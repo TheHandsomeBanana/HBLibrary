@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3FD4AABB-3541-45D3-9F18-076CA68B8EBB}</ProjectGuid>
+    <ProjectGuid>{AA953510-99B8-4669-8280-DC72A8FCE319}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HBLibrary.NetFramework.Services.Security</RootNamespace>
-    <AssemblyName>HBLibrary.NetFramework.Services.Security</AssemblyName>
+    <RootNamespace>HBLibrary.NetFramework.Services.Serialization</RootNamespace>
+    <AssemblyName>HBLibrary.NetFramework.Services.Serialization</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,26 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cryptography\AesCryptoService.cs" />
-    <Compile Include="Cryptography\Interfaces\IAesCryptoService.cs" />
-    <Compile Include="Cryptography\Interfaces\ICryptoService.cs" />
-    <Compile Include="Cryptography\Interfaces\IRsaCryptoService.cs" />
-    <Compile Include="Cryptography\KeyGenerator.cs" />
-    <Compile Include="Cryptography\Keys\AesKey.cs" />
-    <Compile Include="Cryptography\Keys\IKey.cs" />
-    <Compile Include="Cryptography\Keys\RsaKey.cs" />
-    <Compile Include="Cryptography\RsaCryptoService.cs" />
-    <Compile Include="Cryptography\Settings\EncryptionMode.cs" />
-    <Compile Include="DataProtection\DataProtectionService.cs" />
-    <Compile Include="DataProtection\IDataProtectionService.cs" />
-    <Compile Include="Exceptions\CryptoServiceException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.NetFramework.Common\HBLibrary.NetFramework.Common.csproj">
-      <Project>{30c3bb00-c94b-4235-ae18-686250e3ec71}</Project>
-      <Name>HBLibrary.NetFramework.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
