@@ -16,5 +16,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
             this.Targets = targets.ToImmutableArray();
             DisplayFormat = displayFormat;
         }
+
+        public LogConfiguration(ILogConfiguration configuration) {
+            Targets = configuration.Targets;
+            DisplayFormat = configuration.DisplayFormat;
+        }
     }
 }

@@ -3,14 +3,16 @@ using HBLibrary.NetFramework.Services.Logging.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Loggers {
     public abstract class LoggerBase {
         public string Category { get; protected set; }
-        public ILogConfiguration Configuration { get; protected set; }
-        public ILoggerFactory Factory { get; protected set; }
+        public ILogConfiguration Configuration { get; set; }
+
+        public LoggerBase() { }
 
         protected string GetFormattedString(LogStatement log) {
             switch (Configuration.DisplayFormat) {

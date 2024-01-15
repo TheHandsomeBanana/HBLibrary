@@ -14,6 +14,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
         IDictionary<string, IAsyncLogger> RegisteredAsyncLoggers {get;}
         ILoggerFactory ConfigureFactory(LogConfigurationDelegate configMethod);
         void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod);
+        void ConfigureLogger(IAsyncLogger logger, LogConfigurationDelegate configMethod);
         ILogger GetOrCreateStandardLogger(string category);
         ILogger<T> GetOrCreateStandardLogger<T>() where T : class;
         ILogger GetOrCreateThreadSafeLogger(string category);

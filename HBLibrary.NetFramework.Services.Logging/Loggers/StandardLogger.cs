@@ -12,10 +12,8 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
     public class StandardLogger : LoggerBase, ILogger {
-        protected StandardLogger() {
-            Configuration = Factory.Configuration;
-        }
-        internal StandardLogger(string category) : this() {
+        protected StandardLogger() { }
+        internal StandardLogger(string category) {
             this.Category = category;
         }
 
@@ -61,14 +59,8 @@ namespace HBLibrary.NetFramework.Services.Logging {
                     case LogStatementDelegate statementMethod:
                         statementMethod.Invoke(log);
                         break;
-                    case LogStringDelegate stringMethod:
-                        stringMethod.Invoke(GetFormattedString(log));
-                        break;
                     case AsyncLogStatementDelegate statementAsyncMethod:
                         statementAsyncMethod.Invoke(log).Wait();
-                        break;
-                    case AsyncLogStringDelegate stringAsyncMethod:
-                        stringAsyncMethod.Invoke(GetFormattedString(log)).Wait();
                         break;
                     case string filePath:
                         using (StreamWriter sw = new StreamWriter(filePath, true))
@@ -80,7 +72,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
     }
 
     public class StandardLogger<T> : StandardLogger, ILogger<T> where T : class {
-        internal StandardLogger() : base() {
+        internal StandardLogger() {
             Category = typeof(T).Name;
         }
     }

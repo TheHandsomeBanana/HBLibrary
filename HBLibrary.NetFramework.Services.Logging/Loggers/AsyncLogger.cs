@@ -18,12 +18,20 @@ namespace HBLibrary.NetFramework.Services.Logging.Loggers {
             Category = category;
         }
 
+        public void Configure(LogConfigurationDelegate configMethod) {
+            LogConfigurationBuilder builder = new LogConfigurationBuilder();
+            foreach (LogTarget target in Configuration.Targets)
+                builder.AddTarget(target);
+
+            Configuration = configMethod.Invoke(builder);
+        }
+
         public Task Debug(string message) => LogInternal(message, LogLevel.Debug);
-        public Task Error(string message) => LogInternal(message, LogLevel.Debug);
-        public Task Error(Exception exception) => LogInternal(exception.ToString(), LogLevel.Debug);
-        public Task Fatal(string message) => LogInternal(message, LogLevel.Debug);
-        public Task Info(string message) => LogInternal(message, LogLevel.Debug);
-        public Task Warn(string message) => LogInternal(message, LogLevel.Debug);
+        public Task Error(string message) => LogInternal(message, LogLevel.Error);
+        public Task Error(Exception exception) => LogInternal(exception.ToString(), LogLevel.Error);
+        public Task Fatal(string message) => LogInternal(message, LogLevel.Fatal);
+        public Task Info(string message) => LogInternal(message, LogLevel.Info);
+        public Task Warn(string message) => LogInternal(message, LogLevel.Warning);
 
         public static SemaphoreSlim SemaphoreSlim { get; } = new SemaphoreSlim(1);
         protected virtual async Task LogInternal(string message, LogLevel level) {
@@ -38,14 +46,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Loggers {
                         case LogStatementDelegate statementMethod:
                             statementMethod.Invoke(log);
                             break;
-                        case LogStringDelegate stringMethod:
-                            stringMethod.Invoke(GetFormattedString(log));
-                            break;
                         case AsyncLogStatementDelegate statementAsyncMethod:
                             await statementAsyncMethod.Invoke(log);
-                            break;
-                        case AsyncLogStringDelegate stringAsyncMethod:
-                            await stringAsyncMethod.Invoke(GetFormattedString(log));
                             break;
                         case string filePath:
                             using (StreamWriter sw = new StreamWriter(filePath, true))

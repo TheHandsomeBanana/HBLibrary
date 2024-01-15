@@ -18,28 +18,54 @@ namespace HBLibrary.NetFramework.Services.Logging {
             if(loggers.TryGetValue(category, out ILogger logger)) 
                 return logger;
 
-            return new StandardLogger(category);
+            logger = new StandardLogger(category);
+            logger.Configuration = Configuration;
+            return logger;
         }
 
         public ILogger<T> GetOrCreateStandardLogger<T>() where T : class {
             if (loggers.TryGetValue(typeof(T).Name, out ILogger logger))
                 return (ILogger<T>)logger;
 
-            return new StandardLogger<T>();
+            logger = new StandardLogger<T>();
+            logger.Configuration = Configuration;
+            return (ILogger<T>)logger;
         }
 
         public ILogger GetOrCreateThreadSafeLogger(string category) {
             if (loggers.TryGetValue(category, out ILogger logger))
                 return logger;
 
-            return new ThreadSafeLogger();
+            logger = new ThreadSafeLogger(category);
+            logger.Configuration = Configuration;
+            return logger;
         }
 
         public ILogger<T> GetOrCreateThreadSafeLogger<T>() where T : class {
             if (loggers.TryGetValue(typeof(T).Name, out ILogger logger))
                 return (ILogger<T>)logger;
 
-            return new ThreadSafeLogger<T>();
+            logger = new ThreadSafeLogger<T>();
+            logger.Configuration = Configuration;
+            return (ILogger<T>)logger;
+        }
+
+        public IAsyncLogger GetOrCreateAsyncLogger(string category) {
+            if (asyncLoggers.TryGetValue(category, out IAsyncLogger logger))
+                return logger;
+
+            logger = new AsyncLogger(category);
+            logger.Configuration = Configuration;
+            return logger;
+        }
+
+        public IAsyncLogger<T> GetOrCreateAsyncLogger<T>() where T : class {
+            if (asyncLoggers.TryGetValue(typeof(T).Name, out IAsyncLogger logger))
+                return (IAsyncLogger<T>)logger;
+
+            logger = new AsyncLogger<T>();
+            logger.Configuration = Configuration;
+            return (IAsyncLogger<T>)logger;
         }
 
         public ILoggerFactory ConfigureFactory(LogConfigurationDelegate configMethod) {
@@ -47,21 +73,18 @@ namespace HBLibrary.NetFramework.Services.Logging {
             return this;
         }
 
+        public static LoggerFactory FromConfiguration(LogConfigurationDelegate configMethod) {
+            LoggerFactory factory = new LoggerFactory();
+            factory.Configuration = configMethod.Invoke(new LogConfigurationBuilder());
+            return factory;
+        }
+
         public void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod) 
             => logger.Configure(configMethod);
+        
+        public void ConfigureLogger(IAsyncLogger logger, LogConfigurationDelegate configMethod) 
+            => logger.Configure(configMethod);
 
-        public IAsyncLogger GetOrCreateAsyncLogger(string category) {
-            if (asyncLoggers.TryGetValue(category, out IAsyncLogger logger))
-                return logger;
-
-            return new AsyncLogger(category);
-        }
-
-        public IAsyncLogger<T> GetOrCreateAsyncLogger<T>() where T : class {
-            if (asyncLoggers.TryGetValue(typeof(T).Name, out IAsyncLogger logger))
-                return (IAsyncLogger<T>)logger;
-
-            return new AsyncLogger<T>();
-        }
+        
     }
 }

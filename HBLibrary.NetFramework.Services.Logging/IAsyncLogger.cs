@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
     public interface IAsyncLogger {
-        ILogConfiguration Configuration { get; }
-        ILoggerFactory Factory { get; }
+        ILogConfiguration Configuration { get; set; }
+        void Configure(LogConfigurationDelegate configMethod);
         Task Debug(string message);
         Task Info(string message);
         Task Warn(string message);

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Loggers {
     public sealed class ThreadSafeLogger : StandardLogger, ILogger {
+        public ThreadSafeLogger(string category) : base(category) { }
+
         private static readonly object lockObj = new object();
         protected override void LogInternal(string message, LogLevel level) {
             lock(lockObj) {
