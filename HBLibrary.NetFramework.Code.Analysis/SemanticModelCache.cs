@@ -23,6 +23,12 @@ namespace HBLibrary.NetFramework.Code.Analysis {
             return modelCache;
         }
 
+        public static async Task<SemanticModelCache> FromDocuments(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
+            SemanticModelCache modelCache = new SemanticModelCache();
+            await modelCache.Init(documents, cancellationToken);
+            return modelCache;
+        }
+
         private async Task Init(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
             Dictionary<string, Task<SemanticModel>> taskMapping = GetTaskMapping(documents, cancellationToken);
             SemanticModel[] semanticModels = await Task.WhenAll(taskMapping.Values);
