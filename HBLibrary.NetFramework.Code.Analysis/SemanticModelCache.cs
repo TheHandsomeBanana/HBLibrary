@@ -11,15 +11,19 @@ namespace HBLibrary.NetFramework.Code.Analysis {
     public class SemanticModelCache {
         private readonly IDictionary<string, SemanticModel> modelCollection = new Dictionary<string, SemanticModel>();
 
-        public async Task Init(Solution solution, CancellationToken cancellationToken = default) {
-            await InitInternal(solution.Projects.SelectMany(e => e.Documents), cancellationToken);
+        public static async Task<SemanticModelCache> FromSolution(Solution solution, CancellationToken cancellationToken = default) {
+            SemanticModelCache modelCache = new SemanticModelCache();
+            await modelCache.Init(solution.Projects.SelectMany(e => e.Documents), cancellationToken);
+            return modelCache;
         }
 
-        public async Task Init(Project project, CancellationToken cancellationToken = default) {
-            await InitInternal(project.Documents, cancellationToken);
+        public static async Task<SemanticModelCache> FromProject(Project project, CancellationToken cancellationToken = default) {
+            SemanticModelCache modelCache = new SemanticModelCache();
+            await modelCache.Init(project.Documents, cancellationToken);
+            return modelCache;
         }
 
-        private async Task InitInternal(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
+        private async Task Init(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
             Dictionary<string, Task<SemanticModel>> taskMapping = GetTaskMapping(documents, cancellationToken);
             SemanticModel[] semanticModels = await Task.WhenAll(taskMapping.Values);
 

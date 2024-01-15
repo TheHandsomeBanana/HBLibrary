@@ -16,8 +16,8 @@ namespace HBLibrary.NetFramework.Code.Analysis {
         AnalyserFactoryScope Scope { get; }
         SemanticModelCache SemanticModelCache {get;}
         Solution Solution { get; }
-        Task<IAnalyserFactory> FromSolution(Solution solution);
-        Task<IAnalyserFactory> FromProject(Project project);
+        Task Init(Solution solution);
+        Task Init(Project project);
         IObjectAssignmentAnalyser CreateObjectAssignmentAnalyser();
     }
 }

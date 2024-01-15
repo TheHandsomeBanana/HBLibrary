@@ -130,6 +130,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalyserFactory.cs" />
+    <Compile Include="AnalyserRegistry.cs" />
     <Compile Include="Analyser\ICodeAnalyser.cs" />
     <Compile Include="Analyser\Results\ObjectAssignmentResult.cs" />
     <Compile Include="IAnalyserFactory.cs" />
