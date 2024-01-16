@@ -18,7 +18,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// </summary>
         ILogConfiguration GlobalConfiguration { get; }
         /// <summary>
-        /// Contains all registered <see cref="ILogger"/> instances
+        /// Contains all registered <see cref="ILogger"/> instances.
         /// </summary>
         IReadOnlyDictionary<string, ILogger> RegisteredLoggers { get; }
         /// <summary>
@@ -26,7 +26,8 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// </summary>
         IReadOnlyDictionary<string, ILogConfiguration> LoggerConfigurations { get; }
         /// <summary>
-        /// Updates the <see cref="GlobalConfiguration"/>.
+        /// Updates the <see cref="GlobalConfiguration"/>.<br/>
+        /// Overrides the <see cref="ILogger.Configuration"/> from each registered <see cref="ILogger"/>.
         /// </summary>
         /// <param name="configMethod"></param>
         /// <returns></returns>

@@ -11,13 +11,14 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
     [TestClass]
     public class ThreadSafeLoggerTests {
         private const string LogFile = "../../assets/threadSafeLogFile";
-        private readonly static ILoggerFactory factory = new LoggerFactory();
+        private readonly static ILoggerRegistry registry = new LoggerRegistry();
+        private readonly static ILoggerFactory factory = new LoggerFactory(registry);
 
         [TestMethod]
         public async Task ThreadSafeLogger_LogToFile_Valid() {
-            factory.ConfigureFactory(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
-            ILogger logger1 = factory.CreateThreadSafeLogger("Logger1");
-            ILogger logger2 = factory.CreateThreadSafeLogger("Logger2");
+            registry.ConfigureRegistry(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
+            ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
+            ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
 
             try {
                 Task log1 = WriteLog(logger1, 10, "test");
@@ -36,9 +37,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         private readonly List<string> logs = new List<string>();
         [TestMethod]
         public async Task ThreadSafeLogger_LogToMethod_Valid() {
-            factory.ConfigureFactory(e => e.AddTarget(OnLog, LogLevel.Debug).Build());
-            ILogger logger1 = factory.CreateThreadSafeLogger("Logger1");
-            ILogger logger2 = factory.CreateThreadSafeLogger("Logger2");
+            registry.ConfigureRegistry(e => e.AddTarget(OnLog, LogLevel.Debug).Build());
+            ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
+            ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
 
             Task log1 = WriteLog(logger1, 10, "test");
             Task log2 = WriteLog(logger2, 10, "test2");

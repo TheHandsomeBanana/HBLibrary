@@ -19,7 +19,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
         public void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod) {
             LogConfigurationBuilder builder = new LogConfigurationBuilder();
-            foreach(LogTarget target in GlobalConfiguration.Targets)
+            foreach (LogTarget target in GlobalConfiguration.Targets)
                 builder.AddTarget(target);
 
             ILogConfiguration configuration = configMethod.Invoke(builder);
@@ -29,6 +29,15 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
         public ILoggerRegistry ConfigureRegistry(LogConfigurationDelegate configMethod) {
             GlobalConfiguration = configMethod.Invoke(new LogConfigurationBuilder());
+
+            LogConfigurationBuilder builder = new LogConfigurationBuilder();
+
+            foreach (string name in loggerConfigurations.Keys.ToList()) {
+                ILogConfiguration config = builder.OverrideConfig(GlobalConfiguration).Build();
+                loggerConfigurations[name] = config;
+                registeredLoggers[name].Configuration = config;
+            }
+
             return this;
         }
 
@@ -76,24 +85,21 @@ namespace HBLibrary.NetFramework.Services.Logging {
             try {
                 return (IAsyncLogger<T>)registeredLoggers[typeName];
             }
-            catch(InvalidCastException) {
+            catch (InvalidCastException) {
                 throw LoggerException.LoggerNotAsync(typeName);
             }
         }
 
         public void RegisterLogger(ILogger logger) {
-            if(registeredLoggers.ContainsKey(logger.Name))
+            if (registeredLoggers.ContainsKey(logger.Name))
                 LoggerException.ThrowLoggerRegistered(logger.Name);
 
-            loggerConfigurations[logger.Name] = new LogConfigurationBuilder()
-                .OverrideConfig(GlobalConfiguration)
-                .Build();
-
+            ConfigureLogger(logger, e => e.OverrideConfig(GlobalConfiguration).Build());
             registeredLoggers[logger.Name] = logger;
         }
 
         public ILogConfiguration GetConfiguration(string name) {
-            if(loggerConfigurations.ContainsKey(name)) 
+            if (loggerConfigurations.ContainsKey(name))
                 return loggerConfigurations[name];
 
             throw LoggerException.ConfigurationNotFound(name);

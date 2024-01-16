@@ -17,8 +17,12 @@ namespace HBLibrary.NetFramework.Services.Logging {
         public IAsyncLogger CreateAsyncLogger(string name) => new AsyncLogger(name);
         public IAsyncLogger<T> CreateAsyncLogger<T>() where T : class => new AsyncLogger<T>();
 
+        public LoggerFactory(ILoggerRegistry registry) {
+            this.Registry = registry;
+        }
+
         public ILogger GetOrCreateStandardLogger(string name) {
-            if(Registry.ContainsLogger(name))
+            if (Registry.ContainsLogger(name))
                 return Registry.GetLogger(name);
 
             StandardLogger logger = new StandardLogger(name);

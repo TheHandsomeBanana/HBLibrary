@@ -12,9 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
-    public class StandardLogger : LoggerBase, ILogger {
+    public class StandardLogger : ILogger {
         public string Name { get; protected set; }
-        public ILogConfiguration Configuration { get; set; }
+        public ILogConfiguration Configuration { get; set; } = LogConfiguration.Default;
 
         protected StandardLogger() { }
         internal StandardLogger(string name) {

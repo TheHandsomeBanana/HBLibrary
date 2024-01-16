@@ -12,13 +12,14 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
     [TestClass]
     public class AsyncLoggerTests {
         private const string LogFile = "../../assets/asyncLogFile";
-        private readonly static ILoggerFactory factory = new LoggerFactory();
+        private readonly static ILoggerRegistry registry = new LoggerRegistry();
+        private readonly static ILoggerFactory factory = new LoggerFactory(registry);
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_Valid() {
-            IAsyncLogger<AsyncLoggerTests> logger = factory.CreateAsyncLogger<AsyncLoggerTests>();
+            IAsyncLogger<AsyncLoggerTests> logger = factory.GetOrCreateAsyncLogger<AsyncLoggerTests>();
 
-            factory.ConfigureLogger(logger, e => e
+            registry.ConfigureLogger(logger, e => e
                 .AddTarget(LogFile, LogLevel.Debug)
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
@@ -33,10 +34,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToMethod_Valid() {
-            IAsyncLogger logger = factory.CreateAsyncLogger("TestCategory");
-            logger.Configure(e => e
-            .AddTarget(f => Console.WriteLine(f.ToString()), LogLevel.Debug)
-            .WithDisplayFormat(LogDisplayFormat.Full)
+            IAsyncLogger logger = factory.GetOrCreateAsyncLogger("TestCategory");
+            registry.ConfigureLogger(logger, e => e
+            .AddTarget(f => Console.WriteLine(f.ToFullString()), LogLevel.Debug)
             .Build());
 
             using (StringWriter sw = new StringWriter()) {
@@ -48,9 +48,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_CheckThreadSafety_Valid() {
-            factory.ConfigureFactory(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
-            IAsyncLogger logger1 = factory.CreateAsyncLogger("Logger1");
-            IAsyncLogger logger2 = factory.CreateAsyncLogger("Logger2");
+            registry.ConfigureRegistry(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
+            IAsyncLogger logger1 = factory.GetOrCreateAsyncLogger("Logger1");
+            IAsyncLogger logger2 = factory.GetOrCreateAsyncLogger("Logger2");
 
             try {
                 Task log1 = WriteLog(logger1, 10, "test");
