@@ -5,86 +5,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HBLibrary.NetFramework.Services.Logging {
     public class LoggerFactory : ILoggerFactory {
-        private readonly Dictionary<string, IAsyncLogger> asyncLoggers = new Dictionary<string, IAsyncLogger>();
-        private readonly Dictionary<string, ILogger> loggers = new Dictionary<string, ILogger>();
-        public ILogConfiguration Configuration { get; private set; } = LogConfiguration.Default;
-        public IDictionary<string, ILogger> RegisteredLoggers => loggers;
-        public IDictionary<string, IAsyncLogger> RegisteredAsyncLoggers => asyncLoggers;
+        public ILoggerRegistry Registry { get; }
+        public ILogger CreateStandardLogger(string name) => new StandardLogger(name);
+        public ILogger<T> CreateStandardLogger<T>() where T : class => new StandardLogger<T>();
+        public ILogger CreateThreadSafeLogger(string name) => new ThreadSafeLogger(name);
+        public ILogger<T> CreateThreadSafeLogger<T>() where T : class => new ThreadSafeLogger<T>();
+        public IAsyncLogger CreateAsyncLogger(string name) => new AsyncLogger(name);
+        public IAsyncLogger<T> CreateAsyncLogger<T>() where T : class => new AsyncLogger<T>();
 
-        public ILogger GetOrCreateStandardLogger(string category) {
-            if(loggers.TryGetValue(category, out ILogger logger)) 
-                return logger;
+        public ILogger GetOrCreateStandardLogger(string name) {
+            if(Registry.ContainsLogger(name))
+                return Registry.GetLogger(name);
 
-            logger = new StandardLogger(category);
-            logger.Configuration = Configuration;
+            StandardLogger logger = new StandardLogger(name);
+            Registry.RegisterLogger(logger);
             return logger;
         }
 
         public ILogger<T> GetOrCreateStandardLogger<T>() where T : class {
-            if (loggers.TryGetValue(typeof(T).Name, out ILogger logger))
-                return (ILogger<T>)logger;
+            if (Registry.ContainsLogger<T>())
+                return Registry.GetLogger<T>();
 
-            logger = new StandardLogger<T>();
-            logger.Configuration = Configuration;
-            return (ILogger<T>)logger;
+            StandardLogger<T> logger = new StandardLogger<T>();
+            Registry.RegisterLogger(logger);
+            return logger;
         }
 
-        public ILogger GetOrCreateThreadSafeLogger(string category) {
-            if (loggers.TryGetValue(category, out ILogger logger))
-                return logger;
+        public ILogger GetOrCreateThreadSafeLogger(string name) {
+            if (Registry.ContainsLogger(name))
+                return Registry.GetLogger(name);
 
-            logger = new ThreadSafeLogger(category);
-            logger.Configuration = Configuration;
+            ThreadSafeLogger logger = new ThreadSafeLogger(name);
+            Registry.RegisterLogger(logger);
             return logger;
         }
 
         public ILogger<T> GetOrCreateThreadSafeLogger<T>() where T : class {
-            if (loggers.TryGetValue(typeof(T).Name, out ILogger logger))
-                return (ILogger<T>)logger;
+            if (Registry.ContainsLogger<T>())
+                return Registry.GetLogger<T>();
 
-            logger = new ThreadSafeLogger<T>();
-            logger.Configuration = Configuration;
-            return (ILogger<T>)logger;
+            ThreadSafeLogger<T> logger = new ThreadSafeLogger<T>();
+            Registry.RegisterLogger(logger);
+            return logger;
         }
 
-        public IAsyncLogger GetOrCreateAsyncLogger(string category) {
-            if (asyncLoggers.TryGetValue(category, out IAsyncLogger logger))
-                return logger;
+        public IAsyncLogger GetOrCreateAsyncLogger(string name) {
+            if (Registry.ContainsLogger(name))
+                return Registry.GetAsyncLogger(name);
 
-            logger = new AsyncLogger(category);
-            logger.Configuration = Configuration;
+            AsyncLogger logger = new AsyncLogger(name);
+            Registry.RegisterLogger(logger);
             return logger;
         }
 
         public IAsyncLogger<T> GetOrCreateAsyncLogger<T>() where T : class {
-            if (asyncLoggers.TryGetValue(typeof(T).Name, out IAsyncLogger logger))
-                return (IAsyncLogger<T>)logger;
+            if (Registry.ContainsLogger<T>())
+                return Registry.GetAsyncLogger<T>();
 
-            logger = new AsyncLogger<T>();
-            logger.Configuration = Configuration;
-            return (IAsyncLogger<T>)logger;
+            AsyncLogger<T> logger = new AsyncLogger<T>();
+            Registry.RegisterLogger(logger);
+            return logger;
         }
-
-        public ILoggerFactory ConfigureFactory(LogConfigurationDelegate configMethod) {
-            Configuration = configMethod.Invoke(new LogConfigurationBuilder());
-            return this;
-        }
-
-        public static LoggerFactory FromConfiguration(LogConfigurationDelegate configMethod) {
-            LoggerFactory factory = new LoggerFactory();
-            factory.Configuration = configMethod.Invoke(new LogConfigurationBuilder());
-            return factory;
-        }
-
-        public void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod) 
-            => logger.Configure(configMethod);
-        
-        public void ConfigureLogger(IAsyncLogger logger, LogConfigurationDelegate configMethod) 
-            => logger.Configure(configMethod);
-
-        
     }
 }

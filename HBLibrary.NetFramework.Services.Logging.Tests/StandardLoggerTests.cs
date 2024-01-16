@@ -13,7 +13,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public void StandardLogger_LogToFile_Valid() {
-            ILogger<StandardLoggerTests> logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
+            ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
 
             factory.ConfigureLogger(logger, e => e
                 .AddTarget(LogFile, LogLevel.Debug)
@@ -30,7 +30,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public void StandardLogger_LogConfiguration_Valid() {
-            ILogger<StandardLoggerTests> logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
+            ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
             factory.ConfigureLogger(logger, e => e
                .AddTarget(f => File.WriteAllText(LogFile, f.ToMinimalString()), LogLevel.Debug)
                .WithDisplayFormat(Configuration.LogDisplayFormat.Minimal)
@@ -45,7 +45,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public void StandardLogger_LogToMethod_Valid() {
-            ILogger logger = factory.GetOrCreateStandardLogger("TestCategory");
+            ILogger logger = factory.CreateStandardLogger("TestCategory");
             logger.Configure(e => e
             .AddTarget(f => Console.WriteLine(f.ToString()), LogLevel.Debug)
             .WithDisplayFormat(LogDisplayFormat.Full)
@@ -60,7 +60,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public void StandardLogger_NoLog_LogLevelTooHigh() {
-            ILogger<StandardLoggerTests> logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
+            ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
 
             factory.ConfigureLogger(logger, e => e
                 .AddTarget(LogFile, LogLevel.Error)

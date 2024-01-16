@@ -16,8 +16,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         [TestMethod]
         public async Task ThreadSafeLogger_LogToFile_Valid() {
             factory.ConfigureFactory(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
-            ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
-            ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
+            ILogger logger1 = factory.CreateThreadSafeLogger("Logger1");
+            ILogger logger2 = factory.CreateThreadSafeLogger("Logger2");
 
             try {
                 Task log1 = WriteLog(logger1, 10, "test");
@@ -37,8 +37,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         [TestMethod]
         public async Task ThreadSafeLogger_LogToMethod_Valid() {
             factory.ConfigureFactory(e => e.AddTarget(OnLog, LogLevel.Debug).Build());
-            ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
-            ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
+            ILogger logger1 = factory.CreateThreadSafeLogger("Logger1");
+            ILogger logger2 = factory.CreateThreadSafeLogger("Logger2");
 
             Task log1 = WriteLog(logger1, 10, "test");
             Task log2 = WriteLog(logger2, 10, "test2");

@@ -6,18 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
-    public interface IAsyncLogger {
-        ILogConfiguration Configuration { get; set; }
-        void Configure(LogConfigurationDelegate configMethod);
-        Task Debug(string message);
-        Task Info(string message);
-        Task Warn(string message);
-        Task Error(string message);
-        Task Error(Exception exception);
-        Task Fatal(string message);
+    public interface IAsyncLogger : ILogger {
+        Task DebugAsync(string message);
+        Task InfoAsync(string message);
+        Task WarnAsync(string message);
+        Task ErrorAsync(string message);
+        Task ErrorAsync(Exception exception);
+        Task FatalAsync(string message);
     }
 
     public interface IAsyncLogger<T> : IAsyncLogger where T : class {
-
     }
 }

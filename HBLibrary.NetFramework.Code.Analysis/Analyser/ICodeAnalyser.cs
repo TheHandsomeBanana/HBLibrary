@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Code.Analysis.Analyser {
     public interface ICodeAnalyser {
-        SyntaxNode GetSyntaxNode(SnapshotPoint snapshot);
-        Task<object> Run(SyntaxNode syntaxNode);
+        IAnalyserRegistry Registry { get; }
+        Task<object> RunAsync(SyntaxNode syntaxNode);
     }
 
     public interface ICodeAnalyser<TResult> : ICodeAnalyser {
@@ -19,6 +19,6 @@ namespace HBLibrary.NetFramework.Code.Analysis.Analyser {
         /// </summary>
         /// <param name="syntaxNode"></param>
         /// <returns></returns>
-        Task<TResult> Run(SnapshotPoint snapshot);
+        new Task<TResult> RunAsync(SyntaxNode snapshot);
     }
 }

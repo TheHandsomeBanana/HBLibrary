@@ -1,4 +1,4 @@
-﻿using HBLibrary.NetFramework.Services.Logging.Target;
+﻿using HBLibrary.NetFramework.Services.Logging.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,19 +44,23 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
 
         public ILogConfiguration Build() {
             if (overrideConfig) {
+                Reset();
                 overrideConfig = false;
                 return new LogConfiguration(logConfiguration);
             }
 
             LogConfiguration result = new LogConfiguration(targets, displayFormat);
-            targets.Clear();
-            displayFormat = LogDisplayFormat.Normal;
+            Reset();
             return result;
         }
 
         private void AddInternal(object value, LogLevel minLevel)
             => targets.Add(new LogTarget(value, minLevel));
 
+        private void Reset() {
+            targets.Clear();
+            displayFormat = LogDisplayFormat.Full;
+        }
         
     }
 }

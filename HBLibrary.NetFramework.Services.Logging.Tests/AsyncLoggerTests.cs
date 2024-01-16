@@ -16,7 +16,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_Valid() {
-            IAsyncLogger<AsyncLoggerTests> logger = factory.GetOrCreateAsyncLogger<AsyncLoggerTests>();
+            IAsyncLogger<AsyncLoggerTests> logger = factory.CreateAsyncLogger<AsyncLoggerTests>();
 
             factory.ConfigureLogger(logger, e => e
                 .AddTarget(LogFile, LogLevel.Debug)
@@ -24,7 +24,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
                 .Build());
 
             string testString = "Testinfo";
-            await logger.Info(testString);
+            await logger.InfoAsync(testString);
             string content = File.ReadAllText(LogFile);
             Assert.AreNotEqual("", content);
 
@@ -33,7 +33,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToMethod_Valid() {
-            IAsyncLogger logger = factory.GetOrCreateAsyncLogger("TestCategory");
+            IAsyncLogger logger = factory.CreateAsyncLogger("TestCategory");
             logger.Configure(e => e
             .AddTarget(f => Console.WriteLine(f.ToString()), LogLevel.Debug)
             .WithDisplayFormat(LogDisplayFormat.Full)
@@ -41,7 +41,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
             using (StringWriter sw = new StringWriter()) {
                 Console.SetOut(sw);
-                await logger.Info("Testinfo");
+                await logger.InfoAsync("Testinfo");
                 Assert.IsTrue(sw.ToString().EndsWith("Log Level: Info\nMessage: Testinfo\r\n"));
             }
         }
@@ -49,8 +49,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         [TestMethod]
         public async Task AsyncLogger_LogToFile_CheckThreadSafety_Valid() {
             factory.ConfigureFactory(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
-            IAsyncLogger logger1 = factory.GetOrCreateAsyncLogger("Logger1");
-            IAsyncLogger logger2 = factory.GetOrCreateAsyncLogger("Logger2");
+            IAsyncLogger logger1 = factory.CreateAsyncLogger("Logger1");
+            IAsyncLogger logger2 = factory.CreateAsyncLogger("Logger2");
 
             try {
                 Task log1 = WriteLog(logger1, 10, "test");
@@ -69,7 +69,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
             Random rnd = new Random();
             for (int i = 0; i < iterations; i++) {
                 await Task.Delay(rnd.Next(1, 5)); // Random delay between 1 and 5 milliseconds
-                await logger.Info(message + "[" + i + "]");
+                await logger.InfoAsync(message + "[" + i + "]");
             }
         }
     }

@@ -1,9 +1,10 @@
 ﻿using HBLibrary.NetFramework.Services.Logging.Configuration;
 using HBLibrary.NetFramework.Services.Logging.Loggers;
 using HBLibrary.NetFramework.Services.Logging.Statements;
-using HBLibrary.NetFramework.Services.Logging.Target;
+using HBLibrary.NetFramework.Services.Logging.Targets;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -12,17 +13,12 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
     public class StandardLogger : LoggerBase, ILogger {
+        public string Name { get; protected set; }
+        public ILogConfiguration Configuration { get; set; }
+
         protected StandardLogger() { }
-        internal StandardLogger(string category) {
-            this.Category = category;
-        }
-
-        public void Configure(LogConfigurationDelegate configMethod) {
-            LogConfigurationBuilder builder = new LogConfigurationBuilder();
-            foreach (LogTarget target in Configuration.Targets)
-                builder.AddTarget(target);
-
-            Configuration = configMethod.Invoke(builder);
+        internal StandardLogger(string name) {
+            this.Name = name;
         }
 
         public void Debug(string message) {
@@ -54,7 +50,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 if (target.Level > level)
                     continue;
 
-                LogStatement log = new LogStatement(message, Category, level, DateTime.Now);
+                LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
                 switch (target.Value) {
                     case LogStatementDelegate statementMethod:
                         statementMethod.Invoke(log);
@@ -69,11 +65,24 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 }
             }
         }
+
+        protected string GetFormattedString(LogStatement log) {
+            switch (Configuration.DisplayFormat) {
+                case LogDisplayFormat.MessageOnly:
+                    return log.ToString();
+                case LogDisplayFormat.Minimal:
+                    return log.ToMinimalString();
+                case LogDisplayFormat.Full:
+                    return log.ToFullString();
+                default:
+                    throw new NotSupportedException(Configuration.DisplayFormat.ToString());
+            }
+        }
     }
 
     public class StandardLogger<T> : StandardLogger, ILogger<T> where T : class {
         internal StandardLogger() {
-            Category = typeof(T).Name;
+            Name = typeof(T).Name;
         }
     }
 }

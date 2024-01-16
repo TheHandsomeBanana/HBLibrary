@@ -1,5 +1,5 @@
 ﻿using HBLibrary.NetFramework.Services.Logging.Statements;
-using HBLibrary.NetFramework.Services.Logging.Target;
+using HBLibrary.NetFramework.Services.Logging.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;

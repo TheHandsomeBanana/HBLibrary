@@ -1,5 +1,4 @@
-﻿using HBLibrary.NetFramework.Services.Logging.Target;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -22,10 +21,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Statements {
             CreatedOn = createdOn;
         }
 
-        public override string ToString()
-            => $"Category: {Category}\nCreated On: {CreatedOn:dd.MM.yyyy hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
+        public override string ToString() => $"[{Level}]: {Message}";
 
-        public string ToFullString() => ToString();
+        public string ToFullString()
+            => $"Category: {Category}\nCreated On: {CreatedOn:dd.MM.yyyy hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
         public string ToMinimalString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
     }
 }

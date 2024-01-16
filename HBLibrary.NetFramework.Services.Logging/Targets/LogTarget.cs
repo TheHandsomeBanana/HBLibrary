@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.NetFramework.Services.Logging.Target {
+namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public readonly struct LogTarget {
         public object Value { get; }
         public LogLevel Level { get; }

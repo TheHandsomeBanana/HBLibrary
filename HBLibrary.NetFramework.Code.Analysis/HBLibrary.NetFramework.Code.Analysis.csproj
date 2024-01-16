@@ -133,7 +133,9 @@
     <Compile Include="AnalyserFactory.cs" />
     <Compile Include="AnalyserRegistry.cs" />
     <Compile Include="Analyser\ICodeAnalyser.cs" />
+    <Compile Include="Analyser\ObjectAssignmentAnalyser.cs" />
     <Compile Include="Analyser\Results\ObjectAssignmentResult.cs" />
+    <Compile Include="Exceptions\AnalyserException.cs" />
     <Compile Include="IAnalyserFactory.cs" />
     <Compile Include="IAnalyserRegistry.cs" />
     <Compile Include="Analyser\IObjectAssignmentAnalyser.cs" />

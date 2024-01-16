@@ -11,25 +11,25 @@ namespace HBLibrary.NetFramework.Code.Analysis {
     public class SemanticModelCache {
         private readonly IDictionary<string, SemanticModel> modelCollection = new Dictionary<string, SemanticModel>();
 
-        public static async Task<SemanticModelCache> FromSolution(Solution solution, CancellationToken cancellationToken = default) {
+        public static async Task<SemanticModelCache> FromSolutionAsync(Solution solution, CancellationToken cancellationToken = default) {
             SemanticModelCache modelCache = new SemanticModelCache();
-            await modelCache.Init(solution.Projects.SelectMany(e => e.Documents), cancellationToken);
+            await modelCache.InitAsync(solution.Projects.SelectMany(e => e.Documents), cancellationToken);
             return modelCache;
         }
 
-        public static async Task<SemanticModelCache> FromProject(Project project, CancellationToken cancellationToken = default) {
+        public static async Task<SemanticModelCache> FromProjectAsync(Project project, CancellationToken cancellationToken = default) {
             SemanticModelCache modelCache = new SemanticModelCache();
-            await modelCache.Init(project.Documents, cancellationToken);
+            await modelCache.InitAsync(project.Documents, cancellationToken);
             return modelCache;
         }
 
-        public static async Task<SemanticModelCache> FromDocuments(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
+        public static async Task<SemanticModelCache> FromDocumentsAsync(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
             SemanticModelCache modelCache = new SemanticModelCache();
-            await modelCache.Init(documents, cancellationToken);
+            await modelCache.InitAsync(documents, cancellationToken);
             return modelCache;
         }
 
-        private async Task Init(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
+        private async Task InitAsync(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
             Dictionary<string, Task<SemanticModel>> taskMapping = GetTaskMapping(documents, cancellationToken);
             SemanticModel[] semanticModels = await Task.WhenAll(taskMapping.Values);
 
