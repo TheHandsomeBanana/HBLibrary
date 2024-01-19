@@ -9,12 +9,18 @@ using HBLibrary.NetFramework.Services.Logging.Exceptions;
 namespace HBLibrary.NetFramework.Services.Logging {
     /// <summary>
     /// Container for <see cref="ILogger"/> instances and their <see cref="ILogConfiguration"/>.<br/>
-    /// Provides a global configuration for all registered <see cref="ILogger"/> instances.
+    /// Provides a global configuration for all registered <see cref="ILogger"/> instances.<br/>
+    /// Will dispose automatically on process exit.
     /// </summary>
-    public interface ILoggerRegistry {
+    public interface ILoggerRegistry : IDisposable {
+        /// <summary>
+        /// <see langword="true"/> if <see cref="ConfigureRegistry(LogConfigurationDelegate)"/> has been called.
+        /// </summary>
+        bool IsConfigured { get; }
         /// <summary>
         /// Global configuration that is applied to all <see cref="ILogger"/> instances that are either registered,<br/>
-        /// or only created and configured with <see cref="ConfigureLogger(ILogger, LogConfigurationDelegate)"/> 
+        /// or only created and configured with <see cref="ConfigureLogger(ILogger, LogConfigurationDelegate)"/>.<br/>
+        /// The global <see cref="LogLevel"/> threshold will overwrite every child threshold.
         /// </summary>
         ILogConfiguration GlobalConfiguration { get; }
         /// <summary>
@@ -22,18 +28,16 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// </summary>
         IReadOnlyDictionary<string, ILogger> RegisteredLoggers { get; }
         /// <summary>
-        /// Contains <see cref="ILogConfiguration"/> instances from every registered or configured <see cref="ILogger"/>.
-        /// </summary>
-        IReadOnlyDictionary<string, ILogConfiguration> LoggerConfigurations { get; }
-        /// <summary>
         /// Updates the <see cref="GlobalConfiguration"/>.<br/>
-        /// Overrides the <see cref="ILogger.Configuration"/> from each registered <see cref="ILogger"/>.
+        /// Overrides the <see cref="ILogger.Configuration"/> from each registered <see cref="ILogger"/>.<br/>
+        /// Can only be called once.
         /// </summary>
         /// <param name="configMethod"></param>
         /// <returns></returns>
         ILoggerRegistry ConfigureRegistry(LogConfigurationDelegate configMethod);
         /// <summary>
-        /// Updates an <see cref="ILogger.Configuration"/>.
+        /// Overrides an <see cref="ILogger.Configuration"/> based on <see cref="GlobalConfiguration"/> and <paramref name="configMethod"/>.<br/>
+        /// If <paramref name="configMethod"/> is <see langword="null"/>, applies only <see cref="GlobalConfiguration"/>.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configMethod"></param>
@@ -84,11 +88,5 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// <param name="name"></param>
         /// <returns><see cref="bool"/></returns>
         bool ContainsLogger<T>() where T : class;
-        /// <summary>
-        /// Gets an <see cref="ILogConfiguration"/> from <see cref="LoggerConfigurations"/> by <paramref name="name"/>.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        ILogConfiguration GetConfiguration(string name);
     }
 }

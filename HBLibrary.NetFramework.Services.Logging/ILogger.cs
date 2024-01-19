@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
-    public interface ILogger {
+    public interface ILogger : IDisposable {
         ILogConfiguration Configuration { get; set; }
         string Name { get; }
         void Debug(string message);

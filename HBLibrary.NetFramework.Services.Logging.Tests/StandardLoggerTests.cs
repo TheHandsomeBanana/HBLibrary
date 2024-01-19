@@ -17,7 +17,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
             ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
 
             registry.ConfigureLogger(logger, e => e
-                .AddTarget(LogFile, LogLevel.Debug)
+                .AddFileTarget(LogFile, LogLevel.Debug)
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
 
@@ -32,18 +32,18 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         [TestMethod]
         public void StandardLogger_LogConfiguration_Valid() {
             registry.ConfigureRegistry(e => e
-               .AddTarget(f => File.WriteAllText(LogFile, f.ToMinimalString()), LogLevel.Debug)
+               .AddMethodTarget(f => File.WriteAllText(LogFile, f.ToMinimalString()), LogLevel.Debug)
                .WithDisplayFormat(Configuration.LogDisplayFormat.Minimal)
                .Build());
 
             ILogger<StandardLoggerTests> logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
             Assert.AreEqual(1, logger.Configuration.Targets.Length);
-            registry.ConfigureLogger(logger, e => e.AddTarget(f => Console.WriteLine(f.ToString()), LogLevel.Debug).Build());
+            registry.ConfigureLogger(logger, e => e.AddMethodTarget(f => Console.WriteLine(f.ToString()), LogLevel.Debug).Build());
             Assert.AreEqual(2, logger.Configuration.Targets.Length);
 
             // Overrides logger configuration
             registry.ConfigureRegistry(e => e
-            .AddTarget(LogFile, LogLevel.Debug)
+            .AddFileTarget(LogFile, LogLevel.Debug)
             .Build());
 
             Assert.AreEqual(1, logger.Configuration.Targets.Length);
@@ -53,7 +53,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         public void StandardLogger_LogToMethod_Valid() {
             ILogger logger = factory.CreateStandardLogger("TestCategory");
             registry.ConfigureLogger(logger, e => e
-            .AddTarget(f => Console.WriteLine(f.ToFullString()), LogLevel.Debug)
+            .AddMethodTarget(f => Console.WriteLine(f.ToFullString()), LogLevel.Debug)
             .WithDisplayFormat(LogDisplayFormat.Full)
             .Build());
 
@@ -69,7 +69,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
             ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
 
             registry.ConfigureLogger(logger, e => e
-                .AddTarget(LogFile, LogLevel.Error)
+                .AddFileTarget(LogFile, LogLevel.Error)
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
 

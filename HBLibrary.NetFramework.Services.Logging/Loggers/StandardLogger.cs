@@ -46,23 +46,12 @@ namespace HBLibrary.NetFramework.Services.Logging {
         }
 
         protected virtual void LogInternal(string message, LogLevel level) {
-            foreach (LogTarget target in Configuration.Targets) {
-                if (target.Level > level)
+            foreach (ILogTarget target in Configuration.Targets) {
+                if (target.LevelThreshold > level)
                     continue;
 
                 LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                switch (target.Value) {
-                    case LogStatementDelegate statementMethod:
-                        statementMethod.Invoke(log);
-                        break;
-                    case AsyncLogStatementDelegate statementAsyncMethod:
-                        statementAsyncMethod.Invoke(log).Wait();
-                        break;
-                    case string filePath:
-                        using (StreamWriter sw = new StreamWriter(filePath, true))
-                            sw.WriteLine(GetFormattedString(log));
-                        break;
-                }
+                target.WriteLog(log, Configuration.DisplayFormat);
             }
         }
 
@@ -77,6 +66,10 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 default:
                     throw new NotSupportedException(Configuration.DisplayFormat.ToString());
             }
+        }
+
+        public void Dispose() {
+            Configuration.Dispose();
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using HBLibrary.NetFramework.Services.Logging.Targets;
+﻿using HBLibrary.NetFramework.Services.Logging.Exceptions;
+using HBLibrary.NetFramework.Services.Logging.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,26 +8,58 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Configuration {
     internal class LogConfigurationBuilder : ILogConfigurationBuilder {
-        private readonly List<LogTarget> targets = new List<LogTarget>();
-        private LogDisplayFormat displayFormat;
+        private readonly List<ILogTarget> targets = new List<ILogTarget>();
+        private readonly List<IAsyncLogTarget> asyncTargets = new List<IAsyncLogTarget>();
+        private LogDisplayFormat displayFormat = LogDisplayFormat.Full;
+        private LogLevel? levelThreshold = null;
         private bool overrideConfig = false;
-        public ILogConfigurationBuilder AddTarget(string filePath, LogLevel minLevel) {
-            targets.Add(new LogTarget(filePath, minLevel));
-            return this;
-        }
-
-        public ILogConfigurationBuilder AddTarget(LogStatementDelegate method, LogLevel minLevel) {
-            AddInternal(method, minLevel);
-            return this;
-        }
-
-        public ILogConfigurationBuilder AddTarget(AsyncLogStatementDelegate method, LogLevel minLevel) {
-            AddInternal(method, minLevel);
-            return this;
-        }
-
-        internal LogConfigurationBuilder AddTarget(LogTarget target) {
+        public ILogConfigurationBuilder AddTarget(ILogTarget target) {
             targets.Add(target);
+            return this;
+        }
+
+        public ILogConfigurationBuilder AddAsyncTarget(IAsyncLogTarget target) {
+            asyncTargets.Add(target);
+            return this;
+        }
+
+        public ILogConfigurationBuilder AddFileTarget(string filePath, bool useAsync) {
+            if (!levelThreshold.HasValue)
+                throw LoggerException.LevelThresholdNotSet();
+
+            return AddFileTarget(filePath, levelThreshold.Value, useAsync);
+        }
+
+        public ILogConfigurationBuilder AddFileTarget(string fileName, LogLevel minLevel, bool useAsync) {
+            if (useAsync)
+                asyncTargets.Add(new FileTarget(fileName, minLevel, useAsync));
+            else
+                targets.Add(new FileTarget(fileName, minLevel, useAsync));
+
+            return this;
+        }
+
+        public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method) {
+            if (!levelThreshold.HasValue)
+                throw LoggerException.LevelThresholdNotSet();
+
+            return AddMethodTarget(method, levelThreshold.Value);
+        }
+
+        public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel minLevel) {
+            targets.Add(new MethodTarget(method, minLevel));
+            return this;
+        }
+
+        public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method) {
+            if (!levelThreshold.HasValue)
+                throw LoggerException.LevelThresholdNotSet();
+
+            return AddAsyncMethodTarget(method, levelThreshold.Value);
+        }
+
+        public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel minLevel) {
+            asyncTargets.Add(new AsyncMethodTarget(method, minLevel));
             return this;
         }
 
@@ -41,6 +74,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
             displayFormat = format;
             return this;
         }
+        public ILogConfigurationBuilder WithLevelThreshold(LogLevel level) {
+            this.levelThreshold = level;
+            return this;
+        }
 
         public ILogConfiguration Build() {
             if (overrideConfig) {
@@ -49,18 +86,28 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
                 return new LogConfiguration(logConfiguration);
             }
 
-            LogConfiguration result = new LogConfiguration(targets, displayFormat);
+            if(levelThreshold.HasValue) {
+                foreach(ILogTarget target in targets) {
+                    if (target.LevelThreshold != levelThreshold.Value)
+                        target.LevelThreshold = levelThreshold.Value;
+                }
+
+                foreach(IAsyncLogTarget target in asyncTargets) {
+                    if (target.LevelThreshold != levelThreshold.Value)
+                        target.LevelThreshold = levelThreshold.Value;
+                }
+            }
+
+            LogConfiguration result = new LogConfiguration(targets, asyncTargets, displayFormat, levelThreshold);
             Reset();
             return result;
         }
 
-        private void AddInternal(object value, LogLevel minLevel)
-            => targets.Add(new LogTarget(value, minLevel));
-
         private void Reset() {
             targets.Clear();
+            asyncTargets.Clear();
             displayFormat = LogDisplayFormat.Full;
+            levelThreshold = LogLevel.Debug;
         }
-        
     }
 }

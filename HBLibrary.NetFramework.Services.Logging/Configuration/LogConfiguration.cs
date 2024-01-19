@@ -8,18 +8,36 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Configuration {
     internal class LogConfiguration : ILogConfiguration {
-        public ImmutableArray<LogTarget> Targets { get; } = ImmutableArray<LogTarget>.Empty;
+        public IReadOnlyList<ILogTarget> Targets { get; } = Array.Empty<ILogTarget>();
+        public IReadOnlyList<IAsyncLogTarget> AsyncTargets { get; } = Array.Empty<IAsyncLogTarget>();
         public LogDisplayFormat DisplayFormat { get; } = LogDisplayFormat.Full;
+        public LogLevel? LevelThreshold { get; } = null;
         public static LogConfiguration Default => new LogConfiguration();
+
         private LogConfiguration() { }
-        public LogConfiguration(IEnumerable<LogTarget> targets, LogDisplayFormat displayFormat) {
-            this.Targets = targets.ToImmutableArray();
+        public LogConfiguration(List<ILogTarget> targets, List<IAsyncLogTarget> asyncTargets, LogDisplayFormat displayFormat, LogLevel? levelThreshold) {
+            Targets = targets;
+            AsyncTargets = asyncTargets;
             DisplayFormat = displayFormat;
+            LevelThreshold = levelThreshold;
         }
 
         public LogConfiguration(ILogConfiguration configuration) {
+            foreach(ILogTarget target in configuration.Targets)
+                target.Dispose();
+
+            foreach(IAsyncLogTarget asyncTarget in AsyncTargets) 
+                asyncTarget.Dispose();
+            
             Targets = configuration.Targets;
+            AsyncTargets = configuration.AsyncTargets;
             DisplayFormat = configuration.DisplayFormat;
+            LevelThreshold = configuration.LevelThreshold;
+        }
+
+        public void Dispose() {
+            foreach(ILogTarget target in Targets)
+                target.Dispose();
         }
     }
 }

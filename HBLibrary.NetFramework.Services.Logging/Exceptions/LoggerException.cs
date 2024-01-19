@@ -10,15 +10,21 @@ namespace HBLibrary.NetFramework.Services.Logging.Exceptions {
         }
 
         public static void ThrowLoggerNotRegistered(string name)
-            => throw new LoggerException("Logger " + name + " not registered");
+            => throw new LoggerException("Logger " + name + " not registered.");
 
         public static void ThrowLoggerRegistered(string name)
-            => throw new LoggerException("Logger " + name + " already registered");
-
-        public static LoggerException ConfigurationNotFound(string name)
-            => new LoggerException("No configuration found for logger " + name);
+            => throw new LoggerException("Logger " + name + " already registered.");
         
         public static LoggerException LoggerNotAsync(string name)
-            => new LoggerException("Logger " + name + " not async");
+            => new LoggerException("Logger " + name + " not async.");
+
+        public static void ThrowAsyncTargetsNotAllowed(string name)
+            => throw new LoggerException($"{name} is synchronous and should not use async targets.");
+
+        public static void ThrowRegistryConfigured()
+            => throw new LoggerException("Registry is already configured.");
+
+        public static LoggerException LevelThresholdNotSet()
+            => new LoggerException("Level threshold is not set.");
     }
 }

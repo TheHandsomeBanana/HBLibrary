@@ -28,23 +28,20 @@ namespace HBLibrary.NetFramework.Services.Logging.Loggers {
         protected virtual async Task LogInternalAsync(string message, LogLevel level) {
             await SemaphoreSlim.WaitAsync();
             try {
-                foreach (LogTarget target in Configuration.Targets) {
-                    if (target.Level > level)
+                foreach (ILogTarget target in Configuration.Targets) {
+                    if (target.LevelThreshold > level)
                         continue;
 
                     LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                    switch (target.Value) {
-                        case LogStatementDelegate statementMethod:
-                            statementMethod.Invoke(log);
-                            break;
-                        case AsyncLogStatementDelegate statementAsyncMethod:
-                            await statementAsyncMethod.Invoke(log);
-                            break;
-                        case string filePath:
-                            using (StreamWriter sw = new StreamWriter(filePath, true))
-                                await sw.WriteLineAsync(GetFormattedString(log));
-                            break;
-                    }
+                    target.WriteLog(log, Configuration.DisplayFormat);
+                }
+
+                foreach(IAsyncLogTarget target in Configuration.AsyncTargets) {
+                    if (target.LevelThreshold > level)
+                        continue;
+
+                    LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
+                    await target.WriteLogAsync(log, Configuration.DisplayFormat);
                 }
             }
             finally {

@@ -16,7 +16,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task ThreadSafeLogger_LogToFile_Valid() {
-            registry.ConfigureRegistry(e => e.AddTarget(LogFile, LogLevel.Debug).Build());
+            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug).Build());
             ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
             ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
 
@@ -37,7 +37,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         private readonly List<string> logs = new List<string>();
         [TestMethod]
         public async Task ThreadSafeLogger_LogToMethod_Valid() {
-            registry.ConfigureRegistry(e => e.AddTarget(OnLog, LogLevel.Debug).Build());
+            registry.ConfigureRegistry(e => e.AddMethodTarget(OnLog, LogLevel.Debug).Build());
             ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
             ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
 
