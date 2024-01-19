@@ -20,7 +20,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
             IAsyncLogger<AsyncLoggerTests> logger = factory.GetOrCreateAsyncLogger<AsyncLoggerTests>();
 
             registry.ConfigureLogger(logger, e => e
-                .AddFileTarget(LogFile, LogLevel.Debug)
+                .AddFileTarget(LogFile, LogLevel.Debug, true)
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
 
@@ -36,7 +36,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         public async Task AsyncLogger_LogToMethod_Valid() {
             IAsyncLogger logger = factory.GetOrCreateAsyncLogger("TestCategory");
             registry.ConfigureLogger(logger, e => e
-            .AddMethodTarget(f => Console.WriteLine(f.ToFullString()), LogLevel.Debug)
+            .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()))
             .Build());
 
             using (StringWriter sw = new StringWriter()) {
@@ -48,7 +48,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_CheckThreadSafety_Valid() {
-            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug).Build());
+            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug, true).Build());
             IAsyncLogger logger1 = factory.GetOrCreateAsyncLogger("Logger1");
             IAsyncLogger logger2 = factory.GetOrCreateAsyncLogger("Logger2");
 

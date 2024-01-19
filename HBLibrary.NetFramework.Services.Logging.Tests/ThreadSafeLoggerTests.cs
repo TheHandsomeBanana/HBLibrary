@@ -1,4 +1,5 @@
-﻿using HBLibrary.NetFramework.Services.Logging.Statements;
+﻿using HBLibrary.NetFramework.Services.Logging.Configuration;
+using HBLibrary.NetFramework.Services.Logging.Statements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task ThreadSafeLogger_LogToFile_Valid() {
-            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug).Build());
+            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, false).Build());
             ILogger logger1 = factory.GetOrCreateThreadSafeLogger("Logger1");
             ILogger logger2 = factory.GetOrCreateThreadSafeLogger("Logger2");
 
@@ -50,7 +51,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
             logs.Clear();
         }
 
-        private void OnLog(LogStatement logStatement) {
+        private void OnLog(LogStatement logStatement, LogDisplayFormat format) {
             logs.Add(logStatement.Message);
         }
 
