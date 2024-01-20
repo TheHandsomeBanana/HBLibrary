@@ -93,6 +93,7 @@
     <Compile Include="Targets\FileTarget.cs" />
     <Compile Include="Targets\ILogTarget.cs" />
     <Compile Include="Targets\MethodTarget.cs" />
+    <Compile Include="Targets\TargetWithHeader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
