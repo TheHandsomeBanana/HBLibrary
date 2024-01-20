@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncLoggerTests.cs" />
+    <Compile Include="LoggerRegistryTests.cs" />
     <Compile Include="StandardLoggerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

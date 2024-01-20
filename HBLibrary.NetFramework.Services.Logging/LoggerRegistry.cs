@@ -27,9 +27,6 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
         public void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod) {
             LogConfigurationBuilder builder = new LogConfigurationBuilder();
-            if (GlobalConfiguration.LevelThreshold.HasValue)
-                builder.WithLevelThreshold(GlobalConfiguration.LevelThreshold.Value);
-
             foreach (ILogTarget target in GlobalConfiguration.Targets)
                 builder.AddTarget(target);
 
@@ -39,6 +36,9 @@ namespace HBLibrary.NetFramework.Services.Logging {
             }
 
             ILogConfiguration configuration = configMethod?.Invoke(builder) ?? builder.Build();
+            if (GlobalConfiguration.LevelThreshold.HasValue)
+                configuration.LevelThreshold = GlobalConfiguration.LevelThreshold;
+
             if (!(logger is IAsyncLogger) && configuration.AsyncTargets.Count > 0)
                 LoggingException.ThrowAsyncTargetsNotAllowed(logger.GetType().Name);
 

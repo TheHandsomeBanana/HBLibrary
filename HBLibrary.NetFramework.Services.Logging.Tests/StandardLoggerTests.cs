@@ -153,5 +153,16 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
                 Assert.IsTrue(sw.ToString().EndsWith("Log Level: Error\nMessage: Testerror\n\r\n"));
             }
         }
+
+        [TestMethod]
+        public void StandardLogger_TargetLevelThresholdOverride_Valid() {
+            ILogger logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
+            registry.ConfigureLogger(logger, e => e
+            .WithLevelThreshold(LogLevel.Error)
+            .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()), LogLevel.Warning)
+            .Build());
+
+            Assert.AreEqual(logger.Configuration.LevelThreshold, logger.Configuration.Targets[0].LevelThreshold);
+        }
     }
 }
