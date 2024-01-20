@@ -89,6 +89,7 @@
     <Compile Include="Statements\LogStatement.cs" />
     <Compile Include="Targets\AsyncMethodTarget.cs" />
     <Compile Include="Targets\ConsoleTarget.cs" />
+    <Compile Include="Targets\DebugTarget.cs" />
     <Compile Include="Targets\FileTarget.cs" />
     <Compile Include="Targets\ILogTarget.cs" />
     <Compile Include="Targets\MethodTarget.cs" />

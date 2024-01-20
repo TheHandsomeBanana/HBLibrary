@@ -40,6 +40,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Targets {
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        public ConsoleTarget(LogLevel threshold) : this() {
+            this.LevelThreshold = threshold;
+        }
+
         public void WriteLog(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) {
             switch (log.Level) {
                 case LogLevel.Debug:
