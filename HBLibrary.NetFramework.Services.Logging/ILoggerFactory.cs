@@ -19,7 +19,6 @@ namespace HBLibrary.NetFramework.Services.Logging {
         ILoggerRegistry Registry { get; }
         /// <summary>
         /// Creates a <see cref="StandardLogger"/>.<br/>
-        /// Not thread safe.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="StandardLogger"/> instance</returns>
@@ -27,14 +26,12 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// <summary>
         /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
         /// If not, creates new <see cref="StandardLogger"/> and adds it to the <see cref="Registry"/>.<br/>
-        /// Not thread safe.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="StandardLogger"/ instance></returns>
         ILogger GetOrCreateStandardLogger(string name);
         /// <summary>
         /// Creates a <see cref="StandardLogger{T}"/>.<br/>
-        /// Not thread safe.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="StandardLogger{T}"/> instance</returns>
@@ -42,37 +39,10 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// <summary>
         /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
         /// If not, creates new <see cref="StandardLogger{T}"/> and adds it to the <see cref="Registry"/>.<br/>
-        /// Not thread safe.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="StandardLogger{T}"/> instance</returns>
         ILogger<T> GetOrCreateStandardLogger<T>() where T : class;
-        /// <summary>
-        /// Creates a <see cref="ThreadSafeLogger"/>.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns><see cref="ThreadSafeLogger"/> instance</returns>
-        ILogger CreateThreadSafeLogger(string name);
-        /// <summary>
-        /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
-        /// If not, creates new <see cref="ThreadSafeLogger"/> and adds it to the <see cref="Registry"/>.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns><see cref="ThreadSafeLogger"/> instance</returns>
-        ILogger GetOrCreateThreadSafeLogger(string name);
-        /// <summary>
-        /// Creates a <see cref="ThreadSafeLogger{T}"/>.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns><see cref="ThreadSafeLogger{T}"/> instance</returns>
-        ILogger<T> CreateThreadSafeLogger<T>() where T : class;
-        /// <summary>
-        /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
-        /// If not, creates new <see cref="ThreadSafeLogger{T}"/> and adds it to the <see cref="Registry"/>.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns><see cref="ThreadSafeLogger{T}"/> instance</returns>
-        ILogger<T> GetOrCreateThreadSafeLogger<T>() where T : class;
         /// <summary>
         /// Creates an <see cref="AsyncLogger"/>.<br/>
         /// Provides synchronous and asynchronous logging and is thread safe.

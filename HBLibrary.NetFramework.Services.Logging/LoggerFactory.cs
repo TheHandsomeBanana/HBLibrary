@@ -12,8 +12,6 @@ namespace HBLibrary.NetFramework.Services.Logging {
         public ILoggerRegistry Registry { get; }
         public ILogger CreateStandardLogger(string name) => new StandardLogger(name);
         public ILogger<T> CreateStandardLogger<T>() where T : class => new StandardLogger<T>();
-        public ILogger CreateThreadSafeLogger(string name) => new ThreadSafeLogger(name);
-        public ILogger<T> CreateThreadSafeLogger<T>() where T : class => new ThreadSafeLogger<T>();
         public IAsyncLogger CreateAsyncLogger(string name) => new AsyncLogger(name);
         public IAsyncLogger<T> CreateAsyncLogger<T>() where T : class => new AsyncLogger<T>();
 
@@ -35,24 +33,6 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 return Registry.GetLogger<T>();
 
             StandardLogger<T> logger = new StandardLogger<T>();
-            Registry.RegisterLogger(logger);
-            return logger;
-        }
-
-        public ILogger GetOrCreateThreadSafeLogger(string name) {
-            if (Registry.ContainsLogger(name))
-                return Registry.GetLogger(name);
-
-            ThreadSafeLogger logger = new ThreadSafeLogger(name);
-            Registry.RegisterLogger(logger);
-            return logger;
-        }
-
-        public ILogger<T> GetOrCreateThreadSafeLogger<T>() where T : class {
-            if (Registry.ContainsLogger<T>())
-                return Registry.GetLogger<T>();
-
-            ThreadSafeLogger<T> logger = new ThreadSafeLogger<T>();
             Registry.RegisterLogger(logger);
             return logger;
         }

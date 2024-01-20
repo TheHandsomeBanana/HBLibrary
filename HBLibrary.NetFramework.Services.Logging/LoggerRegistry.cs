@@ -40,14 +40,14 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
             ILogConfiguration configuration = configMethod?.Invoke(builder) ?? builder.Build();
             if (!(logger is IAsyncLogger) && configuration.AsyncTargets.Count > 0)
-                LoggerException.ThrowAsyncTargetsNotAllowed(logger.GetType().Name);
+                LoggingException.ThrowAsyncTargetsNotAllowed(logger.GetType().Name);
 
             logger.Configuration = configuration;
         }
 
         public ILoggerRegistry ConfigureRegistry(LogConfigurationDelegate configMethod) {
             if (IsConfigured)
-                LoggerException.ThrowRegistryConfigured();
+                LoggingException.ThrowRegistryConfigured();
 
             IsConfigured = true;
             GlobalConfiguration = configMethod.Invoke(new LogConfigurationBuilder());
@@ -70,7 +70,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
         public ILogger GetLogger(string name) {
             if (!registeredLoggers.ContainsKey(name))
-                LoggerException.ThrowLoggerNotRegistered(name);
+                LoggingException.ThrowLoggerNotRegistered(name);
 
             return registeredLoggers[name];
         }
@@ -78,39 +78,39 @@ namespace HBLibrary.NetFramework.Services.Logging {
         public ILogger<T> GetLogger<T>() where T : class {
             string typeName = typeof(T).Name;
             if (!registeredLoggers.ContainsKey(typeName))
-                LoggerException.ThrowLoggerNotRegistered(typeName);
+                LoggingException.ThrowLoggerNotRegistered(typeName);
 
             return (ILogger<T>)registeredLoggers[typeName];
         }
 
         public IAsyncLogger GetAsyncLogger(string name) {
             if (!registeredLoggers.ContainsKey(name))
-                LoggerException.ThrowLoggerNotRegistered(name);
+                LoggingException.ThrowLoggerNotRegistered(name);
 
             try {
                 return (IAsyncLogger)registeredLoggers[name];
             }
             catch (InvalidCastException) {
-                throw LoggerException.LoggerNotAsync(name);
+                throw LoggingException.LoggerNotAsync(name);
             }
         }
 
         public IAsyncLogger<T> GetAsyncLogger<T>() where T : class {
             string typeName = typeof(T).Name;
             if (!registeredLoggers.ContainsKey(typeName))
-                LoggerException.ThrowLoggerNotRegistered(typeName);
+                LoggingException.ThrowLoggerNotRegistered(typeName);
 
             try {
                 return (IAsyncLogger<T>)registeredLoggers[typeName];
             }
             catch (InvalidCastException) {
-                throw LoggerException.LoggerNotAsync(typeName);
+                throw LoggingException.LoggerNotAsync(typeName);
             }
         }
 
         public void RegisterLogger(ILogger logger) {
             if (registeredLoggers.ContainsKey(logger.Name))
-                LoggerException.ThrowLoggerRegistered(logger.Name);
+                LoggingException.ThrowLoggerRegistered(logger.Name);
 
             ConfigureLogger(logger, null);
             registeredLoggers[logger.Name] = logger;

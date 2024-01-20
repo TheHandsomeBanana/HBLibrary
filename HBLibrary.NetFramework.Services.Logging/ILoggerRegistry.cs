@@ -47,34 +47,34 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="ILogger"/></returns>
-        /// <exception cref="LoggerException"/>
+        /// <exception cref="LoggingException"/>
         ILogger GetLogger(string name);
         /// <summary>
         /// Registers an <see cref="ILogger"/> with its <see cref="ILogger.Name"/> and instance.
         /// </summary>
         /// <param name="logger"></param>
-        /// <exception cref="LoggerException"/> 
+        /// <exception cref="LoggingException"/> 
         void RegisterLogger(ILogger logger);
         /// <summary>
         /// Gets an <see cref="ILogger{T}"/> from <see cref="RegisteredLoggers"/> by <paramref name="name"/>.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="ILogger{T}"/></returns>
-        /// <exception cref="LoggerException"/>
+        /// <exception cref="LoggingException"/>
         ILogger<T> GetLogger<T>() where T : class;
         /// <summary>
         /// Gets an <see cref="IAsyncLogger"/> from <see cref="RegisteredLoggers"/> by <paramref name="name"/>.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="IAsyncLogger"/></returns>
-        /// <exception cref="LoggerException"/>
+        /// <exception cref="LoggingException"/>
         IAsyncLogger GetAsyncLogger(string name);
         /// <summary>
         /// Gets an <see cref="IAsyncLogger"/> from <see cref="RegisteredLoggers"/> by <paramref name="name"/>.
         /// </summary>
         /// <param name="name"></param>
         /// <returns><see cref="IAsyncLogger"/></returns>
-        /// <exception cref="LoggerException"/>
+        /// <exception cref="LoggingException"/>
         IAsyncLogger<T> GetAsyncLogger<T>() where T : class;
         /// <summary>
         /// Checks wether an <see cref="ILogger"/> is registered by <paramref name="name"/>.

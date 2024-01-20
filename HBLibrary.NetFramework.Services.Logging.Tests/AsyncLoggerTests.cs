@@ -48,7 +48,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_CheckThreadSafety_Valid() {
-            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug, true).Build());
+            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug, false).Build());
             IAsyncLogger logger1 = factory.GetOrCreateAsyncLogger("Logger1");
             IAsyncLogger logger2 = factory.GetOrCreateAsyncLogger("Logger2");
 

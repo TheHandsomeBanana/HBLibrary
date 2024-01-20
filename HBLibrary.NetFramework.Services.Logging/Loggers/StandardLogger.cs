@@ -45,13 +45,16 @@ namespace HBLibrary.NetFramework.Services.Logging {
             LogInternal(message, LogLevel.Warning);
         }
 
+        private static readonly object lockObj = new object();
         protected virtual void LogInternal(string message, LogLevel level) {
-            foreach (ILogTarget target in Configuration.Targets) {
-                if (target.LevelThreshold > level)
-                    continue;
+            lock (lockObj) {
+                foreach (ILogTarget target in Configuration.Targets) {
+                    if (target.LevelThreshold > level)
+                        continue;
 
-                LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                target.WriteLog(log, Configuration.DisplayFormat);
+                    LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
+                    target.WriteLog(log, Configuration.DisplayFormat);
+                }
             }
         }
 
@@ -70,6 +73,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
         public void Dispose() {
             Configuration.Dispose();
+            Configuration = null;
         }
     }
 

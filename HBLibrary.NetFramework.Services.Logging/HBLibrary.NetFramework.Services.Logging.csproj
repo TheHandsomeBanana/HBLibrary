@@ -76,7 +76,7 @@
     <Compile Include="Configuration\ILogConfigurationBuilder.cs" />
     <Compile Include="Configuration\LogConfiguration.cs" />
     <Compile Include="Configuration\LogConfigurationBuilder.cs" />
-    <Compile Include="Exceptions\LoggerException.cs" />
+    <Compile Include="Exceptions\LoggingException.cs" />
     <Compile Include="IAsyncLogger.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILoggerFactory.cs" />
@@ -85,7 +85,6 @@
     <Compile Include="Loggers\AsyncLogger.cs" />
     <Compile Include="Loggers\StandardLogger.cs" />
     <Compile Include="LoggerFactory.cs" />
-    <Compile Include="Loggers\ThreadSafeLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statements\LogStatement.cs" />
     <Compile Include="Targets\AsyncMethodTarget.cs" />

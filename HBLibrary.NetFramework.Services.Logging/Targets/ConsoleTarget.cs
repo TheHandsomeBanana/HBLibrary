@@ -59,7 +59,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Targets {
                     break;
             }
 
-            Console.WriteLine(log.Format(format));
+            Console.WriteLine(log.Format(format) + "\n");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void Dispose() { }

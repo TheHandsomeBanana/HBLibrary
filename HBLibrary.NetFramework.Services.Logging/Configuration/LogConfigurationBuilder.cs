@@ -14,6 +14,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
         private LogLevel? levelThreshold = null;
         private bool overrideConfig = false;
         public ILogConfigurationBuilder AddTarget(ILogTarget target) {
+            if (target is ConsoleTarget && targets.Any(e => e is ConsoleTarget))
+                throw new LoggingException("Console can only be targeted once.");
+
             targets.Add(target);
             return this;
         }
@@ -25,7 +28,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
 
         public ILogConfigurationBuilder AddFileTarget(string filePath, bool useAsync) {
             if (!levelThreshold.HasValue)
-                throw LoggerException.LevelThresholdNotSet();
+                throw LoggingException.LevelThresholdNotSet();
 
             return AddFileTarget(filePath, levelThreshold.Value, useAsync);
         }
@@ -41,7 +44,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
 
         public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method) {
             if (!levelThreshold.HasValue)
-                throw LoggerException.LevelThresholdNotSet();
+                throw LoggingException.LevelThresholdNotSet();
 
             return AddMethodTarget(method, levelThreshold.Value);
         }
@@ -53,7 +56,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
 
         public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method) {
             if (!levelThreshold.HasValue)
-                throw LoggerException.LevelThresholdNotSet();
+                throw LoggingException.LevelThresholdNotSet();
 
             return AddAsyncMethodTarget(method, levelThreshold.Value);
         }
