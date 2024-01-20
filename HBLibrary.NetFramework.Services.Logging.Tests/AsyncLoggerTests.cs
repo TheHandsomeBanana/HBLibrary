@@ -26,9 +26,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
             string testString = "Testinfo";
             await logger.InfoAsync(testString);
+            logger.Dispose();
+
             string content = File.ReadAllText(LogFile);
             Assert.AreNotEqual("", content);
-
             File.WriteAllText(LogFile, "");
         }
 
@@ -36,6 +37,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         public async Task AsyncLogger_LogToMethod_Valid() {
             IAsyncLogger logger = factory.GetOrCreateAsyncLogger("TestCategory");
             registry.ConfigureLogger(logger, e => e
+            .WithLevelThreshold(LogLevel.Debug)
             .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()))
             .Build());
 
@@ -44,6 +46,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
                 await logger.InfoAsync("Testinfo");
                 Assert.IsTrue(sw.ToString().EndsWith("Log Level: Info\nMessage: Testinfo\r\n"));
             }
+
+            logger.Dispose();
         }
 
         [TestMethod]
@@ -61,6 +65,8 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
                 Assert.Fail(ex.ToString());
             }
             finally {
+                logger1.Dispose();
+                logger2.Dispose();
                 File.WriteAllText(LogFile, "");
             }
         }
