@@ -29,12 +29,12 @@ public struct LogStatement {
         CreatedOn = createdOn;
     }
 
-    public override string ToString() => $"[{Level}]: {Message}";
-    public string ToFullString()
+    public override readonly string ToString() => $"[{Level}]: {Message}";
+    public readonly string ToFullString()
         => $"Name: {Name}\nCreated On: {CreatedOn:yyyy-MM-dd hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
-    public string ToMinimalString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
-    public string ToJson() => JsonSerializer.Serialize(this);
-    public string ToXml() {
+    public readonly string ToMinimalString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
+    public readonly string ToJson() => JsonSerializer.Serialize(this);
+    public readonly string ToXml() {
         using (TextWriter stringwriter = new StringWriter()) {
             var serializer = new XmlSerializer(this.GetType());
             serializer.Serialize(stringwriter, this);
@@ -42,7 +42,7 @@ public struct LogStatement {
         }
     }
 
-    public string Format(LogDisplayFormat format) {
+    public readonly string Format(LogDisplayFormat format) {
         switch (format) {
             case LogDisplayFormat.MessageOnly:
                 return ToString();
