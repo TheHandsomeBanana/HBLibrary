@@ -4,6 +4,7 @@ using HBLibrary.NetFramework.Services.Logging.Targets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection.Emit;
 using System.Runtime.Remoting.Messaging;
@@ -13,15 +14,15 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
     [TestClass]
     public class StandardLoggerTests {
         private const string LogFile = "../../assets/standardLogFile";
-        private readonly static ILoggerRegistry registry = new LoggerRegistry();
-        private readonly static ILoggerFactory factory = new LoggerFactory(registry);
 
         [TestMethod]
-        public void StandardLogger_LogToFile_Valid() {
-            ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
+        public void StandardLogger_LogToFile() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger<StandardLoggerTests> logger = factory.CreateLogger<StandardLoggerTests>();
 
             registry.ConfigureLogger(logger, e => e
-                .WithLevelThreshold(LogLevel.Debug)
                 .AddFileTarget(LogFile, false)
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
@@ -36,27 +37,33 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         }
 
         [TestMethod]
-        public void StandardLogger_LogConfiguration_Valid() {
+        public void StandardLogger_LogConfiguration() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
             registry.ConfigureRegistry(e => e
-                .WithLevelThreshold(LogLevel.Debug)
-                .AddMethodTarget((f, _) => File.WriteAllText(LogFile, f.ToMinimalString()), LogLevel.Debug)
+                .AddMethodTarget((f, _) => File.WriteAllText(LogFile, f.ToMinimalString()))
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
 
-            ILogger<StandardLoggerTests> logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
-            Assert.AreEqual(1, logger.Configuration.Targets.Count);
+            Assert.AreEqual(1, registry.GlobalConfiguration.Targets.Count);
+
+            ILogger<StandardLoggerTests> logger = factory.GetOrCreateLogger<StandardLoggerTests>();
+            Assert.AreEqual(0, logger.Configuration.Targets.Count);
             registry.ConfigureLogger(logger, e => e.AddMethodTarget((f, _) => Console.WriteLine(f.ToString())).Build());
-            Assert.AreEqual(2, logger.Configuration.Targets.Count);
+            Assert.AreEqual(1, logger.Configuration.Targets.Count);
 
             registry.Dispose();
             Assert.AreEqual(null, logger.Configuration);
         }
 
         [TestMethod]
-        public void StandardLogger_LogToMethod_Valid() {
-            ILogger logger = factory.CreateStandardLogger("TestCategory");
+        public void StandardLogger_LogToMethod() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger logger = factory.CreateLogger("TestCategory");
             registry.ConfigureLogger(logger, e => e
-            .WithLevelThreshold(LogLevel.Debug)
             .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()))
             .WithDisplayFormat(LogDisplayFormat.Full)
             .Build());
@@ -72,7 +79,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public void StandardLogger_NoLog_LogLevelTooHigh() {
-            ILogger<StandardLoggerTests> logger = factory.CreateStandardLogger<StandardLoggerTests>();
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger<StandardLoggerTests> logger = factory.CreateLogger<StandardLoggerTests>();
 
             registry.ConfigureLogger(logger, e => e
                 .WithLevelThreshold(LogLevel.Error)
@@ -84,39 +94,51 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
             logger.Warn(testString);
             logger.Dispose();
             string content = File.ReadAllText(LogFile);
-            Assert.AreEqual("", content);
+            try {
+                Assert.AreEqual(FileTarget.Logo + FileTarget.TargetName + "\r\n", content);
+            }
+            catch (Exception e) {
+                Assert.Fail(e.ToString());
+            }
+            finally {
+                File.WriteAllText(LogFile, "");
+            }
         }
 
         [TestMethod]
-        public async Task StandardLogger_ThreadSafety_LogToFile_Valid() {
+        public async Task StandardLogger_ThreadSafety_LogToFile() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
             registry.ConfigureRegistry(e => e.WithLevelThreshold(LogLevel.Debug).AddFileTarget(LogFile, false).Build());
-            ILogger logger1 = factory.GetOrCreateStandardLogger("Logger1");
-            ILogger logger2 = factory.GetOrCreateStandardLogger("Logger2");
+            ILogger logger1 = factory.GetOrCreateLogger("Logger1");
+            ILogger logger2 = factory.GetOrCreateLogger("Logger2");
 
             try {
                 Task log1 = WriteLog(logger1, 10, "test");
                 Task log2 = WriteLog(logger2, 10, "test2");
                 await Task.WhenAll(log1, log2);
+
+                registry.Dispose();
             }
             catch (Exception ex) {
                 Assert.Fail(ex.ToString());
             }
             finally {
+                File.WriteAllText(LogFile, "");
             }
-
-            logger1.Dispose();
-            logger2.Dispose();
-
-            File.WriteAllText(LogFile, "");
         }
 
 
         private readonly List<string> logs = new List<string>();
         [TestMethod]
-        public async Task StandardLogger_ThreadSafety_LogToMethod_Valid() {
+        public async Task StandardLogger_ThreadSafety_LogToMethod() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
             registry.ConfigureRegistry(e => e.AddMethodTarget(OnLog, LogLevel.Debug).Build());
-            ILogger logger1 = factory.GetOrCreateStandardLogger("Logger1");
-            ILogger logger2 = factory.GetOrCreateStandardLogger("Logger2");
+            ILogger logger1 = factory.GetOrCreateLogger("Logger1");
+            ILogger logger2 = factory.GetOrCreateLogger("Logger2");
 
             Task log1 = WriteLog(logger1, 10, "test");
             Task log2 = WriteLog(logger2, 10, "test2");
@@ -140,13 +162,15 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         }
 
         [TestMethod]
-        public void StandardLogger_ConsoleTarget_Valid() {
+        public void StandardLogger_ConsoleTarget() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
             registry.ConfigureRegistry(e => e
-            .WithLevelThreshold(LogLevel.Debug)
             .AddTarget(new ConsoleTarget())
             .Build());
 
-            ILogger logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
+            ILogger logger = factory.GetOrCreateLogger<StandardLoggerTests>();
             using (StringWriter sw = new StringWriter()) {
                 Console.SetOut(sw);
                 logger.Error("Testerror");
@@ -155,14 +179,84 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
         }
 
         [TestMethod]
-        public void StandardLogger_TargetLevelThresholdOverride_Valid() {
-            ILogger logger = factory.GetOrCreateStandardLogger<StandardLoggerTests>();
+        public void StandardLogger_TargetLevelThreshold_GlobalApplied() {
+            LoggerRegistry registry = LoggerRegistry.FromConfiguration(e => e.WithLevelThreshold(LogLevel.Error).Build());
+            LoggerFactory factory = new LoggerFactory(registry);
+            StringWriter sw = new StringWriter();
+            Console.SetOut(sw);
+
+
+            ILogger logger = factory.GetOrCreateLogger<StandardLoggerTests>();
+            registry.ConfigureLogger(logger, e => e
+            .WithLevelThreshold(LogLevel.Warning)
+            .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()), LogLevel.Info)
+            .Build());
+
+            logger.Warn("Testwarning");
+
+            Assert.AreEqual("", sw.ToString());
+            sw.Dispose();
+            registry.Dispose();
+        }
+
+        [TestMethod]
+        public void StandardLogger_TargetLevelThreshold_LoggerApplied() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+            StringWriter sw = new StringWriter();
+            Console.SetOut(sw);
+
+            ILogger logger = factory.GetOrCreateLogger<StandardLoggerTests>();
             registry.ConfigureLogger(logger, e => e
             .WithLevelThreshold(LogLevel.Error)
             .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()), LogLevel.Warning)
             .Build());
 
-            Assert.AreEqual(logger.Configuration.LevelThreshold, logger.Configuration.Targets[0].LevelThreshold);
+            logger.Warn("Testwarning");
+
+            Assert.AreEqual("", sw.ToString());
+            sw.Dispose();
+            registry.Dispose();
+        }
+
+        [TestMethod]
+        public void StandardLogger_TargetLevelThreshold_TargetApplied() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
+            StringWriter sw = new StringWriter();
+            Console.SetOut(sw);
+
+            ILogger logger = factory.GetOrCreateLogger<StandardLoggerTests>();
+            registry.ConfigureLogger(logger, e => e
+            .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()), LogLevel.Error)
+            .Build());
+
+            logger.Warn("Testwarning");
+
+            Assert.AreEqual("", sw.ToString());
+            sw.Dispose();
+            registry.Dispose();
+        }
+
+        [TestMethod]
+        public void StandardLogger_DebugTarget() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger<StandardLoggerTests> logger = factory.CreateLogger<StandardLoggerTests>();
+
+            registry.ConfigureLogger(logger, e => e
+                .AddTarget(new DebugTarget())
+                .WithDisplayFormat(LogDisplayFormat.Minimal)
+                .Build());
+
+            logger.Info("Testinformation");
+
+            TextWriter writer = Debug.Listeners[1].GetType().GetProperty("Writer").GetValue(Debug.Listeners[1]) as TextWriter;
+            Assert.IsNotNull(writer);
+            string value = writer.ToString();
+            Assert.IsTrue(value.EndsWith("[Info]: Testinformation\r\n"));
         }
     }
 }

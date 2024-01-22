@@ -12,15 +12,15 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
     [TestClass]
     public class AsyncLoggerTests {
         private const string LogFile = "../../assets/asyncLogFile";
-        private readonly static ILoggerRegistry registry = new LoggerRegistry();
-        private readonly static ILoggerFactory factory = new LoggerFactory(registry);
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_Valid() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
             IAsyncLogger<AsyncLoggerTests> logger = factory.GetOrCreateAsyncLogger<AsyncLoggerTests>();
 
             registry.ConfigureLogger(logger, e => e
-                .AddFileTarget(LogFile, LogLevel.Debug, true)
+                .AddFileTarget(LogFile, true)
                 .WithDisplayFormat(LogDisplayFormat.Minimal)
                 .Build());
 
@@ -35,9 +35,11 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToMethod_Valid() {
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
             IAsyncLogger logger = factory.GetOrCreateAsyncLogger("TestCategory");
             registry.ConfigureLogger(logger, e => e
-            .WithLevelThreshold(LogLevel.Debug)
             .AddMethodTarget((f, _) => Console.WriteLine(f.ToFullString()))
             .Build());
 
@@ -52,7 +54,10 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
 
         [TestMethod]
         public async Task AsyncLogger_LogToFile_CheckThreadSafety_Valid() {
-            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, LogLevel.Debug, false).Build());
+            LoggerRegistry registry = new LoggerRegistry();
+            LoggerFactory factory = new LoggerFactory(registry);
+
+            registry.ConfigureRegistry(e => e.AddFileTarget(LogFile, false).Build());
             IAsyncLogger logger1 = factory.GetOrCreateAsyncLogger("Logger1");
             IAsyncLogger logger2 = factory.GetOrCreateAsyncLogger("Logger2");
 
@@ -65,8 +70,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
                 Assert.Fail(ex.ToString());
             }
             finally {
-                logger1.Dispose();
-                logger2.Dispose();
+                registry.Dispose();
                 File.WriteAllText(LogFile, "");
             }
         }

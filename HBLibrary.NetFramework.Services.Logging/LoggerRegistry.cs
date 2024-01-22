@@ -16,6 +16,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
         public ILogConfiguration GlobalConfiguration { get; private set; } = LogConfiguration.Default;
         public IReadOnlyDictionary<string, ILogger> RegisteredLoggers => registeredLoggers;
         public bool IsConfigured { get; private set; } = false;
+        public bool IsEnabled {get; private set; } = true;
 
         public LoggerRegistry() {
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
@@ -26,19 +27,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
         }
 
         public void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod) {
-            LogConfigurationBuilder builder = new LogConfigurationBuilder();
-            foreach (ILogTarget target in GlobalConfiguration.Targets)
-                builder.AddTarget(target);
-
-            if (logger is IAsyncLogger) {
-                foreach (IAsyncLogTarget target in GlobalConfiguration.AsyncTargets)
-                    builder.AddAsyncTarget(target);
-            }
-
-            ILogConfiguration configuration = configMethod?.Invoke(builder) ?? builder.Build();
-            if (GlobalConfiguration.LevelThreshold.HasValue)
-                configuration.LevelThreshold = GlobalConfiguration.LevelThreshold;
-
+            ILogConfiguration configuration = configMethod.Invoke(new LogConfigurationBuilder());
             if (!(logger is IAsyncLogger) && configuration.AsyncTargets.Count > 0)
                 LoggingException.ThrowAsyncTargetsNotAllowed(logger.GetType().Name);
 
@@ -51,10 +40,6 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
             IsConfigured = true;
             GlobalConfiguration = configMethod.Invoke(new LogConfigurationBuilder());
-
-            LogConfigurationBuilder builder = new LogConfigurationBuilder();
-            foreach (ILogger logger in registeredLoggers.Values)
-                logger.Configuration = builder.OverrideConfig(GlobalConfiguration).Build();
 
             return this;
         }
@@ -111,8 +96,8 @@ namespace HBLibrary.NetFramework.Services.Logging {
         public void RegisterLogger(ILogger logger) {
             if (registeredLoggers.ContainsKey(logger.Name))
                 LoggingException.ThrowLoggerRegistered(logger.Name);
-
-            ConfigureLogger(logger, null);
+            
+            logger.Registry = this;
             registeredLoggers[logger.Name] = logger;
         }
 
@@ -125,11 +110,23 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 logger.Dispose();
 
             registeredLoggers.Clear();
+
+            GlobalConfiguration.Dispose();
+            GlobalConfiguration = null;
+
             disposed = true;
         }
 
         private void OnProcessExit(object sender, EventArgs e) {
             Dispose();
+        }
+
+        public void Enable() {
+            IsEnabled = true;
+        }
+
+        public void Disable() {
+            IsEnabled = false;
         }
     }
 }

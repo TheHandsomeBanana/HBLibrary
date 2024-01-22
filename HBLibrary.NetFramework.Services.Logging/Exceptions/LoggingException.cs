@@ -23,8 +23,5 @@ namespace HBLibrary.NetFramework.Services.Logging.Exceptions {
 
         public static void ThrowRegistryConfigured()
             => throw new LoggingException("Registry is already configured.");
-
-        public static LoggingException LevelThresholdNotSet()
-            => new LoggingException("Level threshold is not set.");
     }
 }

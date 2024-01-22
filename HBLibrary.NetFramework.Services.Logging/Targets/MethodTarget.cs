@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public class MethodTarget : ILogTarget, IEquatable<MethodTarget> {
-        public LogLevel LevelThreshold { get; set; }
+        public LogLevel? LevelThreshold { get; }
         public LogStatementDelegate Method { get; private set; }
 
-        public MethodTarget(LogStatementDelegate method, LogLevel minLevel) {
+        public MethodTarget(LogStatementDelegate method, LogLevel? minLevel = null) {
             LevelThreshold = minLevel;
             Method = method;
         }

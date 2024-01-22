@@ -8,12 +8,28 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public interface ILogTarget : IDisposable {
-        LogLevel LevelThreshold { get; set; }
+        /// <summary>
+        /// Logging level threshold on the target layer.
+        /// </summary>
+        LogLevel? LevelThreshold { get; }
+        /// <summary>
+        /// Writes the provided <paramref name="log"/> to this target
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="displayFormat"></param>
         void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full);
     }
 
     public interface IAsyncLogTarget : IDisposable {
-        LogLevel LevelThreshold { get; set; }
+        /// <summary>
+        /// Logging level threshold on the target layer.
+        /// </summary>
+        LogLevel? LevelThreshold { get; }
+        /// <summary>
+        /// Writes the provided <paramref name="log"/> to this target
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="displayFormat"></param>
         Task WriteLogAsync(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full);
     }
 }

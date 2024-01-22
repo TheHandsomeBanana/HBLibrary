@@ -17,6 +17,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
             if (target is ConsoleTarget && targets.Any(e => e is ConsoleTarget))
                 throw new LoggingException("Console can only be targeted once.");
 
+            else if(target is DebugTarget && targets.Any(e => e is DebugTarget))
+                throw new LoggingException("Debug output can only be targeted once.");
+
             targets.Add(target);
             return this;
         }
@@ -26,43 +29,22 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
             return this;
         }
 
-        public ILogConfigurationBuilder AddFileTarget(string filePath, bool useAsync) {
-            if (!levelThreshold.HasValue)
-                throw LoggingException.LevelThresholdNotSet();
-
-            return AddFileTarget(filePath, levelThreshold.Value, useAsync);
-        }
-
-        public ILogConfigurationBuilder AddFileTarget(string fileName, LogLevel minLevel, bool useAsync) {
+        public ILogConfigurationBuilder AddFileTarget(string fileName, bool useAsync, LogLevel? levelThreshold = null) {
             if (useAsync)
-                asyncTargets.Add(new FileTarget(fileName, minLevel, useAsync));
+                asyncTargets.Add(new FileTarget(fileName, levelThreshold, useAsync));
             else
-                targets.Add(new FileTarget(fileName, minLevel, useAsync));
+                targets.Add(new FileTarget(fileName, levelThreshold, useAsync));
 
             return this;
         }
 
-        public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method) {
-            if (!levelThreshold.HasValue)
-                throw LoggingException.LevelThresholdNotSet();
-
-            return AddMethodTarget(method, levelThreshold.Value);
-        }
-
-        public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel minLevel) {
-            targets.Add(new MethodTarget(method, minLevel));
+        public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel? levelThreshold = null) {
+            targets.Add(new MethodTarget(method, levelThreshold));
             return this;
         }
 
-        public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method) {
-            if (!levelThreshold.HasValue)
-                throw LoggingException.LevelThresholdNotSet();
-
-            return AddAsyncMethodTarget(method, levelThreshold.Value);
-        }
-
-        public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel minLevel) {
-            asyncTargets.Add(new AsyncMethodTarget(method, minLevel));
+        public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? levelThreshold = null) {
+            asyncTargets.Add(new AsyncMethodTarget(method, levelThreshold));
             return this;
         }
 
@@ -77,6 +59,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
             displayFormat = format;
             return this;
         }
+
         public ILogConfigurationBuilder WithLevelThreshold(LogLevel level) {
             this.levelThreshold = level;
             return this;
@@ -87,18 +70,6 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
                 Reset();
                 overrideConfig = false;
                 return new LogConfiguration(logConfiguration);
-            }
-
-            if(levelThreshold.HasValue) {
-                foreach(ILogTarget target in targets) {
-                    if (target.LevelThreshold != levelThreshold.Value)
-                        target.LevelThreshold = levelThreshold.Value;
-                }
-
-                foreach(IAsyncLogTarget target in asyncTargets) {
-                    if (target.LevelThreshold != levelThreshold.Value)
-                        target.LevelThreshold = levelThreshold.Value;
-                }
             }
 
             LogConfiguration result = new LogConfiguration(targets, asyncTargets, displayFormat, levelThreshold);

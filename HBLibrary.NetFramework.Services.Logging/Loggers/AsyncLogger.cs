@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging.Loggers {
-    public class AsyncLogger : StandardLogger, IAsyncLogger {
+    public class AsyncLogger : Logger, IAsyncLogger {
         protected AsyncLogger() { }
         internal AsyncLogger(string name) {
             Name = name;

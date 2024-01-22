@@ -13,12 +13,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
     public interface ILogConfigurationBuilder {
         ILogConfigurationBuilder AddTarget(ILogTarget target);
         ILogConfigurationBuilder AddAsyncTarget(IAsyncLogTarget target);
-        ILogConfigurationBuilder AddFileTarget(string filePath, bool useAsync);
-        ILogConfigurationBuilder AddFileTarget(string filePath, LogLevel minLevel, bool useAsync);
-        ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method);
-        ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel minLevel);
-        ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method);
-        ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel minLevel);
+        ILogConfigurationBuilder AddFileTarget(string filePath, bool useAsync, LogLevel? levelThreshold = null);
+        ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel? levelThreshold = null);
+        ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? levelThreshold = null);
         ILogConfigurationBuilder WithDisplayFormat(LogDisplayFormat format);
         /// <summary>
         /// Requires to be called before adding targets to overwrite the target level threshold.

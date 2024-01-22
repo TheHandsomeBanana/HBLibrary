@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public class AsyncMethodTarget : IAsyncLogTarget, IEquatable<AsyncMethodTarget> {
         public AsyncLogStatementDelegate Method { get; private set; }
-        public LogLevel LevelThreshold { get; set; }
+        public LogLevel? LevelThreshold { get; set; }
 
-        public AsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel minLevel) {
+        public AsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? minLevel = null) {
             Method = method;
             LevelThreshold = minLevel;
         }

@@ -12,12 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.NetFramework.Services.Logging {
-    public class StandardLogger : ILogger {
+    public class Logger : ILogger {
+        public ILoggerRegistry Registry { get; set; }
+        public bool IsEnabled => Registry?.IsEnabled ?? true;
         public string Name { get; protected set; }
         public ILogConfiguration Configuration { get; set; } = LogConfiguration.Default;
 
-        protected StandardLogger() { }
-        internal StandardLogger(string name) {
+        protected Logger() { }
+        internal Logger(string name) {
             this.Name = name;
         }
 
@@ -47,27 +49,27 @@ namespace HBLibrary.NetFramework.Services.Logging {
 
         private static readonly object lockObj = new object();
         protected virtual void LogInternal(string message, LogLevel level) {
+            if (!IsEnabled)
+                return;
+
             lock (lockObj) {
-                foreach (ILogTarget target in Configuration.Targets) {
-                    if (target.LevelThreshold > level)
+                // set right threshold --> Global layer > logger layer > target layer
+                LogLevel? levelThreshold = Registry?.GlobalConfiguration.LevelThreshold ?? Configuration.LevelThreshold;
+
+                // Concat global targets if registry contains logger
+                IEnumerable<ILogTarget> allTargets = Registry != null
+                    ? Configuration.Targets.Concat(Registry.GlobalConfiguration.Targets)
+                    : Configuration.Targets;
+
+                foreach (ILogTarget target in allTargets) {
+                    // Check for threshold global or per target, no threshold = always log
+                    if ((levelThreshold.HasValue && levelThreshold > level) 
+                        || (target.LevelThreshold.HasValue && target.LevelThreshold > level))
                         continue;
 
                     LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
                     target.WriteLog(log, Configuration.DisplayFormat);
                 }
-            }
-        }
-
-        protected string GetFormattedString(LogStatement log) {
-            switch (Configuration.DisplayFormat) {
-                case LogDisplayFormat.MessageOnly:
-                    return log.ToString();
-                case LogDisplayFormat.Minimal:
-                    return log.ToMinimalString();
-                case LogDisplayFormat.Full:
-                    return log.ToFullString();
-                default:
-                    throw new NotSupportedException(Configuration.DisplayFormat.ToString());
             }
         }
 
@@ -77,8 +79,8 @@ namespace HBLibrary.NetFramework.Services.Logging {
         }
     }
 
-    public class StandardLogger<T> : StandardLogger, ILogger<T> where T : class {
-        internal StandardLogger() {
+    public class Logger<T> : Logger, ILogger<T> where T : class {
+        internal Logger() {
             Name = typeof(T).Name;
         }
     }

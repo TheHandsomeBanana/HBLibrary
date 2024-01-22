@@ -30,10 +30,9 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
         /// </summary>
         LogDisplayFormat DisplayFormat { get; }
         /// <summary>
-        /// Sets the threshold for the logging level.<br/>
-        /// This will overwrite all <see cref="Targets"/> and <see cref="AsyncTargets"/> thresholds.
+        /// Logging level threshold on the logger or global layer.<br/>
         /// </summary>
-        LogLevel? LevelThreshold { get; set; }
+        LogLevel? LevelThreshold { get; }
     }
 
     public enum LogDisplayFormat {

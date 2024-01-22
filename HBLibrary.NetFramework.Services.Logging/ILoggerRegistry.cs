@@ -1,4 +1,5 @@
 ﻿using HBLibrary.NetFramework.Services.Logging.Configuration;
+using HBLibrary.NetFramework.Services.Logging.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,16 @@ namespace HBLibrary.NetFramework.Services.Logging {
     /// </summary>
     public interface ILoggerRegistry : IDisposable {
         /// <summary>
+        /// Toggled by <see cref="Enable"/> and <see cref="Disable"/>.
+        /// </summary>
+        bool IsEnabled { get; }
+        /// <summary>
         /// <see langword="true"/> if <see cref="ConfigureRegistry(LogConfigurationDelegate)"/> has been called.
         /// </summary>
         bool IsConfigured { get; }
         /// <summary>
-        /// Global configuration that is applied to all <see cref="ILogger"/> instances that are either registered,<br/>
-        /// or only created and configured with <see cref="ConfigureLogger(ILogger, LogConfigurationDelegate)"/>.<br/>
-        /// The global <see cref="LogLevel"/> threshold will overwrite every child threshold.
+        /// Global configuration containig targets that are used by all <see cref="ILogger"/> instances that are either registered.<br/>
+        /// The global <see cref="LogLevel"/> threshold will overpower every <see cref="ILogger"/> and <see cref="ILogTarget"/> threshold.
         /// </summary>
         ILogConfiguration GlobalConfiguration { get; }
         /// <summary>
@@ -28,19 +32,27 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// </summary>
         IReadOnlyDictionary<string, ILogger> RegisteredLoggers { get; }
         /// <summary>
+        /// <see cref="ILoggerRegistry"/> is enabled by default. Enables logging if disabled.
+        /// </summary>
+        void Enable();
+        /// <summary>
+        /// Disables <see cref="ILoggerRegistry"/> including all <see cref="RegisteredLoggers"/>.
+        /// </summary>
+        void Disable();
+        /// <summary>
         /// Updates the <see cref="GlobalConfiguration"/>.<br/>
-        /// Overrides the <see cref="ILogger.Configuration"/> from each registered <see cref="ILogger"/>.<br/>
-        /// Can only be called once.
+        /// Should be invoked on startup and can only be called once.
         /// </summary>
         /// <param name="configMethod"></param>
         /// <returns></returns>
+        /// <exception cref="LoggingException"></exception>
         ILoggerRegistry ConfigureRegistry(LogConfigurationDelegate configMethod);
         /// <summary>
-        /// Overrides an <see cref="ILogger.Configuration"/> based on <see cref="GlobalConfiguration"/> and <paramref name="configMethod"/>.<br/>
-        /// If <paramref name="configMethod"/> is <see langword="null"/>, applies only <see cref="GlobalConfiguration"/>.
+        /// Overrides the <paramref name="logger"/> <see cref="ILogger.Configuration"/> based on <paramref name="configMethod"/>.<br/>
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configMethod"></param>
+        /// <exception cref="LoggingException"></exception>
         void ConfigureLogger(ILogger logger, LogConfigurationDelegate configMethod);
         /// <summary>
         /// Gets an <see cref="ILogger"/> from <see cref="RegisteredLoggers"/> by <paramref name="name"/>

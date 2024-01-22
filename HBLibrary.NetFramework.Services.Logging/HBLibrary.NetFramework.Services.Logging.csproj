@@ -83,7 +83,7 @@
     <Compile Include="ILoggerRegistry.cs" />
     <Compile Include="LoggerRegistry.cs" />
     <Compile Include="Loggers\AsyncLogger.cs" />
-    <Compile Include="Loggers\StandardLogger.cs" />
+    <Compile Include="Loggers\Logger.cs" />
     <Compile Include="LoggerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statements\LogStatement.cs" />

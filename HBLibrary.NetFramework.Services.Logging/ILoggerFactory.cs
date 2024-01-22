@@ -18,31 +18,31 @@ namespace HBLibrary.NetFramework.Services.Logging {
         /// </summary>
         ILoggerRegistry Registry { get; }
         /// <summary>
-        /// Creates a <see cref="StandardLogger"/>.<br/>
+        /// Creates a <see cref="Logger"/>.<br/>
         /// </summary>
         /// <param name="name"></param>
-        /// <returns><see cref="StandardLogger"/> instance</returns>
-        ILogger CreateStandardLogger(string name);
+        /// <returns><see cref="Logger"/> instance</returns>
+        ILogger CreateLogger(string name);
         /// <summary>
         /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
-        /// If not, creates new <see cref="StandardLogger"/> and adds it to the <see cref="Registry"/>.<br/>
+        /// If not, creates new <see cref="Logger"/> and adds it to the <see cref="Registry"/>.<br/>
         /// </summary>
         /// <param name="name"></param>
-        /// <returns><see cref="StandardLogger"/ instance></returns>
-        ILogger GetOrCreateStandardLogger(string name);
+        /// <returns><see cref="Logger"/ instance></returns>
+        ILogger GetOrCreateLogger(string name);
         /// <summary>
-        /// Creates a <see cref="StandardLogger{T}"/>.<br/>
+        /// Creates a <see cref="Logger{T}"/>.<br/>
         /// </summary>
         /// <param name="name"></param>
-        /// <returns><see cref="StandardLogger{T}"/> instance</returns>
-        ILogger<T> CreateStandardLogger<T>() where T : class;
+        /// <returns><see cref="Logger{T}"/> instance</returns>
+        ILogger<T> CreateLogger<T>() where T : class;
         /// <summary>
         /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
-        /// If not, creates new <see cref="StandardLogger{T}"/> and adds it to the <see cref="Registry"/>.<br/>
+        /// If not, creates new <see cref="Logger{T}"/> and adds it to the <see cref="Registry"/>.<br/>
         /// </summary>
         /// <param name="name"></param>
-        /// <returns><see cref="StandardLogger{T}"/> instance</returns>
-        ILogger<T> GetOrCreateStandardLogger<T>() where T : class;
+        /// <returns><see cref="Logger{T}"/> instance</returns>
+        ILogger<T> GetOrCreateLogger<T>() where T : class;
         /// <summary>
         /// Creates an <see cref="AsyncLogger"/>.<br/>
         /// Provides synchronous and asynchronous logging and is thread safe.

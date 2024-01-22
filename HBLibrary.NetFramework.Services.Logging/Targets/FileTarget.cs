@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, IEquatable<FileTarget> {
         public const string TargetName =
-             @"                                                                            |" + "\r\n" +
-             @"    _______ __        ______                      __                        |" + "\r\n" +
-             @"   / ____(_) /__     /_  __/___ __________ ____  / /_                       |" + "\r\n" +
-             @"  / /_  / / / _ \     / / / __ `/ ___/ __ `/ _ \/ __/                       |" + "\r\n" +
-             @" / __/ / / /  __/    / / / /_/ / /  / /_/ /  __/ /_                         |" + "\r\n" +
-             @"/_/   /_/_/\___/    /_/  \__,_/_/   \__, /\___/\__/                         |" + "\r\n" +
-             @"                                   /____/                                   |" + "\r\n" +
-             @"____________________________________________________________________________|" + "\r\n\r\n";
+             @"                                                                            |" + "\n" +
+             @"    _______ __        ______                      __                        |" + "\n" +
+             @"   / ____(_) /__     /_  __/___ __________ ____  / /_                       |" + "\n" +
+             @"  / /_  / / / _ \     / / / __ `/ ___/ __ `/ _ \/ __/                       |" + "\n" +
+             @" / __/ / / /  __/    / / / /_/ / /  / /_/ /  __/ /_                         |" + "\n" +
+             @"/_/   /_/_/\___/    /_/  \__,_/_/   \__, /\___/\__/                         |" + "\n" +
+             @"                                   /____/                                   |" + "\n" +
+             @"____________________________________________________________________________|" + "\n";
 
         private FileStream fileStream;
         private StreamWriter fileStreamWriter;
@@ -41,22 +41,22 @@ namespace HBLibrary.NetFramework.Services.Logging.Targets {
                 keepFileHandle = value;
             }
         }
-        public LogLevel LevelThreshold { get; set; }
+        public LogLevel? LevelThreshold { get; }
 
-        public FileTarget(string fileName, LogLevel minLevel, bool useAsync = false, bool keepFileHandle = true) {
+        public FileTarget(string fileName, LogLevel? minLevel = null, bool useAsync = false, bool keepFileHandle = true) {
             this.FileName = fileName;
             this.LevelThreshold = minLevel;
             UseAsync = useAsync;
             this.KeepFileHandle = keepFileHandle;
 
             if (keepFileHandle) {
-                fileStreamWriter.WriteLine(Logo);
+                fileStreamWriter.Write(Logo);
                 fileStreamWriter.WriteLine(TargetName);
             }
             else {
                 using (FileStream fs = InitStream(fileName, false)) {
                     using (StreamWriter sw = new StreamWriter(fs)) {
-                        sw.WriteLine(Logo);
+                        sw.Write(Logo);
                         sw.WriteLine(TargetName);
                     }
                 }

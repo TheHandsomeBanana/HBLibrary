@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using HBLibrary.NetFramework.Services.Logging.Exceptions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,52 @@ namespace HBLibrary.NetFramework.Services.Logging.Tests {
     [TestClass]
     public class LoggerRegistryTests {
         [TestMethod]
-        public void GlobalConfiguration_ThresholdOverride_Valid() {
+        public void LoggerRegistry_RegisterLogger_Valid() {
             ILoggerRegistry registry = LoggerRegistry.FromConfiguration(e => e.WithLevelThreshold(LogLevel.Error).Build());
             ILoggerFactory factory = new LoggerFactory(registry);
 
-            ILogger logger = factory.CreateStandardLogger("Logger 1");
+            ILogger logger = factory.CreateLogger("Logger 1");
             registry.RegisterLogger(logger);
-            registry.ConfigureLogger(logger, e => e.WithLevelThreshold(LogLevel.Debug).Build());
+            Assert.IsNotNull(logger.Registry);
+            registry.Dispose();
+        }
 
-            Assert.AreEqual(registry.GlobalConfiguration.LevelThreshold, logger.Configuration.LevelThreshold);
+        [TestMethod]
+        public void LoggerRegistry_RegisterLogger_ThrowsException() {
+            ILoggerRegistry registry = LoggerRegistry.FromConfiguration(e => e.WithLevelThreshold(LogLevel.Error).Build());
+            ILoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger logger = factory.GetOrCreateLogger("Logger 1");
+            Assert.ThrowsException<LoggingException>(() => registry.RegisterLogger(logger));
+
+            registry.Dispose();
+        }
+
+        [TestMethod]
+        public void LoggerRegistry_GetLogger_Valid() {
+            ILoggerRegistry registry = LoggerRegistry.FromConfiguration(e => e.WithLevelThreshold(LogLevel.Error).Build());
+            ILoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger logger = factory.GetOrCreateLogger("Logger 1");
+            try {
+                logger = registry.GetLogger(logger.Name);
+            }
+            catch (Exception e) {
+                Assert.Fail(e.ToString());
+            }
+            finally {
+                registry.Dispose();
+            }
+        }
+
+        [TestMethod]
+        public void LoggerRegistry_GetLogger_ThrowsException() {
+            ILoggerRegistry registry = LoggerRegistry.FromConfiguration(e => e.WithLevelThreshold(LogLevel.Error).Build());
+            ILoggerFactory factory = new LoggerFactory(registry);
+
+            ILogger logger = factory.CreateLogger("Logger 1");
+            Assert.ThrowsException<LoggingException>(() => registry.GetLogger(logger.Name));
+
             registry.Dispose();
         }
     }

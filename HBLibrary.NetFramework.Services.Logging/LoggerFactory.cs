@@ -10,8 +10,8 @@ using System.Xml.Linq;
 namespace HBLibrary.NetFramework.Services.Logging {
     public class LoggerFactory : ILoggerFactory {
         public ILoggerRegistry Registry { get; }
-        public ILogger CreateStandardLogger(string name) => new StandardLogger(name);
-        public ILogger<T> CreateStandardLogger<T>() where T : class => new StandardLogger<T>();
+        public ILogger CreateLogger(string name) => new Logger(name);
+        public ILogger<T> CreateLogger<T>() where T : class => new Logger<T>();
         public IAsyncLogger CreateAsyncLogger(string name) => new AsyncLogger(name);
         public IAsyncLogger<T> CreateAsyncLogger<T>() where T : class => new AsyncLogger<T>();
 
@@ -19,20 +19,22 @@ namespace HBLibrary.NetFramework.Services.Logging {
             this.Registry = registry;
         }
 
-        public ILogger GetOrCreateStandardLogger(string name) {
+        public ILogger GetOrCreateLogger(string name) {
             if (Registry.ContainsLogger(name))
                 return Registry.GetLogger(name);
 
-            StandardLogger logger = new StandardLogger(name);
+            Logger logger = new Logger(name);
+            logger.Registry = Registry;
             Registry.RegisterLogger(logger);
             return logger;
         }
 
-        public ILogger<T> GetOrCreateStandardLogger<T>() where T : class {
+        public ILogger<T> GetOrCreateLogger<T>() where T : class {
             if (Registry.ContainsLogger<T>())
                 return Registry.GetLogger<T>();
 
-            StandardLogger<T> logger = new StandardLogger<T>();
+            Logger<T> logger = new Logger<T>();
+            logger.Registry = Registry;
             Registry.RegisterLogger(logger);
             return logger;
         }
@@ -42,6 +44,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 return Registry.GetAsyncLogger(name);
 
             AsyncLogger logger = new AsyncLogger(name);
+            logger.Registry = Registry;
             Registry.RegisterLogger(logger);
             return logger;
         }
@@ -51,6 +54,7 @@ namespace HBLibrary.NetFramework.Services.Logging {
                 return Registry.GetAsyncLogger<T>();
 
             AsyncLogger<T> logger = new AsyncLogger<T>();
+            logger.Registry = Registry;
             Registry.RegisterLogger(logger);
             return logger;
         }

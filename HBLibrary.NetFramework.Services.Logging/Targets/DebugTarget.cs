@@ -11,25 +11,27 @@ using System.Threading.Tasks;
 namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public class DebugTarget : TargetWithHeader, ILogTarget {
         public const string TargetName =
-              @"                                                                            |" + "\r\n" +
-              @"    ____       __                   ______                      __          |" + "\r\n" +
-              @"   / __ \___  / /_  __  ______ _   /_  __/___ __________ ____  / /_         |" + "\r\n" +
-              @"  / / / / _ \/ __ \/ / / / __ `/    / / / __ `/ ___/ __ `/ _ \/ __/         |" + "\r\n" +
-              @" / /_/ /  __/ /_/ / /_/ / /_/ /    / / / /_/ / /  / /_/ /  __/ /_           |" + "\r\n" +
-              @"/_____/\___/_.___/\__,_/\__, /    /_/  \__,_/_/   \__, /\___/\__/           |" + "\r\n" +
-              @"                       /____/                    /____/                     |" + "\r\n" +
-              @"____________________________________________________________________________|" + "\r\n\r\n";
+              @"                                                                            |" + "\n" +
+              @"    ____       __                   ______                      __          |" + "\n" +
+              @"   / __ \___  / /_  __  ______ _   /_  __/___ __________ ____  / /_         |" + "\n" +
+              @"  / / / / _ \/ __ \/ / / / __ `/    / / / __ `/ ___/ __ `/ _ \/ __/         |" + "\n" +
+              @" / /_/ /  __/ /_/ / /_/ / /_/ /    / / / /_/ / /  / /_/ /  __/ /_           |" + "\n" +
+              @"/_____/\___/_.___/\__,_/\__, /    /_/  \__,_/_/   \__, /\___/\__/           |" + "\n" +
+              @"                       /____/                    /____/                     |" + "\n" +
+              @"____________________________________________________________________________|" + "\n";
 
-        public LogLevel LevelThreshold { get; set; }
+        public LogLevel? LevelThreshold { get; } = null;
         public bool Enabled { get; }
-        public DebugTarget() { }
-        public DebugTarget(LogLevel threshold) {
-            LevelThreshold = threshold;
+        public DebugTarget() {
             Enabled = Debugger.IsAttached && Debugger.IsLogging();
             if (Enabled) {
-                Debug.WriteLine(Logo);
+                Debug.Write(Logo);
                 Debug.WriteLine(TargetName);
             }
+        }
+
+        public DebugTarget(LogLevel threshold) : this() {
+            LevelThreshold = threshold;
         }
 
         public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {

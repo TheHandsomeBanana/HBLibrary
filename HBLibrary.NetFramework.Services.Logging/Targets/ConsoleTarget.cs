@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 namespace HBLibrary.NetFramework.Services.Logging.Targets {
     public class ConsoleTarget : TargetWithHeader, ILogTarget {
         public const string TargetName =
-              @"                                                                            |" + "\r\n" +
-              @"   ______                       __        ______                      __    |" + "\r\n" +
-              @"  / ____/___  ____  _________  / /__     /_  __/___ __________ ____  / /_   |" + "\r\n" +
-              @" / /   / __ \/ __ \/ ___/ __ \/ / _ \     / / / __ `/ ___/ __ `/ _ \/ __/   |" + "\r\n" +
-              @"/ /___/ /_/ / / / (__  ) /_/ / /  __/    / / / /_/ / /  / /_/ /  __/ /_     |" + "\r\n" +
-              @"\____/\____/_/ /_/____/\____/_/\___/    /_/  \__,_/_/   \__, /\___/\__/     |" + "\r\n" +
-              @"                                                       /____/               |" + "\r\n" +
-              @"____________________________________________________________________________|" + "\r\n\r\n";
+              @"                                                                            |" + "\n" +
+              @"   ______                       __        ______                      __    |" + "\n" +
+              @"  / ____/___  ____  _________  / /__     /_  __/___ __________ ____  / /_   |" + "\n" +
+              @" / /   / __ \/ __ \/ ___/ __ \/ / _ \     / / / __ `/ ___/ __ `/ _ \/ __/   |" + "\n" +
+              @"/ /___/ /_/ / / / (__  ) /_/ / /  __/    / / / /_/ / /  / /_/ /  __/ /_     |" + "\n" +
+              @"\____/\____/_/ /_/____/\____/_/\___/    /_/  \__,_/_/   \__, /\___/\__/     |" + "\n" +
+              @"                                                       /____/               |" + "\n" +
+              @"____________________________________________________________________________|" + "\n\n";
 
-        public LogLevel LevelThreshold { get; set; }
+        public LogLevel? LevelThreshold { get; } = null;
 
         public ConsoleTarget() {
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine(Logo);
+            Console.Write(Logo);
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine(TargetName);
             Console.ForegroundColor = ConsoleColor.White;

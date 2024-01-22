@@ -15,7 +15,7 @@ namespace HBLibrary.NetFramework.Services.Logging.Configuration {
         public static LogConfiguration Default => new LogConfiguration();
 
         private LogConfiguration() { }
-        public LogConfiguration(List<ILogTarget> targets, List<IAsyncLogTarget> asyncTargets, LogDisplayFormat displayFormat, LogLevel? levelThreshold) {
+        public LogConfiguration(List<ILogTarget> targets, List<IAsyncLogTarget> asyncTargets, LogDisplayFormat displayFormat, LogLevel? levelThreshold = null) {
             Targets = targets.ToList();
             AsyncTargets = asyncTargets.ToList();
             DisplayFormat = displayFormat;
