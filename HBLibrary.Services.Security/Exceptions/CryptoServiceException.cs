@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HBLibrary.NetFramework.Services.Security.Exceptions {
+namespace HBLibrary.Services.Security.Exceptions {
     public class CryptoServiceException : Exception {
         public CryptoServiceException(string message) : base(message) {
         }

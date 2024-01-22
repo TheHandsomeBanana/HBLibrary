@@ -1,11 +1,10 @@
-﻿using HBLibrary.NetFramework.VisualStudio.Workspace;
+﻿using HBLibrary.VisualStudio.Workspace;
 using System;
 
-namespace HBLibrary.NetFramework.VisualStudio.Commands {
-    public static class CommandHelper {
-        public static void RunVSCommand(Guid guid, uint id) {
-            object pvaln = null;
-            WorkspaceHelper.GetUIShell().PostExecCommand(guid, id, 0, ref pvaln);
-        }
+namespace HBLibrary.VisualStudio.Commands; 
+public static class CommandHelper {
+    public static void RunVSCommand(Guid guid, uint id) {
+        object pvaln = null;
+        WorkspaceHelper.GetUIShell().PostExecCommand(guid, id, 0, ref pvaln);
     }
 }

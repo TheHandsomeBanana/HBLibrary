@@ -1,4 +1,4 @@
-﻿using HBLibrary.NetFramework.Code.Analysis.Analyser;
+﻿using HBLibrary.Code.Analysis.Analyser;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.NetFramework.Code.Analysis {
-    public interface IAnalyserFactory {
-        IAnalyserRegistry Registry { get; }
-        TAnalyser CreateAnalyser<TAnalyser>() where TAnalyser : ICodeAnalyser;
-        TAnalyser GetOrCreateAnalyser<TAnalyser>() where TAnalyser : ICodeAnalyser;
-        IObjectAssignmentAnalyser CreateObjectAssignmentAnalyser();
-        IObjectAssignmentAnalyser GetOrCreateObjectAssignmentAnalyser();
-    }
+namespace HBLibrary.Code.Analysis; 
+public interface IAnalyserFactory {
+    IAnalyserRegistry Registry { get; }
+    TAnalyser CreateAnalyser<TAnalyser>() where TAnalyser : ICodeAnalyser;
+    TAnalyser GetOrCreateAnalyser<TAnalyser>() where TAnalyser : ICodeAnalyser;
+    IObjectAssignmentAnalyser CreateObjectAssignmentAnalyser();
+    IObjectAssignmentAnalyser GetOrCreateObjectAssignmentAnalyser();
 }

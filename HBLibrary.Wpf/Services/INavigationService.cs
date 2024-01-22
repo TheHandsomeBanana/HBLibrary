@@ -1,5 +1,4 @@
-﻿namespace HBLibrary.NetFramework.Wpf.Services {
-    public interface INavigationService {
-        void Navigate();
-    }
+﻿namespace HBLibrary.Wpf.Services; 
+public interface INavigationService {
+    void Navigate();
 }

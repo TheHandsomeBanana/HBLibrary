@@ -1,7 +1,8 @@
-﻿namespace HBLibrary.NetFramework.Services.Security.Cryptography.Settings {
-    public enum EncryptionMode {
-        WindowsDataProtectionAPI,
-        AES,
-        RSA,
-    }
+﻿namespace HBLibrary.Services.Security.Cryptography.Settings; 
+public enum EncryptionMode {
+#if WINDOWS
+    WindowsDataProtectionAPI,
+#endif
+    AES,
+    RSA,
 }
