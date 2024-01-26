@@ -7,17 +7,13 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Compression.WinRAR {
     internal static class WinRARHelper {
-        public static string GetWinRARInstallationPath() {
+        public static string? GetWinRARInstallationPath() {
             string registryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\WinRAR.exe";
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKey)) {
-                if (key != null) {
-                    object value = key.GetValue("Path");
-                    if (value != null) 
-                        return value.ToString();
-                }
-            }
+            using RegistryKey? key = Registry.LocalMachine.OpenSubKey(registryKey);
+            if (key == null)
+                return null;
 
-            return null; // WinRAR not found in registry
+            return key.GetValue("Path")?.ToString();
         }
     }
 

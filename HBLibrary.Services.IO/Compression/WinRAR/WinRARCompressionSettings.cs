@@ -1,30 +1,128 @@
-﻿using HBLibrary.Services.IO.Exceptions;
+﻿using HBLibrary.Common.RegularExpressions;
+using HBLibrary.Services.IO.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Compression.WinRAR {
     // https://documentation.help/WinRAR/HELPCommandLineSyntax.htm
     public class WinRARCompressionSettings {
-        public string ArchiveName { get; set; }
-        public WinRARCompressionFormat Format { get; set; } = WinRARCompressionFormat.RAR;
-        public WinRARCompressionMethod Method { get; set; } = WinRARCompressionMethod.Best;
+        public string FormatExtension => ArchiveFormat switch {
+            WinRARArchiveFormat.RAR or
+            WinRARArchiveFormat.RAR4 => ".rar",
+            WinRARArchiveFormat.ZIP => ".zip",
+            _ => ""
+        };
+
+        public WinRARArchiveFormat ArchiveFormat { get; set; } = WinRARArchiveFormat.RAR;
+        public WinRARCompressionMethod CompressionMethod { get; set; } = WinRARCompressionMethod.Best;
         public WinRARDictionarySize DictionarySize { get; set; } = WinRARDictionarySize.Md32m;
         public WinRARVolumeSize? VolumeSize { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
         public bool ProtectAgainstChanges { get; set; } = false;
 
-        public WinRARCompressionSettings(string archiveName) {
-            this.ArchiveName = archiveName;
+        private string? recoveryRecordPercentage;
+        /// <summary>
+        /// e.g. '5%' -> adds a recovery record that is 5% of the total archive size
+        /// </summary>
+        public string? RecoveryRecordPercentage { 
+            get => recoveryRecordPercentage; 
+            set {
+                if (value is null) {
+                    recoveryRecordPercentage = null;
+                    return;
+                }
+
+                if (!RegexCollection.SimplePercentageValue.Match(value).Success)
+                    throw new CompressionException($"{value} does not match the percentage value pattern.");
+
+                recoveryRecordPercentage = value;
+            }
         }
 
         public override string ToString() {
-            StringBuilder sb = new StringBuilder();
+            Validate();
 
+            StringBuilder sb = new StringBuilder();
+            sb.Append("a -r "); // a = compress, -r = recursive
+            sb.Append(ArchiveFormatString + " ");
+            sb.Append(CompressionMethod + " ");
+            if (ProtectAgainstChanges)
+                sb.Append("-k ");
+
+            if (recoveryRecordPercentage is not null)
+                sb.Append("-rr" + recoveryRecordPercentage + " ");
+
+            if (Password is not null)
+                sb.Append("-p" + Password + " ");
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns the settings as argument <see cref="string"/> for internal use.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="CompressionException"></exception>
+        public string GetArgumentString() {
+            return ToString();
+        }
+
+        public string ArchiveFormatString => ArchiveFormat switch {
+            WinRARArchiveFormat.RAR or
+            WinRARArchiveFormat.RAR4 => "-afrar",
+            WinRARArchiveFormat.ZIP => "-afzip",
+            _ => throw new NotSupportedException()
+        };
+
+        public string CompressionMethodString => CompressionMethod switch {
+            WinRARCompressionMethod.Save => "-m0",
+            WinRARCompressionMethod.Fastest => "-m1",
+            WinRARCompressionMethod.Fast => "-m2",
+            WinRARCompressionMethod.Normal => "-m3",
+            WinRARCompressionMethod.Good => "-m4",
+            WinRARCompressionMethod.Best => "-m5",
+            _ => throw new NotSupportedException(CompressionMethod.ToString())
+        };
+
+        public string DictionarySizeString => DictionarySize.ToString().ToLower();
+
+        public readonly static IReadOnlyDictionary<WinRARArchiveFormat, WinRARDictionarySize[]> ArchiveFormatDictionarySizeMapping
+            = new Dictionary<WinRARArchiveFormat, WinRARDictionarySize[]>() {
+                { WinRARArchiveFormat.ZIP, [WinRARDictionarySize.Md32k] },
+                { WinRARArchiveFormat.RAR4, [
+                    WinRARDictionarySize.Md64k, 
+                    WinRARDictionarySize.Md128k,
+                    WinRARDictionarySize.Md256k,
+                    WinRARDictionarySize.Md512k,
+                    WinRARDictionarySize.Md1024k,
+                    WinRARDictionarySize.Md2048k,
+                    WinRARDictionarySize.Md4096k,
+                    ] 
+                },
+                { WinRARArchiveFormat.RAR, [
+                    WinRARDictionarySize.Md1m,
+                    WinRARDictionarySize.Md2m,
+                    WinRARDictionarySize.Md4m,
+                    WinRARDictionarySize.Md8m,
+                    WinRARDictionarySize.Md16m,
+                    WinRARDictionarySize.Md32m,
+                    WinRARDictionarySize.Md64m,
+                    WinRARDictionarySize.Md128m,
+                    WinRARDictionarySize.Md256m,
+                    WinRARDictionarySize.Md512m,
+                    WinRARDictionarySize.Md1024m,
+                    ]
+                }
+        };
+
+        private void Validate() {
+            if (!ArchiveFormatDictionarySizeMapping[ArchiveFormat].Contains(DictionarySize))
+                throw new CompressionException($"Invalid dictionary size {DictionarySize} for given archive format {ArchiveFormat}." +
+                    $"Valid dictionary sizes are {string.Join(",", ArchiveFormatDictionarySizeMapping[ArchiveFormat])}");
         }
     }
 
@@ -62,7 +160,7 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
         GB
     }
 
-    public enum WinRARCompressionFormat {
+    public enum WinRARArchiveFormat {
         RAR,
         RAR4,
         ZIP

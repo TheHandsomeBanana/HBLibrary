@@ -10,32 +10,29 @@ using System.Diagnostics;
 using System.Runtime;
 
 namespace HBLibrary.Services.IO.Compression.Zip {
-    public class ZipCompressor : IZipCompressor {
+    public class ZipCompressionService : IZipCompressionService {
 
         public void CompressDirectory(string sourceDirectory, string destinationArchive) {
-            CompressDirectory(sourceDirectory, destinationArchive, null);
-        }
-
-        public void ExtractDirectory(string sourceArchive, string destinationDirectory) {
-            ExtractDirectory(sourceArchive, destinationDirectory, null);
+            CompressDirectory(sourceDirectory, destinationArchive, new ZipCompressionSettings());
         }
 
         public void Extract(string sourceArchive, string destinationDirectory) {
-            Extract(sourceArchive, destinationDirectory, null);
+            Extract(sourceArchive, destinationDirectory, new ZipExtractionSettings());
         }
 
         public void CompressFile(string sourceFile, string destinationArchive) {
-            CompressFile(sourceFile, destinationArchive, null); 
+            CompressFile(sourceFile, destinationArchive, new ZipCompressionSettings()); 
         }
 
         public void CompressFile(string sourceFile, string destinationArchive, ZipCompressionSettings settings) {
             using(ZipFile zip = new ZipFile()) {
-                if(settings?.Password != null) {
+                if(settings.Password != null) {
                     zip.Password = settings.Password;
                     zip.Encryption = settings.EncryptionAlgorithm;
                 }
 
-
+                zip.CompressionLevel = settings.Level;
+                zip.CompressionMethod = settings.Method;
                 zip.AddFile(sourceFile);
                 zip.Save(destinationArchive);
             }
@@ -43,23 +40,22 @@ namespace HBLibrary.Services.IO.Compression.Zip {
 
         public void CompressDirectory(string sourceDirectory, string destinationArchive, ZipCompressionSettings settings) {
             using (ZipFile zip = new ZipFile()) {
-                if (settings?.Password != null) {
+                if (settings.Password != null) {
                     zip.Password = settings.Password;
                     zip.Encryption = settings.EncryptionAlgorithm;
                 }
+
+                zip.CompressionLevel = settings.Level;
+                zip.CompressionMethod = settings.Method;
 
                 zip.AddDirectory(sourceDirectory, Path.GetDirectoryName(sourceDirectory));
                 zip.Save(destinationArchive);
             }
         }
 
-        public void ExtractDirectory(string sourceArchive, string destinationDirectory, ZipExtractionSettings settings) {
-            Extract(sourceArchive, destinationDirectory, settings);
-        }
-
         public void Extract(string sourceArchive, string destinationDirectory, ZipExtractionSettings settings) {
             using (ZipFile zip = ZipFile.Read(sourceArchive)) {
-                if (settings?.Password != null)
+                if (settings.Password != null)
                     zip.Password = settings.Password;
 
                 zip.ExtractAll(destinationDirectory, settings.ExtractExistingFileAction);
