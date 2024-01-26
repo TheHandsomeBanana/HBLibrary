@@ -12,7 +12,11 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            sb.Append("x ");
+            sb.Append("x "); // Extract
+
+            if (Password is not null)
+                sb.Append("-p" + Password + " ");
+
             return sb.ToString(); 
         }
     }
