@@ -13,15 +13,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Code.Interpreter"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A3F4643D-185E-40AB-8D95-50C9A1767116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Services.Logging.Tests", "HBLibrary.Services.Logging.Tests\HBLibrary.Services.Logging.Tests.csproj", "{24C9DA1B-C118-4503-904F-70AC10D40B68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.Logging.Tests", "HBLibrary.Services.Logging.Tests\HBLibrary.Services.Logging.Tests.csproj", "{24C9DA1B-C118-4503-904F-70AC10D40B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Code.Analysis", "HBLibrary.Code.Analysis\HBLibrary.Code.Analysis.csproj", "{483E3A64-5401-4931-B1DA-25889A0D1E25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Code.Analysis", "HBLibrary.Code.Analysis\HBLibrary.Code.Analysis.csproj", "{483E3A64-5401-4931-B1DA-25889A0D1E25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Services.Security", "HBLibrary.Services.Security\HBLibrary.Services.Security.csproj", "{5019D774-3C23-46B1-AF0F-DAA721E81B16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.Security", "HBLibrary.Services.Security\HBLibrary.Services.Security.csproj", "{5019D774-3C23-46B1-AF0F-DAA721E81B16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Wpf", "HBLibrary.Wpf\HBLibrary.Wpf.csproj", "{A78B5289-B34F-4D6D-8630-A87976375A5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Wpf", "HBLibrary.Wpf\HBLibrary.Wpf.csproj", "{A78B5289-B34F-4D6D-8630-A87976375A5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.VisualStudio", "HBLibrary.VisualStudio\HBLibrary.VisualStudio.csproj", "{BF76BDB8-F08F-4884-B863-15A84A2645ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.VisualStudio", "HBLibrary.VisualStudio\HBLibrary.VisualStudio.csproj", "{BF76BDB8-F08F-4884-B863-15A84A2645ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Common.Tests", "HBLibrary.Common.Tests\HBLibrary.Common.Tests.csproj", "{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Services.IO.Tests", "HBLibrary.Services.IO.Tests\HBLibrary.Services.IO.Tests.csproj", "{00691528-C141-4D29-89F1-C1B742E9D9D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,12 +69,22 @@ Global
 		{BF76BDB8-F08F-4884-B863-15A84A2645ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF76BDB8-F08F-4884-B863-15A84A2645ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF76BDB8-F08F-4884-B863-15A84A2645ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{24C9DA1B-C118-4503-904F-70AC10D40B68} = {A3F4643D-185E-40AB-8D95-50C9A1767116}
+		{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69} = {A3F4643D-185E-40AB-8D95-50C9A1767116}
+		{00691528-C141-4D29-89F1-C1B742E9D9D4} = {A3F4643D-185E-40AB-8D95-50C9A1767116}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {200860FD-AB8D-4D1B-9865-33C1F2AFA4E2}
