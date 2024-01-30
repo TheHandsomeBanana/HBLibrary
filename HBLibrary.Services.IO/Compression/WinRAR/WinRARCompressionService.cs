@@ -155,11 +155,11 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
 
             // WinRAR writes errors to stdout for some reason
             if (e.Data.StartsWith("error", StringComparison.CurrentCultureIgnoreCase)) {
-                standardError.AppendLine(e.Data);
+                standardError!.AppendLine(e.Data);
                 OnErrorDataReceived?.Invoke(sender, new ProcessStdStreamEventArgs(e.Data));
             }
             else {
-                standardOutput.AppendLine(e.Data);
+                standardOutput!.AppendLine(e.Data);
                 OnOutputDataReceived?.Invoke(sender, new ProcessStdStreamEventArgs(e.Data));
             }
         }
@@ -174,8 +174,8 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
         }
 
         private void StopReading() {
-            StdOutput = standardOutput.ToString()!;
-            StdError = standardError.ToString()!;
+            StdOutput = standardOutput!.ToString()!;
+            StdError = standardError!.ToString()!;
         }
     }
 }
