@@ -12,8 +12,16 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
     /// </summary>
     public interface IWinRARCompressionService : ICompressionService {
         event EventHandler<ProcessExitEventArgs>? OnProcessExit;
-        event DataReceivedEventHandler? OnErrorDataReceived;
-        event DataReceivedEventHandler? OnOutputDataReceived;
+        event EventHandler<ProcessStdStreamEventArgs>? OnOutputDataReceived;
+        event EventHandler<ProcessStdStreamEventArgs>? OnErrorDataReceived;
+        /// <summary>
+        /// Get the last operation's standard output
+        /// </summary>
+        string StdOutput { get; }
+        /// <summary>
+        /// Get the last operation's standard error
+        /// </summary>
+        string StdError { get; }
         /// <summary>
         /// Timeout in milliseconds for synchronous <see cref="Compress(string, string, WinRARCompressionSettings)"/> / <see cref="Extract(string, string, WinRARExtractionSettings)"/> operations
         /// </summary>

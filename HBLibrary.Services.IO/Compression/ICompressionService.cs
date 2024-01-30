@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Compression {
     public interface ICompressionService {
-        void CompressFile(string sourceFile, string destinationArchive);
-        void CompressDirectory(string sourceDirectory, string destinationArchive);
+        void Compress(string sourceFile, string destinationArchive);
         void Extract(string sourceArchive, string destinationDirectory);
     }
 }

@@ -20,7 +20,7 @@ namespace HBLibrary.Services.IO.Compression.Zip {
             Extract(sourceArchive, destinationDirectory, new ZipExtractionSettings());
         }
 
-        public void CompressFile(string sourceFile, string destinationArchive) {
+        public void Compress(string sourceFile, string destinationArchive) {
             CompressFile(sourceFile, destinationArchive, new ZipCompressionSettings()); 
         }
 
