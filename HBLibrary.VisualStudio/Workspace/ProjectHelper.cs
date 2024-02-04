@@ -28,11 +28,13 @@ public static class ProjectHelper {
 
     public static IEnumerable<string> GetProjectFiles(ProjectItems projectitems) {
         foreach (ProjectItem pi in projectitems) {
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
             for (short i = 1; i <= projectitems.Count; i++)
                 yield return pi.FileNames[i];
 
             foreach (string file in GetProjectFiles(pi.ProjectItems))
                 yield return file;
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
         }
     }
 

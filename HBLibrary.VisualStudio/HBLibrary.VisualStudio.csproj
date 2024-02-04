@@ -4,7 +4,21 @@
     <TargetFramework>net472</TargetFramework>
 	  <LangVersion>12.0</LangVersion>
 	  <UseWPF>true</UseWPF>
+	  <Title>HBLibrary.VisualStudio</Title>
+	  <Authors>HandsomeBanana</Authors>
+	  <PackageProjectUrl>https://github.com/TheHandsomeBanana/HBLibrary/tree/master/HBLibrary.VisualStudio</PackageProjectUrl>
+	  <Description>Helper Library for extensibility</Description>
+	  <PackageIcon>HandsomeBanana.png</PackageIcon>
+	  <PackageTags>VisualStudio</PackageTags>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="D:\Bilder\Spam\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0" />
