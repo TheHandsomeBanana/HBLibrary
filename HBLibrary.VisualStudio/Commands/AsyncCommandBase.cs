@@ -12,6 +12,7 @@ public abstract class AsyncCommandBase : CommandBase {
         this.onException = onException;
     }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
     protected override async void Execute(object sender, EventArgs e) {
         try {
             if (isRunning)
@@ -26,6 +27,7 @@ public abstract class AsyncCommandBase : CommandBase {
 
         isRunning = false;
     }
+#pragma warning restore VSTHRD100 // Avoid async void methods
 
     protected abstract Task ExecuteAsync(object sender, EventArgs e);
 

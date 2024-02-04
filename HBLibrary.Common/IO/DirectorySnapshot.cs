@@ -13,9 +13,6 @@ public readonly struct DirectorySnapshot {
     public DirectorySnapshot(string path) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
-
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
        
         Path = path;
         FullPath = System.IO.Path.GetFullPath(path);

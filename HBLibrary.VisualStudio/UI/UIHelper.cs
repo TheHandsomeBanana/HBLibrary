@@ -16,7 +16,9 @@ public static class UIHelper {
         IVsUIShell uiShell = WorkspaceHelper.GetUIShell();
         Assumes.Present(uiShell);
 
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
         uiShell.GetDialogOwnerHwnd(out IntPtr hwnd);
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
         WindowHelper.ShowModal(window, hwnd);
     }
 

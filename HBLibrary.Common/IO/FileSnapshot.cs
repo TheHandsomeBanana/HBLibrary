@@ -10,21 +10,18 @@ namespace HBLibrary.Common.IO;
 public readonly struct FileSnapshot {
     public string Path { get; }
     public string FullPath { get; }
-    public long Size { get; }
+    public long Length { get; }
     public int OptimalBufferSize { get; }
 
     public FileSnapshot(string path) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
-        if (!File.Exists(path))
-            File.Create(path).Dispose();
-
         Path = path;
         FileInfo temp = GetInfo();
         FullPath = temp.FullName;
-        Size = temp.Length;
-        OptimalBufferSize = GetOptimalBufferSize(Size);
+        Length = temp.Length;
+        OptimalBufferSize = GetOptimalBufferSize(Length);
     }
 
     public FileInfo GetInfo() => new FileInfo(Path);

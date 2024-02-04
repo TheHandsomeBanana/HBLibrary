@@ -11,21 +11,24 @@ public static class SolutionHelper {
             yield return project;
     }
 
-    public static Project GetCurrentProject() {
+    public static Project GetSelectedProject() {
         DTE dte = WorkspaceHelper.GetDTE();
 
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
         if ((dte.SelectedItems.Item(1).Project == null && dte.SelectedItems.Item(1).ProjectItem?.ContainingProject == null) || dte.SelectedItems.Count == 0)
             return dte.ActiveDocument?.ProjectItem?.ContainingProject;
         else
             return (dte.SelectedItems.Item(1).Project == null) ? dte.SelectedItems.Item(1).ProjectItem.ContainingProject : dte.SelectedItems.Item(1).Project;
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
     }
 
     public static Microsoft.CodeAnalysis.Project ToCAProject(Project project) {
-        return WorkspaceHelper.GetCurrentCASolution().Projects.FirstOrDefault(e => {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            return e.FilePath == project.FullName;
-        });
+        ThreadHelper.ThrowIfNotOnUIThread();
+
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+        return WorkspaceHelper.GetCurrentCASolution().Projects.FirstOrDefault(e => e.FilePath == project.FullName);
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
     }
 
-    public static Microsoft.CodeAnalysis.Project GetCurrentCAProject() => ToCAProject(GetCurrentProject());
+    public static Microsoft.CodeAnalysis.Project GetCurrentCAProject() => ToCAProject(GetSelectedProject());
 }
