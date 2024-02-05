@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Common.IO;
-public struct DirectorySnapshot {
+public readonly struct DirectorySnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
     public ImmutableArray<DirectorySnapshot> SubDirectories { get; } = [];
