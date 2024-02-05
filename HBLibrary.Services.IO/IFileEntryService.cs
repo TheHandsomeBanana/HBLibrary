@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public interface IFileEntryService {
-    void CopyFile(FileSnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip);
-    void MoveFile(FileSnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip);
-    void ReplaceFile(FileSnapshot source, FileSnapshot target);
-    Task CopyFileAsync(FileSnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip);
-    Task MoveFileAsync(FileSnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip);
-    Task ReplaceFileAsync(FileSnapshot source, FileSnapshot target);
+    void CopyFile(string source, string target, CopyOperationAction action = CopyOperationAction.Skip);
+    void MoveFile(string source, string target, MoveOperationAction action = MoveOperationAction.Skip);
+    Task CopyFileAsync(string source, string target, CopyOperationAction action = CopyOperationAction.Skip);
+    Task MoveFileAsync(string source, string target, MoveOperationAction action = MoveOperationAction.Skip);
 
-    void CopyDirectory(DirectorySnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip);
-    void MoveDirectory(DirectorySnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip);
-    void ReplaceDirectory(DirectorySnapshot source, DirectorySnapshot target);
-    Task CopyDirectoryAsync(DirectorySnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip);
-    Task MoveDirectoryAsync(DirectorySnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip);
-    Task ReplaceDirectoryAsync(DirectorySnapshot source, DirectorySnapshot target);
+    void CopyDirectory(string source, string target, CopyOperationAction action = CopyOperationAction.Skip);
+    void MoveDirectory(string source, string target, MoveOperationAction action = MoveOperationAction.Skip);
+    void ReplaceDirectory(string source, string target);
+    Task CopyDirectoryAsync(string source, string target, CopyOperationAction action = CopyOperationAction.Skip);
+    Task MoveDirectoryAsync(string source, string target, MoveOperationAction action = MoveOperationAction.Skip);
+    Task ReplaceDirectoryAsync(string source, string target);
 }
 
 public enum CopyOperationAction {

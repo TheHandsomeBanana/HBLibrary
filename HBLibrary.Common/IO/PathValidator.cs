@@ -24,9 +24,4 @@ public static class PathValidator {
             return false;
         }
     }
-
-    public static bool ValidateFile(string path) => ValidatePath(path) && File.Exists(path);
-    public static bool FileExists(string path, out string? fullPath) => PathExists(path, out fullPath) && File.Exists(path);
-    public static bool ValidateDirectory(string path) => ValidatePath(path) && Directory.Exists(path);
-    public static bool DirectoryExists(string path, out string? fullPath) => PathExists(path, out fullPath) && Directory.Exists(path);
 }

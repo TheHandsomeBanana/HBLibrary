@@ -1,18 +1,49 @@
 ﻿using HBLibrary.Common.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public class FileEntryService : IFileEntryService {
     #region Copy
-    public void CopyDirectory(DirectorySnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip) {
-        CopyDirectoryInternal(source.FullPath, target.CombineToFile(source.Path), action);
+    public void CopyDirectory(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        CopyDirectoryInternal(source, target, action);
     }
 
-    private void CopyDirectoryInternal(string source, string target, CopyOperationAction action) {
+    public void CopyFile(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        CopyFileInternal(source, target, action);
+    }
+
+    public Task CopyDirectoryAsync(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        return CopyDirectoryInternalAsync(source, target, action);
+    }
+
+    public Task CopyFileAsync(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        return CopyFileInternalAsync(source, FileSnapshot.GetOptimalBufferSize(source), target, action);
+    }
+
+    private static void CopyDirectoryInternal(string source, string target, CopyOperationAction action) {
         foreach (string file in Directory.GetFiles(source)) {
             string targetFile = Path.Combine(target, Path.GetFileName(file));
             CopyFileInternal(file, targetFile, action);
@@ -22,11 +53,6 @@ public class FileEntryService : IFileEntryService {
             string targetDirectory = Path.Combine(target, Path.GetFileName(directory));
             CopyDirectoryInternal(directory, targetDirectory, action);
         }
-    }
-
-
-    public void CopyFile(FileSnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip) {
-        CopyFileInternal(source.FullPath, target.CombineToFile(source.Path), action);
     }
 
     private static void CopyFileInternal(string source, string target, CopyOperationAction action) {
@@ -52,14 +78,6 @@ public class FileEntryService : IFileEntryService {
         }
     }
 
-    public Task CopyDirectoryAsync(DirectorySnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip) {
-        return CopyDirectoryInternalAsync(source.FullPath, target.FullPath, action);
-    }
-
-    public Task CopyFileAsync(FileSnapshot source, DirectorySnapshot target, CopyOperationAction action = CopyOperationAction.Skip) {
-        return CopyFileInternalAsync(source.FullPath, source.OptimalBufferSize, target.CombineToFile(source.Path), action);
-    }
-
     private static async Task CopyDirectoryInternalAsync(string source, string target, CopyOperationAction action) {
         List<Task> copyFileTasks = [];
         foreach (string file in Directory.GetFiles(source)) {
@@ -79,14 +97,14 @@ public class FileEntryService : IFileEntryService {
     private static async Task CopyFileInternalAsync(string source, int bufferSize, string target, CopyOperationAction action) {
         switch (action) {
             case CopyOperationAction.Skip:
-                if (!File.Exists(target)) 
+                if (!File.Exists(target))
                     await CopyAsync(source, bufferSize, target);
                 break;
             case CopyOperationAction.OverwriteAll:
                 await CopyAsync(source, bufferSize, target);
                 break;
             case CopyOperationAction.OverwriteModifiedOnly:
-                if(!File.Exists(target) || new FileInfo(source).Length != new FileInfo(target).Length)
+                if (!File.Exists(target) || new FileInfo(source).Length != new FileInfo(target).Length)
                     await CopyAsync(source, bufferSize, target);
 
                 break;
@@ -103,58 +121,115 @@ public class FileEntryService : IFileEntryService {
     #endregion Copy
 
     #region Move
-    public void MoveDirectory(DirectorySnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip) {
-        Directory.Move(source.FullPath, target.FullPath);
+    public void MoveDirectory(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+
+        switch (action) {
+            case MoveOperationAction.Skip:
+                if (Directory.EnumerateDirectories(target).All(e => e != target))
+                    Directory.Move(source, target);
+                break;
+            case MoveOperationAction.Overwrite:
+                MoveDirectoryWithOverwrite(source, target);
+                break;
+        }
     }
 
-    public void MoveFile(FileSnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip) {
-        Directory.Move(source.FullPath, target.FullPath);
+    private static void MoveDirectoryWithOverwrite(string source, string target) {
+        foreach (string file in Directory.GetFiles(source)) {
+            string destFile = Path.Combine(target, Path.GetFileName(file));
+            File.Move(file, destFile, true); // Overwrites the file if it already exists
+        }
+
+        foreach (string directory in Directory.GetDirectories(source)) {
+            string destDir = Path.Combine(target, Path.GetFileName(directory));
+            MoveDirectoryWithOverwrite(directory, destDir); // Recursive call for subdirectories
+        }
     }
 
-    public async Task MoveDirectoryAsync(DirectorySnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip) {
-        await MoveDirectoryInternalAsync(source.FullPath, target.FullPath);
+    public void MoveFile(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        switch (action) {
+            case MoveOperationAction.Skip:
+                if (!File.Exists(target))
+                    File.Move(source, target);
+                break;
+            case MoveOperationAction.Overwrite:
+                File.Move(source, target, true);
+                break;
+        }
     }
 
-    public async Task MoveFileAsync(FileSnapshot source, DirectorySnapshot target, MoveOperationAction action = MoveOperationAction.Skip) {
-        await Task.Run(() => File.Move(source.FullPath, target.CombineToFile(source.Path)));
+    public Task MoveDirectoryAsync(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        return MoveDirectoryInternalAsync(source, target, action);
     }
 
-    private async Task MoveDirectoryInternalAsync(string source, string target) {
+    public Task MoveFileAsync(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
+        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+            throw new ArgumentException("Path invalid.", nameof(source));
+
+        if (PathValidator.ValidatePath(target))
+            throw new ArgumentException("Path invalid.", nameof(target));
+
+        switch (action) {
+            case MoveOperationAction.Skip:
+                if (!File.Exists(target))
+                    return Task.Run(() => File.Move(source, target));
+
+                return Task.CompletedTask;
+            case MoveOperationAction.Overwrite:
+                return Task.Run(() => File.Move(source, target, true));
+            default:
+                throw new NotSupportedException(action.ToString());
+        }
+    }
+
+    private async Task MoveDirectoryInternalAsync(string source, string target, MoveOperationAction action) {
         List<Task> moveFileTasks = [];
         foreach (string file in Directory.GetFiles(source)) {
             string targetFile = Path.Combine(target, Path.GetFileName(file));
-            moveFileTasks.Add(Task.Run(() => File.Move(source, targetFile)));
+            moveFileTasks.Add(MoveFileAsync(source, targetFile, action));
         }
         await Task.WhenAll(moveFileTasks);
 
         List<Task> moveDirectoryTasks = [];
         foreach (string directory in Directory.GetDirectories(source)) {
             string targetDirectory = Path.Combine(target, Path.GetFileName(directory));
-            moveFileTasks.Add(MoveDirectoryInternalAsync(directory, targetDirectory));
+            moveFileTasks.Add(MoveDirectoryInternalAsync(directory, targetDirectory, action));
         }
         await Task.WhenAll(moveDirectoryTasks);
     }
     #endregion
 
     #region Replace
-    public void ReplaceDirectory(DirectorySnapshot source, DirectorySnapshot target) {
-        Directory.Delete(target.FullPath, true);
+    public void ReplaceDirectory(string source, string target) {
+        if (Directory.Exists(target))
+            Directory.Delete(target, true);
+
         MoveDirectory(source, target);
     }
 
-    public void ReplaceFile(FileSnapshot source, FileSnapshot target) {
-        File.Delete(target.FullPath);
-        File.Move(source.FullPath, target.FullPath);
-    }
+    public Task ReplaceDirectoryAsync(string source, string target) {
+        if (Directory.Exists(target))
+            Directory.Delete(target, true);
 
-    public Task ReplaceDirectoryAsync(DirectorySnapshot source, DirectorySnapshot target) {
-        Directory.Delete(target.FullPath, true);
         return MoveDirectoryAsync(source, target);
-    }
-
-    public Task ReplaceFileAsync(FileSnapshot source, FileSnapshot target) {
-        File.Delete(target.FullPath);
-        return Task.Run(() => File.Move(source.FullPath, target.FullPath));
     }
     #endregion
 }

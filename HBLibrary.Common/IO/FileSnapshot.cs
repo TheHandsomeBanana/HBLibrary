@@ -8,15 +8,32 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Common.IO;
 public readonly struct FileSnapshot {
-    public string Path { get; }
-    public string FullPath { get; }
-    public long Length { get; }
-    public int OptimalBufferSize { get; }
+    public string Path { get; init; }
+    public string FullPath { get; init; }
+    public long Length { get; init; }
+    public int OptimalBufferSize { get; init; }
 
-    public FileSnapshot(string path) {
+    /// <summary>
+    /// Creates a snapshot of the provided file or a new file.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static FileSnapshot Load(string path) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
+        if (!File.Exists(path))
+            File.Create(path).Dispose();
+
+        return new FileSnapshot(path);
+    }
+
+    /// <summary>
+    /// Used for directory loader
+    /// </summary>
+    /// <param name="path"></param>
+    internal FileSnapshot(string path) {
         Path = path;
         FileInfo temp = GetInfo();
         FullPath = temp.FullName;
