@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Common.IO;
+namespace HBLibrary.Services.IO;
 public readonly struct FileSnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
@@ -65,5 +65,9 @@ public readonly struct FileSnapshot {
 
     public static int GetOptimalBufferSize(string file) {
         return GetOptimalBufferSize(new FileInfo(file).Length);
+    }
+
+    public FileStream OpenStream(FileMode mode, FileAccess access, FileShare share, bool useAsync = false) {
+        return new FileStream(FullPath, mode, access, share, OptimalBufferSize, useAsync);
     }
 }

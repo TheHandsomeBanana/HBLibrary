@@ -1,5 +1,4 @@
-﻿using HBLibrary.Common.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public interface IFileService {
-    string Read(FileSnapshot file);
-    Task<string> ReadAsync(FileSnapshot file);
-    void Write(FileSnapshot file, string content);
-    Task WriteAsync(FileSnapshot file, string content);
+    FileOperationResult Execute(FileOperation operation);
+    Task<FileOperationResult> ExecuteAsync(FileOperation operation);
 
-    TJson ReadFromJson<TJson>(FileSnapshot file);
-    Task<TJson> ReadFromJsonAsync<TJson>(FileSnapshot file);
-    void WriteJson<TJson>(FileSnapshot file, TJson json);
-    Task WriteJsonAsync<TJson>(FileSnapshot file, TJson json);
+    string Read(FileSnapshot file, FileShare share = FileShare.None);
+    Task<string> ReadAsync(FileSnapshot file, FileShare share = FileShare.None);
+    byte[] ReadBytes(FileSnapshot file, FileShare share = FileShare.None);
+    Task<byte[]> ReadBytesAsync(FileSnapshot file, FileShare share = FileShare.None);
 
-    TXml ReadFromXml<TXml>(FileSnapshot file);
-    Task<TXml> ReadFromXmlAsync<TXml>(FileSnapshot file);
-    void WriteXml<TXml>(FileSnapshot file, TXml xml);
-    Task WriteXmlAsync<TXml>(FileSnapshot file, TXml xml);
+    void Write(FileSnapshot file, string content, bool append = false, FileShare share = FileShare.None);
+    Task WriteAsync(FileSnapshot file, string content, bool append = false, FileShare share = FileShare.None);
+    void WriteBytes(FileSnapshot file, byte[] bytes, bool append = false, FileShare share = FileShare.None);
+    Task WriteBytesAsync(FileSnapshot file, byte[] bytes, bool append = false, FileShare share = FileShare.None);   
 }

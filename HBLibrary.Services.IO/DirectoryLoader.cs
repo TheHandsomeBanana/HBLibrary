@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Common.IO;
+namespace HBLibrary.Services.IO;
 public static class DirectoryLoader {
     public static DirectorySnapshot LoadImmutableDirectory(string path) {
         ImmutableArray<FileSnapshot> fileSnapshots = Directory.GetFiles(path)
@@ -39,17 +39,18 @@ public static class DirectoryLoader {
     }
 
     private static void LoadDirectory(DirectoryNode directoryNode) {
-        directoryNode.Files.AddRange(Directory.GetFiles(directoryNode.Path));
+        directoryNode.Files = directoryNode.Directory.EnumerateFiles().ToImmutableArray();
 
-        string[] subdirectoryPaths = Directory.GetDirectories(directoryNode.Path);
-        Parallel.ForEach(subdirectoryPaths, e => {
-            var subDirectoryNode = new DirectoryNode(e);
+        IEnumerable<DirectoryInfo> subdirectoryInfos = directoryNode.Directory.EnumerateDirectories();
+        ConcurrentBag<DirectoryNode> subdirectoryNodes = new ConcurrentBag<DirectoryNode>();
+
+        Parallel.ForEach(subdirectoryInfos, subDirectoryInfo =>
+        {
+            var subDirectoryNode = new DirectoryNode(subDirectoryInfo);
             LoadDirectory(subDirectoryNode);
-
-            // Synchronize the addition to the parent directory's list
-            lock (directoryNode.Subdirectories) {
-                directoryNode.Subdirectories.Add(subDirectoryNode);
-            }
+            subdirectoryNodes.Add(subDirectoryNode);
         });
+
+        directoryNode.Subdirectories = subdirectoryNodes.ToImmutableArray();
     }
 }

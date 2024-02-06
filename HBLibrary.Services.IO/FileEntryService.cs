@@ -1,5 +1,4 @@
-﻿using HBLibrary.Common.IO;
-
+﻿
 namespace HBLibrary.Services.IO;
 public class FileEntryService : IFileEntryService {
     #region Copy
@@ -143,7 +142,15 @@ public class FileEntryService : IFileEntryService {
     private static void MoveDirectoryWithOverwrite(string source, string target) {
         foreach (string file in Directory.GetFiles(source)) {
             string destFile = Path.Combine(target, Path.GetFileName(file));
+
+#if NETFRAMEWORK
+            if (File.Exists(destFile))
+                File.Delete(destFile);
+
+            File.Move(source, destFile);
+#elif NET5_0_OR_GREATER
             File.Move(file, destFile, true); // Overwrites the file if it already exists
+#endif
         }
 
         foreach (string directory in Directory.GetDirectories(source)) {
@@ -165,7 +172,14 @@ public class FileEntryService : IFileEntryService {
                     File.Move(source, target);
                 break;
             case MoveOperationAction.Overwrite:
-                File.Move(source, target, true);
+#if NETFRAMEWORK
+                if (File.Exists(target))
+                    File.Delete(target);
+
+                File.Move(source, target);
+#elif NET5_0_OR_GREATER
+            File.Move(source, target, true); // Overwrites the file if it already exists
+#endif                
                 break;
         }
     }
@@ -194,7 +208,16 @@ public class FileEntryService : IFileEntryService {
 
                 return Task.CompletedTask;
             case MoveOperationAction.Overwrite:
-                return Task.Run(() => File.Move(source, target, true));
+                return Task.Run(() => {
+#if NETFRAMEWORK
+                    if (File.Exists(target))
+                        File.Delete(target);
+
+                    File.Move(source, target);
+#elif NET5_0_OR_GREATER
+                    File.Move(source, target, true);
+#endif
+                });
             default:
                 throw new NotSupportedException(action.ToString());
         }
@@ -215,7 +238,7 @@ public class FileEntryService : IFileEntryService {
         }
         await Task.WhenAll(moveDirectoryTasks);
     }
-    #endregion
+#endregion
 
     #region Replace
     public void ReplaceDirectory(string source, string target) {

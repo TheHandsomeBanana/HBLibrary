@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Common.IO;
+namespace HBLibrary.Services.IO;
 public readonly struct DirectorySnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
-    public ImmutableArray<DirectorySnapshot> SubDirectories { get; } = [];
+    public ImmutableArray<DirectorySnapshot> Subdirectories { get; } = [];
     public ImmutableArray<FileSnapshot> Files { get; } = [];
 
     public static DirectorySnapshot Load(string path) {
@@ -49,7 +49,7 @@ public readonly struct DirectorySnapshot {
 
     internal DirectorySnapshot(string path, ImmutableArray<FileSnapshot> files, ImmutableArray<DirectorySnapshot> directories) : this(path) {
         Files = files;
-        SubDirectories = directories;
+        Subdirectories = directories;
     }
 
     public DirectoryInfo GetDirectoryInfo() => new DirectoryInfo(FullPath);

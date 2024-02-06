@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Common.IO;
+namespace HBLibrary.Services.IO;
 public static class PathValidator {
     public static bool ValidatePath(string path) 
         => !string.IsNullOrEmpty(path) 
