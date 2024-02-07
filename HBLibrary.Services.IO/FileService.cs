@@ -1,13 +1,45 @@
 ﻿using HBLibrary.Common.Extensions;
+using HBLibrary.Services.IO.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public class FileService : IFileService {
+    public FileOperationResponse Execute(FileOperationRequest operation) {
+        DateTime executionStart = DateTime.Now;
+
+
+        throw new NotImplementedException();
+    }
+
+    public async Task<FileOperationResponse> ExecuteAsync(FileOperationRequest operation, CancellationToken token = default) {
+        DateTime executionStart = DateTime.Now;
+
+        if (!operation.CanAsync)
+            return new FileOperationErrorResponse($"{operation} can't execute async.") {
+                ExecutionStart = executionStart,
+                ExecutionEnd = DateTime.Now
+            };
+
+        switch (operation) {
+            case DecryptFileOperationRequest decryptFileOperation:
+                return new DecryptFileOperationResponse();
+            case EncryptFileOperationRequest encryptFileOperation:
+                return new EncryptFileOperationResponse();
+            case CopyFileOperationRequest copyFileOperation:
+                return new CopyFileOperationResponse();
+            case ReadFileOperationRequest readFileOperation:
+                return new ReadFileOperationResponse();
+            case WriteFileOperationRequest writeFileOperation:
+                return new WriteFileOperationResponse();
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
     public string Read(FileSnapshot file, FileShare share = FileShare.None) {
         using FileStream fs = file.OpenStream(FileMode.Open, FileAccess.Read, share);
         using StreamReader sr = new StreamReader(fs);

@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\HBLibrary.Common\HBLibrary.Common.csproj" />
+	  <ProjectReference Include="..\HBLibrary.Services.Security\HBLibrary.Services.Security.csproj" />
 	</ItemGroup>
 
 </Project>

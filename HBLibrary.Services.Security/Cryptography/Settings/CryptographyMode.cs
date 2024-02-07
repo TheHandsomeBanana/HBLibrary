@@ -1,5 +1,5 @@
 ﻿namespace HBLibrary.Services.Security.Cryptography.Settings; 
-public enum EncryptionMode {
+public enum CryptographyMode {
 #if WINDOWS
     WindowsDataProtectionAPI,
 #endif

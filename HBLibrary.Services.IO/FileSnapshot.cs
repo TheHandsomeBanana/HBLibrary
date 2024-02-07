@@ -41,6 +41,13 @@ public readonly struct FileSnapshot {
         OptimalBufferSize = GetOptimalBufferSize(Length);
     }
 
+    internal FileSnapshot(FileInfo info) {
+        Path = info.Name;
+        FullPath = info.FullName;
+        Length = info.Length;
+        OptimalBufferSize = GetOptimalBufferSize(info.Length);
+    }
+
     public FileInfo GetInfo() => new FileInfo(Path);
 
     // https://github.com/dotnet/runtime/discussions/74405

@@ -18,4 +18,10 @@ public class DirectoryNode {
     internal DirectoryNode(DirectoryInfo info) {
         Directory = info;
     }
+
+    public DirectorySnapshot CreateSnapshot() {
+        return new DirectorySnapshot(Directory.Name, 
+            Files.Select(e => new FileSnapshot(e)).ToImmutableArray(),
+            Subdirectories.Select(e => e.CreateSnapshot()).ToImmutableArray());
+    }
 }
