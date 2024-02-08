@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Operations;
-public class WriteFileOperationResponse : FileOperationResponse {
-    public override string GetStringResult() {
+namespace HBLibrary.Services.IO.Operations.File;
+public class CopyFileOperationResponse : FileOperationResponse
+{
+    public override string GetStringResult()
+    {
         throw new NotImplementedException();
     }
 }

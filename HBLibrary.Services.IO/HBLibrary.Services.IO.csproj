@@ -20,4 +20,9 @@
 	  <ProjectReference Include="..\HBLibrary.Services.Security\HBLibrary.Services.Security.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Operations\Archive\" />
+	  <Folder Include="Operations\Directory\" />
+	</ItemGroup>
+
 </Project>

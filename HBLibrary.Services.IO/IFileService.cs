@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using HBLibrary.Services.IO.Operations;
+using HBLibrary.Services.IO.Operations.File;
 
 namespace HBLibrary.Services.IO;
 public interface IFileService {

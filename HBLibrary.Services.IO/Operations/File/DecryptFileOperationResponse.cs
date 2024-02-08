@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Operations;
-public class EncryptFileOperationRequest : WriteFileOperationRequest {
+namespace HBLibrary.Services.IO.Operations.File;
+public class DecryptFileOperationResponse : ReadFileOperationResponse
+{
 }

@@ -10,18 +10,5 @@ public static class PathValidator {
         => !string.IsNullOrEmpty(path) 
         && path.IndexOfAny(Path.GetInvalidPathChars()) == -1;
 
-    public static bool PathExists(string path, out string? fullPath) {
-        fullPath = null;
-
-        if (!ValidatePath(path))
-            return false;
-
-        try {
-            fullPath = Path.GetFullPath(path);
-            return true;
-        }
-        catch (Exception) {
-            return false;
-        }
-    }
+    public static bool IsUNCPath(string path) => path.StartsWith("\\\\") && path.Length > 2;
 }
