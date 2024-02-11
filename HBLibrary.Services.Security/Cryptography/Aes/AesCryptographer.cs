@@ -8,7 +8,7 @@ using HBLibrary.Services.Security.Cryptography;
 
 namespace HBLibrary.Services.Security.Cryptography.Aes;
 
-public class AesCryptoService : IAesCryptoService {
+public class AesCryptographer : IAesCryptographer {
     public byte[] Decrypt(byte[] cipher, AesKey key) {
         ICryptoTransform decryptor = System.Security.Cryptography.Aes.Create().CreateDecryptor(key.Key, key.IV);
 

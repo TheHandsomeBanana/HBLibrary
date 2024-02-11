@@ -4,7 +4,7 @@ using System;
 using System.Security.Cryptography;
 
 namespace HBLibrary.Services.Security.Cryptography.Rsa;
-public class RsaCryptoService : IRsaCryptoService {
+public class RsaCryptographer : IRsaCryptographer {
     public byte[] Decrypt(byte[] cipher, RsaKey key) {
         RSA rsa = RSA.Create(key.KeySize);
         if (key.IsPublic)

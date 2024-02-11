@@ -1,6 +1,8 @@
 ﻿using System.Security.Cryptography;
 
 #if WINDOWS
+#pragma warning disable CA1416 // Validate platform compatibility
+
 namespace HBLibrary.Services.Security.DataProtection;
 
 public class DataProtectionService : IDataProtectionService {
@@ -22,5 +24,6 @@ public class DataProtectionService : IDataProtectionService {
         return ProtectedData.Unprotect(data, entropy, scope);
     }
 }
+#pragma warning restore CA1416 // Validate platform compatibility
 
 #endif

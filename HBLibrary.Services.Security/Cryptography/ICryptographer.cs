@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.Security.Cryptography;
 public interface ICryptographer {
-    byte[] Encrypt(byte[] data, CryptographySettings? settings = null);
-    byte[] Decrypt(byte[] data, CryptographySettings? settings = null);
+    byte[] Encrypt(byte[] data, CryptographySettings settings);
+    byte[] Decrypt(byte[] data, CryptographySettings settings);
 }
