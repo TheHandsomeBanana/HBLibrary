@@ -8,7 +8,7 @@ namespace HBLibrary.Services.IO.Operations;
 public abstract class IOOperationResponse {
     public bool Success { get; internal set; }
     public string? ErrorMessage { get; internal set; }
-
+    public Exception? Exception { get; internal set; }
     public DateTime ExecutionStart { get; internal set; }
     public DateTime ExecutionEnd { get; internal set; }
     public TimeSpan ExecutionTime => ExecutionEnd - ExecutionStart;

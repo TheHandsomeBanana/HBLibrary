@@ -9,7 +9,7 @@ public class WinRARCompressionTests {
 
     [TestMethod]
     public void CompressFile_ReturnsCorrectResult() {
-        IWinRARCompressionService service = new WinRARCompressionService();
+        IWinRARCompressor service = new WinRARCompressor();
         service.OnProcessExit += CorrectResult_OnProcessExit;
         service.OnOutputDataReceived += CorrectResult_OnOutputDataReceived;
         service.OnErrorDataReceived += CorrectResult_OnErrorDataReceived;
@@ -19,17 +19,17 @@ public class WinRARCompressionTests {
 
     [TestMethod]
     public void ExtractFile_ReturnsCorrectResult() {
-        IWinRARCompressionService service = new WinRARCompressionService();
+        IWinRARCompressor service = new WinRARCompressor();
     }
 
     [TestMethod]
     public void CompressDirectory_ReturnsCorrectResult() {
-        IWinRARCompressionService service = new WinRARCompressionService();
+        IWinRARCompressor service = new WinRARCompressor();
     }
 
     [TestMethod]
     public void ExtractDirectory_ReturnsCorrectResult() {
-        IWinRARCompressionService service = new WinRARCompressionService();
+        IWinRARCompressor service = new WinRARCompressor();
     }
 
     private void CorrectResult_OnErrorDataReceived(object? sender, ProcessStdStreamEventArgs e) {
@@ -49,7 +49,7 @@ public class WinRARCompressionTests {
     [TestMethod]
     public void Compress_InvalidSource_ShouldTriggerError() {
         string errorOutput = "";
-        IWinRARCompressionService service = new WinRARCompressionService();
+        IWinRARCompressor service = new WinRARCompressor();
         service.OnErrorDataReceived += (sender, e) => {
             if (!string.IsNullOrEmpty(e.Data)) {
                 errorOutput += e.Data + Environment.NewLine;

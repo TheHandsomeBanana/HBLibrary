@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Runtime;
 
 namespace HBLibrary.Services.IO.Compression.Zip {
-    public class ZipCompressionService : IZipCompressionService {
+    public class ZipCompressor : IZipCompressor {
 
         public void CompressDirectory(string sourceDirectory, string destinationArchive) {
             CompressDirectory(sourceDirectory, destinationArchive, new ZipCompressionSettings());

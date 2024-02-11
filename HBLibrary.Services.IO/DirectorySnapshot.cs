@@ -13,7 +13,7 @@ public readonly struct DirectorySnapshot {
     public ImmutableArray<DirectorySnapshot> Subdirectories { get; } = [];
     public ImmutableArray<FileSnapshot> Files { get; } = [];
 
-    public static DirectorySnapshot Load(string path) {
+    public static DirectorySnapshot Create(string path) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
@@ -30,7 +30,7 @@ public readonly struct DirectorySnapshot {
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static DirectorySnapshot LoadFull(string path) {
+    public static DirectorySnapshot CreateAndLoad(string path) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
@@ -54,5 +54,13 @@ public readonly struct DirectorySnapshot {
 
     public DirectoryInfo GetDirectoryInfo() => new DirectoryInfo(FullPath);
 
-    public string CombineToFile(string file) => System.IO.Path.Combine(FullPath, System.IO.Path.GetFileName(file));
+
+    public static implicit operator ValidPath(DirectorySnapshot directory) => new ValidPath(directory);
+
+    public static explicit operator DirectorySnapshot(ValidPath path) {
+        if (!path.IsDirectory)
+            throw new InvalidCastException($"Path {path} is not a directory.");
+
+        return new DirectorySnapshot(path.Path);
+    }
 }

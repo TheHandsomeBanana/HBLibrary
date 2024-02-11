@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Compression {
-    public interface ICompressionService {
+    public interface ICompressor {
         void Compress(string sourceFile, string destinationArchive);
         void Extract(string sourceArchive, string destinationDirectory);
     }

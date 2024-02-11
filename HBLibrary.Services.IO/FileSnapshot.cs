@@ -19,7 +19,7 @@ public readonly struct FileSnapshot {
     /// <param name="path"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static FileSnapshot Load(string path) {
+    public static FileSnapshot Create(string path) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
@@ -27,6 +27,19 @@ public readonly struct FileSnapshot {
             File.Create(path).Dispose();
 
         return new FileSnapshot(path);
+    }
+
+    public static bool TryCreate(string path, out FileSnapshot? file) {
+        file = null;
+
+        if (!PathValidator.ValidatePath(path))
+            return false;
+
+        if (!File.Exists(path))
+            File.Create(path).Dispose();
+
+        file = new FileSnapshot(path);
+        return true;
     }
 
     /// <summary>
@@ -76,5 +89,14 @@ public readonly struct FileSnapshot {
 
     public FileStream OpenStream(FileMode mode, FileAccess access, FileShare share, bool useAsync = false) {
         return new FileStream(FullPath, mode, access, share, OptimalBufferSize, useAsync);
+    }
+
+    public static implicit operator ValidPath(FileSnapshot file) => new ValidPath(file);
+
+    public static explicit operator FileSnapshot(ValidPath path) {
+        if (!path.IsFile)
+            throw new InvalidCastException($"Path {path} is not a file.");
+
+        return new FileSnapshot(path.Path);
     }
 }

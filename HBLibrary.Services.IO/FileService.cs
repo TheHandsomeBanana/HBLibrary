@@ -25,20 +25,70 @@ public class FileService : IFileService {
                 ExecutionEnd = DateTime.Now
             };
 
+        FileOperationResponse fileOperationResponse;
+        bool success = true;
+        string? error = null;
+        Exception? e = null;
+
         switch (operation) {
-            case DecryptFileOperationRequest decryptFileOperation:
-                return new DecryptFileOperationResponse();
-            case EncryptFileOperationRequest encryptFileOperation:
-                return new EncryptFileOperationResponse();
-            case CopyFileOperationRequest copyFileOperation:
-                return new CopyFileOperationResponse();
-            case ReadFileOperationRequest readFileOperation:
-                return new ReadFileOperationResponse();
-            case WriteFileOperationRequest writeFileOperation:
-                return new WriteFileOperationResponse();
+            case DecryptFileOperationRequest decryptRequest:
+                fileOperationResponse = new DecryptFileOperationResponse();
+                break;
+            case EncryptFileOperationRequest encryptRequest:
+                fileOperationResponse = new EncryptFileOperationResponse();
+                break;
+            case CopyFileOperationRequest copyRequest:
+                fileOperationResponse = new CopyFileOperationResponse();
+                break;
+            case ReadFileOperationRequest readRequest:
+                byte[] content = [];
+                try {
+                    content = await ReadBytesAsync(readRequest.File, readRequest.Share);
+                }
+                catch (Exception ex) {
+                    e = ex;
+                    error = e.Message;
+                    success = false;
+                }
+
+                fileOperationResponse = new ReadFileOperationResponse {
+                    ExecutionStart = executionStart,
+                    Success = success,
+                    Result = content,
+                    ResultString = readRequest.Encoding.GetString(content),
+                    ErrorMessage = error,
+                    Exception = e,
+                    File = readRequest.File
+                };
+                break;
+            case WriteFileOperationRequest writeRequest:
+                try {
+                    if (writeRequest.StringContent is not null)
+                        await WriteAsync(writeRequest.File, writeRequest.StringContent, writeRequest.Append, writeRequest.Share);
+                    else
+                        await WriteBytesAsync(writeRequest.File, writeRequest.Content, writeRequest.Append, writeRequest.Share);
+                }
+                catch (Exception ex) {
+                    e = ex;
+                    error = e.Message;
+                    success = false;
+                }
+
+                fileOperationResponse = new WriteFileOperationResponse {
+                    ExecutionStart = executionStart,
+                    Success = success,
+                    ErrorMessage = error,
+                    Exception = e,
+                    File = writeRequest.File,
+                };
+
+                break;
             default:
-                throw new NotImplementedException();
+                throw new NotSupportedException(operation.GetType().Name);
         }
+
+        fileOperationResponse.ExecutionEnd = DateTime.Now;
+        return fileOperationResponse;
     }
 
     public string Read(FileSnapshot file, FileShare share = FileShare.None) {

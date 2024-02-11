@@ -8,5 +8,15 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
 public abstract class FileOperationRequest : IOOperationRequest {
-    public FileSnapshot File { get; set; }
+    /// <summary>
+    /// Implicitly sets <see cref="FileSnapshot"/> <see cref="File"/>, so a valid file path must be provided.
+    /// </summary>
+    public override ValidPath Path {
+        set {
+            File = (FileSnapshot)value;
+            base.Path = value;
+        }
+    }
+
+    public FileSnapshot File { get; private set; }
 }

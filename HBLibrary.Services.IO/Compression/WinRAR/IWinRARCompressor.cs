@@ -10,7 +10,7 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
     /// <summary>
     /// Utilizes the WinRAR command line for RAR compression
     /// </summary>
-    public interface IWinRARCompressionService : ICompressionService {
+    public interface IWinRARCompressor : ICompressor {
         event EventHandler<ProcessExitEventArgs>? OnProcessExit;
         event EventHandler<ProcessStdStreamEventArgs>? OnOutputDataReceived;
         event EventHandler<ProcessStdStreamEventArgs>? OnErrorDataReceived;

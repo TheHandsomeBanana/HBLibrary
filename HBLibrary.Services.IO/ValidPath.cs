@@ -22,6 +22,22 @@ public readonly struct ValidPath {
         IsUNC = isUNC;
     }
 
+    internal ValidPath(FileSnapshot file) {
+        Path = file.Path;
+        FullPath = file.FullPath;
+        IsFile = true;
+        IsDirectory = false;
+        IsUNC = PathValidator.IsUNCPath(file.FullPath);
+    }
+
+    internal ValidPath(DirectorySnapshot directory) {
+        Path = directory.Path;
+        FullPath = directory.FullPath;
+        IsDirectory = true;
+        IsFile = false;
+        IsUNC = PathValidator.IsUNCPath(directory.FullPath);
+    }
+
     /// <summary>
     /// Use when path should exist on file system.
     /// </summary>

@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations;
 public abstract class IOOperationRequest {
-    public ValidPath ValidPath { get; set; }
+    public virtual ValidPath Path { get; set; }
     public abstract bool CanAsync { get; }
 }

@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace HBLibrary.Services.IO;
 public static class IOOperationExecutor {
     public static IOOperationResponse Execute(IOOperationResponse response) {
-
+        throw new NotImplementedException();
     }
 
     public static Task<IOOperationResponse> ExecuteAsync(IOOperationResponse response) {
-
+        throw new NotImplementedException();
     }
 }

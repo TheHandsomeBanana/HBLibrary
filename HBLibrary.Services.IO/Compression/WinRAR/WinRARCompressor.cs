@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Compression.WinRAR {
-    public class WinRARCompressionService : IWinRARCompressionService {
+    public class WinRARCompressor : IWinRARCompressor {
         private readonly string winRARPath;
         private StringBuilder? standardOutput;
         private StringBuilder? standardError;
@@ -23,7 +23,7 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
         public string StdOutput { get; set; } = "";
         public string StdError { get; set; } = "";
 
-        public WinRARCompressionService() {
+        public WinRARCompressor() {
             this.winRARPath = WinRARHelper.GetWinRARInstallationPath()
                 ?? throw new DirectoryNotFoundException("Could not detect a WinRAR installation.");
         }
