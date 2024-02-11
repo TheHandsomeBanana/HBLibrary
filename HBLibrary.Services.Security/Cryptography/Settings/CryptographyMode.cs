@@ -1,7 +1,8 @@
 ﻿namespace HBLibrary.Services.Security.Cryptography.Settings; 
 public enum CryptographyMode {
 #if WINDOWS
-    WindowsDataProtectionAPI,
+    DPApiUser,
+    DPApiMachine,
 #endif
     AES,
     RSA,

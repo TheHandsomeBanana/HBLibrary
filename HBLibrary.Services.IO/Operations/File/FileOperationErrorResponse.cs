@@ -5,17 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public class FileOperationErrorResponse : FileOperationResponse
-{
+public class FileOperationErrorResponse : FileOperationResponse {
 
-    public FileOperationErrorResponse(string error)
-    {
+    public FileOperationErrorResponse(string error) {
         Success = false;
-        Message = error;
+        ErrorMessage = error;
     }
 
-    public override string GetStringResult()
-    {
+    public override string GetStringResult() {
         return base.ToString();
     }
 }

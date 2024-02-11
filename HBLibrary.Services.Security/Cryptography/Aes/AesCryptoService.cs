@@ -6,32 +6,11 @@ using System.Threading.Tasks;
 using HBLibrary.Common.Extensions;
 using HBLibrary.Services.Security.Cryptography;
 
-namespace HBLibrary.Services.Security.Cryptography;
+namespace HBLibrary.Services.Security.Cryptography.Aes;
 
 public class AesCryptoService : IAesCryptoService {
-
-    public byte[] Decrypt(byte[] cipher, IKey key) {
-        if (cipher == null || cipher.Length == 0)
-            throw new ArgumentNullException(nameof(cipher));
-
-        if (!(key is AesKey))
-            throw new ArgumentException($"The provided key is not an {nameof(AesKey)}.");
-
-        return Decrypt(cipher, (AesKey)key);
-    }
-
-    public byte[] Encrypt(byte[] data, IKey key) {
-        if (data == null)
-            throw new ArgumentNullException(nameof(data));
-
-        if (!(key is AesKey))
-            throw new ArgumentException($"The provided key is not an {nameof(AesKey)}.");
-
-        return Encrypt(data, (AesKey)key);
-    }
-
     public byte[] Decrypt(byte[] cipher, AesKey key) {
-        ICryptoTransform decryptor = Aes.Create().CreateDecryptor(key.Key, key.IV);
+        ICryptoTransform decryptor = System.Security.Cryptography.Aes.Create().CreateDecryptor(key.Key, key.IV);
 
         using (MemoryStream ms = new MemoryStream(cipher)) {
             using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read)) {
@@ -50,7 +29,7 @@ public class AesCryptoService : IAesCryptoService {
     }
 
     public byte[] Encrypt(byte[] data, AesKey key) {
-        ICryptoTransform encryptor = Aes.Create().CreateEncryptor(key.Key, key.IV);
+        ICryptoTransform encryptor = System.Security.Cryptography.Aes.Create().CreateEncryptor(key.Key, key.IV);
 
         using (MemoryStream ms = new MemoryStream()) {
             using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write)) {
@@ -63,7 +42,7 @@ public class AesCryptoService : IAesCryptoService {
     }
 
     public async Task<byte[]> DecryptAsync(byte[] cipher, AesKey key) {
-        ICryptoTransform decryptor = Aes.Create().CreateDecryptor(key.Key, key.IV);
+        ICryptoTransform decryptor = System.Security.Cryptography.Aes.Create().CreateDecryptor(key.Key, key.IV);
 
         using (MemoryStream ms = new MemoryStream(cipher)) {
             using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read)) {
@@ -81,7 +60,7 @@ public class AesCryptoService : IAesCryptoService {
     }
 
     public async Task<byte[]> EncryptAsync(byte[] data, AesKey key) {
-        ICryptoTransform encryptor = Aes.Create().CreateEncryptor(key.Key, key.IV);
+        ICryptoTransform encryptor = System.Security.Cryptography.Aes.Create().CreateEncryptor(key.Key, key.IV);
 
         using (MemoryStream ms = new MemoryStream()) {
             using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write)) {
@@ -90,14 +69,6 @@ public class AesCryptoService : IAesCryptoService {
 
             return ms.ToArray();
         }
-    }
-
-    public AesKey[] GenerateKeys(int keySize = 256) {
-        return new AesKey[] { KeyGenerator.GenerateAesKey(keySize) };
-    }
-
-    IKey[] ICryptoService.GenerateKeys(int keySize) {
-        return GenerateKeys(keySize);
     }
 
     public AesKey GenerateKey(int keySize = 256) => KeyGenerator.GenerateAesKey(keySize);
