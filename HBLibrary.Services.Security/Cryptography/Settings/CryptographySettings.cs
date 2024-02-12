@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.Security.Cryptography.Settings;
 public class CryptographySettings {
-    public CryptographyMode Mode { get; }
+    public required CryptographyMode Mode { get; init; }
     public required IKey Key { get; init; }
 
     

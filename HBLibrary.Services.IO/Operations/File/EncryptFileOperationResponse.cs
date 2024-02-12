@@ -5,6 +5,5 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public class EncryptFileOperationResponse : WriteFileOperationResponse
-{
+public class EncryptFileOperationResponse : WriteFileOperationResponse {
 }

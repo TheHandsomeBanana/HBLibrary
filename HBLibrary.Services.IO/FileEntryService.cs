@@ -2,7 +2,7 @@
 namespace HBLibrary.Services.IO;
 public class FileEntryService : IFileEntryService {
     #region Copy
-    public void CopyDirectory(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+    public void CopyDirectory(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
         if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
@@ -12,7 +12,7 @@ public class FileEntryService : IFileEntryService {
         CopyDirectoryInternal(source, target, action);
     }
 
-    public void CopyFile(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+    public void CopyFile(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
         if (PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
@@ -22,7 +22,7 @@ public class FileEntryService : IFileEntryService {
         CopyFileInternal(source, target, action);
     }
 
-    public Task CopyDirectoryAsync(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+    public Task CopyDirectoryAsync(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
         if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
@@ -32,7 +32,7 @@ public class FileEntryService : IFileEntryService {
         return CopyDirectoryInternalAsync(source, target, action);
     }
 
-    public Task CopyFileAsync(string source, string target, CopyOperationAction action = CopyOperationAction.Skip) {
+    public Task CopyFileAsync(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
         if (PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
@@ -42,7 +42,7 @@ public class FileEntryService : IFileEntryService {
         return CopyFileInternalAsync(source, FileSnapshot.GetOptimalBufferSize(source), target, action);
     }
 
-    private static void CopyDirectoryInternal(string source, string target, CopyOperationAction action) {
+    private static void CopyDirectoryInternal(string source, string target, CopyConflictAction action) {
         foreach (string file in Directory.GetFiles(source)) {
             string targetFile = Path.Combine(target, Path.GetFileName(file));
             CopyFileInternal(file, targetFile, action);
@@ -54,16 +54,16 @@ public class FileEntryService : IFileEntryService {
         }
     }
 
-    private static void CopyFileInternal(string source, string target, CopyOperationAction action) {
+    private static void CopyFileInternal(string source, string target, CopyConflictAction action) {
         switch (action) {
-            case CopyOperationAction.Skip:
+            case CopyConflictAction.Skip:
                 if (!File.Exists(target))
                     File.Copy(source, target);
                 break;
-            case CopyOperationAction.OverwriteAll:
+            case CopyConflictAction.OverwriteAll:
                 File.Copy(source, target, true);
                 break;
-            case CopyOperationAction.OverwriteModifiedOnly:
+            case CopyConflictAction.OverwriteModifiedOnly:
                 if (File.Exists(target)) {
                     FileInfo sourceInfo = new FileInfo(source);
                     FileInfo targetInfo = new FileInfo(target);
@@ -77,7 +77,7 @@ public class FileEntryService : IFileEntryService {
         }
     }
 
-    private static async Task CopyDirectoryInternalAsync(string source, string target, CopyOperationAction action) {
+    private static async Task CopyDirectoryInternalAsync(string source, string target, CopyConflictAction action) {
         List<Task> copyFileTasks = [];
         foreach (string file in Directory.GetFiles(source)) {
             string targetFile = Path.Combine(target, Path.GetFileName(file));
@@ -93,16 +93,16 @@ public class FileEntryService : IFileEntryService {
         await Task.WhenAll(copyDirectoryTasks);
     }
 
-    private static async Task CopyFileInternalAsync(string source, int bufferSize, string target, CopyOperationAction action) {
+    private static async Task CopyFileInternalAsync(string source, int bufferSize, string target, CopyConflictAction action) {
         switch (action) {
-            case CopyOperationAction.Skip:
+            case CopyConflictAction.Skip:
                 if (!File.Exists(target))
                     await CopyAsync(source, bufferSize, target);
                 break;
-            case CopyOperationAction.OverwriteAll:
+            case CopyConflictAction.OverwriteAll:
                 await CopyAsync(source, bufferSize, target);
                 break;
-            case CopyOperationAction.OverwriteModifiedOnly:
+            case CopyConflictAction.OverwriteModifiedOnly:
                 if (!File.Exists(target) || new FileInfo(source).Length != new FileInfo(target).Length)
                     await CopyAsync(source, bufferSize, target);
 

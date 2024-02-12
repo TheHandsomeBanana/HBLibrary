@@ -11,33 +11,33 @@ public static class KeyGenerator {
         return new AesKey(aes.Key, aes.IV);
     }
 
-#if NET5_0_OR_GREATER
     public static RsaKey[] GenerateRsaKeys(int keySizeInBits = 2048) {
         RSA rsa = RSA.Create(keySizeInBits);
 
-        return [new RsaKey(rsa.ExportRSAPublicKey(), keySizeInBits, true), new RsaKey(rsa.ExportRSAPrivateKey(), keySizeInBits, false)];
-    } 
+        return [rsa.GeneratePublicKey(), rsa.GeneratePrivateKey()];
+    }
 
-    public static RsaKey GeneratePublicKey(RSA rsa) {
+#if NET5_0_OR_GREATER
+    public static RsaKey GeneratePublicKey(this RSA rsa) {
         return new RsaKey(rsa.ExportRSAPublicKey(), rsa.KeySize, true);
     }
 
-    public static RsaKey GeneratePrivateKey(RSA rsa) {
+    public static RsaKey GeneratePrivateKey(this RSA rsa) {
         return new RsaKey(rsa.ExportRSAPrivateKey(), rsa.KeySize, false);
     }
 #elif NET472_OR_GREATER
-    public static RsaKey[] GenerateRsaKeys(int keySizeInBits = 2048) {
-        RSA rsa = RSA.Create(keySizeInBits);
-
-        return new RsaKey[] { new RsaKey(rsa.ToByteArray(false), keySizeInBits, true), new RsaKey(rsa.ToByteArray(true), keySizeInBits, false) };
-    }
-
-    public static RsaKey GeneratePublicKey(RSA rsa) {
+    public static RsaKey GeneratePublicKey(this RSA rsa) {
         return new RsaKey(rsa.ToByteArray(false), rsa.KeySize, true);
     }
 
-    public static RsaKey GeneratePrivateKey(RSA rsa) {
+    public static RsaKey GeneratePrivateKey(this RSA rsa) {
         return new RsaKey(rsa.ToByteArray(true), rsa.KeySize, false);
+    }
+#endif
+
+#if WINDOWS
+    public static DPEntropy GenerateDPApiKey(byte[] entropy) {
+        return new DPEntropy(entropy);
     }
 #endif
 }

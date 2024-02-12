@@ -14,8 +14,9 @@ public class WriteFileOperationRequest : FileOperationRequest {
     public byte[] Content { get; set; } = [];
     public string? StringContent { get; set; }
     public FileShare Share { get; set; } = FileShare.None;
-    public bool Append { get; set; }
+    public virtual bool Append { get; set; }
     public FileAccess Access => FileAccess.Write;
+    public Encoding Encoding { get; set; } = Encoding.UTF8;
 
 
     public WriteFileOperationRequest WithJsonObject<TJson>(TJson obj, JsonSerializerOptions? options = null) {

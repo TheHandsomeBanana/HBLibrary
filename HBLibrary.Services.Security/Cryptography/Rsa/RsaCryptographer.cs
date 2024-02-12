@@ -26,7 +26,7 @@ public class RsaCryptographer : IRsaCryptographer {
 #if NET5_0_OR_GREATER
         rsa.ImportRSAPublicKey(key.Key, out int bytesRead);
 #elif NET472_OR_GREATER
-        RsaKeyHelper.FromByteArray(rsa, key.Key);
+        rsa.FromByteArray(key.Key);
 #endif
         return rsa.Encrypt(data, RSAEncryptionPadding.OaepSHA512);
     }
@@ -36,18 +36,10 @@ public class RsaCryptographer : IRsaCryptographer {
     }
 
     public RsaKey GeneratePublicKey(RSA rsa) {
-#if NET5_0_OR_GREATER
-        return new RsaKey(rsa.ExportRSAPublicKey(), rsa.KeySize, true);
-#elif NET472_OR_GREATER
-        return new RsaKey(rsa.ToByteArray(false), rsa.KeySize, true);
-#endif
+        return rsa.GeneratePublicKey();
     }
 
     public RsaKey GeneratePrivateKey(RSA rsa) {
-#if NET5_0_OR_GREATER
-        return new RsaKey(rsa.ExportRSAPrivateKey(), rsa.KeySize, false);
-#elif NET472_OR_GREATER
-        return new RsaKey(rsa.ToByteArray(true), rsa.KeySize, true);
-#endif
+        return rsa.GeneratePrivateKey();
     }
 }

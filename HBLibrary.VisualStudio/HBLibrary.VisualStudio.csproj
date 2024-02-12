@@ -1,33 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-	  <LangVersion>12.0</LangVersion>
-	  <UseWPF>true</UseWPF>
-	  <Title>HBLibrary.VisualStudio</Title>
-	  <Authors>HandsomeBanana</Authors>
-	  <PackageProjectUrl>https://github.com/TheHandsomeBanana/HBLibrary/tree/master/HBLibrary.VisualStudio</PackageProjectUrl>
-	  <Description>Helper Library for extensibility</Description>
-	  <PackageIcon>HandsomeBanana.png</PackageIcon>
-	  <PackageTags>VisualStudio</PackageTags>
-	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<LangVersion>12.0</LangVersion>
+		<UseWPF>true</UseWPF>
+		<Title>HBLibrary.VisualStudio</Title>
+		<Authors>HandsomeBanana</Authors>
+		<PackageProjectUrl>https://github.com/TheHandsomeBanana/HBLibrary/tree/master/HBLibrary.VisualStudio</PackageProjectUrl>
+		<Description>Helper Library for extensibility</Description>
+		<PackageIcon>HandsomeBanana.png</PackageIcon>
+		<PackageTags>VisualStudio</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<NoWarn>NU1603</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="D:\Bilder\Spam\HandsomeBanana.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="D:\Bilder\Spam\HandsomeBanana.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0" />
-    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.8.0" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.8.37222" />
-    <PackageReference Include="PolySharp" Version="1.14.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0" />
+		<PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.8.0" />
+		<PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.8.37222" />
+		<PackageReference Include="PolySharp" Version="1.14.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
 </Project>
