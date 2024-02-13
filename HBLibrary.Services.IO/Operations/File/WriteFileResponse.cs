@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public class CopyFileOperationResponse : FileOperationResponse
+public class WriteFileResponse : FileOperationResponse
 {
     public override string GetStringResult()
     {

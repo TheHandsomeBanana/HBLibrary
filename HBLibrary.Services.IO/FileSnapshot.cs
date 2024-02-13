@@ -42,10 +42,6 @@ public readonly struct FileSnapshot {
         return true;
     }
 
-    /// <summary>
-    /// Used for directory loader
-    /// </summary>
-    /// <param name="path"></param>
     internal FileSnapshot(string path) {
         Path = path;
         FileInfo temp = GetInfo();
@@ -96,6 +92,9 @@ public readonly struct FileSnapshot {
     public static explicit operator FileSnapshot(ValidPath path) {
         if (!path.IsFile)
             throw new InvalidCastException($"Path {path} is not a file.");
+
+        if (!File.Exists(path.Path))
+            File.Create(path.Path);
 
         return new FileSnapshot(path.Path);
     }

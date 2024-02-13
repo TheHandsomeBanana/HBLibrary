@@ -21,7 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Operations\Archive\" />
 	  <Folder Include="Operations\Directory\" />
 	</ItemGroup>
 

@@ -11,8 +11,4 @@ public class FileOperationErrorResponse : FileOperationResponse {
         Success = false;
         ErrorMessage = error;
     }
-
-    public override string GetStringResult() {
-        return base.ToString();
-    }
 }

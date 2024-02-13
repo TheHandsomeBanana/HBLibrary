@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public abstract class FileOperationResponse : IOOperationResponse {
+public class FileOperationResponse : IOOperationResponse {
     public FileSnapshot? File { get; internal set; }
 
-    public override string ToString() {
+    public override string GetStringResult() {
         StringBuilder sb = new StringBuilder();
         sb.Append(base.ToString());
 

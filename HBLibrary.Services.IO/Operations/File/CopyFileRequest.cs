@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public class CopyFileOperationRequest : FileOperationRequest {
+public class CopyFileRequest : FileOperationRequest {
     public override bool CanAsync => true;
     public required string TargetFile { get; set; }
     public required CopyConflictAction ConflictAction { get; set; }

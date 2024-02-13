@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public class ReadFileOperationResponse : FileOperationResponse
+public class ReadFileResponse : FileOperationResponse
 {
     public byte[] Result { get; internal set; } = [];
     public string? ResultString { get; internal set; }

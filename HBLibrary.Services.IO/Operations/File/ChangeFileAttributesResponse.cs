@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Operations.File;
-public class DecryptFileOperationResponse : ReadFileOperationResponse
+public class ChangeFileAttributesResponse : FileOperationResponse
 {
+    public override string GetStringResult()
+    {
+        throw new NotImplementedException();
+    }
 }

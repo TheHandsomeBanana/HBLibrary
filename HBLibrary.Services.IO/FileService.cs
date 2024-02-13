@@ -25,7 +25,7 @@ public class FileService : IFileService {
         Exception? e = null;
 
         switch (operation) {
-            case DecryptFileOperationRequest decryptRequest:
+            case DecryptFileRequest decryptRequest:
                 byte[] content = [];
 
                 try {
@@ -36,13 +36,13 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new DecryptFileOperationResponse() {
+                fileOperationResponse = new DecryptFileResponse() {
                     Result = content,
                     ResultString = decryptRequest.Encoding.GetString(content),
                     File = decryptRequest.File
                 };
                 break;
-            case EncryptFileOperationRequest encryptRequest:
+            case EncryptFileRequest encryptRequest:
                 try {
                     if (encryptRequest.StringContent is not null)
                         Encrypt(encryptRequest.File, encryptRequest.StringContent, encryptRequest.Cryptographer, encryptRequest.Settings, encryptRequest.Encoding, encryptRequest.Share);
@@ -54,11 +54,11 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new EncryptFileOperationResponse {
+                fileOperationResponse = new EncryptFileResponse {
                     File = encryptRequest.File,
                 };
                 break;
-            case CopyFileOperationRequest copyRequest:
+            case CopyFileRequest copyRequest:
                 try {
                     copyRequest.FileEntryService.CopyFile(copyRequest.File.FullPath, copyRequest.TargetFile, copyRequest.ConflictAction);
                 }
@@ -67,12 +67,12 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new CopyFileOperationResponse {
+                fileOperationResponse = new CopyFileResponse {
                     File = copyRequest.File,
                 };
 
                 break;
-            case ReadFileOperationRequest readRequest:
+            case ReadFileRequest readRequest:
                 content = [];
 
                 try {
@@ -83,13 +83,13 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new ReadFileOperationResponse {
+                fileOperationResponse = new ReadFileResponse {
                     Result = content,
                     ResultString = readRequest.Encoding.GetString(content),
                     File = readRequest.File
                 };
                 break;
-            case WriteFileOperationRequest writeRequest:
+            case WriteFileRequest writeRequest:
                 try {
                     if (writeRequest.StringContent is not null)
                         Write(writeRequest.File, writeRequest.StringContent, writeRequest.Append, writeRequest.Share);
@@ -101,7 +101,7 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new WriteFileOperationResponse {
+                fileOperationResponse = new WriteFileResponse {
                     File = writeRequest.File,
                 };
 
@@ -132,7 +132,7 @@ public class FileService : IFileService {
         Exception? e = null;
 
         switch (operation) {
-            case DecryptFileOperationRequest decryptRequest:
+            case DecryptFileRequest decryptRequest:
                 byte[] content = [];
 
                 try {
@@ -143,13 +143,13 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new DecryptFileOperationResponse() {
+                fileOperationResponse = new DecryptFileResponse() {
                     Result = content,
                     ResultString = decryptRequest.Encoding.GetString(content),
                     File = decryptRequest.File
                 };
                 break;
-            case EncryptFileOperationRequest encryptRequest:
+            case EncryptFileRequest encryptRequest:
                 try {
                     if (encryptRequest.StringContent is not null)
                         await EncryptAsync(encryptRequest.File, encryptRequest.StringContent, encryptRequest.Cryptographer, encryptRequest.Settings, encryptRequest.Encoding, encryptRequest.Share);
@@ -161,11 +161,11 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new EncryptFileOperationResponse {
+                fileOperationResponse = new EncryptFileResponse {
                     File = encryptRequest.File,
                 };
                 break;
-            case CopyFileOperationRequest copyRequest:
+            case CopyFileRequest copyRequest:
                 try {
                     await copyRequest.FileEntryService.CopyFileAsync(copyRequest.File.FullPath, copyRequest.TargetFile, copyRequest.ConflictAction);
                 }
@@ -174,12 +174,12 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new CopyFileOperationResponse {
+                fileOperationResponse = new CopyFileResponse {
                     File = copyRequest.File,
                 };
                 
                 break;
-            case ReadFileOperationRequest readRequest:
+            case ReadFileRequest readRequest:
                 content = [];
 
                 try {
@@ -190,13 +190,13 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new ReadFileOperationResponse {
+                fileOperationResponse = new ReadFileResponse {
                     Result = content,
                     ResultString = readRequest.Encoding.GetString(content),
                     File = readRequest.File
                 };
                 break;
-            case WriteFileOperationRequest writeRequest:
+            case WriteFileRequest writeRequest:
                 try {
                     if (writeRequest.StringContent is not null)
                         await WriteAsync(writeRequest.File, writeRequest.StringContent, writeRequest.Append, writeRequest.Share);
@@ -208,7 +208,7 @@ public class FileService : IFileService {
                     success = false;
                 }
 
-                fileOperationResponse = new WriteFileOperationResponse {
+                fileOperationResponse = new WriteFileResponse {
                     File = writeRequest.File,
                 };
 

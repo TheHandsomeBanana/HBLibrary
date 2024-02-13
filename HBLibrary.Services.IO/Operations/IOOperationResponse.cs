@@ -13,9 +13,7 @@ public abstract class IOOperationResponse {
     public DateTime ExecutionEnd { get; internal set; }
     public TimeSpan ExecutionTime => ExecutionEnd - ExecutionStart;
 
-    public abstract string GetStringResult();
-
-    public override string ToString() {
+    public virtual string GetStringResult() {
         StringBuilder sb = new StringBuilder();
         sb.Append("Success: " + Success);
         sb.Append($"\nExecution start: {ExecutionStart:HH:mm:ss}\nExecution time: {ExecutionTime:c}");
