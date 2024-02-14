@@ -23,7 +23,7 @@ public class DirectoryContents {
     /// <param name="path"></param>
     /// <returns></returns>
     public static DirectoryContents Create(DirectorySnapshot directory) {
-        if (directory.ExistedBeforehand)
+        if (directory.IsNewDirectory)
             return new DirectoryContents(directory, [], []);
 
         return DirectoryLoader.LoadDirectoryWithContents(directory);

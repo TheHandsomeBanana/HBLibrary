@@ -37,5 +37,10 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
 
         void Compress(IArchive archive, WinRARCompressionSettings settings);
         void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder, WinRARCompressionSettings settings);
+
+#if NET5_0_OR_GREATER
+        Task CompressAsync(IArchive archive, WinRARCompressionSettings settings, CancellationToken token = default);
+        Task CompressAsync(Func<IArchiveBuilder, IArchive> archiveBuilder, WinRARCompressionSettings settings, CancellationToken token = default);
+#endif
     }
 }

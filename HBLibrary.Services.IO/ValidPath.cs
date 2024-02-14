@@ -66,16 +66,16 @@ public readonly struct ValidPath {
     /// Use when path is not existing on file system.
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="willBeFile"></param>
+    /// <param name="representsFile"></param>
     /// <param name="validPath"></param>
     /// <returns>True when the path is valid.</returns>
-    public static bool TryCreate(string path, bool willBeFile, out ValidPath? validPath) {
+    public static bool TryCreate(string path, bool representsFile, out ValidPath? validPath) {
         validPath = null;
         if (!PathValidator.ValidatePath(path))
             return false;
 
-        bool isFile = willBeFile;
-        bool isDirectory = !willBeFile;
+        bool isFile = representsFile;
+        bool isDirectory = !representsFile;
         bool isUNC = PathValidator.IsUNCPath(path);
 
         if (!isFile && !isDirectory)

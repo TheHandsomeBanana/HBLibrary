@@ -40,6 +40,12 @@ internal class ArchiveBuilder : IArchiveBuilder {
         if (name is null)
             throw new InvalidOperationException("Archive does not have a name.");
 
-        return new Archive(name, files, directories);
+        Archive archive = new Archive(name, files, directories);
+
+        name = null;
+        files.Clear();
+        directories.Clear();
+        
+        return archive;
     }   
 }

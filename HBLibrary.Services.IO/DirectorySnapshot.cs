@@ -11,7 +11,7 @@ namespace HBLibrary.Services.IO;
 public readonly struct DirectorySnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
-    public bool ExistedBeforehand { get; init; }
+    public bool IsNewDirectory { get; init; }
 
     public static DirectorySnapshot Create(string path) {
         if (!PathValidator.ValidatePath(path))
@@ -23,8 +23,21 @@ public readonly struct DirectorySnapshot {
         return new DirectorySnapshot {
             Path = path,
             FullPath = info.FullName,
-            ExistedBeforehand = dirExisted,
+            IsNewDirectory = !dirExisted,
         };
+    }
+
+    public static bool TryCreate(string path, out DirectorySnapshot? directory) {
+        directory = null;
+
+        if (!PathValidator.ValidatePath(path))
+            return false;
+
+        if (!File.Exists(path))
+            File.Create(path).Dispose();
+
+        directory = new DirectorySnapshot(path);
+        return true;
     }
 
     internal DirectorySnapshot(string path) {
@@ -41,5 +54,17 @@ public readonly struct DirectorySnapshot {
             throw new InvalidCastException($"Path {path} is not a directory.");
 
         return new DirectorySnapshot(path.Path);
+    }
+
+    public ImmutableArray<FileSnapshot> GetFiles() {
+        return Directory.EnumerateFiles(FullPath)
+            .Select(e => new FileSnapshot(e))
+            .ToImmutableArray();
+    }
+
+    public ImmutableArray<DirectorySnapshot> GetSubdirectories() {
+        return Directory.EnumerateDirectories(FullPath)
+            .Select(e => new DirectorySnapshot(e))
+            .ToImmutableArray();
     }
 }

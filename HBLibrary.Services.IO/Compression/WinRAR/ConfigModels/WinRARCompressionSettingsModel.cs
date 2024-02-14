@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Compression.WinRAR.ConfigModels;
-#if NETFRAMEWORK
 [Serializable]
-#endif
 public class WinRARCompressionSettingsModel {
     public WinRARExecutableMode? ExecutableMode { get; set; }
     public WinRARArchiveFormat? ArchiveFormat { get; set; }
