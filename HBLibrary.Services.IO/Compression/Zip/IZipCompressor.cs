@@ -9,5 +9,8 @@ namespace HBLibrary.Services.IO.Compression.Zip {
         void CompressFile(string sourceFile, string destinationArchive, ZipCompressionSettings settings);
         void CompressDirectory(string sourceDirectory, string destinationDirectory, ZipCompressionSettings settings);
         void Extract(string sourceArchive, string destinationDirectory, ZipExtractionSettings settings);
+
+        void Compress(IArchive archive, ZipCompressionSettings settings);
+        void Compress(Func<IArchiveBuilder, IArchive> archive, ZipCompressionSettings settings);
     }
 }

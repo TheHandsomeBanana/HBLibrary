@@ -34,5 +34,8 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
         Task CompressAsync(string source, string destinationArchive, WinRARCompressionSettings settings, CancellationToken token = default);
         Task ExtractAsync(string sourceArchive, string destinationDirectory, WinRARExtractionSettings settings, CancellationToken token = default);
 #endif
+
+        void Compress(IArchive archive, WinRARCompressionSettings settings);
+        void Compress(Func<IArchiveBuilder, IArchive> archive,  WinRARCompressionSettings settings);
     }
 }
