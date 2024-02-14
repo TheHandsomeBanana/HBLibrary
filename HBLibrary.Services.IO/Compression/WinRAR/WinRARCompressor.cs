@@ -120,6 +120,22 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
         }
 #endif
 
+        public void Compress(IArchive archive, WinRARCompressionSettings settings) {
+            throw new NotImplementedException();
+        }
+
+        public void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder, WinRARCompressionSettings settings) {
+            throw new NotImplementedException();
+        }
+
+        public void Compress(IArchive archive) {
+            throw new NotImplementedException();
+        }
+
+        public void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder) {
+            throw new NotImplementedException();
+        }
+
         public void Compress(string sourceDirectory, string destinationArchive)
            => Compress(sourceDirectory, destinationArchive, WinRARCompressionSettings.Default);
 
@@ -177,5 +193,6 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
             StdOutput = standardOutput!.ToString()!;
             StdError = standardError!.ToString()!;
         }
+
     }
 }

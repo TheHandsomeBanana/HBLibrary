@@ -36,6 +36,6 @@ namespace HBLibrary.Services.IO.Compression.WinRAR {
 #endif
 
         void Compress(IArchive archive, WinRARCompressionSettings settings);
-        void Compress(Func<IArchiveBuilder, IArchive> archive,  WinRARCompressionSettings settings);
+        void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder, WinRARCompressionSettings settings);
     }
 }

@@ -10,6 +10,6 @@ namespace HBLibrary.Services.IO.Compression {
         void Extract(string sourceArchive, string destinationDirectory);
 
         void Compress(IArchive archive);
-        void Compress(Func<IArchiveBuilder, IArchive> archive);
+        void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder);
     }
 }

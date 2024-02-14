@@ -12,6 +12,14 @@ using System.Runtime;
 namespace HBLibrary.Services.IO.Compression.Zip {
     public class ZipCompressor : IZipCompressor {
 
+        public void Compress(IArchive archive) {
+            Compress(archive, new ZipCompressionSettings());
+        }
+
+        public void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder) {
+            Compress(archiveBuilder, new ZipCompressionSettings());
+        }
+
         public void CompressDirectory(string sourceDirectory, string destinationArchive) {
             CompressDirectory(sourceDirectory, destinationArchive, new ZipCompressionSettings());
         }
@@ -21,12 +29,12 @@ namespace HBLibrary.Services.IO.Compression.Zip {
         }
 
         public void Compress(string sourceFile, string destinationArchive) {
-            CompressFile(sourceFile, destinationArchive, new ZipCompressionSettings()); 
+            CompressFile(sourceFile, destinationArchive, new ZipCompressionSettings());
         }
 
         public void CompressFile(string sourceFile, string destinationArchive, ZipCompressionSettings settings) {
-            using(ZipFile zip = new ZipFile()) {
-                if(settings.Password != null) {
+            using (ZipFile zip = new ZipFile()) {
+                if (settings.Password != null) {
                     zip.Password = settings.Password;
                     zip.Encryption = settings.EncryptionAlgorithm;
                 }
@@ -60,6 +68,29 @@ namespace HBLibrary.Services.IO.Compression.Zip {
 
                 zip.ExtractAll(destinationDirectory, settings.ExtractExistingFileAction);
             }
+        }
+
+        public void Compress(IArchive archive, ZipCompressionSettings settings) {
+            using (ZipFile zip = new ZipFile()) {
+                if (settings.Password != null) {
+                    zip.Password = settings.Password;
+                    zip.Encryption = settings.EncryptionAlgorithm;
+                }
+
+                zip.CompressionLevel = settings.Level;
+                zip.CompressionMethod = settings.Method;
+
+                foreach (string dir in archive.DirectoryNames)
+                    zip.AddDirectory(dir, Path.GetDirectoryName(dir));
+
+                zip.AddFiles(archive.FileNames);
+                zip.Save(archive.Name);
+            }
+        }
+
+        public void Compress(Func<IArchiveBuilder, IArchive> archiveBuilder, ZipCompressionSettings settings) {
+            IArchive archive = archiveBuilder.Invoke(new ArchiveBuilder());
+            Compress(archive);
         }
     }
 }
