@@ -8,11 +8,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
-// https://documentation.help/WinRAR/HELPCommandLineSyntax.htm
-public class WinRARCompressionSettings
-{
-    public string ArchiveFormatExtension => ArchiveFormat switch
-    {
+// https://documentation.help/WinRAR/HELPCommandLineSyntax.html
+public class WinRARCompressionSettings {
+    public string ArchiveFormatExtension => ArchiveFormat switch {
         WinRARArchiveFormat.RAR or
         WinRARArchiveFormat.RAR4 => ".rar",
         WinRARArchiveFormat.ZIP => ".zip",
@@ -35,13 +33,10 @@ public class WinRARCompressionSettings
     /// <summary>
     /// e.g. '5%' -> adds a recovery record that is 5% of the total archive size
     /// </summary>
-    public string? RecoveryRecordPercentage
-    {
+    public string? RecoveryRecordPercentage {
         get => recoveryRecordPercentage;
-        set
-        {
-            if (value is null)
-            {
+        set {
+            if (value is null) {
                 recoveryRecordPercentage = null;
                 return;
             }
@@ -54,8 +49,7 @@ public class WinRARCompressionSettings
     }
 
     public static WinRARCompressionSettings Default => new WinRARCompressionSettings();
-    public string SetExtension(string path)
-    {
+    public string SetExtension(string path) {
         if (path.EndsWith(ArchiveFormatExtension))
             return path;
 
@@ -66,8 +60,7 @@ public class WinRARCompressionSettings
     /// </summary>
     /// <returns></returns>
     /// <exception cref="WinRARException"></exception>
-    public override string ToString()
-    {
+    public override string ToString() {
         Validate();
 
         StringBuilder sb = new StringBuilder();
@@ -102,21 +95,18 @@ public class WinRARCompressionSettings
     /// </summary>
     /// <returns></returns>
     /// <exception cref="WinRARException"></exception>
-    public string GetArgumentString()
-    {
+    public string GetArgumentString() {
         return ToString();
     }
 
-    public string ArchiveFormatString => ArchiveFormat switch
-    {
+    public string ArchiveFormatString => ArchiveFormat switch {
         WinRARArchiveFormat.RAR or
         WinRARArchiveFormat.RAR4 => "-af rar",
         WinRARArchiveFormat.ZIP => "-af zip",
         _ => throw new NotSupportedException()
     };
 
-    public string CompressionMethodString => CompressionMethod switch
-    {
+    public string CompressionMethodString => CompressionMethod switch {
         WinRARCompressionMethod.Save => "-m0",
         WinRARCompressionMethod.Fastest => "-m1",
         WinRARCompressionMethod.Fast => "-m2",
@@ -157,8 +147,7 @@ public class WinRARCompressionSettings
                 }
     };
 
-    public string ExecutionModeString => ExecutionMode switch
-    {
+    public string ExecutionModeString => ExecutionMode switch {
         WinRARExecutionMode.Foreground => "",
         WinRARExecutionMode.Background => "-ibck",
         _ => throw new NotSupportedException(ExecutionMode.ToString())
@@ -168,8 +157,7 @@ public class WinRARCompressionSettings
     /// Validates the settings combination
     /// </summary>
     /// <exception cref="WinRARException"></exception>
-    public void Validate()
-    {
+    public void Validate() {
         if (!ArchiveFormatDictionarySizeMapping[ArchiveFormat].Contains(DictionarySize))
             throw new WinRARException($"Invalid dictionary size {DictionarySize} for given archive format {ArchiveFormat}." +
                 $"Valid dictionary sizes are {string.Join(",", ArchiveFormatDictionarySizeMapping[ArchiveFormat])}");
@@ -179,13 +167,11 @@ public class WinRARCompressionSettings
     }
 }
 
-public readonly struct WinRARVolumeSize
-{
+public readonly struct WinRARVolumeSize {
     public WinRARSizeType SizeType { get; }
     public int Size { get; }
 
-    public WinRARVolumeSize(WinRARSizeType sizeType, int size)
-    {
+    public WinRARVolumeSize(WinRARSizeType sizeType, int size) {
         SizeType = sizeType;
         Size = size;
     }
@@ -195,10 +181,8 @@ public readonly struct WinRARVolumeSize
     public static WinRARVolumeSize WebUpload100MB() => new WinRARVolumeSize(WinRARSizeType.MB, 100);
     public static WinRARVolumeSize WebUpload200MB() => new WinRARVolumeSize(WinRARSizeType.MB, 200);
 
-    public override string ToString()
-    {
-        switch (SizeType)
-        {
+    public override string ToString() {
+        switch (SizeType) {
             case WinRARSizeType.kB:
                 return "-v" + Size + "k";
             case WinRARSizeType.MB:
@@ -212,22 +196,19 @@ public readonly struct WinRARVolumeSize
 }
 
 
-public enum WinRARSizeType
-{
+public enum WinRARSizeType {
     kB,
     MB,
     GB
 }
 
-public enum WinRARArchiveFormat
-{
+public enum WinRARArchiveFormat {
     RAR,
     RAR4,
     ZIP
 }
 
-public enum WinRARCompressionMethod
-{
+public enum WinRARCompressionMethod {
     Save,
     Fastest,
     Fast,
@@ -236,8 +217,7 @@ public enum WinRARCompressionMethod
     Best
 }
 
-public enum WinRARDictionarySize
-{
+public enum WinRARDictionarySize {
     Md32k,
     Md64k,
     Md128k,
@@ -259,14 +239,12 @@ public enum WinRARDictionarySize
     Md1024m
 }
 
-public enum WinRARExecutionMode
-{
+public enum WinRARExecutionMode {
     Foreground,
     Background,
 }
 
-public enum WinRARExecutableMode
-{
+public enum WinRARExecutableMode {
     /// <summary>
     /// Utilizes Rar.exe and UnRAR.exe, GUI will not trigger on failure
     /// </summary>

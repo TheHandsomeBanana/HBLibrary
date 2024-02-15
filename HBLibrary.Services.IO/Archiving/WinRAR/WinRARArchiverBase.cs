@@ -1,4 +1,5 @@
-﻿using HBLibrary.Common.Process;
+﻿using HBLibrary.Common.Exceptions;
+using HBLibrary.Common.Process;
 using HBLibrary.Services.IO.Compression.WinRAR;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ public abstract class WinRARArchiverBase {
 
     public WinRARArchiverBase() {
         WinRARPath = WinRARHelper.GetWinRARInstallationPath()
-            ?? throw new DirectoryNotFoundException("Could not detect a WinRAR installation.");
+            ?? throw new ApplicationNotFoundException("WinRAR");
     }
 
     protected bool OnProcessExitIsNull() => OnProcessExit == null;
@@ -65,5 +66,43 @@ public abstract class WinRARArchiverBase {
 
         StandardOutput = null;
         StandardError = null;
+    }
+
+    protected Process CreateProcess(string arguments, WinRARExecutableMode executableMode, bool compress) {
+        ProcessStartInfo startInfo = new ProcessStartInfo {
+            FileName = WinRARPath + (executableMode == WinRARExecutableMode.WinRAR
+            ? "\\WinRAR.exe"
+            : compress ? "\\Rar.exe" : "\\UnRAR.exe"),
+
+            Arguments = arguments,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true,
+            UseShellExecute = false,
+        };
+
+        Process process = new Process {
+            EnableRaisingEvents = true,
+            StartInfo = startInfo
+        };
+
+        process.OutputDataReceived += OutputDataReceived;
+
+        return process;
+    }
+
+    private void OutputDataReceived(object sender, DataReceivedEventArgs e) {
+        if (string.IsNullOrEmpty(e.Data))
+            return;
+
+        // WinRAR writes errors to stdout for some crazy idk reason
+        if (e.Data.StartsWith("error", StringComparison.CurrentCultureIgnoreCase)) {
+            StandardError!.AppendLine(e.Data);
+            RaiseOnErrorDataReceived(sender, new ProcessStdStreamEventArgs(e.Data));
+        }
+        else {
+            StandardOutput!.AppendLine(e.Data);
+            RaiseOnOutputDataReceived(sender, new ProcessStdStreamEventArgs(e.Data));
+        }
     }
 }

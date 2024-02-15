@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Archiving;
-public class ArchiveService : IArchiveService {
-    public ICompressor Compressor => throw new NotImplementedException();
+namespace HBLibrary.Services.IO.Archiving.WinRAR;
+public class WinRARArchiveService : IArchiveService<IWinRARCompressor, IWinRARExtractor> {
+    public IWinRARCompressor Compressor { get; }
+    public IWinRARExtractor Extractor { get; }
 
-    public IExtractor Extractor => throw new NotImplementedException();
+    public WinRARArchiveService(IWinRARCompressor compressor, IWinRARExtractor extractor) {
+        this.Compressor = compressor;
+        this.Extractor = extractor;
+    }
 
     public void CompressArchive(Archive contents) {
         throw new NotImplementedException();

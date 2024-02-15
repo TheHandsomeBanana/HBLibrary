@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,33 +13,57 @@ public readonly struct FileSnapshot {
     public string FullPath { get; init; }
     public long Length { get; init; }
     public int OptimalBufferSize { get; init; }
+    public bool IsNewFile { get; init; } = false;
 
     /// <summary>
     /// Creates a snapshot of the provided file or a new file.
+    /// Set <paramref name="createNew"/> to <see langword="true"></see> to create a new file if it does not exist yet.
     /// </summary>
     /// <param name="path"></param>
+    /// <param name="createNew"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static FileSnapshot Create(string path) {
+    public static FileSnapshot Create(string path, bool createNew) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
-        if (!File.Exists(path))
-            File.Create(path).Dispose();
 
-        return new FileSnapshot(path);
+        bool fileExists = File.Exists(path);
+
+        if (!fileExists) {
+            if (!createNew)
+                throw new FileNotFoundException($"File does not exist and {nameof(createNew)} is set to false.", path);
+            else
+                File.Create(path).Dispose();
+        }
+
+        return new FileSnapshot(path) { IsNewFile = !fileExists };
     }
 
-    public static bool TryCreate(string path, out FileSnapshot? file) {
+    /// <summary>
+    /// Set <paramref name="createNew"/> to <see langword="true"></see> to create a new file if it does not exist yet.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="file"></param>
+    /// <param name="createNew"></param>
+    /// <returns></returns>
+    public static bool TryCreate(string path, out FileSnapshot? file, bool createNew = false) {
         file = null;
 
         if (!PathValidator.ValidatePath(path))
             return false;
 
-        if (!File.Exists(path))
-            File.Create(path).Dispose();
+        bool fileExists = File.Exists(path);
 
-        file = new FileSnapshot(path);
+        if (!fileExists) {
+
+            if (!createNew)
+                return false;
+            else
+                File.Create(path).Dispose();
+        }
+
+        file = new FileSnapshot(path) { IsNewFile = !fileExists };
         return true;
     }
 
@@ -97,5 +122,9 @@ public readonly struct FileSnapshot {
             File.Create(path.Path);
 
         return new FileSnapshot(path.Path);
+    }
+
+    public override string ToString() {
+        return FullPath;
     }
 }

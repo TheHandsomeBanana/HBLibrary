@@ -13,21 +13,33 @@ public readonly struct DirectorySnapshot {
     public string FullPath { get; init; }
     public bool IsNewDirectory { get; init; }
 
-    public static DirectorySnapshot Create(string path) {
+    /// <summary>
+    /// Set <paramref name="createNew"/> to <see langword="true"></see> to create a new directory if it does not exist yet.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="createNew"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static DirectorySnapshot Create(string path, bool createNew = false) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 
-        bool dirExisted = Directory.Exists(path);
-        DirectoryInfo info = Directory.CreateDirectory(path);
+        bool dirExists = Directory.Exists(path);
+        if (!dirExists) {
+            if (!createNew)
+                throw new DirectoryNotFoundException($"Directory {path} does not exist and {nameof(createNew)} is set to false.");
+            else
+                Directory.CreateDirectory(path);
+        }
 
         return new DirectorySnapshot {
             Path = path,
-            FullPath = info.FullName,
-            IsNewDirectory = !dirExisted,
+            FullPath = new DirectoryInfo(path).FullName,
+            IsNewDirectory = !dirExists,
         };
     }
 
-    public static bool TryCreate(string path, out DirectorySnapshot? directory) {
+    public static bool TryCreate(string path, out DirectorySnapshot? directory, bool createNew = false) {
         directory = null;
 
         if (!PathValidator.ValidatePath(path))
@@ -66,5 +78,9 @@ public readonly struct DirectorySnapshot {
         return Directory.EnumerateDirectories(FullPath)
             .Select(e => new DirectorySnapshot(e))
             .ToImmutableArray();
+    }
+
+    public override string ToString() {
+        return FullPath;
     }
 }
