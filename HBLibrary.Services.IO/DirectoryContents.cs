@@ -26,6 +26,6 @@ public class DirectoryContents {
         if (directory.IsNewDirectory)
             return new DirectoryContents(directory, [], []);
 
-        return DirectoryLoader.LoadDirectoryWithContents(directory);
+        return DirectoryLoader.LoadDirectoryContents(directory);
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HBLibrary.Services.IO.Archiving.WinRAR;
 
-namespace HBLibrary.Services.IO.Compression.WinRAR.ConfigModels;
+namespace HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 [Serializable]
-public class WinRARCompressionSettingsModel {
+public class WinRARCompressionSettingsModel
+{
     public WinRARExecutableMode? ExecutableMode { get; set; }
     public WinRARArchiveFormat? ArchiveFormat { get; set; }
     public WinRARCompressionMethod? CompressionMethod { get; set; }

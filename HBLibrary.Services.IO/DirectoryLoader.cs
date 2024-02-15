@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public static class DirectoryLoader {
-    public static DirectoryContents LoadDirectoryWithContents(DirectorySnapshot directorySnapshot) {
+    public static DirectoryContents LoadDirectoryContents(DirectorySnapshot directorySnapshot) {
         ImmutableArray<FileSnapshot> files = Directory.GetFiles(directorySnapshot.FullPath)
                                      .Select(filePath => new FileSnapshot(filePath))
                                      .ToImmutableArray();
 
         ImmutableArray<DirectoryContents> directories = Directory.GetDirectories(directorySnapshot.FullPath)
                                           .AsParallel()
-                                          .Select(e => LoadDirectoryWithContents(new DirectorySnapshot(e)))
+                                          .Select(e => LoadDirectoryContents(new DirectorySnapshot(e)))
                                           .ToImmutableArray();
 
         return new DirectoryContents(directorySnapshot, files, directories);
