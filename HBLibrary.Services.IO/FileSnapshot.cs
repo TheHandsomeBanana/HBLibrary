@@ -23,7 +23,7 @@ public readonly struct FileSnapshot {
     /// <param name="createNew"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static FileSnapshot Create(string path, bool createNew) {
+    public static FileSnapshot Create(string path, bool createNew = false) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
 

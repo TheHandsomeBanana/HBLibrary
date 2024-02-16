@@ -13,5 +13,5 @@ public interface IArchiveService<TCompressor, TExtractor> where TCompressor : IC
     void CompressArchive(Archive contents);
     void DeleteArchive(FileSnapshot file);
     void UpdateArchive(FileSnapshot file, Archive contents);
-    void ExtractArchive(FileSnapshot file);
+    void ExtractArchive(FileSnapshot file, DirectorySnapshot directory);
 }

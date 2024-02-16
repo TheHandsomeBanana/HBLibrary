@@ -15,7 +15,8 @@ public class FileService : IFileService {
         DateTime executionStart = DateTime.Now;
 
         if (!operation.CanAsync)
-            return new FileOperationErrorResponse($"{operation} can't execute async.") {
+            return new FileOperationResponse() {
+                ErrorMessage = $"{operation} can't execute async.",
                 ExecutionStart = executionStart,
                 ExecutionEnd = DateTime.Now,
             };
@@ -122,7 +123,8 @@ public class FileService : IFileService {
         DateTime executionStart = DateTime.Now;
 
         if (!operation.CanAsync)
-            return new FileOperationErrorResponse($"{operation} can't execute async.") {
+            return new FileOperationResponse {
+                ErrorMessage = $"{operation} can't execute async.",
                 ExecutionStart = executionStart,
                 ExecutionEnd = DateTime.Now,
             };
