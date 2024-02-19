@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Wpf", "HBLibrary.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.VisualStudio", "HBLibrary.VisualStudio\HBLibrary.VisualStudio.csproj", "{BF76BDB8-F08F-4884-B863-15A84A2645ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Common.Tests", "HBLibrary.Common.Tests\HBLibrary.Common.Tests.csproj", "{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Common.Tests", "HBLibrary.Common.Tests\HBLibrary.Common.Tests.csproj", "{1C0BD069-D9D0-47AC-ADC6-9B1427AAEE69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Services.IO.Tests", "HBLibrary.Services.IO.Tests\HBLibrary.Services.IO.Tests.csproj", "{00691528-C141-4D29-89F1-C1B742E9D9D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.IO.Tests", "HBLibrary.Services.IO.Tests\HBLibrary.Services.IO.Tests.csproj", "{00691528-C141-4D29-89F1-C1B742E9D9D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Discord", "HBLibrary.Discord\HBLibrary.Discord.csproj", "{D3B579C4-D40F-4185-B662-E3612F8420AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,10 @@ Global
 		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00691528-C141-4D29-89F1-C1B742E9D9D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B579C4-D40F-4185-B662-E3612F8420AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B579C4-D40F-4185-B662-E3612F8420AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B579C4-D40F-4185-B662-E3612F8420AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B579C4-D40F-4185-B662-E3612F8420AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
