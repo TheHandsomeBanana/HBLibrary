@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace HBLibrary.VisualStudio.Workspace; 
 public static class SolutionHelper {
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
     public static IEnumerable<Project> GetProjects(Solution solution) {
         ThreadHelper.ThrowIfNotOnUIThread();
         foreach (Project project in solution.Projects)
@@ -14,21 +15,25 @@ public static class SolutionHelper {
     public static Project GetSelectedProject() {
         DTE dte = WorkspaceHelper.GetDTE();
 
-#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
         if ((dte.SelectedItems.Item(1).Project == null && dte.SelectedItems.Item(1).ProjectItem?.ContainingProject == null) || dte.SelectedItems.Count == 0)
             return dte.ActiveDocument?.ProjectItem?.ContainingProject;
         else
             return (dte.SelectedItems.Item(1).Project == null) ? dte.SelectedItems.Item(1).ProjectItem.ContainingProject : dte.SelectedItems.Item(1).Project;
-#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
     }
 
     public static Microsoft.CodeAnalysis.Project ToCAProject(Project project) {
         ThreadHelper.ThrowIfNotOnUIThread();
 
-#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
         return WorkspaceHelper.GetCurrentCASolution().Projects.FirstOrDefault(e => e.FilePath == project.FullName);
-#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
     }
 
     public static Microsoft.CodeAnalysis.Project GetCurrentCAProject() => ToCAProject(GetSelectedProject());
+
+    public static void NavigateToFileAndLine(string filePath, int lineNumber) {
+        DTE dte = WorkspaceHelper.GetDTE();
+        dte.ItemOperations.OpenFile(filePath);
+        ((TextSelection)dte.ActiveDocument.Selection).GotoLine(lineNumber, true);
+    }
+
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
 }
