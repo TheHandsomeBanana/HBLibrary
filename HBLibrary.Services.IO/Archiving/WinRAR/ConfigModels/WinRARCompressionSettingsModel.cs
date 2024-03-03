@@ -7,10 +7,7 @@ using HBLibrary.Services.IO.Archiving.WinRAR;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 [Serializable]
-public class WinRARCompressionSettingsModel
-{
-    public WinRARExecutableMode? ExecutableMode { get; set; }
-    public WinRARArchiveFormat? ArchiveFormat { get; set; }
+public class WinRARCompressionSettingsModel {
     public WinRARCompressionMethod? CompressionMethod { get; set; }
     public WinRARDictionarySize? DictionarySize { get; set; }
     public WinRARExecutionMode? ExecutionMode { get; set; }
