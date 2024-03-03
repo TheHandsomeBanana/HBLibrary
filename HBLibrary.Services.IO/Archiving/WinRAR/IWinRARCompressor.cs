@@ -1,5 +1,4 @@
 ﻿using HBLibrary.Common.Process;
-using HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 using HBLibrary.Services.IO.Compression;
 using System;
 using System.Collections.Generic;
