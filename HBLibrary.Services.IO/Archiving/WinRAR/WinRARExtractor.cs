@@ -12,7 +12,7 @@ public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
         StartReading();
 
         string arguments = settings.ToString()! + $"\"{sourceArchive}\" \"{destinationDirectory}\"";
-        using Process extractionProcess = CreateProcess(arguments, settings.ExecutableMode, false);
+        using Process extractionProcess = CreateProcess(arguments, false);
         extractionProcess.Start();
 
         extractionProcess.BeginErrorReadLine();
@@ -45,7 +45,7 @@ public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
         StartReading();
 
         string arguments = settings.ToString()! + $"\"{sourceArchive}\" \"{destinationDirectory}\"";
-        using Process extractionProcess = CreateProcess(arguments, settings.ExecutableMode, false);
+        using Process extractionProcess = CreateProcess(arguments, false);
         extractionProcess.Start();
 
         extractionProcess.BeginErrorReadLine();

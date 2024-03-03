@@ -23,7 +23,7 @@ public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor {
         string destinationArchive = settings.SetExtension(archive.Name);
 
         string arguments = settings.ToString()! + $"\"{destinationArchive}\" {string.Join(" ", archive.GetEntries().Select(e => $"\"{e}\""))}";
-        using Process compressionProcess = CreateProcess(arguments, settings.ExecutableMode, true);
+        using Process compressionProcess = CreateProcess(arguments, true);
         compressionProcess.Start();
 
         compressionProcess.BeginErrorReadLine();
@@ -53,7 +53,7 @@ public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor {
         string destinationArchive = settings.SetExtension(archive.Name);
 
         string arguments = settings.ToString()! + $"\"{destinationArchive}\" {string.Join(" ", archive.GetEntries().Select(e => $"\"{e}\""))}";
-        using Process compressionProcess = CreateProcess(arguments, settings.ExecutableMode, true);
+        using Process compressionProcess = CreateProcess(arguments, true);
         compressionProcess.Start();
 
         compressionProcess.BeginErrorReadLine();

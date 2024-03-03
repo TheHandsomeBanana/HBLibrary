@@ -68,11 +68,9 @@ public abstract class WinRARArchiverBase {
         StandardError = null;
     }
 
-    protected Process CreateProcess(string arguments, WinRARExecutableMode executableMode, bool compress) {
+    protected Process CreateProcess(string arguments, bool compress) {
         ProcessStartInfo startInfo = new ProcessStartInfo {
-            FileName = WinRARPath + (executableMode == WinRARExecutableMode.WinRAR
-            ? "\\WinRAR.exe"
-            : compress ? "\\Rar.exe" : "\\UnRAR.exe"),
+            FileName = WinRARPath + (compress ? "\\Rar.exe" : "\\UnRAR.exe"),
 
             Arguments = arguments,
             RedirectStandardError = true,
