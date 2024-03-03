@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Code.Interpreter.Evaluator;
-public interface ISemanticEvaluator<TSyntaxTree, TError> where TSyntaxTree : ISyntaxTree where TError : ISemanticError {
-    public ImmutableArray<TError> Evaluate(TSyntaxTree syntaxTree, string content);
+public interface ISemanticEvaluator<TSyntaxTree> where TSyntaxTree : ISyntaxTree {
+    public ImmutableArray<SemanticError> Evaluate(TSyntaxTree syntaxTree, string content);
 }

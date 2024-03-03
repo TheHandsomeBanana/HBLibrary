@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 namespace HBLibrary.Code.Interpreter.Syntax;
 public interface ISyntaxError {
     public TextSpan FullSpan { get; }
-    public string? Affected { get; }
+    public string? Content { get; }
     public string? Message { get; }
 }

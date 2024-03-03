@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Code.Interpreter.Evaluator.Default;
-public class DefaultSemanticError : ISemanticError {
+namespace HBLibrary.Code.Interpreter.Evaluator;
+public struct SemanticError {
     public TextSpan Location { get; }
     public string Affected { get; }
     public string Message { get; }
 
-    public DefaultSemanticError(TextSpan location, string affected, string message) {
+    public SemanticError(TextSpan location, string affected, string message) {
         Location = location;
         Affected = affected;
         Message = message;
