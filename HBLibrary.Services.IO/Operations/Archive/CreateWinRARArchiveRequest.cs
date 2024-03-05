@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Services.IO.Archiving.WinRAR;
+using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,5 @@ public class CreateWinRARArchiveRequest : CreateArchiveRequest {
 #endif
 
     public required IWinRARCompressor Compressor { get; set; }
-    public WinRARCompressionSettings CompressionSettings { get; set; } = WinRARCompressionSettings.Default;
+    public WinRARCompressionOptions CompressionSettings { get; set; } = WinRARCompressionOptions.Default;
 }

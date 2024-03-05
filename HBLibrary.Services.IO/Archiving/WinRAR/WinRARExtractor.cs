@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Process;
+using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
-    public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionSettings settings) {
+    public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings) {
         StartReading();
 
         string arguments = settings.ToString()! + $"\"{sourceArchive}\" \"{destinationDirectory}\"";
@@ -37,11 +38,11 @@ public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
     }
 
     public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory) {
-        Extract(sourceArchive, destinationDirectory, WinRARExtractionSettings.Default);
+        Extract(sourceArchive, destinationDirectory, WinRARExtractionOptions.Default);
     }
 #if NET5_0_OR_GREATER
 
-    public async Task ExtractAsync(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionSettings settings, CancellationToken token = default) {
+    public async Task ExtractAsync(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings, CancellationToken token = default) {
         StartReading();
 
         string arguments = settings.ToString()! + $"\"{sourceArchive}\" \"{destinationDirectory}\"";

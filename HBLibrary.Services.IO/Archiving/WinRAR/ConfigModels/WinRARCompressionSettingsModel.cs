@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HBLibrary.Services.IO.Archiving.WinRAR;
+using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 [Serializable]

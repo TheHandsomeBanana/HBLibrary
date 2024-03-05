@@ -1,6 +1,7 @@
 using HBLibrary.Common.Process;
 using HBLibrary.Services.IO.Archiving;
 using HBLibrary.Services.IO.Archiving.WinRAR;
+using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using HBLibrary.Services.IO.Compression.WinRAR;
 
 namespace HBLibrary.Services.IO.Tests;
@@ -17,7 +18,7 @@ public class WinRARCompressionTests {
         service.OnErrorDataReceived += CorrectResult_OnErrorDataReceived;
         Archive archive = new Archive(assets + "compressedFile.rar");
         archive.Files.Add(FileSnapshot.Create(assets + "compressableFile.txt", true));
-        service.Compress(archive, WinRARCompressionSettings.Default);
+        service.Compress(archive, WinRARCompressionOptions.Default);
     }
 
     [TestMethod]

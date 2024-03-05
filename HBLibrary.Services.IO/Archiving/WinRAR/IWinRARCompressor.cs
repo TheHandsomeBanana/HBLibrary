@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Process;
+using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using HBLibrary.Services.IO.Compression;
 using System;
 using System.Collections.Generic;
@@ -24,14 +25,14 @@ public interface IWinRARCompressor : ICompressor {
     /// </summary>
     string StdError { get; }
     /// <summary>
-    /// Timeout in milliseconds for synchronous <see cref="Compress(string, string, WinRARCompressionSettings)"/> / <see cref="Extract(string, string, WinRARExtractionSettings)"/> operations
+    /// Timeout in milliseconds for synchronous <see cref="Compress(string, string, WinRARCompressionOptions)"/> / <see cref="Extract(string, string, WinRARExtractionOptions)"/> operations
     /// </summary>
     int? ProcessTimeout { get; set; }
 
 #if NET5_0_OR_GREATER
-    Task CompressAsync(Archive archive, WinRARCompressionSettings settings, CancellationToken token = default);
+    Task CompressAsync(Archive archive, WinRARCompressionOptions settings, CancellationToken token = default);
 #endif
 
-    void Compress(Archive archive, WinRARCompressionSettings settings);
+    void Compress(Archive archive, WinRARCompressionOptions settings);
 }
 

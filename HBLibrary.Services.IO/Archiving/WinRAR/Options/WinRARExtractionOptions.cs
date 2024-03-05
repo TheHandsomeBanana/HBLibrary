@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public class WinRARExtractionSettings {
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Options;
+public class WinRARExtractionOptions {
     public string? Password { get; set; }
     public WinRARUpdateMode? UpdateMode { get; set; } = null;
     public WinRAROverwriteMode OverwriteMode { get; set; } = WinRAROverwriteMode.Silent;
 
-    public static WinRARExtractionSettings Default => new WinRARExtractionSettings();
+    public static WinRARExtractionOptions Default => new WinRARExtractionOptions();
 
     public override string ToString() {
         StringBuilder sb = new StringBuilder();
@@ -39,7 +39,7 @@ public class WinRARExtractionSettings {
         _ => throw new NotSupportedException(OverwriteMode.ToString())
     };
 
-    
+
 }
 
 public enum WinRARUpdateMode {

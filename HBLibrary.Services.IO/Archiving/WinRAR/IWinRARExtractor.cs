@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Process;
+using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ public interface IWinRARExtractor : IExtractor {
     /// </summary>
     string StdError { get; }
     /// <summary>
-    /// Timeout in milliseconds for synchronous <see cref="Compress(string, string, WinRARCompressionSettings)"/> / <see cref="Extract(string, string, WinRARExtractionSettings)"/> operations
+    /// Timeout in milliseconds for synchronous <see cref="Compress(string, string, WinRARCompressionOptions)"/> / <see cref="Extract(string, string, WinRARExtractionOptions)"/> operations
     /// </summary>
     int? ProcessTimeout { get; set; }
 
 #if NET5_0_OR_GREATER
-    Task ExtractAsync(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionSettings settings, CancellationToken token = default);
+    Task ExtractAsync(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings, CancellationToken token = default);
 #endif
-    void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionSettings settings);
+    void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings);
 }

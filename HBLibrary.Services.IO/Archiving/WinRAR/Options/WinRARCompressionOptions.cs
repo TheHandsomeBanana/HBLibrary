@@ -7,10 +7,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Options;
 // https://documentation.help/WinRAR/HELPCommandLineSyntax.html
-public class WinRARCompressionSettings {
+public class WinRARCompressionOptions {
     public const string ArchiveFormatExtension = ".rar";
+    public FileSnapshot? Comment { get; init; }
+
+
+
     public WinRARCompressionMethod CompressionMethod { get; init; } = WinRARCompressionMethod.Normal;
     public WinRARDictionarySize DictionarySize { get; init; } = WinRARDictionarySize.Md32m;
     public WinRARExecutionMode ExecutionMode { get; init; } = WinRARExecutionMode.Background;
@@ -40,7 +44,7 @@ public class WinRARCompressionSettings {
         }
     }
 
-    public static WinRARCompressionSettings Default => new WinRARCompressionSettings();
+    public static WinRARCompressionOptions Default => new WinRARCompressionOptions();
     public string SetExtension(string path) {
         if (path.EndsWith(ArchiveFormatExtension))
             return path;
@@ -133,7 +137,6 @@ public readonly struct WinRARVolumeSize {
         throw new NotSupportedException(SizeType.ToString());
     }
 }
-
 
 public enum WinRARSizeType {
     kB,

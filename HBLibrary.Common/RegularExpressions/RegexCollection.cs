@@ -13,7 +13,7 @@ public static partial class RegexCollection {
 #if NET7_0_OR_GREATER
         return SimplePercentageRegex();
 #elif NETFRAMEWORK
-        return new Regex("^(100|[0-9]|[1-9][0-9])%$");
+        return new Regex("^(100|[0-9]|[1-9][0-9])p?$");
 #endif
     }
 
