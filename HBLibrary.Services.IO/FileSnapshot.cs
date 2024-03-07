@@ -14,6 +14,7 @@ public readonly struct FileSnapshot {
     public long Length { get; init; }
     public int OptimalBufferSize { get; init; }
     public bool IsNewFile { get; init; } = false;
+    public string Extension { get; init; }
 
     /// <summary>
     /// Creates a snapshot of the provided file or a new file.
@@ -73,6 +74,7 @@ public readonly struct FileSnapshot {
         FullPath = temp.FullName;
         Length = temp.Length;
         OptimalBufferSize = GetOptimalBufferSize(Length);
+        Extension = temp.Extension;
     }
 
     internal FileSnapshot(FileInfo info) {
@@ -80,6 +82,7 @@ public readonly struct FileSnapshot {
         FullPath = info.FullName;
         Length = info.Length;
         OptimalBufferSize = GetOptimalBufferSize(info.Length);
+        Extension = info.Extension;
     }
 
     public FileInfo GetInfo() => new FileInfo(Path);

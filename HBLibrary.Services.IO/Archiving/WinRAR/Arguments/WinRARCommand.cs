@@ -1,24 +1,27 @@
-﻿using System;
+﻿using HBLibrary.Common.RegularExpressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR.Options;
-public class WinRARArchiveOptions {
-
-}
-
-public struct WinRARCommand {
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Arguments;
+public class WinRARCommand {
     public WinRARCommandName CommandName { get; set; }
     public WinRARCommand(string command) {
-        if(command.StartsWith("rr")) {
-
+        if (command.StartsWith("rr")) {
+            string percantageVal = command.Substring(2);
+            if (!RegexCollection.SimplePercentagePValue.Match(percantageVal).Success)
+                throw new ArgumentException($"Valid values for recovery records are '[0-100]p'", nameof(command));
+        }
+        else if (command.StartsWith("rv")) {
+            string volumeCount = command.Substring(2);
+            if (!int.TryParse(volumeCount, out int _))
+                throw new ArgumentException($"Valid values for recovery records are '[0-100]' with an optional '%'", nameof(command));
         }
 
         if (!CommandMap.ContainsKey(command) || !WildcardCommands.All(e => !command.StartsWith(e)))
-            throw new ArgumentException($"Command {command} invalid.");
-
+            throw new ArgumentException($"Command {command} invalid.", nameof(command));
     }
 
     public static readonly Dictionary<string, WinRARCommandName> CommandMap = new() {
@@ -38,8 +41,6 @@ public struct WinRARCommand {
         { "rn", WinRARCommandName.RenameArchivedFiles },
         { "rr", WinRARCommandName.AddDataRecoveryRecord },
         { "rv", WinRARCommandName.CreateRecoveryVolumes },
-        { "s", WinRARCommandName.ConvertArchiveToSelfExtractingType },
-        { "s-", WinRARCommandName.RemoveSFXModule },
         { "t", WinRARCommandName.TestArchiveFiles },
         { "u", WinRARCommandName.UpdateFilesWithinArchive },
         { "x", WinRARCommandName.ExtractFilesFromArchiveWithFullPaths },
@@ -71,4 +72,3 @@ public enum WinRARCommandName {
     UpdateFilesWithinArchive,
     ExtractFilesFromArchiveWithFullPaths
 }
-

@@ -7,18 +7,25 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Common.RegularExpressions;
 public static partial class RegexCollection {
-    public readonly static Regex SimplePercentageValue = CreateSimplePercentageRegex();
-
-    private static Regex CreateSimplePercentageRegex() {
+    public readonly static Regex SimplePercentageValue =
 #if NET7_0_OR_GREATER
-        return SimplePercentageRegex();
+        SimplePercentageRegex();
 #elif NETFRAMEWORK
-        return new Regex("^(100|[0-9]|[1-9][0-9])p?$");
+        new Regex("^(100|[0-9]|[1-9][0-9])%?$");
 #endif
-    }
+
+    public readonly static Regex SimplePercentagePValue =
+#if NET7_0_OR_GREATER
+        SimplePercentagePRegex();
+#elif NETFRAMEWORK
+        new Regex("^(100|[0-9]|[1-9][0-9])p$");
+#endif
+
 
 #if NET7_0_OR_GREATER
     [GeneratedRegex("^(100|[0-9]|[1-9][0-9])%$")]
     private static partial Regex SimplePercentageRegex();
+    [GeneratedRegex("^(100|[0-9]|[1-9][0-9])p$")]
+    private static partial Regex SimplePercentagePRegex();
 #endif
 }
