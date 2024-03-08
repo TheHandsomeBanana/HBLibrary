@@ -8,45 +8,8 @@ using System.Threading.Tasks;
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Arguments;
 public class WinRARCommand {
     public WinRARCommandName CommandName { get; set; }
-    public WinRARCommand(string command) {
-        if (command.StartsWith("rr")) {
-            string percantageVal = command.Substring(2);
-            if (!RegexCollection.SimplePercentagePValue.Match(percantageVal).Success)
-                throw new ArgumentException($"Valid values for recovery records are '[0-100]p'", nameof(command));
-        }
-        else if (command.StartsWith("rv")) {
-            string volumeCount = command.Substring(2);
-            if (!int.TryParse(volumeCount, out int _))
-                throw new ArgumentException($"Valid values for recovery records are '[0-100]' with an optional '%'", nameof(command));
-        }
-
-        if (!CommandMap.ContainsKey(command) || !WildcardCommands.All(e => !command.StartsWith(e)))
-            throw new ArgumentException($"Command {command} invalid.", nameof(command));
+    internal WinRARCommand(string command) {
     }
-
-    public static readonly Dictionary<string, WinRARCommandName> CommandMap = new() {
-        { "a", WinRARCommandName.AddFilesToArchive },
-        { "c", WinRARCommandName.AddCommentToArchive },
-        { "ch", WinRARCommandName.ChangeArchiveParameters },
-        { "cv", WinRARCommandName.ConvertArchives },
-        { "cw", WinRARCommandName.WriteArchiveCommentToFile },
-        { "d", WinRARCommandName.DeleteFilesFromArchive },
-        { "e", WinRARCommandName.ExtractFilesFromArchiveIgnoringPaths },
-        { "f", WinRARCommandName.FreshenFilesWithinArchive },
-        { "i", WinRARCommandName.FindStringInArchives },
-        { "k", WinRARCommandName.LockArchive },
-        { "m", WinRARCommandName.MoveFilesAndFoldersToArchive },
-        { "r", WinRARCommandName.RepairDamagedArchive },
-        { "rc", WinRARCommandName.ReconstructMissingVolumes },
-        { "rn", WinRARCommandName.RenameArchivedFiles },
-        { "rr", WinRARCommandName.AddDataRecoveryRecord },
-        { "rv", WinRARCommandName.CreateRecoveryVolumes },
-        { "t", WinRARCommandName.TestArchiveFiles },
-        { "u", WinRARCommandName.UpdateFilesWithinArchive },
-        { "x", WinRARCommandName.ExtractFilesFromArchiveWithFullPaths },
-    };
-
-    public static readonly string[] WildcardCommands = ["rr", "rv", "s"];
 }
 
 public enum WinRARCommandName {
@@ -71,4 +34,79 @@ public enum WinRARCommandName {
     TestArchiveFiles,
     UpdateFilesWithinArchive,
     ExtractFilesFromArchiveWithFullPaths
+}
+
+public readonly struct WinRARVolumeSize {
+    public WinRARSizeType SizeType { get; }
+    public int Size { get; }
+
+    public WinRARVolumeSize(WinRARSizeType sizeType, int size) {
+        SizeType = sizeType;
+        Size = size;
+    }
+
+
+    public static WinRARVolumeSize Email25MB() => new WinRARVolumeSize(WinRARSizeType.MB, 25);
+    public static WinRARVolumeSize WebUpload100MB() => new WinRARVolumeSize(WinRARSizeType.MB, 100);
+    public static WinRARVolumeSize WebUpload200MB() => new WinRARVolumeSize(WinRARSizeType.MB, 200);
+
+    public override string ToString() {
+        switch (SizeType) {
+            case WinRARSizeType.kB:
+                return "-v" + Size + "k";
+            case WinRARSizeType.MB:
+                return "-v" + Size + "m";
+            case WinRARSizeType.GB:
+                return "-v" + Size + "g";
+        }
+
+        throw new NotSupportedException(SizeType.ToString());
+    }
+}
+
+public enum WinRARSizeType {
+    kB,
+    MB,
+    GB,
+    Percentage
+}
+
+public enum WinRARCompressionLevel {
+    Save,
+    Fastest,
+    Fast,
+    Normal,
+    Good,
+    Best
+}
+
+public enum WinRARDictionarySize {
+    Md64k,
+    Md128k,
+    Md256k,
+    Md512k,
+    Md1024k,
+    Md2048k,
+    Md4096k,
+    Md1m,
+    Md2m,
+    Md4m,
+    Md8m,
+    Md16m,
+    Md32m,
+    Md64m,
+    Md128m,
+    Md256m,
+    Md512m,
+    Md1024m
+}
+
+public enum WinRARExecutionMode {
+    Foreground,
+    Background,
+}
+
+public enum WinRAROverwriteMode {
+    Overwrite,
+    Skip
 }
