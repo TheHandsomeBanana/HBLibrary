@@ -1,16 +1,6 @@
 ﻿using HBLibrary.Common.Process;
-using HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 using HBLibrary.Services.IO.Archiving.WinRAR.Options;
-using HBLibrary.Services.IO.Compression;
-using HBLibrary.Services.IO.Compression.WinRAR;
-using HBLibrary.Services.IO.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor {

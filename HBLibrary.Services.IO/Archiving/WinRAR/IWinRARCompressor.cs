@@ -1,12 +1,5 @@
 ﻿using HBLibrary.Common.Process;
 using HBLibrary.Services.IO.Archiving.WinRAR.Options;
-using HBLibrary.Services.IO.Compression;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 /// <summary>

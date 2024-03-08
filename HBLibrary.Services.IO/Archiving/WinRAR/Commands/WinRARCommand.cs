@@ -1,11 +1,4 @@
-﻿using HBLibrary.Common.RegularExpressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO.Archiving.WinRAR.Arguments;
+﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public class WinRARCommand {
     public WinRARCommandName CommandName { get; set; }
     internal WinRARCommand(string command) {
@@ -101,12 +94,12 @@ public enum WinRARDictionarySize {
     Md1024m
 }
 
-public enum WinRARExecutionMode {
-    Foreground,
-    Background,
-}
-
 public enum WinRAROverwriteMode {
     Overwrite,
     Skip
+}
+
+public enum WinRARExtractionMode {
+    FullPaths, 
+    IgnoreFolderStructure,
 }

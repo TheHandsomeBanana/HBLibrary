@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO;
+﻿namespace HBLibrary.Services.IO;
 public readonly struct FileSnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }

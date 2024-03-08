@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO;
+﻿namespace HBLibrary.Services.IO;
 public readonly struct ValidPath {
     public string Path { get; }
     public string? FullPath { get; }
@@ -46,7 +40,7 @@ public readonly struct ValidPath {
     /// <returns>True if the path is valid and refers to an existing file or directory.</returns>
     public static bool TryCreate(string path, out ValidPath? validPath) {
         validPath = null;
-        if(!PathValidator.ValidatePath(path)) 
+        if (!PathValidator.ValidatePath(path))
             return false;
 
         bool isFile = File.Exists(path);

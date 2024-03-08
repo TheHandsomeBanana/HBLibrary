@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO;
+﻿namespace HBLibrary.Services.IO;
 public interface IFileEntryService {
     void CopyFile(string sourceFile, string targetFile, CopyConflictAction action = CopyConflictAction.Skip);
     void MoveFile(string sourceFile, string targetFile, MoveOperationAction action = MoveOperationAction.Skip);

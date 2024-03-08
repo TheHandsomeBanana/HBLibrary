@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO.Archiving; 
+﻿namespace HBLibrary.Services.IO.Archiving;
 public abstract class ArchiveServiceBase {
     public void CompressArchive(Archive contents) {
         GetCompressor().Compress(contents);

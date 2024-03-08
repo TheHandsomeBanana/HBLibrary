@@ -1,13 +1,8 @@
 ﻿using HBLibrary.Common.Extensions;
-using HBLibrary.Services.IO.Operations;
 using HBLibrary.Services.IO.Operations.File;
 using HBLibrary.Services.Security.Cryptography;
 using HBLibrary.Services.Security.Cryptography.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public class FileService : IFileService {
@@ -171,7 +166,7 @@ public class FileService : IFileService {
                 try {
                     await copyRequest.FileEntryService.CopyFileAsync(copyRequest.File.FullPath, copyRequest.TargetFile, copyRequest.ConflictAction);
                 }
-                catch(Exception ex) {
+                catch (Exception ex) {
                     e = ex;
                     success = false;
                 }
@@ -179,7 +174,7 @@ public class FileService : IFileService {
                 fileOperationResponse = new CopyFileResponse {
                     File = copyRequest.File,
                 };
-                
+
                 break;
             case ReadFileRequest readRequest:
                 content = [];

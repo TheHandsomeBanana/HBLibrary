@@ -178,7 +178,7 @@ public class FileEntryService : IFileEntryService {
 
                 File.Move(source, target);
 #elif NET5_0_OR_GREATER
-            File.Move(source, target, true); // Overwrites the file if it already exists
+                File.Move(source, target, true); // Overwrites the file if it already exists
 #endif                
                 break;
         }
@@ -238,7 +238,7 @@ public class FileEntryService : IFileEntryService {
         }
         await Task.WhenAll(moveDirectoryTasks);
     }
-#endregion
+    #endregion
 
     #region Replace
     public void ReplaceDirectory(string source, string target) {

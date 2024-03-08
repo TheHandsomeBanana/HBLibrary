@@ -1,14 +1,4 @@
-﻿using HBLibrary.Services.IO.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Ionic.Zip;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Runtime;
-using HBLibrary.Services.IO.Compression;
+﻿using Ionic.Zip;
 
 namespace HBLibrary.Services.IO.Archiving.Zip {
     public class ZipCompressor : IZipCompressor {

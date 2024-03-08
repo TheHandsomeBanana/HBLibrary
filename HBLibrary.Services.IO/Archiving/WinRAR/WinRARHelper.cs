@@ -1,11 +1,6 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Compression.WinRAR; 
+namespace HBLibrary.Services.IO.Archiving.WinRAR;
 internal static class WinRARHelper {
     public static string? GetWinRARInstallationPath() {
         string registryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\WinRAR.exe";

@@ -1,12 +1,7 @@
 ﻿using HBLibrary.Common.Exceptions;
 using HBLibrary.Common.Process;
-using HBLibrary.Services.IO.Compression.WinRAR;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public abstract class WinRARArchiverBase {

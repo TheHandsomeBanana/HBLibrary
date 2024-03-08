@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
+﻿namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public class WinRARArchiveService : ArchiveServiceBase, IArchiveService<IWinRARCompressor, IWinRARExtractor> {
     public IWinRARCompressor Compressor { get; }
     public IWinRARExtractor Extractor { get; }
@@ -14,7 +8,7 @@ public class WinRARArchiveService : ArchiveServiceBase, IArchiveService<IWinRARC
         this.Extractor = extractor;
     }
 
-    
+
 
     public void UpdateArchive(FileSnapshot file, Archive contents) {
         throw new NotImplementedException();

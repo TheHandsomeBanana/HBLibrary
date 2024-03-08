@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO;
 public static class DirectoryLoader {
@@ -40,8 +34,7 @@ public static class DirectoryLoader {
         IEnumerable<DirectoryInfo> subdirectoryInfos = directoryNode.Directory.EnumerateDirectories();
         ConcurrentBag<FullDirectory> subdirectoryNodes = new ConcurrentBag<FullDirectory>();
 
-        Parallel.ForEach(subdirectoryInfos, subDirectoryInfo =>
-        {
+        Parallel.ForEach(subdirectoryInfos, subDirectoryInfo => {
             var subDirectoryNode = new FullDirectory(subDirectoryInfo);
             LoadDirectory(subDirectoryNode);
             subdirectoryNodes.Add(subDirectoryNode);

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO.Archiving;
+﻿namespace HBLibrary.Services.IO.Archiving;
 public class Archive {
     public string Name { get; }
     public List<FileSnapshot> Files { get; } = [];
@@ -44,7 +36,7 @@ public class Archive {
     /// <exception cref="ArgumentException"></exception>
     public void AddDirectory(string directoryName) {
         Directories.Add(DirectorySnapshot.Create(directoryName));
-        
+
     }
     public bool TryAddDirectory(string directoryName) {
         bool created = DirectorySnapshot.TryCreate(directoryName, out DirectorySnapshot? directory);

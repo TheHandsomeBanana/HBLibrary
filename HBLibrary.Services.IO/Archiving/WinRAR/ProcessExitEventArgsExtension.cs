@@ -1,17 +1,9 @@
 ﻿using HBLibrary.Common.Process;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public static class ProcessExitEventArgsExtension
-{
+public static class ProcessExitEventArgsExtension {
     public static string GetDescription(this ProcessExitEventArgs eventArgs)
-        => eventArgs.ExitCode switch
-        {
+        => eventArgs.ExitCode switch {
             0 => "Successful operation.",
             1 => "Warning. Non-fatal error(s) occurred.",
             2 => "A fatal error occurred.",
