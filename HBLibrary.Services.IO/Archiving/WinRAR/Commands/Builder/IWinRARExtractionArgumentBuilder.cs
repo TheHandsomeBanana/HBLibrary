@@ -10,6 +10,4 @@ public interface IWinRARExtractionArgumentBuilder : IWinRARCommonArgumentsBuilde
     public IWinRARExtractionArgumentBuilder IncludeFiles(string pattern); // -n
     public IWinRARExtractionArgumentBuilder ExcludeFiles(IEnumerable<string> files); // -x
     public IWinRARExtractionArgumentBuilder ExcludeFiles(string pattern); // -x
-
-
 }
