@@ -11,7 +11,7 @@ public interface IWinRARCompressionArgumentsBuilder : IWinRARCommonArgumentsBuil
     public IWinRARCompressionArgumentsBuilder SetDictionarySize(WinRARDictionarySize dictionarySize); // -md<size>
     public IWinRARCompressionArgumentsBuilder UseMultipleThreads(int threadCount); // -mt<threads>
     public IWinRARCompressionArgumentsBuilder SetOverwriteMode(WinRAROverwriteMode overwriteMode); // -o- | -o+
-    public IWinRARCompressionArgumentsBuilder IncludeSubdirectories(); // -r
+    public IWinRARCompressionArgumentsBuilder RecurseSubdirectories(); // -r
     public IWinRARCompressionArgumentsBuilder AddDataRecoveryRecord(int size); // -rr[%]
     public IWinRARCompressionArgumentsBuilder CreateRecoveryVolumes(int size, WinRARSizeType sizeType); // -rv[%]
     public IWinRARCompressionArgumentsBuilder DeleteOriginalFiles(); // -sdel

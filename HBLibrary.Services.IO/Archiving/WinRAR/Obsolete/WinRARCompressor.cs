@@ -1,14 +1,26 @@
 ﻿using HBLibrary.Common.Process;
+
+/* Unmerged change from project 'HBLibrary.Services.IO (net8.0-windows)'
+Before:
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+After:
+using HBLibrary.Services;
+using HBLibrary.Services.IO.Archiving.WinRAR;
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+*/
 using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using System.Diagnostics;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor {
-    public void Compress(Archive archive) {
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor
+{
+    public void Compress(Archive archive)
+    {
         Compress(archive, WinRARCompressionOptions.Default);
     }
 
-    public void Compress(Archive archive, WinRARCompressionOptions settings) {
+    public void Compress(Archive archive, WinRARCompressionOptions settings)
+    {
         StartReading();
 
         string destinationArchive = settings.SetExtension(archive.Name);
@@ -22,7 +34,8 @@ public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor {
 
         compressionProcess.WaitForExit(ProcessTimeout ?? Timeout.Infinite);
 
-        if (!OnProcessExitIsNull()) {
+        if (!OnProcessExitIsNull())
+        {
             bool isCanceled = ProcessTimeout.HasValue &&
                 (compressionProcess.ExitTime - compressionProcess.StartTime).TotalMilliseconds >= ProcessTimeout;
 
@@ -38,7 +51,8 @@ public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor {
     }
 
 #if NET5_0_OR_GREATER
-    public async Task CompressAsync(Archive archive, WinRARCompressionOptions settings, CancellationToken token = default) {
+    public async Task CompressAsync(Archive archive, WinRARCompressionOptions settings, CancellationToken token = default)
+    {
         StartReading();
 
         string destinationArchive = settings.SetExtension(archive.Name);

@@ -3,6 +3,10 @@ public class WinRARCommand {
     public WinRARCommandName CommandName { get; set; }
     internal WinRARCommand(string command) {
     }
+
+    public string ToCommandString() {
+        return "";
+    }
 }
 
 public enum WinRARCommandName {

@@ -1,10 +1,21 @@
 ﻿using HBLibrary.Common.Process;
+
+/* Unmerged change from project 'HBLibrary.Services.IO (net8.0-windows)'
+Before:
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+After:
+using HBLibrary.Services;
+using HBLibrary.Services.IO.Archiving.WinRAR;
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+*/
 using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using System.Diagnostics;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
-    public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings) {
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor
+{
+    public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings)
+    {
         StartReading();
 
         string arguments = settings.ToString()! + $"\"{sourceArchive}\" \"{destinationDirectory}\"";
@@ -16,7 +27,8 @@ public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
 
         extractionProcess.WaitForExit(ProcessTimeout ?? Timeout.Infinite);
 
-        if (!OnProcessExitIsNull()) {
+        if (!OnProcessExitIsNull())
+        {
             bool isCanceled = ProcessTimeout.HasValue &&
                 (extractionProcess.ExitTime - extractionProcess.StartTime).TotalMilliseconds >= ProcessTimeout;
 
@@ -32,12 +44,14 @@ public class WinRARExtractor : WinRARArchiverBase, IWinRARExtractor {
         StopReading();
     }
 
-    public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory) {
+    public void Extract(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory)
+    {
         Extract(sourceArchive, destinationDirectory, WinRARExtractionOptions.Default);
     }
 #if NET5_0_OR_GREATER
 
-    public async Task ExtractAsync(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings, CancellationToken token = default) {
+    public async Task ExtractAsync(FileSnapshot sourceArchive, DirectorySnapshot destinationDirectory, WinRARExtractionOptions settings, CancellationToken token = default)
+    {
         StartReading();
 
         string arguments = settings.ToString()! + $"\"{sourceArchive}\" \"{destinationDirectory}\"";

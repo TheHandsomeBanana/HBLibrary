@@ -3,8 +3,9 @@ using HBLibrary.Common.Process;
 using System.Diagnostics;
 using System.Text;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public abstract class WinRARArchiverBase {
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
+public abstract class WinRARArchiverBase
+{
     public event EventHandler<ProcessExitEventArgs>? OnProcessExit;
     public event EventHandler<ProcessStdStreamEventArgs>? OnOutputDataReceived;
     public event EventHandler<ProcessStdStreamEventArgs>? OnErrorDataReceived;
@@ -17,7 +18,8 @@ public abstract class WinRARArchiverBase {
     protected StringBuilder? StandardError { get; set; }
 
 
-    public WinRARArchiverBase() {
+    public WinRARArchiverBase()
+    {
         WinRARPath = WinRARHelper.GetWinRARInstallationPath()
             ?? throw new ApplicationNotFoundException("WinRAR");
     }
@@ -26,36 +28,44 @@ public abstract class WinRARArchiverBase {
     protected bool OnOutputDataReceivedIsNull() => OnOutputDataReceived == null;
     protected bool OnErrorDataReceivedIsNull() => OnErrorDataReceived == null;
 
-    protected virtual void RaiseOnProcessExit(ProcessExitEventArgs e) {
+    protected virtual void RaiseOnProcessExit(ProcessExitEventArgs e)
+    {
         OnProcessExit?.Invoke(this, e);
     }
 
-    protected virtual void RaiseOnOutputDataReceived(ProcessStdStreamEventArgs e) {
+    protected virtual void RaiseOnOutputDataReceived(ProcessStdStreamEventArgs e)
+    {
         OnOutputDataReceived?.Invoke(this, e);
     }
 
-    protected virtual void RaiseOnOutputDataReceived(object sender, ProcessStdStreamEventArgs e) {
+    protected virtual void RaiseOnOutputDataReceived(object sender, ProcessStdStreamEventArgs e)
+    {
         OnOutputDataReceived?.Invoke(sender, e);
     }
 
-    protected virtual void RaiseOnErrorDataReceived(ProcessStdStreamEventArgs e) {
+    protected virtual void RaiseOnErrorDataReceived(ProcessStdStreamEventArgs e)
+    {
         OnErrorDataReceived?.Invoke(this, e);
     }
 
-    protected virtual void RaiseOnErrorDataReceived(object sender, ProcessStdStreamEventArgs e) {
+    protected virtual void RaiseOnErrorDataReceived(object sender, ProcessStdStreamEventArgs e)
+    {
         OnErrorDataReceived?.Invoke(sender, e);
     }
 
-    protected static ProcessExitEventArgs CreateProcessExitEventArgs(Process process, bool isCanceled) {
+    protected static ProcessExitEventArgs CreateProcessExitEventArgs(Process process, bool isCanceled)
+    {
         return new ProcessExitEventArgs(process.ExitCode, process.StartTime, process.ExitTime, isCanceled);
     }
 
-    protected void StartReading() {
+    protected void StartReading()
+    {
         StandardOutput = new StringBuilder();
         StandardError = new StringBuilder();
     }
 
-    protected void StopReading() {
+    protected void StopReading()
+    {
         StdOutput = StandardOutput!.ToString()!;
         StdError = StandardError!.ToString()!;
 
@@ -63,8 +73,10 @@ public abstract class WinRARArchiverBase {
         StandardError = null;
     }
 
-    protected Process CreateProcess(string arguments, bool compress) {
-        ProcessStartInfo startInfo = new ProcessStartInfo {
+    protected Process CreateProcess(string arguments, bool compress)
+    {
+        ProcessStartInfo startInfo = new ProcessStartInfo
+        {
             FileName = WinRARPath + (compress ? "\\Rar.exe" : "\\UnRAR.exe"),
 
             Arguments = arguments,
@@ -74,7 +86,8 @@ public abstract class WinRARArchiverBase {
             UseShellExecute = false,
         };
 
-        Process process = new Process {
+        Process process = new Process
+        {
             EnableRaisingEvents = true,
             StartInfo = startInfo
         };
@@ -84,16 +97,19 @@ public abstract class WinRARArchiverBase {
         return process;
     }
 
-    private void OutputDataReceived(object sender, DataReceivedEventArgs e) {
+    private void OutputDataReceived(object sender, DataReceivedEventArgs e)
+    {
         if (string.IsNullOrEmpty(e.Data))
             return;
 
         // WinRAR writes errors to stdout for some crazy idk reason
-        if (e.Data.StartsWith("error", StringComparison.CurrentCultureIgnoreCase)) {
+        if (e.Data.StartsWith("error", StringComparison.CurrentCultureIgnoreCase))
+        {
             StandardError!.AppendLine(e.Data);
             RaiseOnErrorDataReceived(sender, new ProcessStdStreamEventArgs(e.Data));
         }
-        else {
+        else
+        {
             StandardOutput!.AppendLine(e.Data);
             RaiseOnOutputDataReceived(sender, new ProcessStdStreamEventArgs(e.Data));
         }
