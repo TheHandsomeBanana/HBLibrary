@@ -2,16 +2,41 @@
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public abstract class WinRARCommand {
-    public string Command { get; }
+    private string? commandString = null;
+    public WinRARCommandName Command { get; }
     public ImmutableArray<WinRARCommandArgument> Arguments { get; }
-    public WinRARCommand(string command) {
-        // Todo validate command
+    public WinRARCommand(WinRARCommandName command) {
         this.Command = command;
     }
 
-    public string ToCommandString() {
-        return Command + string.Join(" ", Arguments.Select(e => e.Argument));
+    public WinRARCommand(string commandString) {
+        // Todo: validate commandString
+        this.commandString = commandString;
     }
+
+    public string ToCommandString() {
+        return commandString != null ? commandString : CommandNameMapping[Command] + " " + string.Join(" ", Arguments.Select(e => e.Argument));
+    }
+
+    public readonly static Dictionary<WinRARCommandName, string> CommandNameMapping = new() {
+        { WinRARCommandName.Add, "a" },
+        { WinRARCommandName.Update, "u" },
+        { WinRARCommandName.ExtractFull, "x" },
+        { WinRARCommandName.Extract, "e" },
+        { WinRARCommandName.Comment, "c" },
+        { WinRARCommandName.Repair, "r" },
+        { WinRARCommandName.Delete, "d" },
+    };
+}
+
+public enum WinRARCommandName {
+    Add,
+    Update,
+    Extract,
+    ExtractFull,
+    Comment,
+    Repair,
+    Delete
 }
 
 public readonly struct WinRARVolumeSize {
