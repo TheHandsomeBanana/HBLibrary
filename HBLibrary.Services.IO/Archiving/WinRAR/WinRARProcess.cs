@@ -150,8 +150,21 @@ public class WinRARProcess : IDisposable {
 
 public enum WinRARProcessMode {
     /// <summary>
-    /// When you need to create a new archive, modify an existing archive, or perform any advanced archive management tasks
-    /// <br></br>Can perform all UnRAR tasks and more.
+    /// When you need to create a new archive, modify an existing archive, or perform any advanced archive management tasks.
+    /// <br></br>Can perform all UnRAR commands and the following:<br/>
+    /// Creating archives (a)<br/>
+    /// Updating archives (u)<br/>
+    /// Deleting files from archive (d)<br/>
+    /// Freshen files in archive (f)<br/>
+    /// Printing file to Stdout (p)<br/>
+    /// Converting archive formats (ch)<br/>
+    /// Locking archives (k)<br/>
+    /// Adding recovery records (rr)<br/>
+    /// Creating SFX archives (s)<br/>
+    /// Setting advanced compression parameters (-m, -md)<br/>
+    /// Volume splitting (-v)<br/>
+    /// Commenting (c)<br/>
+    /// Protecting archives (-hp)<br/>
     /// </summary>
     Rar,
     /// <summary>

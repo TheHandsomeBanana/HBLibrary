@@ -1,36 +1,17 @@
-﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
-public class WinRARCommand {
-    public WinRARCommandName CommandName { get; set; }
-    internal WinRARCommand(string command) {
+﻿using System.Collections.Immutable;
+
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
+public abstract class WinRARCommand {
+    public string Command { get; }
+    public ImmutableArray<WinRARCommandArgument> Arguments { get; }
+    public WinRARCommand(string command) {
+        // Todo validate command
+        this.Command = command;
     }
 
     public string ToCommandString() {
-        return "";
+        return Command + string.Join(" ", Arguments.Select(e => e.Argument));
     }
-}
-
-public enum WinRARCommandName {
-    AddFilesToArchive,
-    AddCommentToArchive,
-    ChangeArchiveParameters,
-    ConvertArchives,
-    WriteArchiveCommentToFile,
-    DeleteFilesFromArchive,
-    ExtractFilesFromArchiveIgnoringPaths,
-    FreshenFilesWithinArchive,
-    FindStringInArchives,
-    LockArchive,
-    MoveFilesAndFoldersToArchive,
-    RepairDamagedArchive,
-    ReconstructMissingVolumes,
-    RenameArchivedFiles,
-    AddDataRecoveryRecord,
-    CreateRecoveryVolumes,
-    ConvertArchiveToSelfExtractingType,
-    RemoveSFXModule,
-    TestArchiveFiles,
-    UpdateFilesWithinArchive,
-    ExtractFilesFromArchiveWithFullPaths
 }
 
 public readonly struct WinRARVolumeSize {
