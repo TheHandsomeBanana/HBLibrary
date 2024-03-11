@@ -1,7 +1,7 @@
 using HBLibrary.Common.Process;
 using HBLibrary.Services.IO.Archiving;
 using HBLibrary.Services.IO.Archiving.WinRAR;
-using HBLibrary.Services.IO.Archiving.WinRAR.Options;
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete.Options;
 using HBLibrary.Services.IO.Compression.WinRAR;
 
 namespace HBLibrary.Services.IO.Tests;

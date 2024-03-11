@@ -1,4 +1,6 @@
 ﻿using HBLibrary.Common.Process;
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete.Options;
+
 
 /* Unmerged change from project 'HBLibrary.Services.IO (net8.0-windows)'
 Before:
@@ -8,7 +10,6 @@ using HBLibrary.Services;
 using HBLibrary.Services.IO.Archiving.WinRAR;
 using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;
 */
-using HBLibrary.Services.IO.Archiving.WinRAR.Options;
 using System.Diagnostics;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Obsolete;

@@ -1,5 +1,5 @@
 ﻿using HBLibrary.Common.Process;
-using HBLibrary.Services.IO.Archiving.WinRAR.Options;
+using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete.Options;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 /// <summary>

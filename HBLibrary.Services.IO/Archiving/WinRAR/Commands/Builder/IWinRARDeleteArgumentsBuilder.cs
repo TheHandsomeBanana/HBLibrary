@@ -1,4 +1,4 @@
 ﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
 
-public interface IWinRARDeleteArgumentsBuilder : IWinRARCommonArgumentsBuilder<IWinRARDeleteArgumentsBuilder> {
+public interface IWinRARDeleteArgumentsBuilder : IWinRARArgumentsBuilder<IWinRARDeleteArgumentsBuilder> {
 }

@@ -1,6 +1,6 @@
 ﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
-public interface IWinRARCompressionArgumentsBuilder : IWinRARCommonArgumentsBuilder<IWinRARCompressionArgumentsBuilder> {
-    public IWinRARCompressionArgumentsBuilder AuthenticityVerification(bool enabled); // -av | -av-
+public interface IWinRARCompressionArgumentsBuilder : IWinRARArgumentsBuilder<IWinRARCompressionArgumentsBuilder> {
+    public IWinRARCompressionArgumentsBuilder SetAuthenticityVerification(AuthenticityVerification authenticityVerification); // -av | -av-
     public IWinRARCompressionArgumentsBuilder DisableReadConfiguration(); // -cfg-
     public IWinRARCompressionArgumentsBuilder IgnoreEmptyDirectories(); // -ed
     public IWinRARCompressionArgumentsBuilder FreshenFiles(); // -f

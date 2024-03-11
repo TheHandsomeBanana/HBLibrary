@@ -1,5 +1,5 @@
 ﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
-public interface IWinRARUpdateArgumentsBuilder : IWinRARCommonArgumentsBuilder<IWinRARUpdateArgumentsBuilder> {
+public interface IWinRARUpdateArgumentsBuilder : IWinRARArgumentsBuilder<IWinRARUpdateArgumentsBuilder> {
     public IWinRARUpdateArgumentsBuilder SetOverwriteMode(WinRAROverwriteMode overwriteMode); // -o- | -o+
     public IWinRARUpdateArgumentsBuilder SetPassword(string password); // -p
     public IWinRARUpdateArgumentsBuilder RecurseSubdirectories(); // -r

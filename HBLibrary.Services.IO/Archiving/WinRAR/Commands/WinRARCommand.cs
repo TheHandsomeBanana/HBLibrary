@@ -2,31 +2,43 @@
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public abstract class WinRARCommand {
-    private string? commandString = null;
-    public WinRARCommandName Command { get; }
-    public ImmutableArray<WinRARCommandArgument> Arguments { get; }
-    public WinRARCommand(WinRARCommandName command) {
-        this.Command = command;
+    protected string? CommandString { get; set; }
+    public virtual WinRARCommandName Command { get; }
+    public ImmutableArray<string> Arguments { get; }
+    public WinRARCommand() {
     }
 
     public WinRARCommand(string commandString) {
         // Todo: validate commandString
-        this.commandString = commandString;
+        this.CommandString = commandString;
     }
 
     public string ToCommandString() {
-        return commandString != null ? commandString : CommandNameMapping[Command] + " " + string.Join(" ", Arguments.Select(e => e.Argument));
+        return CommandString != null ? CommandString : WinRARCommandMap.Get(Command) + " " + string.Join(" ", Arguments);
     }
+}
 
-    public readonly static Dictionary<WinRARCommandName, string> CommandNameMapping = new() {
-        { WinRARCommandName.Add, "a" },
-        { WinRARCommandName.Update, "u" },
-        { WinRARCommandName.ExtractFull, "x" },
-        { WinRARCommandName.Extract, "e" },
-        { WinRARCommandName.Comment, "c" },
-        { WinRARCommandName.Repair, "r" },
-        { WinRARCommandName.Delete, "d" },
-    };
+public static class WinRARCommandMap {
+    public const string AddCommand = "a";
+    public const string UpdateCommand = "u";
+    public const string ExtractFullCommand = "x";
+    public const string ExtractCommand = "e";
+    public const string CommentCommand = "c";
+    public const string RepairCommand = "r";
+    public const string DeleteCommand = "d";
+
+    public static string Get(WinRARCommandName commandName) {
+        return commandName switch {
+            WinRARCommandName.Add => AddCommand,
+            WinRARCommandName.Update => UpdateCommand,
+            WinRARCommandName.Extract => ExtractCommand,
+            WinRARCommandName.ExtractFull => ExtractFullCommand,
+            WinRARCommandName.Comment => CommentCommand,
+            WinRARCommandName.Repair => RepairCommand,
+            WinRARCommandName.Delete => DeleteCommand,
+            _ => throw new NotSupportedException(commandName.ToString())
+        };
+    }
 }
 
 public enum WinRARCommandName {
@@ -39,6 +51,32 @@ public enum WinRARCommandName {
     Delete
 }
 
+public readonly struct WinRARPassword {
+    public string Password { get; }
+    public WinRARPasswordMode Mode { get; }
+
+    public WinRARPassword(string password, WinRARPasswordMode mode) {
+        Password = password;
+        Mode = mode;
+    }
+}
+
+public enum WinRARPasswordMode {
+    Basic,
+    EncryptAll
+}
+
+public readonly struct WinRARRecoveryVolume {
+    public WinRARSizeType SizeType { get; }
+    public int Size { get; }
+
+    public WinRARRecoveryVolume(WinRARSizeType sizeType, int size) {
+        SizeType = sizeType;
+        Size = size;
+    }
+
+}
+
 public readonly struct WinRARVolumeSize {
     public WinRARSizeType SizeType { get; }
     public int Size { get; }
@@ -47,7 +85,6 @@ public readonly struct WinRARVolumeSize {
         SizeType = sizeType;
         Size = size;
     }
-
 
     public static WinRARVolumeSize Email25MB() => new WinRARVolumeSize(WinRARSizeType.MB, 25);
     public static WinRARVolumeSize WebUpload100MB() => new WinRARVolumeSize(WinRARSizeType.MB, 100);
@@ -74,6 +111,7 @@ public enum WinRARSizeType {
     Percentage
 }
 
+
 public enum WinRARCompressionLevel {
     Save,
     Fastest,
@@ -82,6 +120,7 @@ public enum WinRARCompressionLevel {
     Good,
     Best
 }
+
 
 public enum WinRARDictionarySize {
     Md64k,
@@ -105,11 +144,11 @@ public enum WinRARDictionarySize {
 }
 
 public enum WinRAROverwriteMode {
-    Overwrite,
-    Skip
+    Silent,
+    Skip,
 }
 
 public enum WinRARExtractionMode {
-    FullPaths, 
+    FullPaths,
     IgnoreFolderStructure,
 }

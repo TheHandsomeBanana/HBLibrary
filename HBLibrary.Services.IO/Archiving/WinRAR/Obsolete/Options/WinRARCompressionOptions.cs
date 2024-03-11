@@ -2,9 +2,10 @@
 using HBLibrary.Services.IO.Exceptions;
 using System.Text;
 
-namespace HBLibrary.Services.IO.Archiving.WinRAR.Options;
+namespace HBLibrary.Services.IO.Archiving.WinRAR.Obsolete.Options;
 // https://documentation.help/WinRAR/HELPCommandLineSyntax.html
-public class WinRARCompressionOptions {
+public class WinRARCompressionOptions
+{
     public const string ArchiveFormatExtension = ".rar";
     public FileSnapshot? Comment { get; init; }
 
@@ -24,10 +25,13 @@ public class WinRARCompressionOptions {
     /// <summary>
     /// e.g. '5%' -> adds a recovery record that is 5% of the total archive size
     /// </summary>
-    public string? RecoveryRecordPercentage {
+    public string? RecoveryRecordPercentage
+    {
         get => recoveryRecordPercentage;
-        set {
-            if (value is null) {
+        set
+        {
+            if (value is null)
+            {
                 recoveryRecordPercentage = null;
                 return;
             }
@@ -40,7 +44,8 @@ public class WinRARCompressionOptions {
     }
 
     public static WinRARCompressionOptions Default => new WinRARCompressionOptions();
-    public string SetExtension(string path) {
+    public string SetExtension(string path)
+    {
         if (path.EndsWith(ArchiveFormatExtension))
             return path;
 
@@ -51,7 +56,8 @@ public class WinRARCompressionOptions {
     /// </summary>
     /// <returns></returns>
     /// <exception cref="WinRARException"></exception>
-    public override string ToString() {
+    public override string ToString()
+    {
 
         StringBuilder sb = new StringBuilder();
         if (ExecutionMode == WinRARExecutionMode.Background)
@@ -82,11 +88,13 @@ public class WinRARCompressionOptions {
     /// </summary>
     /// <returns></returns>
     /// <exception cref="WinRARException"></exception>
-    public string GetArgumentString() {
+    public string GetArgumentString()
+    {
         return ToString();
     }
 
-    public string CompressionMethodString => CompressionMethod switch {
+    public string CompressionMethodString => CompressionMethod switch
+    {
         WinRARCompressionMethod.Save => "-m0",
         WinRARCompressionMethod.Fastest => "-m1",
         WinRARCompressionMethod.Fast => "-m2",
@@ -98,18 +106,21 @@ public class WinRARCompressionOptions {
 
     public string DictionarySizeString => "-" + DictionarySize.ToString().ToLower();
 
-    public string ExecutionModeString => ExecutionMode switch {
+    public string ExecutionModeString => ExecutionMode switch
+    {
         WinRARExecutionMode.Foreground => "",
         WinRARExecutionMode.Background => "-ibck",
         _ => throw new NotSupportedException(ExecutionMode.ToString())
     };
 }
 
-public readonly struct WinRARVolumeSize {
+public readonly struct WinRARVolumeSize
+{
     public WinRARSizeType SizeType { get; }
     public int Size { get; }
 
-    public WinRARVolumeSize(WinRARSizeType sizeType, int size) {
+    public WinRARVolumeSize(WinRARSizeType sizeType, int size)
+    {
         SizeType = sizeType;
         Size = size;
     }
@@ -119,8 +130,10 @@ public readonly struct WinRARVolumeSize {
     public static WinRARVolumeSize WebUpload100MB() => new WinRARVolumeSize(WinRARSizeType.MB, 100);
     public static WinRARVolumeSize WebUpload200MB() => new WinRARVolumeSize(WinRARSizeType.MB, 200);
 
-    public override string ToString() {
-        switch (SizeType) {
+    public override string ToString()
+    {
+        switch (SizeType)
+        {
             case WinRARSizeType.kB:
                 return "-v" + Size + "k";
             case WinRARSizeType.MB:
@@ -133,13 +146,15 @@ public readonly struct WinRARVolumeSize {
     }
 }
 
-public enum WinRARSizeType {
+public enum WinRARSizeType
+{
     kB,
     MB,
     GB
 }
 
-public enum WinRARCompressionMethod {
+public enum WinRARCompressionMethod
+{
     Save,
     Fastest,
     Fast,
@@ -148,7 +163,8 @@ public enum WinRARCompressionMethod {
     Best
 }
 
-public enum WinRARDictionarySize {
+public enum WinRARDictionarySize
+{
     Md64k,
     Md128k,
     Md256k,
@@ -169,7 +185,8 @@ public enum WinRARDictionarySize {
     Md1024m
 }
 
-public enum WinRARExecutionMode {
+public enum WinRARExecutionMode
+{
     Foreground,
     Background,
 }

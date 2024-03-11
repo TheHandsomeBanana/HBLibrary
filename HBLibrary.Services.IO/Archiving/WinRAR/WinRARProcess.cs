@@ -71,8 +71,8 @@ public class WinRARProcess : IDisposable {
         process.StandardInput.WriteLine(command.ToCommandString());
     }
 
-    public void ExecuteCommand(Func<IWinRARCommandBuilder, WinRARCommand> commandBuilder) {
-        WinRARCommand command = commandBuilder.Invoke(new WinRARCommandBuilder());
+    public void ExecuteCommand(Func<IWinRARCommandProvider, WinRARCommand> commandBuilder) {
+        WinRARCommand command = commandBuilder.Invoke(new WinRARCommandProvider());
         ExecuteCommand(command);
     }
 
