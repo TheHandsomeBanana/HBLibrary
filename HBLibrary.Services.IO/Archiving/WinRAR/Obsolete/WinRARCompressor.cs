@@ -1,5 +1,7 @@
 ﻿using HBLibrary.Common.Process;
 using HBLibrary.Services.IO.Archiving.WinRAR.Obsolete.Options;
+using System;
+
 
 
 /* Unmerged change from project 'HBLibrary.Services.IO (net8.0-windows)'
@@ -47,6 +49,7 @@ public class WinRARCompressor : WinRARArchiverBase, IWinRARCompressor
 
             RaiseOnProcessExit(processExitArgs);
         }
+
 
         StopReading();
     }

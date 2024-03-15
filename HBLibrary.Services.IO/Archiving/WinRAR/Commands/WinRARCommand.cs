@@ -1,24 +1,41 @@
-﻿using System.Collections.Immutable;
+﻿using HBLibrary.Common.Limiter;
+using HBLibrary.Services.IO.Exceptions;
+using System.Collections.Immutable;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
-public abstract class WinRARCommand {
-    protected string? CommandString { get; set; }
+public abstract class WinRARCommand : IWinRARCommand {
     public virtual WinRARCommandName Command { get; }
-    public ImmutableArray<string> Arguments { get; }
-    public WinRARCommand() {
+    public WinRARProcessPriority? Priority { get; init; } = null;
+    public WinRARFileNameFormat? FileNameFormat { get; init; } = null;
+    public bool IgnoreFileAttributes { get; set; } = false;
+
+    public virtual string ToCommandString() {
+        StringBuilder sb = new StringBuilder();
+        sb.Append(Get(Command))
+            .Append(" ");
+
+        if(Priority != null)
+            sb.Append(Priority.ToString());
+
+        if(FileNameFormat != null) {
+            switch(FileNameFormat) {
+                case WinRARFileNameFormat.Uppercase:
+                    sb.Append("-cu ");
+                    break;
+                case WinRARFileNameFormat.Lowercase:
+                    sb.Append("-cl ");
+                    break;
+            }
+        }
+
+        if (IgnoreFileAttributes)
+            sb.Append(" -ai");
+
+        return sb.ToString();
     }
 
-    public WinRARCommand(string commandString) {
-        // Todo: validate commandString
-        this.CommandString = commandString;
-    }
-
-    public string ToCommandString() {
-        return CommandString != null ? CommandString : WinRARCommandMap.Get(Command) + " " + string.Join(" ", Arguments);
-    }
-}
-
-public static class WinRARCommandMap {
     public const string AddCommand = "a";
     public const string UpdateCommand = "u";
     public const string ExtractFullCommand = "x";
@@ -56,8 +73,24 @@ public readonly struct WinRARPassword {
     public WinRARPasswordMode Mode { get; }
 
     public WinRARPassword(string password, WinRARPasswordMode mode) {
+        if (!passwordRegex.Match(password).Success)
+            throw new ArgumentException($"The provided password does not match the requirements.");
+
         Password = password;
         Mode = mode;
+    }
+
+    private readonly static Regex passwordRegex = new Regex("^[\\w!@#$%^&*()-_=+[\\]{};:'\",.<>?/|`~]{8,32}$\r\n");
+
+    public override string ToString() {
+        switch (Mode) {
+            case WinRARPasswordMode.Basic:
+                return "-p";
+            case WinRARPasswordMode.EncryptAll:
+                return "-hp";
+            default:
+                throw new NotSupportedException(Mode.ToString());
+        }
     }
 }
 
@@ -101,6 +134,19 @@ public readonly struct WinRARVolumeSize {
         }
 
         throw new NotSupportedException(SizeType.ToString());
+    }
+}
+
+public readonly struct WinRARProcessPriority {
+    /// <summary>
+    /// Valid values are usually [1-15]
+    /// </summary>
+    public int Priority { get; }
+    public TimeSpan? OptionalWait { get; }
+
+    public WinRARProcessPriority(int priority, TimeSpan? optionalWait = null) {
+        this.Priority = priority.LimitToRange(0, 15);
+        OptionalWait = optionalWait;
     }
 }
 
@@ -151,4 +197,9 @@ public enum WinRAROverwriteMode {
 public enum WinRARExtractionMode {
     FullPaths,
     IgnoreFolderStructure,
+}
+
+public enum WinRARFileNameFormat {
+    Uppercase,
+    Lowercase
 }

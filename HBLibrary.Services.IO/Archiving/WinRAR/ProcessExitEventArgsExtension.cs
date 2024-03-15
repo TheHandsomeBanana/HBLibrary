@@ -1,9 +1,13 @@
 ﻿using HBLibrary.Common.Process;
+using System;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public static class ProcessExitEventArgsExtension {
     public static string GetDescription(this ProcessExitEventArgs eventArgs)
-        => eventArgs.ExitCode switch {
+        => GetDescription(eventArgs.ExitCode);
+
+    public static string GetDescription(int exitCode)
+        => exitCode switch {
             0 => "Successful operation.",
             1 => "Warning. Non-fatal error(s) occurred.",
             2 => "A fatal error occurred.",
@@ -17,6 +21,6 @@ public static class ProcessExitEventArgsExtension {
             10 => "No files matching the specified mask and options were found.",
             11 => "Wrong password.",
             255 => "User break.",
-            _ => $"Unknown exit code: {eventArgs.ExitCode}"
+            _ => $"Unknown exit code: {exitCode}"
         };
 }

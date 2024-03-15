@@ -12,10 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public class WinRARProcess : IDisposable {
-    private bool disposedValue;
+public class WinRARProcess {
     private readonly string winRARInstallationPath;
-    private readonly Process process;
+    private readonly WinRARProcessMode winRARProcessMode;
     private StringBuilder? standardOutput;
     private StringBuilder? standardError;
 
@@ -23,69 +22,68 @@ public class WinRARProcess : IDisposable {
     public event EventHandler<ProcessStdStreamEventArgs>? OnOutputDataReceived;
     public event EventHandler<ProcessStdStreamEventArgs>? OnErrorDataReceived;
 
-    /// <summary>
-    /// Contains all written outputs, available after the process has exited.
-    /// </summary>
-    public string StdOutput { get; protected set; } = "";
-    /// <summary>
-    /// Containers all written errors, available after the process has exited.
-    /// </summary>
-    public string StdError { get; protected set; } = "";
-
-   
-
     public WinRARProcess(WinRARProcessMode processMode) {
         winRARInstallationPath = WinRARHelper.GetWinRARInstallationPath()
             ?? throw new ApplicationNotFoundException("WinRAR");
 
-        ProcessStartInfo startInfo = new ProcessStartInfo {
-            FileName = winRARInstallationPath + (processMode == WinRARProcessMode.Rar ? "\\Rar.exe" : "\\UnRAR.exe"),
-
-            RedirectStandardInput = true,
-            RedirectStandardError = true,
-            RedirectStandardOutput = true,
-            CreateNoWindow = true,
-            UseShellExecute = false,
-        };
-
-        process = new Process {
-            EnableRaisingEvents = true,
-            StartInfo = startInfo
-        };
-
-        process.OutputDataReceived += OutputDataReceived;
-        process.ErrorDataReceived += ErrorDataReceived;
+        this.winRARProcessMode = processMode;
     }
-    
-    public void Start() {
+
+    public WinRARCommandResult ExecuteCommand(IWinRARCommand command, int? timeout = null) {
+        using Process process = CreateProcess(command.ToCommandString());
         StartReading();
         process.Start();
-        process.BeginErrorReadLine();
-        process.BeginOutputReadLine();
+        process.WaitForExit(timeout ?? Timeout.Infinite);
+        (string stdOutput, string stdError) = StopReading();
+
+        bool isCanceled = timeout.HasValue &&
+                (process.ExitTime - process.StartTime).TotalMilliseconds >= timeout;
+
+        WinRARCommandResult result = new WinRARCommandResult() {
+            ExitCode = process.ExitCode,
+            ExitCodeMessage = WinRARCommandResult.GetDescription(process.ExitCode),
+            StartTime = process.StartTime,
+            EndTime = process.ExitTime,
+            StdOutput = stdOutput,
+            StdError = stdError,
+            IsCanceled = isCanceled,
+        };
+
+        OnProcessExit?.Invoke(this, new ProcessExitEventArgs(process.ExitCode, process.StartTime, process.ExitTime, isCanceled));
+        return result;
     }
 
-    public void ExecuteCommand(WinRARCommand command) {
-        if (!process.StandardInput.BaseStream.CanWrite)
-            throw new WinRARException("Cannot execute command, cannot write to standard input.");
-
-        process.StandardInput.WriteLine(command.ToCommandString());
-    }
-
-    public void ExecuteCommand(Func<IWinRARCommandProvider, WinRARCommand> commandBuilder) {
-        WinRARCommand command = commandBuilder.Invoke(new WinRARCommandProvider());
-        ExecuteCommand(command);
-    }
-
-    public bool WaitForExit(int timeout = Timeout.Infinite) {
-        bool exit = process.WaitForExit(timeout);
-        StopReading();
-        return exit;
+    public void ExecuteCommand(Func<IWinRARCommandProvider, IWinRARCommand> commandBuilder, int? timeout = null) {
+        IWinRARCommand command = commandBuilder.Invoke(new WinRARCommandProvider());
+        ExecuteCommand(command, timeout);
     }
 
 #if NET5_0_OR_GREATER
-    public async Task WaitForExitAsync(CancellationToken cancellationToken = default) {
-        await process.WaitForExitAsync(cancellationToken);
-        StopReading();
+    public async Task<WinRARCommandResult> ExecuteCommandAsync(IWinRARCommand command, CancellationToken token = default) {
+        using Process process = CreateProcess(command.ToCommandString());
+        StartReading();
+        process.Start();
+        await process.WaitForExitAsync(token);
+
+        (string stdOutput, string stdError) = StopReading();
+
+        WinRARCommandResult result = new WinRARCommandResult() {
+            ExitCode = process.ExitCode,
+            ExitCodeMessage = WinRARCommandResult.GetDescription(process.ExitCode),
+            StartTime = process.StartTime,
+            EndTime = process.ExitTime,
+            StdOutput = stdOutput,
+            StdError = stdError,
+            IsCanceled = token.IsCancellationRequested,
+        };
+
+        OnProcessExit?.Invoke(this, new ProcessExitEventArgs(process.ExitCode, process.StartTime, process.ExitTime, token.IsCancellationRequested));
+        return result;
+    }
+
+    public Task<WinRARCommandResult> ExecuteCommandAsync(Func<IWinRARCommandProvider, IWinRARCommand> commandBuilder, CancellationToken token = default) {
+        IWinRARCommand command = commandBuilder.Invoke(new WinRARCommandProvider());
+        return ExecuteCommandAsync(command, token);
     }
 #endif
 
@@ -112,39 +110,38 @@ public class WinRARProcess : IDisposable {
         OnErrorDataReceived?.Invoke(sender, new ProcessStdStreamEventArgs(e.Data));
     }
 
-
     private void StartReading() {
         standardOutput = new StringBuilder();
         standardError = new StringBuilder();
     }
 
-    private void StopReading() {
-        StdOutput = standardOutput!.ToString()!;
-        StdError = standardError!.ToString()!;
-
+    private (string, string) StopReading() {
+        (string, string) output = (standardOutput!.ToString(), standardError!.ToString());
         standardOutput = null;
         standardError = null;
+        return output;
     }
 
-    protected virtual void Dispose(bool disposing) {
-        if (!disposedValue) {
-            if (disposing) {
-                process.Dispose();
-            }
+    private Process CreateProcess(string commandString) {
+        ProcessStartInfo startInfo = new ProcessStartInfo {
+            FileName = winRARInstallationPath + (winRARProcessMode == WinRARProcessMode.Rar ? "\\Rar.exe" : "\\UnRAR.exe"),
+            Arguments = commandString,
+            RedirectStandardInput = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true,
+            UseShellExecute = false,
+        };
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
-            disposedValue = true;
-        }
-    }
+        Process process = new Process {
+            EnableRaisingEvents = true,
+            StartInfo = startInfo
+        };
 
-    ~WinRARProcess() {
-        Dispose(disposing: false);
-    }
+        process.OutputDataReceived += OutputDataReceived;
+        process.ErrorDataReceived += ErrorDataReceived;
 
-    public void Dispose() {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        return process;
     }
 }
 

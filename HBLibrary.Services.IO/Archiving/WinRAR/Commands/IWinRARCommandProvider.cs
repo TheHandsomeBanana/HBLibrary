@@ -3,13 +3,13 @@ using HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public interface IWinRARCommandProvider {
-    WinRARCommand CreateCommand<TArgumentsBuilder>(WinRARCommandName command, Action<TArgumentsBuilder> builder) where TArgumentsBuilder : IWinRARArgumentsBuilder<TArgumentsBuilder>;
-    WinRARCommand CreateCompressionCommand(Archive archive, Action<IWinRARCompressionArgumentsBuilder> compressionArgumentsBuilder);
-    WinRARCommand CreateExtractionCommand(DirectorySnapshot destination, WinRARExtractionMode extractionMode, Action<IWinRARExtractionArgumentBuilder> extractionArgumentBuilder);
-    WinRARCommand CreateCommentCommand(Action<IWinRARCommentArgumentsBuilder> commentArgumentsBuilder);
-    WinRARCommand CreateUpdateCommand(Archive archive, Action<IWinRARUpdateArgumentsBuilder> updateArgumentsBuilder);
-    WinRARCommand CreateRepairCommand(Action<IWinRARRepairArgumentsBuilder> repairArgumentsBuilder);
-    WinRARCommand CreateDeleteCommand(Action<IWinRARDeleteArgumentsBuilder> deleteArgumentsBuilder);
-    WinRARCommand FromConfiguration(string configuration);
-    WinRARCommand FromCommandString(string commandString);
+    IWinRARCommand CreateCommand<TArgumentsBuilder>(WinRARCommandName command, Action<TArgumentsBuilder> builder) where TArgumentsBuilder : IWinRARArgumentsBuilder<TArgumentsBuilder>;
+    IWinRARCommand CreateCompressionCommand(Archive archive, Action<IWinRARAddArgumentsBuilder> compressionArgumentsBuilder);
+    IWinRARCommand CreateExtractionCommand(DirectorySnapshot destination, WinRARExtractionMode extractionMode, Action<IWinRARExtractArgumentBuilder> extractionArgumentBuilder);
+    IWinRARCommand CreateCommentCommand(Action<IWinRARCommentArgumentsBuilder> commentArgumentsBuilder);
+    IWinRARCommand CreateUpdateCommand(Archive archive, Action<IWinRARUpdateArgumentsBuilder> updateArgumentsBuilder);
+    IWinRARCommand CreateRepairCommand(Action<IWinRARRepairArgumentsBuilder> repairArgumentsBuilder);
+    IWinRARCommand CreateDeleteCommand(Action<IWinRARDeleteArgumentsBuilder> deleteArgumentsBuilder);
+    IWinRARCommand FromConfiguration(string configuration);
+    IWinRARCommand FromCommandString(string commandString);
 }
