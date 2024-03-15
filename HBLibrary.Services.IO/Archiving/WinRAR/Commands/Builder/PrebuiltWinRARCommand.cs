@@ -19,9 +19,9 @@ internal class PrebuiltWinRARCommand : IWinRARCommand {
         StringBuilder sb = new StringBuilder();
         sb.Append(WinRARCommand.Get(Command))
             .Append(' ')
-            .Append(string.Join(' ', Arguments))
+            .Append(string.Join(" ", Arguments))
             .Append(' ')
-            .Append(string.Join(' ', Targets));
+            .Append(string.Join(" ", Targets));
 
         return sb.ToString();
     }

@@ -8,6 +8,4 @@ public interface IWinRARExtractArgumentBuilder : IWinRARArgumentsBuilder<IWinRAR
     public IWinRARExtractArgumentBuilder KeepBrokenFiles(); // -kb
     public IWinRARExtractArgumentBuilder IncludeFiles(IEnumerable<string> files); // -n
     public IWinRARExtractArgumentBuilder IncludeFiles(string pattern); // -n
-    public IWinRARExtractArgumentBuilder ExcludeFiles(IEnumerable<string> files); // -x
-    public IWinRARExtractArgumentBuilder ExcludeFiles(string pattern); // -x
 }

@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Limiter;
+using HBLibrary.Common.RegularExpressions;
 using HBLibrary.Services.IO.Exceptions;
 using System.Collections.Immutable;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Text.RegularExpressions;
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public abstract class WinRARCommand : IWinRARCommand {
     public virtual WinRARCommandName Command { get; }
+    public required string TargetArchive { get; init; }
     public WinRARProcessPriority? Priority { get; init; } = null;
     public WinRARFileNameFormat? FileNameFormat { get; init; } = null;
     public bool IgnoreFileAttributes { get; set; } = false;
@@ -14,13 +16,21 @@ public abstract class WinRARCommand : IWinRARCommand {
     public virtual string ToCommandString() {
         StringBuilder sb = new StringBuilder();
         sb.Append(Get(Command))
-            .Append(" ");
+            .Append(' ')
+            .Append(BuildSwitches())
+            .Append(' ')
+            .Append(TargetArchive);
 
-        if(Priority != null)
+        return sb.ToString();
+    }
+
+    public virtual string BuildSwitches() {
+        StringBuilder sb = new StringBuilder();
+        if (Priority != null)
             sb.Append(Priority.ToString());
 
-        if(FileNameFormat != null) {
-            switch(FileNameFormat) {
+        if (FileNameFormat != null) {
+            switch (FileNameFormat) {
                 case WinRARFileNameFormat.Uppercase:
                     sb.Append("-cu ");
                     break;
@@ -31,7 +41,7 @@ public abstract class WinRARCommand : IWinRARCommand {
         }
 
         if (IgnoreFileAttributes)
-            sb.Append(" -ai");
+            sb.Append("-ai ");
 
         return sb.ToString();
     }
@@ -68,19 +78,17 @@ public enum WinRARCommandName {
     Delete
 }
 
-public readonly struct WinRARPassword {
+public readonly partial struct WinRARPassword {
     public string Password { get; }
     public WinRARPasswordMode Mode { get; }
 
     public WinRARPassword(string password, WinRARPasswordMode mode) {
-        if (!passwordRegex.Match(password).Success)
+        if (!RegexCollection.CommonCLIPasswordRegex.Match(password).Success)
             throw new ArgumentException($"The provided password does not match the requirements.");
 
         Password = password;
         Mode = mode;
     }
-
-    private readonly static Regex passwordRegex = new Regex("^[\\w!@#$%^&*()-_=+[\\]{};:'\",.<>?/|`~]{8,32}$\r\n");
 
     public override string ToString() {
         switch (Mode) {
@@ -92,6 +100,8 @@ public readonly struct WinRARPassword {
                 throw new NotSupportedException(Mode.ToString());
         }
     }
+
+
 }
 
 public enum WinRARPasswordMode {
@@ -104,10 +114,55 @@ public readonly struct WinRARRecoveryVolume {
     public int Size { get; }
 
     public WinRARRecoveryVolume(WinRARSizeType sizeType, int size) {
+        if (sizeType == WinRARSizeType.Percentage)
+            size.LimitToRangeRef(0, 100);
+
         SizeType = sizeType;
         Size = size;
     }
 
+    public override string ToString() {
+        const string rv = "-rv";
+        switch (SizeType) {
+            case WinRARSizeType.kB:
+                return rv + Size + "k";
+            case WinRARSizeType.MB:
+                return rv + Size + "m";
+            case WinRARSizeType.GB:
+                return rv + Size + "g";
+            case WinRARSizeType.Percentage:
+                return rv + Size + "p";
+        }
+
+        throw new NotSupportedException(SizeType.ToString());
+    }
+}
+
+public readonly struct WinRARDataRecoveryRecord {
+    public WinRARSizeType SizeType { get; }
+    public int Size { get; }
+
+    public WinRARDataRecoveryRecord(WinRARSizeType sizeType, int size) {
+        if (sizeType == WinRARSizeType.Percentage)
+            size.LimitToRangeRef(0, 100);
+
+        SizeType = sizeType;
+        Size = size;
+    }
+
+    public override string ToString() {
+        const string rv = "-rr";
+        switch (SizeType) {
+            case WinRARSizeType.kB:
+                return rv + Size + "k";
+            case WinRARSizeType.MB:
+                return rv + Size + "m";
+            case WinRARSizeType.Percentage:
+                return rv + Size + "%";
+        }
+
+        throw new NotSupportedException(SizeType.ToString());
+    }
 }
 
 public readonly struct WinRARVolumeSize {

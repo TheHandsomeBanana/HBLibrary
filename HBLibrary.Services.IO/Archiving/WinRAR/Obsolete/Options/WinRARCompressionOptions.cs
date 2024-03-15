@@ -36,7 +36,7 @@ public class WinRARCompressionOptions
                 return;
             }
 
-            if (!RegexCollection.SimplePercentageValue.Match(value).Success)
+            if (!RegexCollection.SimplePercentageRegex.Match(value).Success)
                 throw new CompressionException($"{value} does not match the percentage value pattern.");
 
             recoveryRecordPercentage = value;

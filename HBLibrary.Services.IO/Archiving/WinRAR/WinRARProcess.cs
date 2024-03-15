@@ -39,6 +39,8 @@ public class WinRARProcess {
         bool isCanceled = timeout.HasValue &&
                 (process.ExitTime - process.StartTime).TotalMilliseconds >= timeout;
 
+        
+
         WinRARCommandResult result = new WinRARCommandResult() {
             ExitCode = process.ExitCode,
             ExitCodeMessage = WinRARCommandResult.GetDescription(process.ExitCode),
@@ -64,7 +66,7 @@ public class WinRARProcess {
         StartReading();
         process.Start();
         await process.WaitForExitAsync(token);
-
+        
         (string stdOutput, string stdError) = StopReading();
 
         WinRARCommandResult result = new WinRARCommandResult() {

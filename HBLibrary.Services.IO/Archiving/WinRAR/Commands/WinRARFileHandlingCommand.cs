@@ -12,12 +12,8 @@ public abstract class WinRARFileHandlingCommand : WinRARCommand {
         StringBuilder sb = new StringBuilder();
         sb.Append(base.ToCommandString())
             .Append(' ')
-            .Append(BuildContextArguments())
-            .Append(' ')
-            .Append(string.Join(' ', Targets));
+            .Append(string.Join(" ", Targets));
 
         return sb.ToString();
     }
-
-    public abstract string BuildContextArguments();
 }
