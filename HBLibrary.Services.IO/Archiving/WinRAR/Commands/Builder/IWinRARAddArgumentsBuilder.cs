@@ -17,4 +17,6 @@ public interface IWinRARAddArgumentsBuilder : IWinRARArgumentsBuilder<IWinRARAdd
     public IWinRARAddArgumentsBuilder DeleteOriginalFiles(); // -sdel
     public IWinRARAddArgumentsBuilder TestArchiveIntegrity(); // -t
     public IWinRARAddArgumentsBuilder CreateVolumes(WinRARVolumeSize volumeSize); // -v<size>[K|M|G]
+    public IWinRARAddArgumentsBuilder FormatFilenames(WinRARFileNameFormat format); // -cl | -cu
+    public IWinRARAddArgumentsBuilder IgnoreFileAttributes(); // -ai
 }

@@ -9,9 +9,9 @@ namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public abstract class WinRARCommand : IWinRARCommand {
     public virtual WinRARCommandName Command { get; }
     public required string TargetArchive { get; init; }
-    public WinRARProcessPriority? Priority { get; init; } = null;
-    public WinRARFileNameFormat? FileNameFormat { get; init; } = null;
-    public bool IgnoreFileAttributes { get; set; } = false;
+    public WinRARProcessPriority? Priority { get; init; } 
+    public WinRARPassword? Password { get; init; }
+
 
     public virtual string ToCommandString() {
         StringBuilder sb = new StringBuilder();
@@ -26,22 +26,13 @@ public abstract class WinRARCommand : IWinRARCommand {
 
     public virtual string BuildSwitches() {
         StringBuilder sb = new StringBuilder();
-        if (Priority != null)
-            sb.Append(Priority.ToString());
+        if (Priority.HasValue)
+            sb.Append(Priority.Value.ToString())
+                .Append(' ');
 
-        if (FileNameFormat != null) {
-            switch (FileNameFormat) {
-                case WinRARFileNameFormat.Uppercase:
-                    sb.Append("-cu ");
-                    break;
-                case WinRARFileNameFormat.Lowercase:
-                    sb.Append("-cl ");
-                    break;
-            }
-        }
-
-        if (IgnoreFileAttributes)
-            sb.Append("-ai ");
+        if (Password.HasValue)
+            sb.Append(Password.Value.ToString())
+                .Append(' ');
 
         return sb.ToString();
     }
@@ -100,8 +91,6 @@ public readonly partial struct WinRARPassword {
                 throw new NotSupportedException(Mode.ToString());
         }
     }
-
-
 }
 
 public enum WinRARPasswordMode {
@@ -194,14 +183,35 @@ public readonly struct WinRARVolumeSize {
 
 public readonly struct WinRARProcessPriority {
     /// <summary>
-    /// Valid values are usually [1-15]
+    /// Valid range is [0-15], with 0 beeing the default, 1 the lowest and 15 the highest priority.
     /// </summary>
     public int Priority { get; }
+    /// <summary>
+    /// Valid range is [0-1000] in milliseconds.
+    /// </summary>
     public TimeSpan? OptionalWait { get; }
 
     public WinRARProcessPriority(int priority, TimeSpan? optionalWait = null) {
-        this.Priority = priority.LimitToRange(0, 15);
+        priority.LimitToRangeRef(0, 15);
+        this.Priority = priority;
+
+        if (optionalWait.HasValue)
+            optionalWait = optionalWait.Value.LimitToRange(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(1000));
+
         OptionalWait = optionalWait;
+    }
+
+    public override string ToString() {
+        StringBuilder sb = new StringBuilder()
+            .Append("-ri")
+            .Append(Priority);
+
+        if (OptionalWait != null) {
+            sb.Append(':')
+                .Append(OptionalWait.Value.TotalMilliseconds);
+        }
+
+        return sb.ToString();
     }
 }
 
@@ -224,24 +234,24 @@ public enum WinRARCompressionLevel {
 
 
 public enum WinRARDictionarySize {
-    Md64k,
-    Md128k,
-    Md256k,
-    Md512k,
-    Md1024k,
-    Md2048k,
-    Md4096k,
-    Md1m,
-    Md2m,
-    Md4m,
-    Md8m,
-    Md16m,
-    Md32m,
-    Md64m,
-    Md128m,
-    Md256m,
-    Md512m,
-    Md1024m
+    D64Kb,
+    D128Kb,
+    D256Kb,
+    D512Kb,
+    D1024Kb,
+    D2048Kb,
+    D4096Kb,
+    D1MB,
+    D2MB,
+    D4MB,
+    D8MB,
+    D16MB,
+    D32MB,
+    D64MB,
+    D128MB,
+    D256MB,
+    D512MB,
+    D1024MB
 }
 
 public enum WinRAROverwriteMode {
@@ -257,4 +267,103 @@ public enum WinRARExtractionMode {
 public enum WinRARFileNameFormat {
     Uppercase,
     Lowercase
+}
+
+public enum AuthenticityVerification {
+    Enabled,
+    Disabled,
+}
+
+
+public static class WinRARNameMapping {
+    public static string Get(WinRARCommandName value)
+        => value switch {
+            WinRARCommandName.Extract => "e",
+            WinRARCommandName.ExtractFull => "x",
+            WinRARCommandName.Add => "a",
+            WinRARCommandName.Comment => "c",
+            WinRARCommandName.Repair => "r",
+            WinRARCommandName.Delete => "d",
+            WinRARCommandName.Update => "u",
+            _ => ""
+        };
+
+    public static string Get(WinRARFileNameFormat value)
+        => value switch {
+            WinRARFileNameFormat.Uppercase => "-cu",
+            WinRARFileNameFormat.Lowercase => "-cl",
+            _ => ""
+        };
+
+    public static string Get(WinRARExtractionMode value)
+        => value switch {
+            WinRARExtractionMode.IgnoreFolderStructure => "e",
+            WinRARExtractionMode.FullPaths => "x",
+            _ => ""
+        };
+
+    public static string Get(WinRARCompressionLevel value)
+        => value switch {
+            WinRARCompressionLevel.Save => "-m0",
+            WinRARCompressionLevel.Fastest => "-m1",
+            WinRARCompressionLevel.Fast => "-m2",
+            WinRARCompressionLevel.Normal => "-m3",
+            WinRARCompressionLevel.Good => "-m4",
+            WinRARCompressionLevel.Best => "-m5",
+            _ => ""
+        };
+
+    public static string Get(WinRARSizeType value)
+        => value switch {
+            WinRARSizeType.kB => "k",
+            WinRARSizeType.MB => "m",
+            WinRARSizeType.GB => "g",
+            WinRARSizeType.Percentage => "p",
+            _ => ""
+        };
+
+    public static string Get(WinRARPasswordMode value)
+        => value switch {
+            WinRARPasswordMode.Basic => "-p",
+            WinRARPasswordMode.EncryptAll => "-hp",
+            _ => ""
+        };
+
+
+    public static string Get(AuthenticityVerification value)
+        => value switch {
+            AuthenticityVerification.Enabled => "-av",
+            AuthenticityVerification.Disabled => "-av-",
+            _ => ""
+        };
+
+    public static string Get(WinRARDictionarySize value)
+        => value switch {
+            WinRARDictionarySize.D64Kb => "-md64k",
+            WinRARDictionarySize.D128Kb => "-md128k",
+            WinRARDictionarySize.D256Kb => "md256k",
+            WinRARDictionarySize.D512Kb => "-md512k",
+            WinRARDictionarySize.D1024Kb => "-md1024k",
+            WinRARDictionarySize.D2048Kb => "-md2048k",
+            WinRARDictionarySize.D4096Kb => "-md4096k",
+            WinRARDictionarySize.D1MB => "-md1m",
+            WinRARDictionarySize.D2MB => "-md2m",
+            WinRARDictionarySize.D4MB => "-md4m",
+            WinRARDictionarySize.D8MB => "-md8m",
+            WinRARDictionarySize.D16MB => "-md16m",
+            WinRARDictionarySize.D32MB => "-md32m",
+            WinRARDictionarySize.D64MB => "-md62m",
+            WinRARDictionarySize.D128MB => "-md128m",
+            WinRARDictionarySize.D256MB => "-md256m",
+            WinRARDictionarySize.D512MB => "-md512m",
+            WinRARDictionarySize.D1024MB => "-md1024m",
+            _ => ""
+        };
+
+    public static string Get(WinRAROverwriteMode value)
+        => value switch {
+            WinRAROverwriteMode.Silent => "-o+",
+            WinRAROverwriteMode.Skip => "-o-",
+            _ => ""
+        };
 }

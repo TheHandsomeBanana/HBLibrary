@@ -9,7 +9,6 @@ public class WinRARExtractCommand : WinRARFileHandlingCommand {
     private readonly WinRARCommandName command;
     public override WinRARCommandName Command => command;
     public required DirectorySnapshot DestinationDirectory { get; init; }
-    public WinRARPassword? Password { get; init; } // -p, -hp
     public WinRAROverwriteMode? OverwriteMode { get; init; } // -o-, -o+
     public bool RecurseSubdirectories { get; init; } = true; // -r
     public bool KeepBrokenFiles { get; init; } = false; // -kb
@@ -35,18 +34,9 @@ public class WinRARExtractCommand : WinRARFileHandlingCommand {
         StringBuilder sb = new StringBuilder();
         sb.Append(base.BuildSwitches());
 
-        if (Password.HasValue)
-            sb.Append(Password.Value.ToString());
-
         if (OverwriteMode.HasValue)
-            switch (OverwriteMode.Value) {
-                case WinRAROverwriteMode.Skip:
-                    sb.Append("-o- ");
-                    break;
-                case WinRAROverwriteMode.Silent:
-                    sb.Append("-o+ ");
-                    break;
-            }
+            sb.Append(WinRARNameMapping.Get(OverwriteMode.Value))
+                .Append(' ');
 
         if (RecurseSubdirectories)
             sb.Append("-r ");
@@ -59,7 +49,7 @@ public class WinRARExtractCommand : WinRARFileHandlingCommand {
 
         if (IgnoreEmptyDirectories)
             sb.Append("-ed ");
-            
+
 
         return sb.ToString();
     }

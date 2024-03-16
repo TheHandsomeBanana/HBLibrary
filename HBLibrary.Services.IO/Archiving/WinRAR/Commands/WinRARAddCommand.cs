@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public class WinRARAddCommand : WinRARFileHandlingCommand {
     public override WinRARCommandName Command => WinRARCommandName.Add; // a
-    public WinRARPassword? Password { get; init; } = null; // -h, -hp
     public WinRARRecoveryVolume? RecoveryVolume { get; init; } = null; // -rv[%]
     public WinRARVolumeSize? VolumeSize { get; init; } = null; // -v<size>[K|M|G]
     public WinRARDataRecoveryRecord? DataRecoveryRecord { get; init; } = null; // -rr[%]
     public AuthenticityVerification? AuthenticityVerification { get; init; } = null; // -av | -av-
-    public WinRARCompressionLevel CompressionLevel { get; init; } = WinRARCompressionLevel.Normal; // -m<0..5>
-    public WinRARDictionarySize DictionarySize { get; init; } = WinRARDictionarySize.Md32m; // -md<size>
-    public WinRAROverwriteMode OverwriteMode { get; init; } = WinRAROverwriteMode.Skip; // -o- | -o+
+    public WinRARCompressionLevel? CompressionLevel { get; init; } // -m<0..5>
+    public WinRARDictionarySize? DictionarySize { get; init; } // -md<size>
+    public WinRAROverwriteMode? OverwriteMode { get; init; } // -o-, -o+
+    public WinRARFileNameFormat? FileNameFormat { get; init; } = null; // -cl, -cu
     public int? ThreadCount { get; init; } = null; // -mt<threads>
     public bool RecurseSubdirectories { get; init; } = true; // -r
     public bool DisableReadConfiguration { get; init; } = false; // -cfg-
@@ -24,14 +24,11 @@ public class WinRARAddCommand : WinRARFileHandlingCommand {
     public bool LockArchive { get; init; } = false; // -k
     public bool DeleteOriginalFiles { get; init; } = false; // -sdel
     public bool TestArchiveIntegrity { get; init; } = false; // -t
+    public bool IgnoreFileAttributes { get; set; } = false; // -ai
 
     public override string BuildSwitches() {
         StringBuilder sb = new StringBuilder();
         sb.Append(base.BuildSwitches());
-
-        if (Password.HasValue)
-            sb.Append(Password.Value.ToString())
-                .Append(' ');
 
         if (RecoveryVolume.HasValue)
             sb.Append(RecoveryVolume.Value.ToString())
@@ -42,46 +39,20 @@ public class WinRARAddCommand : WinRARFileHandlingCommand {
                 .Append(' ');
 
         if (AuthenticityVerification.HasValue)
-            switch (AuthenticityVerification.Value) {
-                case Commands.AuthenticityVerification.Enabled:
-                    sb.Append("-av ");
-                    break;
-                case Commands.AuthenticityVerification.Disabled:
-                    sb.Append("-av- ");
-                    break;
-            }
+            sb.Append(WinRARNameMapping.Get(AuthenticityVerification.Value))
+                .Append(' ');
 
-        switch (CompressionLevel) {
-            case WinRARCompressionLevel.Save:
-                sb.Append("-m0 ");
-                break;
-            case WinRARCompressionLevel.Fastest:
-                sb.Append("-m1 ");
-                break;
-            case WinRARCompressionLevel.Fast:
-                sb.Append("-m2 ");
-                break;
-            case WinRARCompressionLevel.Normal:
-                sb.Append("-m3 ");
-                break;
-            case WinRARCompressionLevel.Good:
-                sb.Append("-m4 ");
-                break;
-            case WinRARCompressionLevel.Best:
-                sb.Append("-m5 ");
-                break;
-        }
+        if (CompressionLevel.HasValue)
+            sb.Append(WinRARNameMapping.Get(CompressionLevel.Value))
+                .Append(' ');
 
-        sb.Append(DictionarySize.ToString().ToLower());
+        if (DictionarySize.HasValue)
+            sb.Append(WinRARNameMapping.Get(DictionarySize.Value))
+                .Append(' ');
 
-        switch (OverwriteMode) {
-            case WinRAROverwriteMode.Silent:
-                sb.Append("-o+ ");
-                break;
-            case WinRAROverwriteMode.Skip:
-                sb.Append("-o- ");
-                break;
-        }
+        if (OverwriteMode.HasValue)
+            sb.Append(WinRARNameMapping.Get(OverwriteMode.Value))
+                .Append(' ');
 
         if (ThreadCount.HasValue)
             sb.Append("-mt")
@@ -91,6 +62,13 @@ public class WinRARAddCommand : WinRARFileHandlingCommand {
         if (DataRecoveryRecord.HasValue)
             sb.Append(DataRecoveryRecord.Value.ToString())
                 .Append(' ');
+
+        if (FileNameFormat != null)
+            sb.Append(WinRARNameMapping.Get(FileNameFormat.Value))
+                .Append(' ');
+
+        if (IgnoreFileAttributes)
+            sb.Append("-ai ");
 
         if (RecurseSubdirectories)
             sb.Append("-r ");
@@ -119,10 +97,3 @@ public class WinRARAddCommand : WinRARFileHandlingCommand {
         return sb.ToString();
     }
 }
-
-public enum AuthenticityVerification {
-    Enabled,
-    Disabled,
-}
-
-
