@@ -15,7 +15,7 @@ public abstract class WinRARCommand : IWinRARCommand {
 
     public virtual string ToCommandString() {
         StringBuilder sb = new StringBuilder();
-        sb.Append(Get(Command))
+        sb.Append(WinRARNameMapping.Get(Command))
             .Append(' ')
             .Append(BuildSwitches())
             .Append(' ')
@@ -35,27 +35,6 @@ public abstract class WinRARCommand : IWinRARCommand {
                 .Append(' ');
 
         return sb.ToString();
-    }
-
-    public const string AddCommand = "a";
-    public const string UpdateCommand = "u";
-    public const string ExtractFullCommand = "x";
-    public const string ExtractCommand = "e";
-    public const string CommentCommand = "c";
-    public const string RepairCommand = "r";
-    public const string DeleteCommand = "d";
-
-    public static string Get(WinRARCommandName commandName) {
-        return commandName switch {
-            WinRARCommandName.Add => AddCommand,
-            WinRARCommandName.Update => UpdateCommand,
-            WinRARCommandName.Extract => ExtractCommand,
-            WinRARCommandName.ExtractFull => ExtractFullCommand,
-            WinRARCommandName.Comment => CommentCommand,
-            WinRARCommandName.Repair => RepairCommand,
-            WinRARCommandName.Delete => DeleteCommand,
-            _ => throw new NotSupportedException(commandName.ToString())
-        };
     }
 }
 

@@ -8,20 +8,18 @@ using System.Threading.Tasks;
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
 internal class PrebuiltWinRARCommand : IWinRARCommand {
     public WinRARCommandName Command { get; }
-    public ImmutableArray<string> Arguments { get; internal set; } = [];
-    public ImmutableArray<string> Targets { get; internal set; } = [];
+    public string ArgumentString { get; }
 
-    internal PrebuiltWinRARCommand(WinRARCommandName command) {
+    internal PrebuiltWinRARCommand(WinRARCommandName command, string argumentString) {
         Command = command;
+        ArgumentString = argumentString;
     }
 
     public string ToCommandString() {
         StringBuilder sb = new StringBuilder();
-        sb.Append(WinRARCommand.Get(Command))
+        sb.Append(WinRARNameMapping.Get(Command))
             .Append(' ')
-            .Append(string.Join(" ", Arguments))
-            .Append(' ')
-            .Append(string.Join(" ", Targets));
+            .Append(ArgumentString);
 
         return sb.ToString();
     }

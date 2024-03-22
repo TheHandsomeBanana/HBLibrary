@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public class WinRARCommandResult {
+public class WinRARCommandExecutionResult {
     public required string StdOutput { get; init; }
     public required string StdError { get; init; }
     public required int ExitCode { get; init; }

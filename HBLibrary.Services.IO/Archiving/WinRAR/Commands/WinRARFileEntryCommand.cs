@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
-public abstract class WinRARFileHandlingCommand : WinRARCommand {
+public abstract class WinRARFileEntryCommand : WinRARCommand {
     public IEnumerable<string> Targets { get; init; } = [];
 
     public override string ToCommandString() {

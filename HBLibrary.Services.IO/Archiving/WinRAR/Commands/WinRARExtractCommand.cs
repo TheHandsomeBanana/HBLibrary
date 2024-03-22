@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
-public class WinRARExtractCommand : WinRARFileHandlingCommand {
+public class WinRARExtractCommand : WinRARFileEntryCommand {
     private readonly WinRARCommandName command;
     public override WinRARCommandName Command => command;
     public required DirectorySnapshot DestinationDirectory { get; init; }
@@ -16,8 +16,8 @@ public class WinRARExtractCommand : WinRARFileHandlingCommand {
     public bool IgnoreEmptyDirectories { get; init; } = true; // -ed
 
 
-    public WinRARExtractCommand(bool extractFull) {
-        command = extractFull ? WinRARCommandName.ExtractFull : WinRARCommandName.Extract;
+    public WinRARExtractCommand(bool ignoreFolderStructure) {
+        command = ignoreFolderStructure ? WinRARCommandName.Extract : WinRARCommandName.ExtractFull;
     }
 
     public override string ToCommandString() {

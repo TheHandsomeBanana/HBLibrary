@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
-public class WinRARDeleteCommand : WinRARFileHandlingCommand {
+public class WinRARDeleteCommand : WinRARFileEntryCommand {
     public override WinRARCommandName Command => WinRARCommandName.Delete;
     public bool RecurseSubdirectories { get; init; } = false; // -r
 

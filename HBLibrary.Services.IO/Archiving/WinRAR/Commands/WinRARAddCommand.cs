@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
-public class WinRARAddCommand : WinRARFileHandlingCommand {
+public class WinRARAddCommand : WinRARFileEntryCommand {
     public override WinRARCommandName Command => WinRARCommandName.Add; // a
     public WinRARRecoveryVolume? RecoveryVolume { get; init; } = null; // -rv[%]
     public WinRARVolumeSize? VolumeSize { get; init; } = null; // -v<size>[K|M|G]
