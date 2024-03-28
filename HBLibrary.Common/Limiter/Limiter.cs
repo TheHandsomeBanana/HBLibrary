@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,5 +16,15 @@ public static class Limiter {
         }
 
         return value.CompareTo(min) < 0 ? min : value.CompareTo(max) > 0 ? max : value;
+    }
+
+    public static void LimitToRangeRef<T>(this ref T value, T min, T max) where T : struct, IComparable<T> {
+        if (min.CompareTo(max) > 0) {
+            var minString = Convert.ToString(min, CultureInfo.InvariantCulture);
+            var maxString = Convert.ToString(max, CultureInfo.InvariantCulture);
+            throw new ArgumentOutOfRangeException(nameof(min), $"The argument {nameof(min)} ({minString}) must not be greater than the argument {nameof(max)} ({maxString}).");
+        }
+
+        value = value.CompareTo(min) < 0 ? min : value.CompareTo(max) > 0 ? max : value;
     }
 }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using HBLibrary.Common.Process;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
-public class WinRARCommandResult {
+public class WinRARCommandExecutionResult {
     public required string StdOutput { get; init; }
     public required string StdError { get; init; }
     public required int ExitCode { get; init; }
@@ -14,7 +15,6 @@ public class WinRARCommandResult {
     public required DateTime StartTime { get; init; }
     public required DateTime EndTime { get; init; }
     public TimeSpan Duration => EndTime - StartTime;
-
 
     internal static string GetDescription(int exitCode)
        => exitCode switch {

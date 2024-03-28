@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Common.Limiter;
-public static class Int32Limiter {
-    public static void LimitToRangeRef(this ref int value, int min, int max) {
+namespace HBLibrary.Common.Limiter; 
+public static class TimeSpanLimiter {
+    public static void LimitToRangeRef(this ref TimeSpan value, TimeSpan min, TimeSpan max) {
         if (min > max)
             throw new ArgumentException($"Min {min} is greater than {max}");
 
@@ -15,12 +14,13 @@ public static class Int32Limiter {
         if (value > max) { value = max; }
     }
 
-    public static int LimitToRange(this int value, int min, int max) {
+    public static TimeSpan LimitToRange(this TimeSpan value, TimeSpan min, TimeSpan max) {
         if (min > max)
             throw new ArgumentException($"Min {min} is greater than {max}");
 
         if (value < min) { return min; }
         if (value > max) { return max; }
+
         return value;
     }
 }
