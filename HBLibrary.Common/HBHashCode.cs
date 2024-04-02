@@ -7,9 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Common;
-public struct HBHashCode {
-
-
+public readonly struct HBHashCode {
     public static int Combine<T1, T2>(T1 item1, T2 item2) where T1 : notnull where T2 : notnull {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2);
@@ -119,23 +117,22 @@ public struct HBHashCode {
     private static readonly int randomSeed = GenerateSeed();
 
     private static int Combine(params int[] hashes) {
-        unchecked { // No arithmetic checks required
-            int hash = randomSeed;
+        int hash = randomSeed;
 
-            // Use prime numbers
-            foreach (int h in hashes) {
-                hash = hash * 17 + h;
-                hash = hash * 23 + h;
-                hash = hash * 31 + h;
-                hash += hash << 13;
-                hash ^= hash >> 7;
-                hash += hash << 3;
-                hash ^= hash >> 17;
-                hash += hash << 5;
-            }
-
-            return hash;
+        // Use prime numbers to minimize collisions
+        foreach (int h in hashes) {
+            hash = hash * 17 + h;
+            hash = hash * 23 + h;
+            hash = hash * 31 + h;
+            hash += hash << 13;
+            hash ^= hash >> 7;
+            hash += hash << 3;
+            hash ^= hash >> 17;
+            hash += hash << 5;
         }
+
+        return hash;
+
     }
 
     private static int GenerateSeed() {
