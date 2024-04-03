@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HBLibrary.Common.Collections;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Parallelism;
 public abstract class AsyncExecutionContextHandler<TContext, TKey> where TKey : notnull, IEquatable<TKey> {
-    private readonly ConcurrentDictionary<OperationId<TKey>, bool> contextExecutionTracker = [];
+    private readonly ConcurrentHashSet<OperationId<TKey>> contextExecutionTracker = [];
 
     public async Task ExecuteActionAsync(TKey key, Func<TContext, Task> action) {
         TContext context = await GetContextAsync(key);
@@ -21,7 +22,7 @@ public abstract class AsyncExecutionContextHandler<TContext, TKey> where TKey : 
 
     public async Task ExecuteActionSingleAsync(TKey key, string operationId, Func<TContext, Task> action) {
         OperationId<TKey> oId = new OperationId<TKey>(key, operationId);
-        if (!contextExecutionTracker.TryAdd(oId, true))
+        if (!contextExecutionTracker.Add(oId))
             throw new InvalidOperationException("Action already running.");
 
         try {
@@ -29,13 +30,13 @@ public abstract class AsyncExecutionContextHandler<TContext, TKey> where TKey : 
             await action(context);
         }
         finally {
-            contextExecutionTracker.TryRemove(oId, out _);
+            contextExecutionTracker.TryRemove(oId);
         }
     }
 
     public async Task<TReturn> ExecuteFunctionSingleAsync<TReturn>(TKey key, string operationId, Func<TContext, Task<TReturn>> function) {
         OperationId<TKey> oId = new OperationId<TKey>(key, operationId);
-        if (!contextExecutionTracker.TryAdd(oId, true))
+        if (!contextExecutionTracker.Add(oId))
             throw new InvalidOperationException("Action already running.");
 
         try {
@@ -43,7 +44,7 @@ public abstract class AsyncExecutionContextHandler<TContext, TKey> where TKey : 
             return await function(context);
         }
         finally {
-            contextExecutionTracker.TryRemove(oId, out _);
+            contextExecutionTracker.TryRemove(oId);
         }   
     }
 
