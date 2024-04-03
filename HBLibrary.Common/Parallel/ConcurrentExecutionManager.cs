@@ -21,12 +21,11 @@ public class ConcurrentExecutionManager<TKey> where TKey : notnull, IEquatable<T
     public async Task<TResult> ExecuteAsync<TResult>(TKey key, string id, Func<Task<TResult>> function) {
         OperationId<TKey> opId = new OperationId<TKey>(key, id);
         if (executions.Add(opId)) {
-            try {
-                return await function();
-            }
-            finally {
-                executions.TryRemove(opId);
-            }
+            TResult result = await function();
+            executions.TryRemove(opId);
+            return result;
         }
+
+        throw new InvalidOperationException();
     }
 }
