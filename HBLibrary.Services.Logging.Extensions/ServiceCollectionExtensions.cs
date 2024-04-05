@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.Logging.DependencyInjection;
+namespace HBLibrary.Services.Logging.Extensions;
 public static class ServiceCollectionExtensions {
     /// <summary>
     /// Adds <see cref="ILoggerRegistry"/> and <see cref="ILoggerFactory"/> to container.
