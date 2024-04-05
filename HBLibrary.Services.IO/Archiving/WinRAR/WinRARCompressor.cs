@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public class WinRARCompressor : IWinRARArchiver<WinRARAddCommand> {
+    private readonly WinRARArchiver archiver = new WinRARArchiver();
     public WinRARCommandExecutionResult Execute(WinRARAddCommand command, int timeout = Timeout.Infinite) {
-        return new WinRARArchiver().Execute(command, timeout);
+        return archiver.Execute(command, timeout);
     }
 
 #if NET5_0_OR_GREATER
