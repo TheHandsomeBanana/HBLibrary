@@ -1,15 +1,22 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using HBLibrary.Common.Parallelism;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.VisualStudio.Threading;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HBLibrary.Code.Analysis; 
 public class SemanticModelCache {
-    private readonly IDictionary<string, SemanticModel> modelCollection = new Dictionary<string, SemanticModel>();
+    private readonly Dictionary<string, SemanticModel> modelCollection = [];
+
+    private readonly List<string> duplicates = [];
+    public IReadOnlyCollection<string> Duplicates => duplicates;
 
     public static async Task<SemanticModelCache> FromSolutionAsync(Solution solution, CancellationToken cancellationToken = default) {
         SemanticModelCache modelCache = new SemanticModelCache();
@@ -30,30 +37,17 @@ public class SemanticModelCache {
     }
 
     private async Task InitAsync(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
-        Dictionary<string, Task<SemanticModel>> taskMapping = GetTaskMapping(documents, cancellationToken);
-        SemanticModel[] semanticModels = await Task.WhenAll(taskMapping.Values);
-
-        Dictionary<string, Task<SemanticModel>>.Enumerator enumerator = taskMapping.GetEnumerator();
-        int counter = 0;
-
-        modelCollection.Add(enumerator.Current.Key, semanticModels[counter]);
-        while (enumerator.MoveNext()) {
-            counter++;
-            modelCollection.Add(enumerator.Current.Key, semanticModels[counter]);
-        }
-
-        enumerator.Dispose();
-    }
-
-    private Dictionary<string, Task<SemanticModel>> GetTaskMapping(IEnumerable<Document> documents, CancellationToken cancellationToken = default) {
-        Dictionary<string, Task<SemanticModel>> taskMapping = new Dictionary<string, Task<SemanticModel>>();
-        foreach (Document document in documents) {
-            if (document.FilePath == null || !document.SupportsSemanticModel || taskMapping.ContainsKey(document.FilePath))
+        foreach (var document in documents) {
+            if (document.FilePath == null || !document.SupportsSemanticModel)
                 continue;
 
-            taskMapping.Add(document.FilePath, document.GetSemanticModelAsync(cancellationToken));
-        }
+            if (modelCollection.ContainsKey(document.FilePath)) {
+                duplicates.Add(document.FilePath);
+                continue;
+            }
 
-        return taskMapping;
+            SemanticModel loadedModel = (await document.GetSemanticModelAsync(cancellationToken))!;
+            modelCollection.Add(document.FilePath, loadedModel);
+        }
     }
 }
