@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Code.Interpreter.Evaluator;
 public interface ISemanticEvaluator<TSyntaxTree> where TSyntaxTree : ISyntaxTree {
-    public ImmutableArray<SemanticError> Evaluate(TSyntaxTree syntaxTree, string content);
+    public ImmutableArray<SimpleError> Evaluate(TSyntaxTree syntaxTree, string content);
 }

@@ -19,7 +19,7 @@ namespace HBLibrary.Common.DI.Unity {
                 setup.Build(container);
         }
 
-        public static IUnityContainer GetChildContainer(string name) {
+        public static IUnityContainer? GetChildContainer(string name) {
             if (UnityContainer.IsRegistered<IUnityContainer>(name))
                 return UnityContainer.Resolve<IUnityContainer>(name);
 

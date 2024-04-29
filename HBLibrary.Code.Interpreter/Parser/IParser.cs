@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace HBLibrary.Code.Interpreter.Parser;
 
-public interface IParser<TSyntaxTree, TToken, TError> where TSyntaxTree : ISyntaxTree where TToken : ISyntaxToken where TError : ISyntaxError {
+public interface IParser<TSyntaxTree, TToken> where TSyntaxTree : ISyntaxTree where TToken : ISyntaxToken {
     TSyntaxTree Parse(ImmutableArray<TToken> tokens);
-    ImmutableArray<TError> GetSyntaxErrors();
+    ImmutableArray<SimpleError> GetSyntaxErrors();
 }

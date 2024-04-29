@@ -10,9 +10,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Code.Analysis; 
+namespace HBLibrary.Code.Analysis;
 public class AnalyserRegistry : IAnalyserRegistry {
-    private readonly Dictionary<string, ICodeAnalyser> registeredAnalysers = new Dictionary<string, ICodeAnalyser>();
+    private readonly Dictionary<string, ICodeAnalyser> registeredAnalysers = [];
     public IReadOnlyDictionary<string, ICodeAnalyser> RegisteredAnalyser => registeredAnalysers;
     public AnalysisScope Scope { get; private set; }
     public SemanticModelCache SemanticModelCache { get; private set; }
@@ -20,6 +20,8 @@ public class AnalyserRegistry : IAnalyserRegistry {
     public Project ScopedProject { get; private set; }
     public IImmutableSet<Document> Documents { get; private set; }
 
+    public AnalyserRegistry() {
+    }
 
     public async Task InitAsync(Project project) {
         Scope = AnalysisScope.Project;

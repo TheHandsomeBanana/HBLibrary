@@ -8,9 +8,11 @@ namespace HBLibrary.Code.Interpreter.Lexer;
 public delegate bool ReadConditionDelegate();
 
 public class PositionReader {
-    private readonly string content;
+    public string Content { get; private set; } = string.Empty;
+
+    public PositionReader() { }
     public PositionReader(string content) {
-        this.content = content;
+        this.Content = content;
     }
 
     public int LastIndex { get; private set; } = -1;
@@ -20,10 +22,14 @@ public class PositionReader {
     public int CurrentLine { get; private set; } = 1;
     public int CurrentLineIndex { get; private set; } = -1;
 
+    public void Init(string content) {
+        this.Content = content;
+    }
+
     public char? ReadSingle() {
         Increment();
         char value = GetChar();
-        if (HasRead() && content[LastIndex] == CommonCharCollection.LF)
+        if (HasRead() && Content[LastIndex] == CommonCharCollection.LF)
             NewLine();
 
         return CanRead() ? value : null;
@@ -35,10 +41,10 @@ public class PositionReader {
 
         StringBuilder sb = new StringBuilder();
         int lastIndex = -1;
-        while (condition() && CanRead()) {
-            sb.Append(content[CurrentIndex]);
+        while (CanRead() && condition()) {
+            sb.Append(Content[CurrentIndex]);
 
-            if (lastIndex != -1 && content[lastIndex] == CommonCharCollection.LF)
+            if (lastIndex != -1 && Content[lastIndex] == CommonCharCollection.LF)
                 NewLine();
             else
                 CurrentLineIndex++;
@@ -51,7 +57,7 @@ public class PositionReader {
     }
 
     public char? PeekSingle() {
-        return CanPeek() ? content[CurrentIndex + 1] : null;
+        return CanPeek() ? Content[CurrentIndex + 1] : null;
     }
 
     public TextSpan GetSpan() => new TextSpan(
@@ -77,13 +83,13 @@ public class PositionReader {
         return new LineSpan(CurrentLine, start, length);
     }
 
-    public char GetChar() => content[CurrentIndex];
-    public char? GetChar(int index) => CanRead(index) ? content[index] : null;
+    public char GetChar() => Content[CurrentIndex];
+    public char? GetChar(int index) => CanRead(index) ? Content[index] : null;
 
     public string GetString() {
         StringBuilder sb = new StringBuilder();
         for (int i = LastIndex; i < CurrentIndex; i++)
-            sb.Append(content[i]);
+            sb.Append(Content[i]);
 
         return sb.ToString();
     }
@@ -102,8 +108,8 @@ public class PositionReader {
         CurrentLineIndex = 0;
     }
 
-    private bool CanRead() => CurrentIndex < content.Length;
-    private bool CanRead(int index) => index < content.Length;
-    private bool CanPeek() => CurrentIndex + 1 < content.Length;
+    private bool CanRead() => CurrentIndex < Content.Length;
+    private bool CanRead(int index) => index < Content.Length;
+    private bool CanPeek() => CurrentIndex + 1 < Content.Length;
     private bool HasRead() => LastIndex != -1;
 }
