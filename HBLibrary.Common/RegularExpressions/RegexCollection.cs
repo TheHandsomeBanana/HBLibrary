@@ -34,9 +34,7 @@ public static partial class RegexCollection {
     private static partial Regex GenSimplePercentageRegex();
     [GeneratedRegex("^(100|[0-9]|[1-9][0-9])p$")]
     private static partial Regex GenSimplePercentagePRegex();
-#if NET5_0_OR_GREATER
     [GeneratedRegex("^[\\w!@#$%^&*()-_=+[\\]{};:'\",.<>?/|`~]{8,32}$\r\n")]
     private static partial Regex GenCommonPasswordRegex();
-#endif
 #endif
 }

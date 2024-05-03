@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace HBLibrary.Code.Interpreter.Lexer;
 public delegate bool ReadConditionDelegate();
 
-public class PositionReader {
+public class LexContentReader {
     public string Content { get; private set; } = string.Empty;
 
-    public PositionReader() { }
-    public PositionReader(string content) {
+    public LexContentReader() { }
+    public LexContentReader(string content) {
         this.Content = content;
     }
 
     public int LastIndex { get; private set; } = -1;
+    public int LastLine { get; private set; } = 1;
     public int LastLineIndex { get; private set; } = -1;
-
     public int CurrentIndex { get; private set; } = -1;
     public int CurrentLine { get; private set; } = 1;
     public int CurrentLineIndex { get; private set; } = -1;
@@ -26,20 +26,40 @@ public class PositionReader {
         this.Content = content;
     }
 
-    public char? ReadSingle() {
-        Increment();
-        char value = GetChar();
-        if (HasRead() && Content[LastIndex] == CommonCharCollection.LF)
-            NewLine();
+    public bool CanRead() => CurrentIndex < Content.Length;
+    public bool CanRead(int index) => index < Content.Length;
+    public bool CanPeek() => CurrentIndex + 1 < Content.Length;
+    public bool HasRead() => LastIndex != -1;
 
-        return CanRead() ? value : null;
+    public void SkipSingle() {
+        if (Content[CurrentIndex] == CommonCharCollection.LF)
+            NewLine();
+        else
+            CurrentLineIndex++;
+
+        CurrentIndex++;
     }
 
-    public string ReadWhile(ReadConditionDelegate condition) {
+    public char? ReadSingle() {
+        Increment();
+        char? value = CanRead() ? GetChar() : null;
+        if (HasRead() && CanRead(LastIndex) && Content[LastIndex] == CommonCharCollection.LF)
+            NewLine();
+
+        return value;
+    }
+
+    public string ReadWhile(ReadConditionDelegate condition, int skipReadsBefore = 0, int skipReadsAfter = 0) {
         LastIndex = CurrentIndex;
         LastLineIndex = CurrentLineIndex;
 
         StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < skipReadsBefore && CanRead(); i++) {
+            sb.Append(Content[CurrentIndex]);
+            SkipSingle();
+        }
+
         int lastIndex = -1;
         while (CanRead() && condition()) {
             sb.Append(Content[CurrentIndex]);
@@ -51,6 +71,11 @@ public class PositionReader {
 
             lastIndex = CurrentIndex;
             CurrentIndex++;
+        }
+
+        for (int i = 0; i < skipReadsAfter && CanRead(); i++) {
+            sb.Append(Content[CurrentIndex]);
+            SkipSingle();
         }
 
         return sb.ToString();
@@ -67,11 +92,8 @@ public class PositionReader {
     public LineSpan GetLineSpan() {
         int start;
         int length;
-        if (!HasRead()) {
-            start = 0;
-            length = CurrentLineIndex;
-        }
-        else if (LastLineIndex < CurrentLineIndex) {
+        if (!HasRead() || LastLine < CurrentLine) {
+            LastLine = CurrentLine;
             start = 0;
             length = CurrentLineIndex;
         }
@@ -94,6 +116,8 @@ public class PositionReader {
         return sb.ToString();
     }
 
+
+
     private void Increment() {
         LastIndex = CurrentIndex;
         LastLineIndex = CurrentLineIndex;
@@ -103,13 +127,11 @@ public class PositionReader {
     }
 
     private void NewLine() {
+        LastLine = CurrentLine;
         CurrentLine++;
         LastLineIndex = -1;
         CurrentLineIndex = 0;
     }
 
-    private bool CanRead() => CurrentIndex < Content.Length;
-    private bool CanRead(int index) => index < Content.Length;
-    private bool CanPeek() => CurrentIndex + 1 < Content.Length;
-    private bool HasRead() => LastIndex != -1;
+
 }
