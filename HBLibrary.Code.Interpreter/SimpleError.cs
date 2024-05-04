@@ -38,6 +38,6 @@ public struct SimpleError {
     }
 
     public override string ToString() {
-        return $"{Span}: {Affected}. Reason: {Message}.";
+        return $"{Span} {LineSpan}: {Affected}. Reason: {Message}.";
     }
 }
