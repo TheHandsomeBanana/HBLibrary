@@ -2,10 +2,11 @@
 
 namespace HBLibrary.Code.Interpreter.Syntax;
 public interface ISyntaxNode { // Flag for constraint
+    public TextSpan Span { get; }
+    public LineSpan LineSpan { get; }
 }
 
 public interface ISyntaxNode<TNode, TToken> : ISyntaxNode where TNode : ISyntaxNode where TToken : ISyntaxToken {
-    public TextSpan Span { get; }
     public TNode? Parent { get; }
     public IReadOnlyList<TNode> ChildNodes { get; }
     public IReadOnlyList<TToken> ChildTokens { get; }

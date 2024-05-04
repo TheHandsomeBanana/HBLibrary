@@ -7,31 +7,38 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Code.Interpreter;
 public readonly struct LineSpan : IEquatable<LineSpan> {
-    public int Line { get; }
+    public int StartLine { get; }
+    public int LineLength { get; }
+    public int EndLine => StartLine + LineLength;
+
     public TextSpan Span { get; }
 
-    public LineSpan(int line, TextSpan span) {
-        Line = line;
+    public LineSpan(int startLine, int lineLength, TextSpan span) {
+        StartLine = startLine;
+        LineLength = lineLength;
         Span = span;
     }
 
-    public LineSpan(int line, int start, int length) {
-        Line = line;
+    public LineSpan(int startLine, int lineLength, int start, int length) {
+        StartLine = startLine;
+        LineLength = lineLength;
         Span = new TextSpan(start, length);
     }
 
     public bool Equals(LineSpan other) {
-        return Line == other.Line && Span == other.Span;
+        return StartLine == other.StartLine &&  
+            LineLength == other.LineLength && 
+            Span == other.Span;
     }
 
     public override bool Equals([NotNullWhen(true)] object? obj) {
         return obj is LineSpan lineSpan && Equals(lineSpan);
     }
 
-    public override int GetHashCode() => HashCode.Combine(Line, Span);
+    public override int GetHashCode() => HashCode.Combine(StartLine, LineLength, Span);
 
     public override string? ToString() {
-        return $"{Line} {Span}";
+        return $"[{StartLine}..{EndLine}] - {Span}";
     }
 
     public static bool operator ==(LineSpan left, LineSpan right) {

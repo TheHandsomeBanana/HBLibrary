@@ -5,5 +5,5 @@ namespace HBLibrary.Code.Interpreter.Parser;
 
 public interface IParser<TSyntaxTree, TToken> where TSyntaxTree : ISyntaxTree where TToken : ISyntaxToken {
     TSyntaxTree Parse(ImmutableArray<TToken> tokens);
-    ImmutableArray<SimpleError> GetSyntaxErrors();
+    ImmutableArray<SimpleError> GetSyntaxErrors(string content);
 }

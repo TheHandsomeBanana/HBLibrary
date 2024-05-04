@@ -92,6 +92,7 @@ public class LexContentReader {
     public LineSpan GetLineSpan() {
         int start;
         int length;
+
         if (!HasRead() || LastLine < CurrentLine) {
             LastLine = CurrentLine;
             start = 0;
@@ -102,7 +103,7 @@ public class LexContentReader {
             length = CurrentLineIndex - LastLineIndex;
         }
 
-        return new LineSpan(CurrentLine, start, length);
+        return new LineSpan(CurrentLine, 0, start, length);
     }
 
     public char GetChar() => Content[CurrentIndex];

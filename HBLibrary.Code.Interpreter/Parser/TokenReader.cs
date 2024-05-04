@@ -7,27 +7,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Code.Interpreter.Parser;
-public class TokenReader<TToken, TSyntaxKind> where TToken : ISyntaxToken
-{
+public class TokenReader<TToken, TSyntaxKind> where TToken : ISyntaxToken {
     public int CurrentIndex { get; private set; }
     public TToken? CurrentToken => CurrentIndex < tokens.Length ? tokens[CurrentIndex] : default;
     private ImmutableArray<TToken> tokens = [];
-    public void Init(ImmutableArray<TToken> tokens)
-    {
+    public void Init(ImmutableArray<TToken> tokens) {
         this.tokens = tokens;
         CurrentIndex = 0;
     }
 
-    public void MoveNext()
-    {
+    public void MoveNext() {
         if (CanMoveNext())
             CurrentIndex++;
     }
 
     public bool CanMoveNext() => CurrentIndex < tokens.Length - 1;
 
-    public TToken? GetNextToken()
-    {
+    public TToken? GetNextToken() {
         if (CanMoveNext())
             MoveNext();
 
@@ -36,11 +32,10 @@ public class TokenReader<TToken, TSyntaxKind> where TToken : ISyntaxToken
 
     private TToken? GetTokenAt(int index) => CurrentIndex < tokens.Length ? tokens[index] : default;
 
-    public TextSpan? GetCurrentFullSpan() => CurrentToken?.FullSpan;
-    public LineSpan? GetCurrentLineSpan() => CurrentToken?.LineSpan;
+    public TextSpan GetCurrentFullSpan() => CurrentToken!.FullSpan;
+    public LineSpan GetCurrentLineSpan() => CurrentToken!.LineSpan;
 
-    public TToken GetLastValidToken()
-    {
+    public TToken GetLastValidToken() {
         int index = CurrentIndex;
         while (GetTokenAt(index) == null && index > 0)
             index--;
@@ -49,14 +44,12 @@ public class TokenReader<TToken, TSyntaxKind> where TToken : ISyntaxToken
     }
 
     public bool CanMoveBack() => CurrentIndex - 1 > 0;
-    public void MoveBack()
-    {
+    public void MoveBack() {
         if (CanMoveBack())
             CurrentIndex--;
     }
 
-    public TToken? GetPreviousToken()
-    {
+    public TToken? GetPreviousToken() {
         CurrentIndex--;
         return CurrentToken;
     }
