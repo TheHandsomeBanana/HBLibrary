@@ -2,8 +2,9 @@
 using System.Text.Json;
 using System.Xml.Serialization;
 
-namespace HBLibrary.Services.IO.Operations.File;
-public class WriteFileRequest : FileOperationRequest {
+namespace HBLibrary.Services.IO.Obsolete.Operations.File;
+public class WriteFileRequest : FileOperationRequest
+{
     public override bool CanAsync => true;
     public byte[] Content { get; set; } = [];
     public string? StringContent { get; set; }
@@ -13,7 +14,8 @@ public class WriteFileRequest : FileOperationRequest {
     public Encoding Encoding { get; set; } = Encoding.UTF8;
 
 
-    public WriteFileRequest WithJsonObject<TJson>(TJson obj, JsonSerializerOptions? options = null) {
+    public WriteFileRequest WithJsonObject<TJson>(TJson obj, JsonSerializerOptions? options = null)
+    {
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));
 
@@ -21,7 +23,8 @@ public class WriteFileRequest : FileOperationRequest {
         return this;
     }
 
-    public WriteFileRequest WithXmlObject<TXml>(TXml obj) {
+    public WriteFileRequest WithXmlObject<TXml>(TXml obj)
+    {
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));
 

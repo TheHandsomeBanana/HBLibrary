@@ -49,9 +49,9 @@ public class WinRARArchiver : IWinRARArchiver {
         return result;
     }
 
-    public void Execute(Func<IWinRARCommandProvider, IWinRARCommand> commandBuilder, int timeout = Timeout.Infinite) {
+    public WinRARCommandExecutionResult Execute(Func<IWinRARCommandProvider, IWinRARCommand> commandBuilder, int timeout = Timeout.Infinite) {
         IWinRARCommand command = commandBuilder.Invoke(new WinRARCommandProvider());
-        Execute(command, timeout);
+        return Execute(command, timeout);
     }
 
 #if NET5_0_OR_GREATER
@@ -93,8 +93,8 @@ public class WinRARArchiver : IWinRARArchiver {
         //    OnErrorDataReceived?.Invoke(sender, new ProcessStdStreamEventArgs(e.Data));
         //}
         //else {
-            standardOutput!.AppendLine(e.Data);
-            OnOutputDataReceived?.Invoke(sender, new ProcessStdStreamEventArgs(e.Data));
+        standardOutput!.AppendLine(e.Data);
+        OnOutputDataReceived?.Invoke(sender, new ProcessStdStreamEventArgs(e.Data));
         //}
     }
 

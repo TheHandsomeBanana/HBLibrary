@@ -1,4 +1,4 @@
-﻿using HBLibrary.Services.IO.Operations.File;
+﻿using HBLibrary.Services.IO.Obsolete.Operations.File;
 
 namespace HBLibrary.Services.IO.Remote;
 public interface IRemoteFileService : IDisposable {
