@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Storyboard x:Key="MaximizeAnimation">
+        <DoubleAnimation Storyboard.TargetName="MainWindowApp"
+                             Storyboard.TargetProperty="(Window.Width)"
+                             To="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                             Duration="0:0:0.2" />
+        <DoubleAnimation Storyboard.TargetName="MainWindowApp"
+                             Storyboard.TargetProperty="(Window.Height)"
+                             To="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                             Duration="0:0:0.2" />
+    </Storyboard>
+
+    <Storyboard x:Key="MinimizeAnimation">
+        <DoubleAnimation Storyboard.TargetName="MainGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).ScaleX" To="0" Duration="0:0:0.3" />
+        <DoubleAnimation Storyboard.TargetName="MainGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).ScaleY" To="0" Duration="0:0:0.3" />
+        <DoubleAnimation Storyboard.TargetName="MainGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.3" />
+        <DoubleAnimation Storyboard.TargetName="MainGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" To="0" Duration="0:0:0.3" />
+    </Storyboard>
+
+</ResourceDictionary>

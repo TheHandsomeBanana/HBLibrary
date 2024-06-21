@@ -8,7 +8,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Styles\Button\CloseButton.png" />
+    <None Remove="Styles\Button\CloseFullscreenButton.png" />
+    <None Remove="Styles\Button\FullscreenButton.png" />
+    <None Remove="Styles\Button\MinimizeButton.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Styles\ListBox\" />
+    <Folder Include="Themes\" />
     <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Styles\Button\CloseButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Styles\Button\CloseFullscreenButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Styles\Button\FullscreenButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Styles\Button\MinimizeButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
