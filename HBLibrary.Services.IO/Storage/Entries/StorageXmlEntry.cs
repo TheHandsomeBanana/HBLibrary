@@ -39,12 +39,12 @@ internal class StorageXmlEntry<T> : StorageEntry, IStorageEntry<T> {
 }
 
 internal class StorageXmlListEntry<T> : StorageEntry, IStorageListEntry<T> {
-    private T[]? entries = [];
+    private T[] entries = [];
 
     internal StorageXmlListEntry(string filename, bool lazy) : base(filename, lazy) {
         if (!lazy) {
             XmlFileService jsonService = new XmlFileService();
-            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename));
+            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
         }
     }
 
@@ -57,7 +57,7 @@ internal class StorageXmlListEntry<T> : StorageEntry, IStorageListEntry<T> {
             IsLoaded = true;
 
             XmlFileService jsonService = new XmlFileService();
-            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename));
+            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
         }
 
         return entries!;
@@ -65,10 +65,10 @@ internal class StorageXmlListEntry<T> : StorageEntry, IStorageListEntry<T> {
 
     public T? Get(int index) {
         if (!IsLoaded) {
-            using StreamReader sr = new StreamReader(Filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
-
-            return csvReader.GetRecords<T>().ElementAtOrDefault(1);
+            IsLoaded = true;
+            XmlFileService jsonService = new XmlFileService();
+            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+            return entries.ElementAtOrDefault(1);
         }
 
         return entries.ElementAtOrDefault(index);

@@ -47,43 +47,39 @@ internal class StorageJsonEntry<T> : IStorageEntry<T> {
 }
 
 internal class StorageJsonListEntry<T> : StorageEntry, IStorageListEntry<T> {
-    private T[] entries = [];
+    private T[] entry = [];
 
     internal StorageJsonListEntry(string filename, bool lazy) : base(filename, lazy) {
         if (!lazy) {
-            using StreamReader sr = new StreamReader(filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
-
-            entries = csvReader.GetRecords<T>().ToArray();
+            JsonFileService jsonService = new JsonFileService();
+            entry = jsonService.ReadJson<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
         }
     }
 
-    internal StorageJsonListEntry(T[] entries, string filename) : base(filename, false) {
-        this.entries = entries;
+    internal StorageJsonListEntry(T[] entry, string filename) : base(filename, false) {
+        this.entry = entry;
     }
 
     public T[] Get() {
         if (!IsLoaded) {
             IsLoaded = true;
 
-            using StreamReader sr = new StreamReader(Filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
-
-            entries = csvReader.GetRecords<T>().ToArray();
+            JsonFileService jsonService = new JsonFileService();
+            entry = jsonService.ReadJson<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
         }
 
-        return entries!;
+        return entry!;
     }
 
     public T? Get(int index) {
         if (!IsLoaded) {
-            using StreamReader sr = new StreamReader(Filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
-
-            return csvReader.GetRecords<T>().ElementAtOrDefault(1);
+            IsLoaded = true;
+            JsonFileService jsonService = new JsonFileService();
+            entry = jsonService.ReadJson<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+            return entry.ElementAtOrDefault(index);
         }
 
-        return entries.ElementAtOrDefault(index);
+        return entry.ElementAtOrDefault(index);
     }
 
     object IStorageEntry.Get() {

@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
 internal class StorageCsvEntry<T> : StorageEntry, IStorageListEntry<T> {
-    private T[] entries = [];
+    private T[] entry = [];
 
     internal StorageCsvEntry(string filename, bool lazy) : base(filename, lazy) {
         if (!lazy) {
             using StreamReader sr = new StreamReader(filename);
             using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
 
-            entries = csvReader.GetRecords<T>().ToArray();
+            entry = csvReader.GetRecords<T>().ToArray();
         }
     }
 
     internal StorageCsvEntry(T[] entries, string filename) : base(filename, false) {
-        this.entries = entries;
+        this.entry = entries;
     }
 
     public T[] Get() {
@@ -30,10 +30,10 @@ internal class StorageCsvEntry<T> : StorageEntry, IStorageListEntry<T> {
             using StreamReader sr = new StreamReader(Filename);
             using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
 
-            entries = csvReader.GetRecords<T>().ToArray();
+            entry = csvReader.GetRecords<T>().ToArray();
         }
 
-        return entries!;
+        return entry!;
     }
 
     public T? Get(int index) {
@@ -44,7 +44,7 @@ internal class StorageCsvEntry<T> : StorageEntry, IStorageListEntry<T> {
             return csvReader.GetRecords<T>().ElementAtOrDefault(1);
         }
 
-        return entries.ElementAtOrDefault(index);
+        return entry.ElementAtOrDefault(index);
     }
 
     object IStorageEntry.Get() {

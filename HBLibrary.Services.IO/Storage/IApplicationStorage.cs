@@ -12,7 +12,7 @@ public interface IApplicationStorage {
     public void SaveStorageEntry<T>(T entry, string filename, StorageEntryType entryType);
 
     public IStorageListEntry<T> GetStorageListEntry<T>(string filename, StorageEntryType entryType, bool lazy = true);
-    public void SaveStorageListEntry<T>(IEnumerable<T> entries, string filename, StorageEntryType entryType);
+    public void SaveStorageListEntry<T>(T[] entries, string filename, StorageEntryType entryType);
 
     public IStorageEntryContainer? Container { get; }
     public bool TryGetStorageEntry<T>(string filename, out IStorageEntry<T>? entry);
