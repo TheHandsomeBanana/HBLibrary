@@ -7,5 +7,7 @@
     <SolidColorBrush x:Key="HBDark_Border_Selected">#7464ec</SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_Label_Foreground">#e6e6e6</SolidColorBrush>
 
-    
+    <SolidColorBrush x:Key="HBDark_Selected_Background">#515151</SolidColorBrush>
+    <SolidColorBrush x:Key="HBDark_MouseOver_Background">#515151</SolidColorBrush>
+
 </ResourceDictionary>
