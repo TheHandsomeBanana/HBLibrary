@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Unity.Storage.RegistrationSet;
 
 namespace HBLibrary.Services.IO.Storage;
 public class ApplicationStorage : IApplicationStorage {
@@ -88,12 +89,20 @@ public class ApplicationStorage : IApplicationStorage {
                     : filename;
 
         switch (entryType) {
+            case StorageEntryType.Json:
+                JsonFileService jsonFileService = new JsonFileService();
+                jsonFileService.WriteJson<T[]>(FileSnapshot.Create(path, true), entries.ToArray(), new JsonSerializerOptions() { WriteIndented = true });
+                Container?.AddEntry(new StorageJsonEntry<T>(entry, path));
+                return;
+
             case StorageEntryType.Csv:
                 using (StreamWriter sw = new StreamWriter(path)) {
                     using (CsvWriter csvWriter = new CsvWriter(sw, CultureInfo.InvariantCulture)) {
                         csvWriter.WriteRecords(entries);
                     }
                 }
+
+                Container?.AddEntry(new StorageCsvEntry<T>(entries.ToArray(), filename));
                 return;
         }
 

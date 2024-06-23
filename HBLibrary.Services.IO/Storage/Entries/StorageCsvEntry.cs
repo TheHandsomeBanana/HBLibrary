@@ -7,33 +7,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-internal class StorageCsvEntry<T> : IStorageListEntry<T> {
-    private bool isLoaded = false;
+internal class StorageCsvEntry<T> : StorageEntry, IStorageListEntry<T> {
     private T[] entries = [];
-    public string Filename { get; }
 
-    internal StorageCsvEntry(string filename, bool lazy) {
-        this.Filename = filename;
-
+    internal StorageCsvEntry(string filename, bool lazy) : base(filename, lazy) {
         if (!lazy) {
             using StreamReader sr = new StreamReader(filename);
             using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
 
             entries = csvReader.GetRecords<T>().ToArray();
         }
-
-        this.isLoaded = !lazy;
     }
 
-    internal StorageCsvEntry(T[] entries, string filename) {
-        this.Filename = filename;
+    internal StorageCsvEntry(T[] entries, string filename) : base(filename, false) {
         this.entries = entries;
-        isLoaded = true;
     }
 
     public T[] Get() {
-        if (!isLoaded) {
-            isLoaded = true;
+        if (!IsLoaded) {
+            IsLoaded = true;
 
             using StreamReader sr = new StreamReader(Filename);
             using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
@@ -45,7 +37,7 @@ internal class StorageCsvEntry<T> : IStorageListEntry<T> {
     }
 
     public T? Get(int index) {
-        if (!isLoaded) {
+        if (!IsLoaded) {
             using StreamReader sr = new StreamReader(Filename);
             using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
 
