@@ -8,26 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-internal class StorageJsonEntry<T> : IStorageEntry<T> {
-    private bool IsLoaded = false;
+internal class StorageJsonEntry<T> : StorageEntry, IStorageEntry<T> {
     private T? entry;
-    public string Filename { get; }
 
-    internal StorageJsonEntry(string filename, bool lazy) {
-        this.Filename = filename;
-
+    internal StorageJsonEntry(string filename, bool lazy) : base(filename, lazy){
         if (!lazy) {
             JsonFileService jsonService = new JsonFileService();
             entry = jsonService.ReadJson<T>(FileSnapshot.Create(this.Filename));
         }
-
-        this.IsLoaded = !lazy;
     }
 
-    internal StorageJsonEntry(T entry, string filename) {
-        this.Filename = filename;
+    internal StorageJsonEntry(T entry, string filename) : base(filename, false) {
         this.entry = entry;
-        IsLoaded = true;
     }
 
     public T Get() {
