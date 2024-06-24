@@ -30,7 +30,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TreeViewItem">
-                    <Grid>
+                    <Grid Margin="0 1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MinWidth="19" Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -39,21 +39,26 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
+
+
                         <ToggleButton Grid.Column="0"
-                            x:Name="Expander"
+                                  x:Name="Expander"
                                   Style="{StaticResource ExpandCollapseToggleStyle}"
                                   IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                   ClickMode="Press"/>
+
                         <Border x:Name="Border"
-                            Grid.Column="1"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                                    Grid.Column="1"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+
                             <ContentPresenter x:Name="PART_Header"
                                           ContentSource="Header"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
+
                         <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1"/>
 
                     </Grid>

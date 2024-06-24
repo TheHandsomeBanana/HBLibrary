@@ -22,7 +22,7 @@ public class WinRARArchiver : IWinRARArchiver {
     public event EventHandler<ProcessStdStreamEventArgs>? OnErrorDataReceived;
 
     public WinRARArchiver() {
-        winRARInstallationPath = WinRARHelper.GetWinRARPath()
+        winRARInstallationPath = WinRARManager.GetWinRARPath()
             ?? throw new ApplicationNotFoundException("WinRAR", "If only the cli is available, add the 'Rar.exe' or 'UnRAR.exe' path to your 'PATH' environment variable.");
     }
 

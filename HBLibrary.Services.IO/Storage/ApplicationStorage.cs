@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using static Unity.Storage.RegistrationSet;
 
 namespace HBLibrary.Services.IO.Storage;
 public class ApplicationStorage : IApplicationStorage {
@@ -23,7 +24,7 @@ public class ApplicationStorage : IApplicationStorage {
         }
     }
 
-    public IStorageEntry<T> GetStorageEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) {
+    public IStorageEntry<T> GetStorageEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) where T : class {
         string path = BasePath is not null
             ? Path.Combine(BasePath, filename)
             : filename;
@@ -39,7 +40,7 @@ public class ApplicationStorage : IApplicationStorage {
         };
     }
 
-    public void SaveStorageEntry<T>(T entry, string filename, StorageEntryType entryType) {
+    public void SaveStorageEntry<T>(T entry, string filename, StorageEntryType entryType) where T : class {
         string path = BasePath is not null
             ? Path.Combine(BasePath, filename)
             : filename;
@@ -62,7 +63,7 @@ public class ApplicationStorage : IApplicationStorage {
         throw new NotSupportedException(entryType.ToString());
     }
 
-    public IStorageListEntry<T> GetStorageListEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) {
+    public IStorageListEntry<T> GetStorageListEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) where T : class {
         string path = BasePath is not null
                     ? Path.Combine(BasePath, filename)
                     : filename;
@@ -79,7 +80,7 @@ public class ApplicationStorage : IApplicationStorage {
         };
     }
 
-    public void SaveStorageListEntry<T>(T[] entry, string filename, StorageEntryType entryType) {
+    public void SaveStorageListEntry<T>(T[] entry, string filename, StorageEntryType entryType) where T : class {
         string path = BasePath is not null
                     ? Path.Combine(BasePath, filename)
                     : filename;
@@ -112,7 +113,7 @@ public class ApplicationStorage : IApplicationStorage {
         throw new NotSupportedException(entryType.ToString());
     }
 
-    public bool TryGetStorageEntry<T>(string filename, out IStorageEntry<T>? entry) {
+    public bool TryGetStorageEntry<T>(string filename, out IStorageEntry<T>? entry) where T : class {
         string path = BasePath is not null
             ? Path.Combine(BasePath, filename)
             : filename;
@@ -125,5 +126,44 @@ public class ApplicationStorage : IApplicationStorage {
         return Container.TryGetEntry(path, out entry);
     }
 
+    public bool TryGetStorageEntry<T>(out IStorageEntry<T>? entry) where T : class {
+        if (BasePath is null) {
+            entry = null;
+            return false;
+        }
 
+        return TryGetStorageEntry(typeof(T).FullName!, out entry);
+    }
+
+    public IStorageEntry<T> GetStorageEntry<T>(StorageEntryType entryType, bool lazy = true) where T : class {
+        if (BasePath is null) {
+            throw new MissingMemberException(BasePath);
+        }
+
+        return GetStorageEntry<T>(typeof(T).FullName!, entryType, lazy);
+    }
+
+    public void SaveStorageEntry<T>(T entry, StorageEntryType entryType) where T : class {
+        if (BasePath is null) {
+            throw new MissingMemberException(BasePath);
+        }
+
+        SaveStorageEntry<T>(entry, typeof(T).FullName!, entryType);
+    }
+
+    public IStorageListEntry<T> GetStorageListEntry<T>(StorageEntryType entryType, bool lazy = true) where T : class {
+        if (BasePath is null) {
+            throw new MissingMemberException(BasePath);
+        }
+
+        return GetStorageListEntry<T>(typeof(T).FullName!, entryType, lazy);
+    }
+
+    public void SaveStorageListEntry<T>(T[] entry, StorageEntryType entryType) where T : class {
+        if (BasePath is null) {
+            throw new MissingMemberException(BasePath);
+        }
+
+        SaveStorageListEntry<T>(entry, typeof(T).FullName!, entryType);
+    }
 }
