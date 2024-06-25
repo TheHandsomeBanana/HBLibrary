@@ -10,5 +10,7 @@ public interface IViewModelCache {
     public void AddOrUpdate<TViewModel>(TViewModel viewModel) where TViewModel : ViewModelBase;
     public void AddOrUpdate(ViewModelBase viewModel);
     public bool TryGet<TViewModel>(out TViewModel? viewModel) where TViewModel : ViewModelBase;
+    public bool TryGet(Type type, out ViewModelBase? viewModel);
     public TViewModel GetOrNew<TViewModel>() where TViewModel : ViewModelBase, new();
+    public ViewModelBase GetOrNew(Type type);
 }

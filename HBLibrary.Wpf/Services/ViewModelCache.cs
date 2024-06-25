@@ -21,12 +21,27 @@ public class ViewModelCache : IViewModelCache {
         if (viewModels.TryGetValue(typeof(TViewModel).FullName!, out ViewModelBase? value))
             return (TViewModel)value;
 
-        return new TViewModel();
+        TViewModel newViewModel = new TViewModel();
+        AddOrUpdate(newViewModel);
+        return newViewModel;
+    }
+
+    public ViewModelBase GetOrNew(Type type) {
+        if (viewModels.TryGetValue(type.FullName!, out ViewModelBase? value))
+            return value;
+
+        ViewModelBase viewModel = (ViewModelBase)Activator.CreateInstance(type)!;
+        AddOrUpdate(viewModel);
+        return viewModel;
     }
 
     public bool TryGet<TViewModel>(out TViewModel? viewModel) where TViewModel : ViewModelBase {
         bool contains = viewModels.TryGetValue(typeof(TViewModel).FullName!, out ViewModelBase? viewModelBase);
         viewModel = viewModelBase as TViewModel;
         return contains;
+    }
+
+    public bool TryGet(Type type, out ViewModelBase? viewModel) {
+        return viewModels.TryGetValue(type.FullName!, out viewModel);
     }
 }

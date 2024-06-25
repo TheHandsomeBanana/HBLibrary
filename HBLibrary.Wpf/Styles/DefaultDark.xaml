@@ -25,6 +25,7 @@
 
     <SolidColorBrush x:Key="HBDark_Button_Disabled_Background" Color="#242424"></SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_Button_Disabled_BorderBrush" Color="#4E4E4E"></SolidColorBrush>
+    <SolidColorBrush x:Key="HBDark_Button_Disabled_Foreground" Color="#4E4E4E"></SolidColorBrush>
 
     
     <!-- TextBox -->

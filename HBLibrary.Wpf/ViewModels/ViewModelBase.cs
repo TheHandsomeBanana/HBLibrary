@@ -9,10 +9,6 @@ public abstract class ViewModelBase : INotifyPropertyChanged {
     protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    public virtual void SaveState(IViewModelCache viewModelCache) {
-        viewModelCache.AddOrUpdate(this);
-    }
 }
 
 public abstract class ViewModelBase<TModel> : ViewModelBase where TModel : new() {
