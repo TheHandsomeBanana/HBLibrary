@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace HBLibrary.Wpf.Styles.Buttons;
+namespace HBLibrary.Wpf.Styles.Button;
 public static class ButtonAttachedProperties {
     public static readonly DependencyProperty CornerRadiousProperty = DependencyProperty.RegisterAttached(
         "CornerRadius",

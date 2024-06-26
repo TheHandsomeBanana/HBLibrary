@@ -6,34 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.ViewModels;
-public class TreeViewItem : ViewModelBase {
-    private string? name;
-    public string? Name {
-        get { 
-            return name; 
-        }
-        set {
-            name = value;
-            NotifyPropertyChanged();
-        }
-    }
+public class TreeViewItem {
+    public string Name { get; set; }
+    public Type ViewModelType { get; set; }
+    public ObservableCollection<TreeViewItem> Children { get; set; } = [];
 
-    private Uri? navLink;
-    public Uri? NavLink {
-        get => navLink;
-        set {
-            navLink = value;
-            NotifyPropertyChanged();
-        }
+    public TreeViewItem(string name, Type viewModelType) {
+        Name = name;
+        ViewModelType = viewModelType;
     }
-
-    private ObservableCollection<TreeViewItem> children = [];
-    public ObservableCollection<TreeViewItem> Children {
-        get => children;
-        set {
-            children = value;
-            NotifyPropertyChanged();
-        }
-    }
-
 }
