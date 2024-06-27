@@ -30,12 +30,20 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register("Command", typeof(ICommand), typeof(ListBoxButton), new PropertyMetadata(null));
 
+    public object CommandParameter {
+        get { return GetValue(CommandParameterProperty); }
+        set { SetValue(CommandParameterProperty, value); }
+    }
+
+    public static readonly DependencyProperty CommandParameterProperty =
+        DependencyProperty.Register("CommandParameter", typeof(object), typeof(ListBoxButton), new PropertyMetadata(null));
+
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
         base.OnMouseLeftButtonUp(e);
 
-        if (Command != null && Command.CanExecute(null)) {
-            Command.Execute(null);
+        if (Command != null && Command.CanExecute(CommandParameter)) {
+            Command.Execute(CommandParameter);
         }
     }
 

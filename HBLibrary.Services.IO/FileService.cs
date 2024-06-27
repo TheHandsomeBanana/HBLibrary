@@ -245,27 +245,27 @@ public class FileService : IFileService {
     }
 
     public void Write(FileSnapshot file, string content, bool append = false, FileShare share = FileShare.None) {
-        FileMode mode = append ? FileMode.Append : FileMode.Open;
+        FileMode mode = append ? FileMode.Append : FileMode.Create;
         using FileStream fs = file.OpenStream(mode, FileAccess.Write, share);
         using StreamWriter sw = new StreamWriter(fs);
         sw.Write(content);
     }
 
     public async Task WriteAsync(FileSnapshot file, string content, bool append = false, FileShare share = FileShare.None) {
-        FileMode mode = append ? FileMode.Append : FileMode.Open;
+        FileMode mode = append ? FileMode.Append : FileMode.Create;
         using FileStream fs = file.OpenStream(mode, FileAccess.Write, share, true);
         using StreamWriter sw = new StreamWriter(fs);
         await sw.WriteAsync(content);
     }
 
     public void WriteBytes(FileSnapshot file, byte[] content, bool append = false, FileShare share = FileShare.None) {
-        FileMode mode = append ? FileMode.Append : FileMode.Open;
+        FileMode mode = append ? FileMode.Append : FileMode.Create;
         using FileStream fs = file.OpenStream(mode, FileAccess.Write, share);
         fs.Write(content);
     }
 
     public async Task WriteBytesAsync(FileSnapshot file, byte[] content, bool append = false, FileShare share = FileShare.None) {
-        FileMode mode = append ? FileMode.Append : FileMode.Open;
+        FileMode mode = append ? FileMode.Append : FileMode.Create;
         using FileStream fs = file.OpenStream(mode, FileAccess.Write, share, true);
         await fs.WriteAsync(content);
     }

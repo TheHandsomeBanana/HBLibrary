@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Services.NavigationService;
-public interface INavigationService {
-    public void Navigate<TViewModel>(string parentTypename) where TViewModel : ViewModelBase;
-    public void Navigate(string parentTypename, Type type);
+public interface INavigationStoreBuilder {
+    public INavigationStoreBuilder AddViewModel(ViewModelBase viewModel);
+    public Dictionary<Type, ViewModelBase> Build();
 }

@@ -4,30 +4,39 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
 internal class StorageJsonEntry<T> : StorageEntry, IStorageEntry<T> {
     private T? entry;
+    private readonly IJsonFileService jsonService;
+    internal StorageJsonEntry(IJsonFileService jsonService, string filename, bool lazy) : base(filename, lazy) {
+        this.jsonService = jsonService; 
 
-    internal StorageJsonEntry(string filename, bool lazy) : base(filename, lazy){
         if (!lazy) {
-            JsonFileService jsonService = new JsonFileService();
-            entry = jsonService.ReadJson<T>(FileSnapshot.Create(this.Filename));
+            if (FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+
+                entry = jsonService.ReadJson<T>(file!.Value);
+            }
         }
     }
 
-    internal StorageJsonEntry(T entry, string filename) : base(filename, false) {
+    internal StorageJsonEntry(IJsonFileService jsonService, T entry, string filename) : this(jsonService, filename, false) {
         this.entry = entry;
     }
 
-    public T Get() {
+    public T? Get() {
         if (!IsLoaded) {
             IsLoaded = true;
 
-            JsonFileService jsonService = new JsonFileService();
-            entry = jsonService.ReadJson<T>(FileSnapshot.Create(Filename));
+            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                return default;
+            }
+
+            entry = jsonService.ReadJson<T>(file!.Value);
         }
 
         return entry!;
@@ -40,15 +49,19 @@ internal class StorageJsonEntry<T> : StorageEntry, IStorageEntry<T> {
 
 internal class StorageJsonListEntry<T> : StorageEntry, IStorageListEntry<T> {
     private T[] entry = [];
+    private readonly IJsonFileService jsonService;
 
-    internal StorageJsonListEntry(string filename, bool lazy) : base(filename, lazy) {
+    internal StorageJsonListEntry(IJsonFileService jsonService, string filename, bool lazy) : base(filename, lazy) {
+        this.jsonService = jsonService;
+        
         if (!lazy) {
-            JsonFileService jsonService = new JsonFileService();
-            entry = jsonService.ReadJson<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+            if (FileSnapshot.TryCreate(filename, out FileSnapshot? file)) {
+                entry = jsonService.ReadJson<T[]>(file!.Value) ?? [];
+            }
         }
     }
 
-    internal StorageJsonListEntry(T[] entry, string filename) : base(filename, false) {
+    internal StorageJsonListEntry(IJsonFileService jsonService, T[] entry, string filename) : this(jsonService, filename, false) {
         this.entry = entry;
     }
 
@@ -56,8 +69,11 @@ internal class StorageJsonListEntry<T> : StorageEntry, IStorageListEntry<T> {
         if (!IsLoaded) {
             IsLoaded = true;
 
-            JsonFileService jsonService = new JsonFileService();
-            entry = jsonService.ReadJson<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                return [];
+            }
+
+            entry = jsonService.ReadJson<T[]>(file!.Value) ?? [];
         }
 
         return entry!;
@@ -66,8 +82,12 @@ internal class StorageJsonListEntry<T> : StorageEntry, IStorageListEntry<T> {
     public T? Get(int index) {
         if (!IsLoaded) {
             IsLoaded = true;
-            JsonFileService jsonService = new JsonFileService();
-            entry = jsonService.ReadJson<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+
+            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                return default;
+            }
+
+            entry = jsonService.ReadJson<T[]>(file!.Value) ?? [];
             return entry.ElementAtOrDefault(index);
         }
 
@@ -75,6 +95,6 @@ internal class StorageJsonListEntry<T> : StorageEntry, IStorageListEntry<T> {
     }
 
     object IStorageEntry.Get() {
-        return Get()!;
+        return Get();
     }
 }

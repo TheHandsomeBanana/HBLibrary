@@ -13,21 +13,29 @@ internal class StorageXmlEntry<T> : StorageEntry, IStorageEntry<T> {
 
     internal StorageXmlEntry(string filename, bool lazy) : base(filename, lazy) {
         if (!lazy) {
-            XmlFileService jsonService = new XmlFileService();
-            entry = jsonService.ReadXml<T>(FileSnapshot.Create(this.Filename));
+
+            if (FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                XmlFileService xmlService = new XmlFileService();
+                entry = xmlService.ReadXml<T>(file!.Value);
+            }
         }
     }
 
-    internal StorageXmlEntry(T entry, string filename) : base(filename, false){
+    internal StorageXmlEntry(T entry, string filename) : base(filename, false) {
         this.entry = entry;
     }
 
-    public T Get() {
+    public T? Get() {
         if (!IsLoaded) {
             IsLoaded = true;
 
-            XmlFileService jsonService = new XmlFileService();
-            entry = jsonService.ReadXml<T>(FileSnapshot.Create(this.Filename));
+            XmlFileService xmlService = new XmlFileService();
+
+            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                return default;
+            }
+
+            entry = xmlService.ReadXml<T>(file!.Value);
         }
 
         return entry!;

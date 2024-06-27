@@ -13,7 +13,7 @@ public interface IStorageEntry {
 }
 
 public interface IStorageEntry<T> : IStorageEntry {
-    public new T Get();
+    public new T? Get();
 }
 
 public interface IStorageListEntry<T> : IStorageEntry {

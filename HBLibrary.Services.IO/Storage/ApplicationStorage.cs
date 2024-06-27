@@ -9,52 +9,67 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using Unity;
 using static Unity.Storage.RegistrationSet;
 
 namespace HBLibrary.Services.IO.Storage;
 public class ApplicationStorage : IApplicationStorage {
+    public const string EXTENSION = "";
+
     public string? BasePath { get; set; }
-    public IStorageEntryContainer? Container { get; }
+    public IStorageEntryContainer? Container { get; private set; }
 
-    public ApplicationStorage(string? basePath = null, bool useContainer = true) {
-        BasePath = basePath;
+    [Dependency]
+    public IJsonFileService? JsonFileService { get; set; }
+    [Dependency]
+    public IXmlFileService? XmlFileService { get; set; }
 
-        if (useContainer) {
-            Container = new StorageEntryContainer();
-        }
-    }
+    public ApplicationStorage() { }
 
     public IStorageEntry<T> GetStorageEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) where T : class {
         string path = BasePath is not null
-            ? Path.Combine(BasePath, filename)
-            : filename;
+            ? Path.Combine(BasePath, filename + EXTENSION)
+            : filename + EXTENSION;
 
         if (Container?.TryGetEntry(path, out IStorageEntry<T>? entry) ?? false) {
             return entry!;
         }
 
-        return entryType switch {
-            StorageEntryType.Json => new StorageJsonEntry<T>(path, lazy),
-            StorageEntryType.Xml => new StorageXmlEntry<T>(path, lazy),
-            _ => throw new NotSupportedException(entryType.ToString()),
-        };
+        switch (entryType) {
+            case StorageEntryType.Json:
+                if (JsonFileService is null) {
+                    throw new MissingMemberException(nameof(JsonFileService));
+                }
+
+                return new StorageJsonEntry<T>(JsonFileService, path, lazy);
+            case StorageEntryType.Xml:
+                return new StorageXmlEntry<T>(path, lazy);
+            default:
+                throw new NotSupportedException(entryType.ToString());
+        }
     }
 
     public void SaveStorageEntry<T>(T entry, string filename, StorageEntryType entryType) where T : class {
         string path = BasePath is not null
-            ? Path.Combine(BasePath, filename)
-            : filename;
+            ? Path.Combine(BasePath, filename + EXTENSION)
+            : filename + EXTENSION;
 
         switch (entryType) {
             case StorageEntryType.Json:
-                JsonFileService jsonFileService = new JsonFileService();
-                jsonFileService.WriteJson(FileSnapshot.Create(path, true), entry, new JsonSerializerOptions() { WriteIndented = true });
+                if (JsonFileService is null) {
+                    throw new MissingMemberException(nameof(JsonFileService));
+                }
 
-                Container?.AddEntry(new StorageJsonEntry<T>(entry, path));
+                JsonFileService.WriteJson(FileSnapshot.Create(path, true), entry, new JsonSerializerOptions() { WriteIndented = true });
+
+                Container?.AddEntry(new StorageJsonEntry<T>(JsonFileService, entry, path));
                 return;
             case StorageEntryType.Xml:
-                XmlFileService xmlFileService = new XmlFileService();
-                xmlFileService.WriteXml(FileSnapshot.Create(path, true), entry);
+                if (XmlFileService is null) {
+                    throw new MissingMemberException(nameof(XmlFileService));
+                }
+
+                XmlFileService.WriteXml(FileSnapshot.Create(path, true), entry);
 
                 Container?.AddEntry(new StorageXmlEntry<T>(entry, path));
                 return;
@@ -65,31 +80,43 @@ public class ApplicationStorage : IApplicationStorage {
 
     public IStorageListEntry<T> GetStorageListEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) where T : class {
         string path = BasePath is not null
-                    ? Path.Combine(BasePath, filename)
-                    : filename;
+                    ? Path.Combine(BasePath, filename + EXTENSION)
+                    : filename + EXTENSION;
 
         if (Container?.TryGetListEntry(path, out IStorageListEntry<T>? entry) ?? false) {
             return entry!;
         }
 
-        return entryType switch {
-            StorageEntryType.Csv => new StorageCsvEntry<T>(path, lazy),
-            StorageEntryType.Json => new StorageJsonListEntry<T>(path, lazy),
-            StorageEntryType.Xml => new StorageXmlListEntry<T>(path, lazy),
-            _ => throw new NotSupportedException(entryType.ToString()),
-        };
+        switch(entryType) {
+            case StorageEntryType.Json:
+                if (JsonFileService is null) {
+                    throw new MissingMemberException(nameof(JsonFileService));
+                }
+
+                return new StorageJsonListEntry<T>(JsonFileService, path, lazy);
+            case StorageEntryType.Xml:
+                return new StorageXmlListEntry<T>(path, lazy);
+            case StorageEntryType.Csv:
+                return new StorageCsvEntry<T>(path, lazy);
+            default:
+                throw new NotSupportedException(entryType.ToString());
+        }
     }
 
     public void SaveStorageListEntry<T>(T[] entry, string filename, StorageEntryType entryType) where T : class {
         string path = BasePath is not null
-                    ? Path.Combine(BasePath, filename)
-                    : filename;
+                    ? Path.Combine(BasePath, filename + EXTENSION)
+                    : filename + EXTENSION;
 
         switch (entryType) {
             case StorageEntryType.Json:
-                JsonFileService jsonFileService = new JsonFileService();
-                jsonFileService.WriteJson(FileSnapshot.Create(path, true), entry, new JsonSerializerOptions() { WriteIndented = true });
-                Container?.AddEntry(new StorageJsonListEntry<T>(entry, path));
+                if (JsonFileService is null) {
+                    throw new MissingMemberException(nameof(JsonFileService));
+                }
+
+                JsonFileService.WriteJson(FileSnapshot.Create(path, true), entry, new JsonSerializerOptions() { WriteIndented = true });
+
+                Container?.AddEntry(new StorageJsonListEntry<T>(JsonFileService, entry, path));
                 return;
 
             case StorageEntryType.Xml:
@@ -115,8 +142,8 @@ public class ApplicationStorage : IApplicationStorage {
 
     public bool TryGetStorageEntry<T>(string filename, out IStorageEntry<T>? entry) where T : class {
         string path = BasePath is not null
-            ? Path.Combine(BasePath, filename)
-            : filename;
+            ? Path.Combine(BasePath, filename + EXTENSION)
+            : filename + EXTENSION;
 
         if (Container is null) {
             entry = null;
@@ -132,7 +159,7 @@ public class ApplicationStorage : IApplicationStorage {
             return false;
         }
 
-        return TryGetStorageEntry(typeof(T).FullName!, out entry);
+        return TryGetStorageEntry(typeof(T).GUID.ToString(), out entry);
     }
 
     public IStorageEntry<T> GetStorageEntry<T>(StorageEntryType entryType, bool lazy = true) where T : class {
@@ -140,7 +167,7 @@ public class ApplicationStorage : IApplicationStorage {
             throw new MissingMemberException(BasePath);
         }
 
-        return GetStorageEntry<T>(typeof(T).FullName!, entryType, lazy);
+        return GetStorageEntry<T>(typeof(T).GUID.ToString(), entryType, lazy);
     }
 
     public void SaveStorageEntry<T>(T entry, StorageEntryType entryType) where T : class {
@@ -148,7 +175,7 @@ public class ApplicationStorage : IApplicationStorage {
             throw new MissingMemberException(BasePath);
         }
 
-        SaveStorageEntry<T>(entry, typeof(T).FullName!, entryType);
+        SaveStorageEntry<T>(entry, typeof(T).GUID.ToString(), entryType);
     }
 
     public IStorageListEntry<T> GetStorageListEntry<T>(StorageEntryType entryType, bool lazy = true) where T : class {
@@ -156,7 +183,7 @@ public class ApplicationStorage : IApplicationStorage {
             throw new MissingMemberException(BasePath);
         }
 
-        return GetStorageListEntry<T>(typeof(T).FullName!, entryType, lazy);
+        return GetStorageListEntry<T>(typeof(T).GUID.ToString(), entryType, lazy);
     }
 
     public void SaveStorageListEntry<T>(T[] entry, StorageEntryType entryType) where T : class {
@@ -164,6 +191,10 @@ public class ApplicationStorage : IApplicationStorage {
             throw new MissingMemberException(BasePath);
         }
 
-        SaveStorageListEntry<T>(entry, typeof(T).FullName!, entryType);
+        SaveStorageListEntry<T>(entry, typeof(T).GUID.ToString(), entryType);
+    }
+
+    public void UseContainer() {
+        Container = new StorageEntryContainer();
     }
 }
