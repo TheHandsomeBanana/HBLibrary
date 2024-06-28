@@ -11,6 +11,4 @@ public interface INavigationStore {
     public ActiveViewModel this[string parentTypename] { get; set; }
     public void SwitchViewModel(string parentTypename, Type viewModelType);
     public void SwitchViewModel<TViewModel>(string parentTypename);
-    public void InitViewModelInstances(Func<INavigationStoreBuilder, Dictionary<Type, ViewModelBase>> builder);
-    public TViewModel GetStoredViewModel<TViewModel>() where TViewModel : ViewModelBase;
 }

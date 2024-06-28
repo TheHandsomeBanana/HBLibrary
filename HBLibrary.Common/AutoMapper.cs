@@ -39,7 +39,7 @@ public static class AutoMapper {
 
 
         foreach (var sourceProperty in sourceProperties) {
-            var destinationProperty = Array.Find(destinationProperties, prop => prop.Name == sourceProperty.Name && prop.PropertyType == sourceProperty.PropertyType);
+            var destinationProperty = destinationProperties.FirstOrDefault(prop => prop.Name == sourceProperty.Name && prop.PropertyType == sourceProperty.PropertyType);
             if (destinationProperty != null && destinationProperty.CanWrite) {
                 destinationProperty.SetValue(destination, sourceProperty.GetValue(source));
             }
