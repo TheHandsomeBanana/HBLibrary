@@ -6,9 +6,20 @@
 
     <Style x:Key="HBDark_TextBlock" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="HBDark_HeaderTextBlock" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Bahnschrift SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <Style x:Key="HBDark_ErrorTextBlock" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource HBDark_TextBlock_ErrorForeground}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 </ResourceDictionary>

@@ -17,4 +17,10 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="HBDark_ControlBorder" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource HBDark_Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
 </ResourceDictionary>

@@ -16,9 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Styles\ListBox\" />
     <Folder Include="Styles\Models\" />
-    <Folder Include="Views\" />
   </ItemGroup>
 
   <ItemGroup>

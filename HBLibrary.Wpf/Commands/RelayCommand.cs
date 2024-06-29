@@ -1,22 +1,50 @@
 ﻿using System;
 
-namespace HBLibrary.Wpf.Commands; 
+namespace HBLibrary.Wpf.Commands;
 public class RelayCommand : CommandBase {
-    private Action<object> callback;
-    private Predicate<object> canExecute;
+    private readonly Action<object?> callback;
+    private readonly Predicate<object?> canExecute;
 
-    public RelayCommand(Action<object> callback, Predicate<object> canExecute) {
+    public RelayCommand(Action<object?> callback, Predicate<object?> canExecute) {
         this.callback = callback ?? throw new ArgumentNullException(nameof(callback));
         this.canExecute = canExecute;
     }
 
-    public RelayCommand(Action<object> callback, bool canExecute) : this(callback, o => canExecute) { }
+    public RelayCommand(Action<object?> callback, bool canExecute) : this(callback, o => canExecute) { }
 
-    public override bool CanExecute(object parameter) {
+    public override bool CanExecute(object? parameter) {
         return canExecute != null ? canExecute(parameter) && base.CanExecute(parameter) : base.CanExecute(parameter);
     }
 
-    public override void Execute(object parameter) {
+    public override void Execute(object? parameter) {
         callback(parameter);
+    }
+}
+
+public class RelayCommand<TParameter> : CommandBase {
+    private readonly Action<TParameter> callback;
+    private readonly Predicate<TParameter> canExecute;
+
+    public RelayCommand(Action<TParameter> callback, Predicate<TParameter> canExecute) {
+        this.callback = callback ?? throw new ArgumentNullException(nameof(callback));
+        this.canExecute = canExecute;
+    }
+
+    public RelayCommand(Action<TParameter> callback, bool canExecute) : this(callback, o => canExecute) { }
+
+    public override bool CanExecute(object? parameter) {
+        if (parameter is TParameter tParameter) {
+            return canExecute != null
+                ? canExecute(tParameter) && base.CanExecute(tParameter)
+                : base.CanExecute(tParameter);
+        }
+
+        return false;
+    }
+
+    public override void Execute(object? parameter) {
+        if (parameter is TParameter tParameter) {
+            callback(tParameter);
+        }
     }
 }

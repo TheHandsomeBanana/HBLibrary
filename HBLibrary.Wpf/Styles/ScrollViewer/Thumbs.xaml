@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <!-- Vertical ScrollBar Thumb Style -->
+    <Style x:Key="HBDark_VSVerticalScrollBarThumbStyle" TargetType="Thumb">
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_Background}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="{TemplateBinding Background}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_MouseOver_Background}"/>
+            </Trigger>
+            <Trigger Property="IsDragging" Value="True">
+                <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_MouseOver_Background}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Horizontal ScrollBar Thumb Style -->
+    <Style x:Key="HBDark_VSHorizontalScrollBarThumbStyle" TargetType="Thumb">
+        <Setter Property="Height" Value="10"/>
+        <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_Background}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_MouseOver_Background}"/>
+            </Trigger>
+            <Trigger Property="IsDragging" Value="True">
+                <Setter Property="Background" Value="DarkGray"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+</ResourceDictionary>

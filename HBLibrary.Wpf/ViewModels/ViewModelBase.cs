@@ -11,12 +11,11 @@ public abstract class ViewModelBase : INotifyPropertyChanged {
     }
 }
 
-public abstract class ViewModelBase<TModel> : ViewModelBase where TModel : new() {
+public abstract class ViewModelBase<TModel> : ViewModelBase {
     public TModel Model { get; protected set; }
 
-    public ViewModelBase() {
-        Model = new TModel();
-    }
+    // Use for TModel instantiation
+    public ViewModelBase() { }
 
     protected ViewModelBase(TModel model) {
         Model = model;

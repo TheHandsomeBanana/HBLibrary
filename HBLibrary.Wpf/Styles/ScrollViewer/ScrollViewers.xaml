@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollBars.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="HBDark_VSScrollViewer" TargetType="ScrollViewer">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollViewer">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollContentPresenter Grid.Column="0" Grid.Row="0"/>
+                        <ScrollBar x:Name="PART_VerticalScrollBar" 
+                                   Grid.Column="1" 
+                                   Grid.Row="0" 
+                                   Orientation="Vertical" 
+                                   Style="{StaticResource HBDark_VSVerticalScrollbar}"/>
+                        <ScrollBar x:Name="PART_HorizontalScrollBar" 
+                                   Grid.Column="0" 
+                                   Grid.Row="1" 
+                                   Orientation="Horizontal" 
+                                   Style="{StaticResource HBDark_VSHorizontalScrollbar}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
