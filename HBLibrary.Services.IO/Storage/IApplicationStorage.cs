@@ -1,6 +1,8 @@
 ﻿using HBLibrary.Services.IO.Json;
+using HBLibrary.Services.IO.Storage.Config;
 using HBLibrary.Services.IO.Storage.Container;
 using HBLibrary.Services.IO.Storage.Entries;
+using HBLibrary.Services.IO.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +11,16 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage;
 public interface IApplicationStorage {
-    public string? BasePath { get; }
+    public string BasePath { get; }
+    public Guid DefaultContainerId { get; }
+    public IStorageEntry? GetStorageEntry(Guid containerId, string filename);
+    public IStorageEntry? CreateStorageEntry(Guid containerId, string filename, StorageEntryContentType contentType);
+    public void AddOrUpdateStorageEntry(Guid containerId, string filename, StorageEntryContentType contentType);
+    public bool ContainsEntry(Guid containerId, string filename);
 
-    public IStorageEntry<T> GetStorageEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) where T : class;
-    public void SaveStorageEntry<T>(T entry, string filename, StorageEntryType entryType) where T : class;
+    public IEnumerable<IStorageEntry> GetStorageEntries(Guid containerId);
+    public void SaveStorageEntries(Guid containerId);
+    public void SaveAll();
+    public IStorageEntryContainer GetContainer(Guid containerId);
 
-    public IStorageListEntry<T> GetStorageListEntry<T>(string filename, StorageEntryType entryType, bool lazy = true) where T : class;
-    public void SaveStorageListEntry<T>(T[] entry, string filename, StorageEntryType entryType) where T : class;
-
-
-    public IStorageEntry<T> GetStorageEntry<T>(StorageEntryType entryType, bool lazy = true) where T : class;
-    public void SaveStorageEntry<T>(T entry, StorageEntryType entryType) where T : class;
-    public IStorageListEntry<T> GetStorageListEntry<T>(StorageEntryType entryType, bool lazy = true) where T : class;
-    public void SaveStorageListEntry<T>(T[] entry, StorageEntryType entryType) where T : class;
-
-
-    public void UseContainer();
-    public IStorageEntryContainer? Container { get; }
-    public bool TryGetStorageEntry<T>(string filename, out IStorageEntry<T>? entry) where T : class;
-    public bool TryGetStorageEntry<T>(out IStorageEntry<T>? entry) where T : class;
-
-
-    
 }

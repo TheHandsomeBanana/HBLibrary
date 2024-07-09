@@ -1,5 +1,5 @@
 ﻿namespace HBLibrary.Services.IO;
-public readonly struct ValidPath {
+public class ValidPath {
     public string Path { get; }
     public string? FullPath { get; }
     public bool IsFile { get; }

@@ -11,35 +11,37 @@ namespace HBLibrary.Wpf.Services.NavigationService;
 public class NavigationStore : INavigationStore {
 
     private readonly Dictionary<string, ActiveViewModel> activeViewModels = [];
-    private readonly IViewModelStore viewModelStore;
+
 
     public ActiveViewModel this[string parentTypename] {
         get => activeViewModels[parentTypename];
         set => activeViewModels[parentTypename] = value;
     }
 
-    public NavigationStore(IViewModelStore viewModelStore) {
-        this.viewModelStore = viewModelStore;
+    public NavigationStore() {
     }    
 
-    public void SwitchViewModel(string parentTypename, Type viewModelType) {
-        if (!viewModelStore.TryGetValue(viewModelType, out ViewModelBase? viewModel)) {
-            throw new InvalidOperationException($"ViewModel of type {viewModelType} is not registered.");
-        }
-
+    public void SwitchViewModel(string parentTypename, ViewModelBase viewModel) {
         if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
-            activeViewModel.ViewModel = viewModel!;
+            activeViewModel.ViewModel = viewModel;
         }
         else {
-            activeViewModels[parentTypename] = new ActiveViewModel(viewModel!);
+            activeViewModels[parentTypename] = new ActiveViewModel(viewModel);
         }
     }
 
-    public void SwitchViewModel<TViewModel>(string parentTypename) {
-        SwitchViewModel(parentTypename, typeof(TViewModel));
+    public void SwitchViewModel<TViewModel>(string parentTypename, TViewModel viewModel) where TViewModel : ViewModelBase {
+        if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
+            activeViewModel.ViewModel = viewModel;
+        }
+        else {
+            activeViewModels[parentTypename] = new ActiveViewModel(viewModel);
+        }
     }
 
-    
+    public void AddDefaultViewModel(string parentTypename, ViewModelBase viewModel) {
+        activeViewModels[parentTypename] = new ActiveViewModel(viewModel);
+    }
 }
 
 

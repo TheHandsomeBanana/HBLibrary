@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 
 namespace HBLibrary.Services.IO;
-public readonly struct DirectorySnapshot {
+public class DirectorySnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
     public bool IsNewDirectory { get; init; }
@@ -45,6 +45,11 @@ public readonly struct DirectorySnapshot {
         return true;
     }
 
+    internal DirectorySnapshot() {
+        Path = "";
+        FullPath = "";
+    }
+
     internal DirectorySnapshot(string path) {
         Path = path;
         FullPath = System.IO.Path.GetFullPath(path);
@@ -59,6 +64,20 @@ public readonly struct DirectorySnapshot {
             throw new InvalidCastException($"Path {path} is not a directory.");
 
         return new DirectorySnapshot(path.Path);
+    }
+
+    public DirectorySnapshot Combine(params string[] paths) {
+        string[] allPaths = paths.Prepend(FullPath).ToArray();
+        string newPath = System.IO.Path.Combine(allPaths);
+
+        return Create(newPath, true);
+    }
+
+    public FileSnapshot CombineToFile(params string[] paths) {
+        string[] allPaths = paths.Prepend(FullPath).ToArray();
+        string newPath = System.IO.Path.Combine(allPaths);
+
+        return FileSnapshot.Create(newPath, true);
     }
 
     public ImmutableArray<FileSnapshot> GetFiles() {

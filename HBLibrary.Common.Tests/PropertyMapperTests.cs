@@ -54,8 +54,26 @@ public class PropertyMapperTests {
     }
 
     [Benchmark]
-    public void UnsafeMapper() {
+    public void GenericUnsafeMapper() {
         TestCoreModel model = this.model.MapUnsafe<TestModel, TestCoreModel>();
+
+        Assert.AreEqual(this.model.Test1, model.Test1);
+        Assert.AreEqual(this.model.Test2, model.Test2);
+        Assert.AreEqual(this.model.Test3, model.Test3);
+        Assert.AreEqual(this.model.Test4, model.Test4);
+        Assert.AreEqual(this.model.Test5, model.Test5);
+        Assert.AreEqual(this.model.Test6, model.Test6);
+        Assert.AreEqual(this.model.Test7, model.Test7);
+        Assert.AreEqual(this.model.Test8, model.Test8);
+        Assert.AreEqual(this.model.Test9, model.Test9);
+        Assert.AreEqual(this.model.Test10, model.Test10);
+        Assert.AreEqual(this.model.test22, model.test22);
+        Assert.AreEqual(this.model.webclient, model.webclient);
+    }
+
+    [Benchmark]
+    public void UnsafeMapper() {
+        TestCoreModel model = (TestCoreModel)this.model.MapUnsafe(typeof(TestModel), typeof(TestCoreModel));
 
         Assert.AreEqual(this.model.Test1, model.Test1);
         Assert.AreEqual(this.model.Test2, model.Test2);

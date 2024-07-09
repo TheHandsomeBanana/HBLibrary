@@ -5,18 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-
-
 public interface IStorageEntry {
     public string Filename { get; }
-    public object Get();
+    public StorageEntryContentType ContentType { get; }
+    public Type? CurrentEntryType { get; }
+
+    public object? Get(Type type);
+    public void Set(object value);
+    public void Save(Type type);
+    public void Save();
 }
 
-public interface IStorageEntry<T> : IStorageEntry {
-    public new T? Get();
-}
-
-public interface IStorageListEntry<T> : IStorageEntry {
-    public new T[] Get();
-    public T? Get(int index);
+public enum StorageEntryContentType {
+    Text,
+    Csv,
+    Json,
+    Xml,
 }

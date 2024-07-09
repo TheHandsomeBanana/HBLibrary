@@ -62,11 +62,11 @@
                     <Grid>
                         <Track Name="PART_Track">
                             <Track.DecreaseRepeatButton>
-                                <RepeatButton Command="ScrollBar.LineUpCommand" 
+                                <RepeatButton Command="ScrollBar.PageUpCommand" 
                                               Style="{StaticResource HBDark_VSScrollBarLineButton}"/>
                             </Track.DecreaseRepeatButton>
                             <Track.IncreaseRepeatButton>
-                                <RepeatButton Command="ScrollBar.LineDownCommand" 
+                                <RepeatButton Command="ScrollBar.PageDownCommand" 
                                               Style="{StaticResource HBDark_VSScrollBarLineButton}"/>
                             </Track.IncreaseRepeatButton>
                             <Track.Thumb>

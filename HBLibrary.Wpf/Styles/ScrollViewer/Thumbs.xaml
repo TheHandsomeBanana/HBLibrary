@@ -31,12 +31,15 @@
 
     <!-- Horizontal ScrollBar Thumb Style -->
     <Style x:Key="HBDark_VSHorizontalScrollBarThumbStyle" TargetType="Thumb">
-        <Setter Property="Height" Value="10"/>
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_Background}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
-                    <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
+                    <Border Background="{TemplateBinding Background}"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -45,7 +48,7 @@
                 <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_MouseOver_Background}"/>
             </Trigger>
             <Trigger Property="IsDragging" Value="True">
-                <Setter Property="Background" Value="DarkGray"/>
+                <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_MouseOver_Background}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

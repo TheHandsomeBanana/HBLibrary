@@ -1,5 +1,5 @@
 ﻿namespace HBLibrary.Services.IO;
-public readonly struct FileSnapshot {
+public class FileSnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
     public long Length { get; init; }

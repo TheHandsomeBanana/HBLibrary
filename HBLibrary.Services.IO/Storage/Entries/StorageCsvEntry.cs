@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,47 +8,70 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-internal class StorageCsvEntry<T> : StorageEntry, IStorageListEntry<T> {
-    private T[] entry = [];
+internal class StorageCsvEntry : IStorageEntry {
+    private IEnumerable? entry;
+    public string Filename { get; }
 
-    internal StorageCsvEntry(string filename, bool lazy) : base(filename, lazy) {
-        if (!lazy) {
-            using StreamReader sr = new StreamReader(filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
+    public StorageEntryContentType ContentType => StorageEntryContentType.Csv;
 
-            entry = csvReader.GetRecords<T>().ToArray();
+    public Type? CurrentEntryType => entry?.GetType();
+
+    internal StorageCsvEntry(string filename) {
+        this.Filename = filename;
+    }
+
+    public object? Get(Type type) {
+        if(!typeof(IEnumerable).IsAssignableFrom(type)) {
+            throw new InvalidOperationException("Invalid type, needs to be enumerable.");
+        }
+
+        try {
+            if (entry is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return null;
+                }
+
+                using StreamReader sr = new StreamReader(Filename);
+                using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
+
+                entry = csvReader.GetRecords(type).ToArray();
+            }
+
+            return entry;
+        }
+        catch {
+            return null;
         }
     }
 
-    internal StorageCsvEntry(T[] entries, string filename) : base(filename, false) {
-        this.entry = entries;
-    }
-
-    public T[] Get() {
-        if (!IsLoaded) {
-            IsLoaded = true;
-
-            using StreamReader sr = new StreamReader(Filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
-
-            entry = csvReader.GetRecords<T>().ToArray();
+    public void Set(object value) {
+        if(value is not IEnumerable) {
+            throw new InvalidOperationException("Cannot set entry, object needs to be enumerable.");
         }
 
-        return entry!;
+        entry = (IEnumerable)value;
     }
 
-    public T? Get(int index) {
-        if (!IsLoaded) {
-            using StreamReader sr = new StreamReader(Filename);
-            using CsvReader csvReader = new CsvReader(sr, CultureInfo.InvariantCulture);
-
-            return csvReader.GetRecords<T>().ElementAtOrDefault(1);
+    public void Save(Type type) {
+        if (entry is null) {
+            throw new InvalidOperationException($"{nameof(entry)} is null.");
         }
 
-        return entry.ElementAtOrDefault(index);
+        if (entry.GetType() != type) {
+            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+        }
+
+        using StreamWriter sr = new StreamWriter(Filename);
+        using CsvWriter csvWriter = new CsvWriter(sr, CultureInfo.InvariantCulture);
+
+        csvWriter.WriteRecords(entry);
     }
 
-    object IStorageEntry.Get() {
-        return Get()!;
+    public void Save() {
+        if (CurrentEntryType is null) {
+            throw new InvalidOperationException($"{nameof(entry)} is null.");
+        }
+
+        Save(CurrentEntryType);
     }
 }

@@ -11,8 +11,8 @@ public class FileOperationResponse : IOOperationResponse
         StringBuilder sb = new StringBuilder();
         sb.Append(base.ToString());
 
-        if (File.HasValue)
-            sb.Append($"\nFile: {File.Value.FullPath}");
+        if (File is not null)
+            sb.Append($"\nFile: {File.FullPath}");
 
         return sb.ToString();
     }

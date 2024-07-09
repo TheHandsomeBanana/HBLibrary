@@ -1,100 +1,63 @@
-﻿using CsvHelper;
-using HBLibrary.Services.IO.Json;
+﻿using HBLibrary.Services.IO.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Unity;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-internal class StorageJsonEntry<T> : StorageEntry, IStorageEntry<T> {
-    private T? entry;
+internal class StorageJsonEntry : IStorageEntry {
+    private object? entry;
     private readonly IJsonFileService jsonService;
-    internal StorageJsonEntry(IJsonFileService jsonService, string filename, bool lazy) : base(filename, lazy) {
-        this.jsonService = jsonService; 
+    public string Filename { get; }
 
-        if (!lazy) {
-            if (FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+    public StorageEntryContentType ContentType => StorageEntryContentType.Json;
 
-                entry = jsonService.ReadJson<T>(file!.Value);
-            }
-        }
-    }
+    public Type? CurrentEntryType => entry?.GetType();
 
-    internal StorageJsonEntry(IJsonFileService jsonService, T entry, string filename) : this(jsonService, filename, false) {
-        this.entry = entry;
-    }
-
-    public T? Get() {
-        if (!IsLoaded) {
-            IsLoaded = true;
-
-            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                return default;
-            }
-
-            entry = jsonService.ReadJson<T>(file!.Value);
-        }
-
-        return entry!;
-    }
-
-    object IStorageEntry.Get() {
-        return Get()!;
-    }
-}
-
-internal class StorageJsonListEntry<T> : StorageEntry, IStorageListEntry<T> {
-    private T[] entry = [];
-    private readonly IJsonFileService jsonService;
-
-    internal StorageJsonListEntry(IJsonFileService jsonService, string filename, bool lazy) : base(filename, lazy) {
+    internal StorageJsonEntry(IJsonFileService jsonService, string filename) {
         this.jsonService = jsonService;
-        
-        if (!lazy) {
-            if (FileSnapshot.TryCreate(filename, out FileSnapshot? file)) {
-                entry = jsonService.ReadJson<T[]>(file!.Value) ?? [];
+        this.Filename = filename;
+    }
+
+    public object? Get(Type type) {
+        try {
+            if (entry is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return default;
+                }
+
+                entry = jsonService.ReadJson(type, file!);
             }
+
+            return entry;
+        }
+        catch {
+            return default;
         }
     }
 
-    internal StorageJsonListEntry(IJsonFileService jsonService, T[] entry, string filename) : this(jsonService, filename, false) {
-        this.entry = entry;
+    public void Set(object value) {
+        entry = value;
     }
 
-    public T[] Get() {
-        if (!IsLoaded) {
-            IsLoaded = true;
-
-            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                return [];
-            }
-
-            entry = jsonService.ReadJson<T[]>(file!.Value) ?? [];
+    public void Save(Type type) {
+        if(entry is null) {
+            throw new InvalidOperationException($"{nameof(entry)} is null.");
         }
 
-        return entry!;
-    }
-
-    public T? Get(int index) {
-        if (!IsLoaded) {
-            IsLoaded = true;
-
-            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                return default;
-            }
-
-            entry = jsonService.ReadJson<T[]>(file!.Value) ?? [];
-            return entry.ElementAtOrDefault(index);
+        if (entry.GetType() != type) {
+            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
         }
 
-        return entry.ElementAtOrDefault(index);
+        jsonService.WriteJson(type, FileSnapshot.Create(Filename, true), entry);
     }
 
-    object IStorageEntry.Get() {
-        return Get();
+    public void Save() {
+        if (CurrentEntryType is null) {
+            throw new InvalidOperationException($"{nameof(entry)} is null.");
+        }
+
+        Save(CurrentEntryType);
     }
 }

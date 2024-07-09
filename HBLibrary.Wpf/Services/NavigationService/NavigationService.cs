@@ -13,11 +13,11 @@ public class NavigationService : INavigationService {
         this.navigationStore = navigationStore;
     }
 
-    public void Navigate<TViewModel>(string parentTypename) where TViewModel : ViewModelBase {
-        navigationStore.SwitchViewModel(parentTypename, typeof(TViewModel));
+    public void Navigate<TViewModel>(string parentTypename, TViewModel viewModel) where TViewModel : ViewModelBase {
+        navigationStore.SwitchViewModel(parentTypename, viewModel);
     }
 
-    public void Navigate(string parentTypename, Type type) {
-        navigationStore.SwitchViewModel(parentTypename, type);
+    public void Navigate(string parentTypename, ViewModelBase viewModelBase) {
+        navigationStore.SwitchViewModel(parentTypename, viewModelBase);
     }
 }

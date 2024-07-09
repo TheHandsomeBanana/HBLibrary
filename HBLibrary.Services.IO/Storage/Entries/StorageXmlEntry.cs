@@ -1,88 +1,63 @@
-﻿using CsvHelper;
-using HBLibrary.Services.IO.Xml;
+﻿using HBLibrary.Services.IO.Xml;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-internal class StorageXmlEntry<T> : StorageEntry, IStorageEntry<T> {
-    private T? entry;
+public class StorageXmlEntry : IStorageEntry {
+    private object? entry;
+    private readonly IXmlFileService xmlService;
+    public string Filename { get; }
 
-    internal StorageXmlEntry(string filename, bool lazy) : base(filename, lazy) {
-        if (!lazy) {
+    public StorageEntryContentType ContentType => StorageEntryContentType.Xml;
 
-            if (FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                XmlFileService xmlService = new XmlFileService();
-                entry = xmlService.ReadXml<T>(file!.Value);
-            }
-        }
+    public Type? CurrentEntryType => entry?.GetType();
+
+    internal StorageXmlEntry(IXmlFileService xmlService, string filename) {
+        this.xmlService = xmlService;
+        this.Filename = filename;
     }
 
-    internal StorageXmlEntry(T entry, string filename) : base(filename, false) {
-        this.entry = entry;
-    }
+    public object? Get(Type type) {
+        try {
+            if (entry is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return null;
+                }
 
-    public T? Get() {
-        if (!IsLoaded) {
-            IsLoaded = true;
-
-            XmlFileService xmlService = new XmlFileService();
-
-            if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                return default;
+                entry = xmlService.ReadXml(type, file!);
             }
 
-            entry = xmlService.ReadXml<T>(file!.Value);
+            return entry;
         }
-
-        return entry!;
-    }
-
-    object IStorageEntry.Get() {
-        return Get()!;
-    }
-}
-
-internal class StorageXmlListEntry<T> : StorageEntry, IStorageListEntry<T> {
-    private T[] entries = [];
-
-    internal StorageXmlListEntry(string filename, bool lazy) : base(filename, lazy) {
-        if (!lazy) {
-            XmlFileService jsonService = new XmlFileService();
-            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+        catch {
+            return null;
         }
     }
 
-    internal StorageXmlListEntry(T[] entries, string filename) : base(filename, false) {
-        this.entries = entries;
+    public void Set(object value) {
+        entry = value;
     }
 
-    public T[] Get() {
-        if (!IsLoaded) {
-            IsLoaded = true;
-
-            XmlFileService jsonService = new XmlFileService();
-            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
+    public void Save(Type type) {
+        if (entry is null) {
+            throw new MissingFieldException(nameof(entry));
         }
 
-        return entries!;
-    }
-
-    public T? Get(int index) {
-        if (!IsLoaded) {
-            IsLoaded = true;
-            XmlFileService jsonService = new XmlFileService();
-            entries = jsonService.ReadXml<T[]>(FileSnapshot.Create(this.Filename)) ?? [];
-            return entries.ElementAtOrDefault(1);
+        if (entry.GetType() != type) {
+            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
         }
 
-        return entries.ElementAtOrDefault(index);
+        xmlService.WriteXml(type, FileSnapshot.Create(Filename, true), entry);
     }
 
-    object IStorageEntry.Get() {
-        return Get()!;
+    public void Save() {
+        if (CurrentEntryType is null) {
+            throw new InvalidOperationException($"{nameof(entry)} is null.");
+        }
+
+        Save(CurrentEntryType);
     }
 }
