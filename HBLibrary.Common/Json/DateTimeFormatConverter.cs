@@ -11,7 +11,7 @@ namespace HBLibrary.Common.Json {
         }
 
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-            return DateTime.ParseExact(reader.GetString(), this.format, CultureInfo.InvariantCulture);
+            return DateTime.ParseExact(reader.GetString()!, this.format, CultureInfo.InvariantCulture);
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) {

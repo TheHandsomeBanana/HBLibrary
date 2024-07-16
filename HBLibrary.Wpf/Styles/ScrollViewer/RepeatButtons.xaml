@@ -6,7 +6,6 @@
     </ResourceDictionary.MergedDictionaries>
     
 
-    <!-- ScrollBar Line Button Style -->
     <Style x:Key="HBDark_VSScrollBarLineButton" TargetType="RepeatButton">
         <Setter Property="Width" Value="10"/>
         <Setter Property="Height" Value="10"/>
@@ -29,5 +28,18 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="HBDark_ScrollBarLineButton" TargetType="RepeatButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

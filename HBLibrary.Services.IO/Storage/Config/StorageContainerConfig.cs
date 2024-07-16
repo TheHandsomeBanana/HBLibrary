@@ -14,7 +14,7 @@ public class StorageContainerConfig {
     [JsonIgnore]
     private const string EXTENSION = ".config";
     [JsonIgnore]
-    private string filename;
+    private string filename = "";
 
     [JsonPropertyName(nameof(ContainerId))]
     public Guid ContainerId { get; set; }

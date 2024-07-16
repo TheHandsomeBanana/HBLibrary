@@ -15,7 +15,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <ScrollViewer Focusable="false" 
-                                      Style="{StaticResource HBDark_VSScrollViewer}">
+                                      VerticalScrollBarVisibility="Hidden"
+                                      HorizontalScrollBarVisibility="Hidden">
                             <ItemsPresenter/>
                         </ScrollViewer>
                     </Border>

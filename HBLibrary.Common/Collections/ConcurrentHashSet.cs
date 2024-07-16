@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -116,7 +117,7 @@ public class ConcurrentHashSet<T> : IEnumerable, IEnumerable<T>, ICollection<T>,
         this.comparer = comparer ?? EqualityComparer<T>.Default;
     }
 
-    public bool Add(T item) => AddInternal(item, comparer.GetHashCode(item), true);
+    public bool Add(T item) => AddInternal(item, comparer.GetHashCode(item!), true);
     public void Clear() {
         int locksAcquired = 0;
         try {
@@ -138,7 +139,7 @@ public class ConcurrentHashSet<T> : IEnumerable, IEnumerable<T>, ICollection<T>,
     public bool Contains(T item) => TryGetValue(item, out _);
 
     public bool TryGetValue(T equalValue, out T? actualValue) {
-        int hashcode = comparer.GetHashCode(equalValue);
+        int hashcode = comparer.GetHashCode(equalValue!);
 
         // We must capture the _buckets field in a local variable. It is set to a new table on each table resize.
         Tables tables = this.tables;
@@ -163,7 +164,7 @@ public class ConcurrentHashSet<T> : IEnumerable, IEnumerable<T>, ICollection<T>,
     }
 
     public bool TryRemove(T item) {
-        var hashcode = comparer.GetHashCode(item);
+        var hashcode = comparer.GetHashCode(item!);
         while (true) {
             var tables = this.tables;
 
@@ -181,7 +182,7 @@ public class ConcurrentHashSet<T> : IEnumerable, IEnumerable<T>, ICollection<T>,
 
                     if (hashcode == current.Hashcode && comparer.Equals(current.Item, item)) {
                         if (prev == null)
-                            Volatile.Write(ref tables.Buckets[bucketNo], current.Next);
+                            Volatile.Write(ref tables!.Buckets[bucketNo]!, current.Next);
                         else
                             prev.Next = current.Next;
 
@@ -236,7 +237,7 @@ public class ConcurrentHashSet<T> : IEnumerable, IEnumerable<T>, ICollection<T>,
 
     private void InitializeFromCollection(IEnumerable<T> collection) {
         foreach (T item in collection)
-            AddInternal(item, comparer.GetHashCode(item), false);
+            AddInternal(item, comparer.GetHashCode(item!), false);
 
         if (budget == 0) {
             Tables tables = this.tables;

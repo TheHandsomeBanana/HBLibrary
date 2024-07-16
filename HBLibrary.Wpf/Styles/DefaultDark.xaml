@@ -6,7 +6,9 @@
     <SolidColorBrush x:Key="VSRed" Color="#e25964"/>
     <SolidColorBrush x:Key="VSViolet" Color="#403582"/>
     <SolidColorBrush x:Key="VSAccentViolet" Color="#7464ec"/>
-    
+    <SolidColorBrush x:Key="ControlBorder" Color="#acacb4"/>
+    <SolidColorBrush x:Key="Foreground" Color="#e6e6e6"/>
+
 
     <SolidColorBrush x:Key="HBDark_Background">#1f1f1f</SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_Background_Overlay">#2F2F2F</SolidColorBrush>

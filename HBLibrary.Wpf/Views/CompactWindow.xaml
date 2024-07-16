@@ -55,7 +55,7 @@
                     Grid.ColumnSpan="2">
             </Border>
 
-            <TextBlock  x:Name="Title"
+            <TextBlock  x:Name="txbTitle"
                         Text="Placeholder"
                         VerticalAlignment="Center"
                         Grid.Row="0" Grid.ColumnSpan="2"

@@ -6,6 +6,8 @@
 
     <Style x:Key="HBDark_CheckBox" TargetType="CheckBox">
         <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBorder}"/>
         <Setter Property="Margin" Value="5 5 0 0"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -18,16 +20,16 @@
                         <Border x:Name="border" 
                             Width="16" 
                             Height="16" 
-                            Background="Transparent"
-                            BorderBrush="{StaticResource HBDark_Label_Foreground}" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="1" 
                             VerticalAlignment="Center"
                                 Padding="1">
                             <Path x:Name="checkMark" 
                               Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" 
-                              Stroke="{StaticResource HBDark_Button_Pressed_Background}"
+                              Stroke="{StaticResource Foreground}"
                                   Stretch="Uniform"
-                                  StrokeThickness="2"
+                                  StrokeThickness="1"
                               Visibility="Collapsed"/>
                         </Border>
                         <ContentPresenter Grid.Column="1" 
@@ -38,6 +40,11 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="checkMark" Property="Visibility" Value="Visible"/>
+                            <Setter Property="Background" Value="{StaticResource VSViolet}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

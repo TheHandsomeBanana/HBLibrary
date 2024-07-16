@@ -1,0 +1,136 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="Border"
+                    Grid.ColumnSpan="2"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" />
+
+            <ContentPresenter Grid.Column="0"
+                            Margin="2,3,0,3"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+            <Path x:Name="Arrow"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Data="M 0 0 L 4 4 L 8 0 Z"
+                    Fill="{StaticResource Foreground}" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+    <Style x:Key="HBDark_ComboBox" TargetType="ComboBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBorder}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                          Template="{StaticResource ComboBoxToggleButton}"
+                                          Grid.Column="2"
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press" 
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="1"/>
+                            <ContentPresenter x:Name="ContentSite"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          Margin="3,3,23,3"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                            <TextBox x:Name="PART_EditableTextBox"
+                                 Style="{StaticResource HBDark_TextBox}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 HorizontalContentAlignment="Stretch"
+                                 VerticalContentAlignment="Center"
+                                 Margin="3,3,3,3"
+                                 Background="{TemplateBinding Background}"
+                                 Visibility="Hidden"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup x:Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   PopupAnimation="Slide">
+                                <Grid x:Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                      Background="{StaticResource HBDark_Background}">
+                                    
+                                    <Border x:Name="DropDownBorder"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="1"
+                                            Background="{TemplateBinding Background}"/>
+
+                                    <ScrollViewer x:Name="DropDownScrollViewer"
+                                                  VerticalScrollBarVisibility="Hidden"
+                                            SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                                VerticalAlignment="Top"
+                                                HorizontalAlignment="Stretch"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Background="Transparent" HorizontalAlignment="Stretch">
+                        <TextBlock Style="{StaticResource HBDark_TextBlock}" Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="HBDark_ComboBoxItem" DataType="ComboBoxItem">
+        <Grid Background="Transparent" HorizontalAlignment="Stretch">
+            <TextBlock Style="{StaticResource HBDark_TextBlock}" Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

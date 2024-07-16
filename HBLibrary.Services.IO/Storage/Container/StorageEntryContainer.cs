@@ -40,7 +40,9 @@ public class StorageEntryContainer : IStorageEntryContainer {
 
     private void InitEntries() {
         foreach(KeyValuePair<string, ContainerEntry> containerEntry in config.Entries) {
-            Create(containerEntry.Key, containerEntry.Value);
+            string path = Path.Combine(this.BasePath, containerEntry.Key + EXTENSION);
+
+            Create(path, containerEntry.Value);
         }
     }
 
@@ -80,9 +82,9 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public IStorageEntry Create(string filename, StorageEntryContentType contentType) {
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
 
-        if(!config.Entries.TryGetValue(path, out ContainerEntry? containerEntry)) {
+        if(!config.Entries.TryGetValue(filename, out ContainerEntry? containerEntry)) {
             containerEntry = new ContainerEntry(contentType);
-            config.Entries.Add(path, containerEntry);
+            config.Entries.Add(filename, containerEntry);
         }
 
         return Create(path, containerEntry);
@@ -157,4 +159,15 @@ public class StorageEntryContainer : IStorageEntryContainer {
         }
     }
 
+    public void Delete(string filename) {
+        string path = Path.Combine(this.BasePath, filename + EXTENSION);
+
+        if (!entries.ContainsKey(path)) {
+            throw new InvalidOperationException($"Container does not contain entry with {path}.");
+        }
+
+        entries.Remove(path);
+        config.Entries.Remove(filename);
+        File.Delete(path);
+    }
 }

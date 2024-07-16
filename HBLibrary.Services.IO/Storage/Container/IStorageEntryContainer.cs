@@ -25,5 +25,7 @@ public interface IStorageEntryContainer {
     public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType);
     public void AddOrUpdate(IStorageEntry value);
 
+    public void Delete(string filename);
+
     public void Save();
 }

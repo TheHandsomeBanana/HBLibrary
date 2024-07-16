@@ -229,6 +229,9 @@
     </Style>
 
     <Style TargetType="{x:Type local:IconButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="50"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconButton}">

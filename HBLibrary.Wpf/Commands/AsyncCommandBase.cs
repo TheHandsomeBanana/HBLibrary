@@ -18,11 +18,11 @@ public abstract class AsyncCommandBase : CommandBase {
         this.onException = onException;
     }
 
-    public override bool CanExecute(object parameter) {
+    public override bool CanExecute(object? parameter) {
         return !IsExecuting;
     }
 
-    public override async void Execute(object parameter) {
+    public override async void Execute(object? parameter) {
         IsExecuting = true;
         try {
             await ExecuteAsync(parameter);
@@ -34,5 +34,5 @@ public abstract class AsyncCommandBase : CommandBase {
         IsExecuting = false;
     }
 
-    protected abstract Task ExecuteAsync(object parameter);
+    protected abstract Task ExecuteAsync(object? parameter);
 }

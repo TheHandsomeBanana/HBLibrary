@@ -42,22 +42,19 @@ internal class StorageJsonEntry : IStorageEntry {
     }
 
     public void Save(Type type) {
-        if(entry is null) {
-            throw new InvalidOperationException($"{nameof(entry)} is null.");
-        }
+        if (entry is not null) {
 
-        if (entry.GetType() != type) {
-            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
-        }
+            if (entry.GetType() != type) {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+            }
 
-        jsonService.WriteJson(type, FileSnapshot.Create(Filename, true), entry);
+            jsonService.WriteJson(type, FileSnapshot.Create(Filename, true), entry);
+        }
     }
 
     public void Save() {
-        if (CurrentEntryType is null) {
-            throw new InvalidOperationException($"{nameof(entry)} is null.");
+        if (CurrentEntryType is not null) {
+            Save(CurrentEntryType);
         }
-
-        Save(CurrentEntryType);
     }
 }

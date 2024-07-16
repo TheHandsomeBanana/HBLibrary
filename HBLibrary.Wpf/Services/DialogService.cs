@@ -19,7 +19,7 @@ public class DialogService : IDialogService {
         };
 
         window.ContentControl.Content = dialogContent;
-        window.Title.Text = title;
+        window.txbTitle.Text = title;
         return window.ShowDialog() == true;
     }
 
@@ -40,7 +40,7 @@ public class DialogService : IDialogService {
             window.ContentControl.MinWidth = dialogContent.MinWidth;
         }
 
-        window.Title.Text = title;
+        window.txbTitle.Text = title;
         return window.ShowDialog() == true;
     }
 }
