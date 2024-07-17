@@ -10,7 +10,7 @@ public abstract class CommandBase : ICommand {
     }
 
     public abstract void Execute(object? parameter);
-    public void OnCanExecuteChanged() {
+    public void NotifyCanExecuteChanged() {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

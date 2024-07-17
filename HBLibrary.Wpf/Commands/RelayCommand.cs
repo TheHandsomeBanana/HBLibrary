@@ -22,24 +22,24 @@ public class RelayCommand : CommandBase {
 }
 
 public class RelayCommand<TParameter> : CommandBase {
-    private readonly Action<TParameter> callback;
-    private readonly Predicate<TParameter> canExecute;
+    private readonly Action<TParameter?> callback;
+    private readonly Predicate<TParameter?> canExecute;
 
-    public RelayCommand(Action<TParameter> callback, Predicate<TParameter> canExecute) {
+    public RelayCommand(Action<TParameter?> callback, Predicate<TParameter?> canExecute) {
         this.callback = callback ?? throw new ArgumentNullException(nameof(callback));
         this.canExecute = canExecute;
     }
 
-    public RelayCommand(Action<TParameter> callback, bool canExecute) : this(callback, o => canExecute) { }
+    public RelayCommand(Action<TParameter?> callback, bool canExecute) : this(callback, o => canExecute) { }
 
-    public override bool CanExecute(object? parameter) {
-        if (parameter is TParameter tParameter) {
-            return canExecute != null
-                ? canExecute(tParameter) && base.CanExecute(tParameter)
-                : base.CanExecute(tParameter);
-        }
+    public override bool CanExecute(object? obj) {
+        TParameter? tParameter = obj is TParameter parameter
+            ? parameter
+            : default;
 
-        return false;
+        return canExecute != null
+            ? canExecute(tParameter) && base.CanExecute(tParameter)
+            : base.CanExecute(tParameter);
     }
 
     public override void Execute(object? parameter) {

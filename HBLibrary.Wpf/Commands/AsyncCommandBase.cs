@@ -10,7 +10,7 @@ public abstract class AsyncCommandBase : CommandBase {
         get { return isExecuting; }
         set {
             isExecuting = value;
-            OnCanExecuteChanged();
+            NotifyCanExecuteChanged();
         }
     }
 

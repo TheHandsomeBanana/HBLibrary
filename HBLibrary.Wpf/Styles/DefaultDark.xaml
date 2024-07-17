@@ -6,6 +6,7 @@
     <SolidColorBrush x:Key="VSRed" Color="#e25964"/>
     <SolidColorBrush x:Key="VSViolet" Color="#403582"/>
     <SolidColorBrush x:Key="VSAccentViolet" Color="#7464ec"/>
+    <SolidColorBrush x:Key="InfoBlue" Color="#1a79ca"/>
     <SolidColorBrush x:Key="ControlBorder" Color="#acacb4"/>
     <SolidColorBrush x:Key="Foreground" Color="#e6e6e6"/>
 
