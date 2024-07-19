@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows;
 
 namespace HBLibrary.Wpf.Converters;
-public class StringToVisibilityConverter : IValueConverter {
+public class EnumToCollectionConverter : IValueConverter {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-        return string.IsNullOrEmpty(value as string) ? Visibility.Collapsed : Visibility.Visible;
+        return Enum.GetValues(value.GetType()).Cast<Enum>().ToList();
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {

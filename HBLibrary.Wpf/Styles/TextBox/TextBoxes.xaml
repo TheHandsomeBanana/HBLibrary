@@ -39,6 +39,10 @@
                             <Setter Property="Background" Value="{StaticResource HBDark_TextBox_Disabled_Background}"/>
                             <Setter Property="BorderBrush" Value="{StaticResource HBDark_TextBox_Disabled_BorderBrush}"/>
                         </Trigger>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource VSRed}"/>
+                            <Setter Property="Foreground" Value="{StaticResource VSRed}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

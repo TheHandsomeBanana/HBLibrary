@@ -20,22 +20,20 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}" />
 
-            <ContentPresenter Grid.Column="0"
-                            Margin="2,3,0,3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            Content="{TemplateBinding Content}"
-                            ContentTemplate="{TemplateBinding ContentTemplate}" />
             <Path x:Name="Arrow"
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Data="M 0 0 L 4 4 L 8 0 Z"
-                    Fill="{StaticResource Foreground}" />
+                    Fill="{StaticResource Foreground}" >
+                
+
+            </Path>
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsChecked" Value="True">
                 <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}" />
+                <Setter TargetName="Arrow" Property="Data" Value="M 0 4 L 4 0 L 8 4 Z" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}" />
@@ -50,7 +48,7 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="2"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="30"/>
@@ -70,13 +68,15 @@
                                           Background="{TemplateBinding Background}"
                                           BorderBrush="{TemplateBinding BorderBrush}"
                                           BorderThickness="1"/>
+
                             <ContentPresenter x:Name="ContentSite"
-                                          Content="{TemplateBinding SelectionBoxItem}"
-                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                          Margin="3,3,23,3"
-                                          VerticalAlignment="Center"
-                                          HorizontalAlignment="Center"/>
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="5,3,23,3"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+
                             <TextBox x:Name="PART_EditableTextBox"
                                  Style="{StaticResource HBDark_TextBox}"
                                  HorizontalAlignment="Center"
@@ -96,7 +96,7 @@
                                       MinWidth="{TemplateBinding ActualWidth}"
                                       MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                       Background="{StaticResource HBDark_Background}">
-                                    
+
                                     <Border x:Name="DropDownBorder"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="1"
@@ -117,20 +117,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Grid Background="Transparent" HorizontalAlignment="Stretch">
-                        <TextBlock Style="{StaticResource HBDark_TextBlock}" Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Grid>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
+        
     </Style>
 
-    <DataTemplate x:Key="HBDark_ComboBoxItem" DataType="ComboBoxItem">
-        <Grid Background="Transparent" HorizontalAlignment="Stretch">
-            <TextBlock Style="{StaticResource HBDark_TextBlock}" Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </Grid>
-    </DataTemplate>
+
 </ResourceDictionary>

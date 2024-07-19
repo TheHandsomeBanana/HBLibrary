@@ -16,8 +16,7 @@
                         </Grid.ColumnDefinitions>
 
                         <ComboBox x:Name="PART_HourComboBox" Grid.Column="0" 
-                                  Style="{TemplateBinding HourStyle}"
-                                  ItemTemplate="{TemplateBinding HourItemTemplate}">
+                                  Style="{TemplateBinding HourStyle}">
                         </ComboBox>
 
                         <TextBlock Text=":" Grid.Column="1" 
@@ -27,8 +26,7 @@
                                    HorizontalAlignment="Center"/>
 
                         <ComboBox x:Name="PART_MinuteComboBox" Grid.Column="2"
-                                  Style="{TemplateBinding MinuteStyle}"
-                                  ItemTemplate="{TemplateBinding MinuteItemTemplate}">
+                                  Style="{TemplateBinding MinuteStyle}">
                         </ComboBox>
 
                         <ContentPresenter Grid.Column="3" 

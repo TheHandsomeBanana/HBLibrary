@@ -26,4 +26,25 @@ public class FileServiceContainer {
         XmlFileService = createXmlFileService();
         return this;
     }
+
+    public FileServiceContainer UseFileService(Action<FileService> updateFileService) {
+        FileService fs = new FileService();
+        updateFileService(fs);
+        this.FileService = fs;
+        return this;
+    }
+
+    public FileServiceContainer UseJsonFileService(Action<JsonFileService> updateJsonFileService) {
+        JsonFileService jfs = new JsonFileService();
+        updateJsonFileService(jfs);
+        this.JsonFileService = jfs;
+        return this;
+    }
+    
+    public FileServiceContainer UseXmlFileService(Action<XmlFileService> updateXmlFileService) {
+        XmlFileService xfs = new XmlFileService();
+        updateXmlFileService(xfs);
+        this.XmlFileService = xfs;
+        return this;
+    }
 }

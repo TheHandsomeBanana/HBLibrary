@@ -63,26 +63,6 @@ public class TimePicker : Control {
     public static readonly DependencyProperty MinuteStyleProperty =
         DependencyProperty.Register("MinuteStyle", typeof(Style), typeof(TimePicker), new PropertyMetadata(null));
 
-
-    public DataTemplate HourItemTemplate {
-        get { return (DataTemplate)GetValue(HourItemTemplateProperty); }
-        set { SetValue(HourItemTemplateProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for HourItemTemplate.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty HourItemTemplateProperty =
-        DependencyProperty.Register("HourItemTemplate", typeof(DataTemplate), typeof(TimePicker), new PropertyMetadata(null));
-
-
-    public DataTemplate MinuteItemTemplate {
-        get { return (DataTemplate)GetValue(MinuteItemTemplateProperty); }
-        set { SetValue(MinuteItemTemplateProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for MinuteItemTemplate.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty MinuteItemTemplateProperty =
-        DependencyProperty.Register("MinuteItemTemplate", typeof(DataTemplate), typeof(TimePicker), new PropertyMetadata(null));
-
     public Path Icon {
         get { return (Path)GetValue(IconProperty); }
         set { SetValue(IconProperty, value); }
@@ -91,7 +71,6 @@ public class TimePicker : Control {
     // Using a DependencyProperty as the backing store for Icon.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IconProperty =
         DependencyProperty.Register("Icon", typeof(Path), typeof(TimePicker), new PropertyMetadata(null));
-
 
 
     private bool isUpdating;
