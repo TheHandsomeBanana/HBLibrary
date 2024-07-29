@@ -15,6 +15,7 @@
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
+	  <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
 	  <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
 	  <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
 	  <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
@@ -25,11 +26,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\HBLibrary.Common\HBLibrary.Common.csproj" />
 	  <ProjectReference Include="..\HBLibrary.Services.Security\HBLibrary.Services.Security.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Obsolete\Operations\Archive\" />
-	  <Folder Include="Obsolete\Operations\Directory\" />
 	</ItemGroup>
 
 </Project>

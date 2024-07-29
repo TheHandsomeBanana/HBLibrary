@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Services.IO.Json;
+using HBLibrary.Services.IO.Storage.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,49 +7,40 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-internal class StorageJsonEntry : IStorageEntry {
-    private object? entry;
+internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     private readonly IJsonFileService jsonService;
-    public string Filename { get; }
 
-    public StorageEntryContentType ContentType => StorageEntryContentType.Json;
-
-    public Type? CurrentEntryType => entry?.GetType();
-
-    internal StorageJsonEntry(IJsonFileService jsonService, string filename) {
+    internal StorageJsonEntry(IJsonFileService jsonService, string filename, StorageEntrySettings settings)
+        : base(filename, StorageEntryContentType.Json, settings) {
         this.jsonService = jsonService;
-        this.Filename = filename;
     }
 
     public object? Get(Type type) {
         try {
-            if (entry is null) {
+            if (Value is null) {
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
                     return default;
                 }
 
-                entry = jsonService.ReadJson(type, file!);
+                if (Settings.LifeTime.Type != EntryLifetimeType.NoLifetime) {
+                    Value = jsonService.ReadJson(type, file!);
+                }
             }
 
-            return entry;
+            return Value;
         }
         catch {
             return default;
         }
     }
 
-    public void Set(object value) {
-        entry = value;
-    }
-
     public void Save(Type type) {
-        if (entry is not null) {
-
-            if (entry.GetType() != type) {
+        if (Value is not null) {
+            if (Value.GetType() != type) {
                 throw new InvalidOperationException("Cannot save, entry does not equal given type.");
             }
 
-            jsonService.WriteJson(type, FileSnapshot.Create(Filename, true), entry);
+            jsonService.WriteJson(type, FileSnapshot.Create(Filename, true), Value);
         }
     }
 
@@ -56,5 +48,45 @@ internal class StorageJsonEntry : IStorageEntry {
         if (CurrentEntryType is not null) {
             Save(CurrentEntryType);
         }
+    }
+
+    public T? Get<T>() {
+        try {
+            if (Value is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return default;
+                }
+
+                if (Settings.LifeTime.Type != EntryLifetimeType.NoLifetime) {
+                    Value = jsonService.ReadJson<T>(file!);
+                }
+            }
+
+            return (T?)Value;
+        }
+        catch {
+            return default;
+        }
+    }
+
+    public void Save<T>() {
+        if (Value is not null) {
+            if (Value is T tValue) {
+                jsonService.WriteJson<T>(FileSnapshot.Create(Filename, true), tValue);
+            }
+            else {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+            }
+        }
+    }
+
+    protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {
+        Save();
+
+        if (Value is IDisposable disposable) {
+            disposable.Dispose();
+        }
+        
+        Value = null;
     }
 }

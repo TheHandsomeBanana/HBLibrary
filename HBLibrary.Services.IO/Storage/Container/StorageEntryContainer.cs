@@ -3,6 +3,7 @@ using HBLibrary.Services.IO.Json;
 using HBLibrary.Services.IO.Storage.Builder;
 using HBLibrary.Services.IO.Storage.Config;
 using HBLibrary.Services.IO.Storage.Entries;
+using HBLibrary.Services.IO.Storage.Settings;
 using HBLibrary.Services.IO.Xml;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
 
 
     private void InitEntries() {
-        foreach(KeyValuePair<string, ContainerEntry> containerEntry in config.Entries) {
+        foreach (KeyValuePair<string, ContainerEntry> containerEntry in config.Entries) {
             string path = Path.Combine(this.BasePath, containerEntry.Key + EXTENSION);
 
             Create(path, containerEntry.Value);
@@ -49,15 +50,15 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public IStorageEntry? this[string filename] {
         get => Get(filename);
         set {
-            if(value is null) throw new ArgumentNullException(nameof(value));
-            
+            if (value is null) {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             entries[filename] = value;
         }
     }
 
-    public void AddOrUpdate(IStorageEntry value) {
-        this[value.Filename] = value;
-    }
+
 
     public IStorageEntry? Get(string filename) {
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
@@ -79,24 +80,31 @@ public class StorageEntryContainer : IStorageEntryContainer {
         return entries.Values;
     }
 
-    public IStorageEntry Create(string filename, StorageEntryContentType contentType) {
+    public IStorageEntry Create(string filename, StorageEntryContentType contentType, StorageEntrySettings? settings = null) {
+
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
 
-        if(!config.Entries.TryGetValue(filename, out ContainerEntry? containerEntry)) {
-            containerEntry = new ContainerEntry(contentType);
+        if (!config.Entries.TryGetValue(filename, out ContainerEntry? containerEntry)) {
+            settings ??= StorageEntrySettings.CreateDefault();
+
+            containerEntry = new ContainerEntry(contentType, settings);
             config.Entries.Add(filename, containerEntry);
         }
 
         return Create(path, containerEntry);
     }
 
-    public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType) {
+    public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType, StorageEntrySettings? settings = null) {
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
 
         // Update
         if (entries.TryGetValue(path, out IStorageEntry? storageEntry)) {
-            if(storageEntry.ContentType != contentType) {
+            if (storageEntry.ContentType != contentType) {
                 throw new InvalidOperationException($"Content type {contentType} does not match found entry content type {storageEntry.ContentType}.");
+            }
+
+            if (settings is not null) {
+                storageEntry.Settings = settings;
             }
 
             storageEntry.Set(entry);
@@ -104,9 +112,9 @@ public class StorageEntryContainer : IStorageEntryContainer {
         }
 
         // Add
-        storageEntry = Create(filename, contentType);
+        storageEntry = Create(filename, contentType, settings);
         storageEntry.Set(entry);
-        entries[path] = storageEntry;   
+        entries[path] = storageEntry;
     }
 
     public bool Contains(string filename) {
@@ -114,7 +122,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
     public void Save() {
-        foreach(IStorageEntry entry in entries.Values) {
+        foreach (IStorageEntry entry in entries.Values) {
             entry.Save();
         }
 
@@ -122,38 +130,29 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
     private IStorageEntry Create(string filename, ContainerEntry containerEntry) {
-        switch(containerEntry.ContentType) {
+        switch (containerEntry.ContentType) {
             case StorageEntryContentType.Json:
-                if(JsonFileService is null) {
+                if (JsonFileService is null) {
                     throw new InvalidOperationException($"{nameof(JsonFileService)} is null.");
                 }
 
-                StorageJsonEntry jsonEntry = new StorageJsonEntry(JsonFileService, filename);
+                StorageJsonEntry jsonEntry = new StorageJsonEntry(JsonFileService, filename, containerEntry.Settings);
                 entries[filename] = jsonEntry;
                 return jsonEntry;
 
             case StorageEntryContentType.Xml:
-                if(XmlFileService is null) {
-                    throw new InvalidOperationException($"{nameof(JsonFileService)} is null.");
+                if (XmlFileService is null) {
+                    throw new InvalidOperationException($"{nameof(XmlFileService)} is null.");
                 }
 
-                StorageXmlEntry xmlEntry = new StorageXmlEntry(XmlFileService, filename);
+                StorageXmlEntry xmlEntry = new StorageXmlEntry(XmlFileService, filename, containerEntry.Settings);
                 entries[filename] = xmlEntry;
                 return xmlEntry;
 
             case StorageEntryContentType.Csv:
-                StorageCsvEntry csvEntry = new StorageCsvEntry(filename);
+                StorageCsvEntry csvEntry = new StorageCsvEntry(filename, containerEntry.Settings);
                 entries[filename] = csvEntry;
                 return csvEntry;
-            case StorageEntryContentType.Text:
-                if(FileService is null) {
-                    throw new InvalidOperationException($"{nameof(JsonFileService)} is null.");
-                }
-
-                StorageTextEntry textEntry = new StorageTextEntry(FileService, filename);
-                entries[filename] = textEntry;
-                return textEntry;
-
             default:
                 throw new NotSupportedException(containerEntry.ContentType.ToString());
         }

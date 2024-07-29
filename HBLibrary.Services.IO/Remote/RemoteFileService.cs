@@ -1,5 +1,4 @@
-﻿using HBLibrary.Services.IO.Obsolete.Operations.File;
-using System.Net.WebSockets;
+﻿using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 
@@ -25,23 +24,7 @@ public class RemoteFileService : IRemoteFileService {
         return Task.CompletedTask;
     }
 
-    public async Task<FileOperationResponse?> ExecuteAsync(FileOperationRequest operation, CancellationToken token = default) {
-        await ConnectAsync();
-
-        string json = JsonSerializer.Serialize(operation);
-        byte[] buffer = Encoding.UTF8.GetBytes(json);
-
-        await client.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, token);
-
-        var responseBuffer = new byte[1024 * 4]; // Adjust buffer size as needed
-        var response = await client.ReceiveAsync(new ArraySegment<byte>(responseBuffer), token);
-
-        // Deserialize the response into a FileOperationResponse object
-        string responseJson = Encoding.UTF8.GetString(responseBuffer, 0, response.Count);
-        FileOperationResponse? fileResponse = JsonSerializer.Deserialize<FileOperationResponse>(responseJson);
-
-        return fileResponse;
-    }
+    
 
 
     private bool disposed = false;

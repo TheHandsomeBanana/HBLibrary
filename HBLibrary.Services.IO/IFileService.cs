@@ -1,9 +1,6 @@
-﻿using HBLibrary.Services.IO.Obsolete.Operations.File;
-
+﻿
 namespace HBLibrary.Services.IO;
 public interface IFileService {
-    FileOperationResponse Execute(FileOperationRequest operation);
-    Task<FileOperationResponse> ExecuteAsync(FileOperationRequest operation, CancellationToken token = default);
 
     string Read(FileSnapshot file, FileShare share = FileShare.None);
     Task<string> ReadAsync(FileSnapshot file, FileShare share = FileShare.None);

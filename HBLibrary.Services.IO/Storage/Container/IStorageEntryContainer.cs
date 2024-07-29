@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Services.IO.Json;
 using HBLibrary.Services.IO.Storage.Entries;
+using HBLibrary.Services.IO.Storage.Settings;
 using HBLibrary.Services.IO.Xml;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,8 @@ public interface IStorageEntryContainer {
 
     public IEnumerable<IStorageEntry> GetAll();
 
-    public IStorageEntry Create(string filename, StorageEntryContentType contentType);
-    public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType);
-    public void AddOrUpdate(IStorageEntry value);
+    public IStorageEntry Create(string filename, StorageEntryContentType contentType, StorageEntrySettings? settings = null);
+    public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType, StorageEntrySettings? settings = null);
 
     public void Delete(string filename);
 

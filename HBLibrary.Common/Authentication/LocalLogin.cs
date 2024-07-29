@@ -4,6 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.IO.Storage.Policy;
-public class StorageEntryPolicy {
+namespace HBLibrary.Common.Authentication;
+public static class LocalLogin {
 }

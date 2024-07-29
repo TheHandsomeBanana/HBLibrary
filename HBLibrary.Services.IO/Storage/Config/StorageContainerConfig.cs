@@ -1,6 +1,8 @@
 ﻿using HBLibrary.Common.Extensions;
 using HBLibrary.Services.IO.Json;
+using HBLibrary.Services.IO.Storage.Container;
 using HBLibrary.Services.IO.Storage.Entries;
+using HBLibrary.Services.IO.Storage.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ public class StorageContainerConfig {
 
     [JsonPropertyName(nameof(ContainerId))]
     public Guid ContainerId { get; set; }
+
     [JsonPropertyName(nameof(Entries))]
     public Dictionary<string, ContainerEntry> Entries { get; set; } = [];
 
@@ -46,7 +49,7 @@ public class StorageContainerConfig {
         string filename = Path.Combine(basePath, basePath.ToGuidString() + EXTENSION);
         JsonFileService jsonFileService = new JsonFileService();
 
-        if (!FileSnapshot.TryCreate(filename, out FileSnapshot? file, true)) {
+        if (!FileSnapshot.TryCreate(filename, out FileSnapshot? file)) {
             return null;
         }
 
@@ -61,8 +64,10 @@ public class StorageContainerConfig {
 
 public class ContainerEntry {
     public StorageEntryContentType ContentType { get; init; }
+    public StorageEntrySettings Settings { get; init; }
 
-    public ContainerEntry(StorageEntryContentType contentType) {
+    public ContainerEntry(StorageEntryContentType contentType, StorageEntrySettings settings) {
         ContentType = contentType;
+        Settings = settings;
     }
 }

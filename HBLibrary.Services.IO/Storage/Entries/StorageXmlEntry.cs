@@ -1,4 +1,5 @@
-﻿using HBLibrary.Services.IO.Xml;
+﻿using HBLibrary.Services.IO.Storage.Settings;
+using HBLibrary.Services.IO.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,58 +7,86 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
-public class StorageXmlEntry : IStorageEntry {
-    private object? entry;
+public class StorageXmlEntry : StorageEntry, IStorageEntry {
     private readonly IXmlFileService xmlService;
-    public string Filename { get; }
-
-    public StorageEntryContentType ContentType => StorageEntryContentType.Xml;
-
-    public Type? CurrentEntryType => entry?.GetType();
-
-    internal StorageXmlEntry(IXmlFileService xmlService, string filename) {
+    internal StorageXmlEntry(IXmlFileService xmlService, string filename, StorageEntrySettings settings) : base(filename, StorageEntryContentType.Xml, settings) {
         this.xmlService = xmlService;
-        this.Filename = filename;
     }
 
     public object? Get(Type type) {
         try {
-            if (entry is null) {
+            if (Value is null) {
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
                     return null;
                 }
 
-                entry = xmlService.ReadXml(type, file!);
+                Value = xmlService.ReadXml(type, file!);
             }
 
-            return entry;
+            return Value;
         }
         catch {
             return null;
         }
     }
 
-    public void Set(object value) {
-        entry = value;
-    }
-
     public void Save(Type type) {
-        if (entry is null) {
-            throw new MissingFieldException(nameof(entry));
+        if (Value is null) {
+            throw new InvalidOperationException(nameof(Value));
         }
 
-        if (entry.GetType() != type) {
+        if (Value.GetType() != type) {
             throw new InvalidOperationException("Cannot save, entry does not equal given type.");
         }
 
-        xmlService.WriteXml(type, FileSnapshot.Create(Filename, true), entry);
+        xmlService.WriteXml(type, FileSnapshot.Create(Filename, true), Value);
     }
 
     public void Save() {
         if (CurrentEntryType is null) {
-            throw new InvalidOperationException($"{nameof(entry)} is null.");
+            throw new InvalidOperationException($"{nameof(Value)} is null.");
         }
 
         Save(CurrentEntryType);
+    }
+
+    public T? Get<T>() {
+        try {
+            if (Value is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return default;
+                }
+
+                Value = xmlService.ReadXml<T>(file!);
+            }
+
+            return (T?)Value;
+        }
+        catch {
+            return default;
+        }
+    }
+
+    public void Save<T>() {
+        if (Value is null) {
+            throw new InvalidOperationException(nameof(Value));
+        }
+
+        if (Value is not T tValue) {
+            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+        }
+
+        xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
+    }
+
+    protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {
+        Save();
+
+        if (Value is IDisposable disposable) {
+            disposable.Dispose();
+        }
+        else {
+            Value = null;
+        }
     }
 }
