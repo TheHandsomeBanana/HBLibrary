@@ -9,6 +9,7 @@
     <SolidColorBrush x:Key="InfoBlue" Color="#1a79ca"/>
     <SolidColorBrush x:Key="ControlBorder" Color="#acacb4"/>
     <SolidColorBrush x:Key="Foreground" Color="#e6e6e6"/>
+    <SolidColorBrush x:Key="SelectionViolet" Color="#343042"/>
 
 
     <SolidColorBrush x:Key="HBDark_Background">#1f1f1f</SolidColorBrush>

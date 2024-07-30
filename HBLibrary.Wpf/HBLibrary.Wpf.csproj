@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HBLibrary.Common\HBLibrary.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Styles\Button\CloseButton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

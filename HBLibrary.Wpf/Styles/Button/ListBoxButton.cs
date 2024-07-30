@@ -78,6 +78,36 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty IconFillProperty =
         DependencyProperty.Register("IconFill", typeof(SolidColorBrush), typeof(ListBoxButton), new PropertyMetadata(Brushes.White));
 
+    public SolidColorBrush IconStroke {
+        get { return (SolidColorBrush)GetValue(IconStrokeProperty); }
+        set { SetValue(IconStrokeProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IconFill.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IconStrokeProperty =
+        DependencyProperty.Register("IconStroke", typeof(SolidColorBrush), typeof(ListBoxButton), new PropertyMetadata(null));
+
+
+
+    public Thickness IconStrokeThickness {
+        get { return (Thickness)GetValue(IconStrokeThicknessProperty); }
+        set { SetValue(IconStrokeThicknessProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IconStrokeThickness.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IconStrokeThicknessProperty =
+        DependencyProperty.Register("IconStrokeThickness", typeof(Thickness), typeof(ListBoxButton), new PropertyMetadata(new Thickness(0)));
+
+    public Stretch IconStretch {
+        get { return (Stretch)GetValue(IconStretchProperty); }
+        set { SetValue(IconStretchProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IconStretch.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IconStretchProperty =
+        DependencyProperty.Register("IconStretch", typeof(Stretch), typeof(ListBoxButton), new PropertyMetadata(Stretch.Uniform));
+
+
 
 
     public Geometry Icon {
@@ -90,7 +120,6 @@ public class ListBoxButton : ListBoxItem {
         DependencyProperty.Register("Icon", typeof(Geometry), typeof(ListBoxButton), new PropertyMetadata(null));
 
 
-
     public string Text {
         get { return (string)GetValue(TextProperty); }
         set { SetValue(TextProperty, value); }
@@ -99,16 +128,4 @@ public class ListBoxButton : ListBoxItem {
     // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TextProperty =
         DependencyProperty.Register("Text", typeof(string), typeof(ListBoxButton), new PropertyMetadata(null));
-
-
-
-
-    public SolidColorBrush SelectedBackground {
-        get { return (SolidColorBrush)GetValue(SelectedBackgroundProperty); }
-        set { SetValue(SelectedBackgroundProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for SelectedBackground.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty SelectedBackgroundProperty =
-        DependencyProperty.Register("SelectedBackground", typeof(SolidColorBrush), typeof(ListBoxButton), new PropertyMetadata(null));
 }

@@ -88,7 +88,63 @@
         </Setter>
     </Style>
 
+    <Style x:Key="HBDark_WatermarkTextBox" TargetType="TextBox" BasedOn="{StaticResource HBDark_TextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}" 
+                     BorderBrush="{TemplateBinding BorderBrush}" 
+                     BorderThickness="1">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+                        <TextBlock Style="{StaticResource HBDark_TextBlock}" Text="{TemplateBinding Tag}" 
+                            Margin="5 0 0 0"
+                        IsHitTestVisible="False"
+                        Visibility="Collapsed"
+                        x:Name="WatermarkTextBlock"/>
+                    </Grid>
 
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter  Property="Background" Value="{StaticResource HBDark_TextBox_MouseOver_Background}"/>
+                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_TextBox_MouseOver_BorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter  Property="Background" Value="{StaticResource HBDark_TextBox_IsKeyboardFocusWithin_Background}"/>
+                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_TextBox_MouseOver_BorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{StaticResource HBDark_TextBox_Disabled_Background}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_TextBox_Disabled_BorderBrush}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsKeyboardFocusWithin" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{StaticResource HBDark_TextBox_MouseOver_Background}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value="{x:Static sys:String.Empty}"/>
+                                <Condition Property="IsKeyboardFocusWithin" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="WatermarkTextBlock" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value="{x:Static sys:String.Empty}"/>
+                                <Condition Property="IsKeyboardFocusWithin" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="WatermarkTextBlock" Property="Visibility" Value="Collapsed"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="HBDark_VSFilterBox" TargetType="TextBox" BasedOn="{StaticResource HBDark_VSTextBox}">
         <Setter Property="Template">
             <Setter.Value>

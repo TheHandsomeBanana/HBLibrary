@@ -5,6 +5,7 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ComboBox/ComboBoxItems.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
@@ -52,6 +53,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="30"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource HBDark_ComboBoxItem}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
