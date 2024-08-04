@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Versioning;
+using System.Security;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -22,7 +23,7 @@ public class CredentialStorage {
         }
     }
 
-    public UserCredentials RegisterUser(string username, string password) {
+    public UserCredentials RegisterUser(string username, SecureString password) {
         if (GetUserCredentials(username) is not null) {
             throw new InvalidOperationException("User already registered");
         }

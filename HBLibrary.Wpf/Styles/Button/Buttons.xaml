@@ -118,8 +118,9 @@
                     <Border Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     Padding="{TemplateBinding Padding}">
-                        <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
@@ -166,8 +167,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}">
-                        <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
-                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                       
                     </Border>
 
                     <ControlTemplate.Triggers>

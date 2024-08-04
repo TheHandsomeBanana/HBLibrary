@@ -10,11 +10,14 @@
         xmlns:behaviors="clr-namespace:HBLibrary.Wpf.Behaviors"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:viewModels="clr-namespace:HBLibrary.Wpf.ViewModels"
+        xmlns:loginViewModels="clr-namespace:HBLibrary.Wpf.ViewModels.Login"
+        xmlns:loginViews="clr-namespace:HBLibrary.Wpf.Views.Login"
+        xmlns:accountType="clr-namespace:HBLibrary.Wpf.Models"
         WindowStyle="SingleBorderWindow"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Background="Transparent"
-        Height="155" Width="400">
+        SizeToContent="Height"
+        Background="Transparent" Width="400">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" GlassFrameThickness="0" ResizeBorderThickness="5" CornerRadius="6" NonClientFrameEdges="None"/>
@@ -32,12 +35,19 @@
                 <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/PasswordBoxes.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ComboBox/ComboBoxes.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="AccountTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="accountType:AccountType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
         </ResourceDictionary>
     </Window.Resources>
 
     <Window.DataContext>
-        <viewModels:LocalLoginViewModel/>
+        <viewModels:LoginViewModel/>
     </Window.DataContext>
 
     <Border Style="{StaticResource VSCopy}"
@@ -54,8 +64,8 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"></RowDefinition>
-                <RowDefinition Height="75"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Border BorderBrush="{StaticResource HBDark_Border}"
@@ -65,7 +75,7 @@
                 Grid.ColumnSpan="2">
             </Border>
 
-            <TextBlock Text="Local Login"
+            <TextBlock Text="Login"
                     VerticalAlignment="Center"
                     Grid.Row="0" Grid.ColumnSpan="2"
                     FontFamily="Bahnschrift SemiBold"
@@ -75,23 +85,36 @@
                      HorizontalAlignment="Right" 
                      VerticalAlignment="Center">
                 <Button x:Name="CloseButton"
-                 buttons:ButtonAttachedProperties.CornerRadius="0 5 0 0"
-                 Style="{StaticResource CloseButtonRed}" 
-                 WindowChrome.IsHitTestVisibleInChrome="True" 
-                 ToolTip="Close"
-                    Height="30"
-                 Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                         buttons:ButtonAttachedProperties.CornerRadius="0 5 0 0"
+                         Style="{StaticResource CloseButtonRed}" 
+                         WindowChrome.IsHitTestVisibleInChrome="True" 
+                         ToolTip="Close"
+                            Height="30"
+                        Command="{x:Static SystemCommands.CloseWindowCommand}"/>
             </StackPanel>
 
             <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2" Margin="10">
-                <TextBox Text="{Binding Username}" Style="{StaticResource HBDark_WatermarkTextBox}" Tag="Username" Margin="0 0 0 5"/>
-                <PasswordBox textBoxes:PasswordBoxAttachedProperties.Watermark="Password"
-                             Style="{StaticResource HBDark_WatermarkPasswordBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:PasswordBoxWatermarkBehavior/>
-                        <behaviors:PasswordBoxPasswordBehavior Password="{Binding SecurePassword, Mode=TwoWay}"/>
-                    </i:Interaction.Behaviors>
-                </PasswordBox>
+                <ComboBox Style="{StaticResource HBDark_ComboBox}"
+                          ItemsSource="{Binding Source={StaticResource AccountTypeValues}}"
+                          SelectedItem="{Binding SelectedAccountType}"
+                          Width="Auto"
+                          Margin="0 0 0 5">
+                    
+                </ComboBox>
+                
+                
+                <ContentControl Content="{Binding CurrentLoginViewModel}">
+
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type loginViewModels:LocalLoginViewModel}">
+                            <loginViews:LocalLoginView DataContext="{Binding}"/>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type loginViewModels:MicrosoftLoginViewModel}">
+                            <loginViews:MicrosoftLoginView DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 10 0">

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Common.Authentication;
-internal class AccountManager {
+namespace HBLibrary.Wpf.Models; 
+public abstract class LoginModel {
+    public abstract AccountType AccountType { get; }
 }

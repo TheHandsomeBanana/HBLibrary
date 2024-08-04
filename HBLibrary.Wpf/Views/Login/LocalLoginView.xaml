@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="HBLibrary.Wpf.Views.Login.LocalLoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HBLibrary.Wpf.Views.Login"
+             mc:Ignorable="d" 
+              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                xmlns:buttons="clr-namespace:HBLibrary.Wpf.Styles.Button"
+                xmlns:textBoxes="clr-namespace:HBLibrary.Wpf.Styles.TextBox"
+                xmlns:behaviors="clr-namespace:HBLibrary.Wpf.Behaviors"
+                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:viewModel="clr-namespace:HBLibrary.Wpf.ViewModels.Login"
+             d:DesignHeight="80" d:DesignWidth="300">
+
+    
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/PasswordBoxes.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
+        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource HBDark_WatermarkTextBox}" Tag="Username" Margin="0 0 0 5"/>
+        <PasswordBox textBoxes:PasswordBoxAttachedProperties.Watermark="Password"
+                 Style="{StaticResource HBDark_WatermarkPasswordBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:PasswordBoxWatermarkBehavior/>
+                <behaviors:PasswordBoxPasswordBehavior Password="{Binding SecurePassword, Mode=TwoWay}"/>
+            </i:Interaction.Behaviors>
+        </PasswordBox>
+    </StackPanel>
+</UserControl>

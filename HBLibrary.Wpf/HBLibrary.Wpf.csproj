@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\microsoft-icon.png" />
     <None Remove="Styles\Button\CloseButton.png" />
     <None Remove="Styles\Button\CloseFullscreenButton.png" />
     <None Remove="Styles\Button\FullscreenButton.png" />
@@ -28,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\microsoft-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Styles\Button\CloseButton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

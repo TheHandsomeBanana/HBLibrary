@@ -11,6 +11,8 @@
     <SolidColorBrush x:Key="Foreground" Color="#e6e6e6"/>
     <SolidColorBrush x:Key="SelectionViolet" Color="#343042"/>
 
+    <SolidColorBrush x:Key="HBDark_ForegroundH1" Color="#7464ec"/>
+
 
     <SolidColorBrush x:Key="HBDark_Background">#1f1f1f</SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_Background_Overlay">#2F2F2F</SolidColorBrush>

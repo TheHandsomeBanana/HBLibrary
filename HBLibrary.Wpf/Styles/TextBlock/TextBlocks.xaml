@@ -15,10 +15,23 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
+    <Style x:Key="HBDark_BigTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <Style x:Key="HBDark_HeaderTextBlock" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Bahnschrift SemiBold"/>
         <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="HBDark_H1TextBlock" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Bahnschrift SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource HBDark_ForegroundH1}"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 

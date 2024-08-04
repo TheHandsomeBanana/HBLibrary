@@ -1,9 +1,11 @@
-﻿using HBLibrary.Common.Security;
+﻿using HBLibrary.Common.Account;
+using HBLibrary.Common.Security;
 using HBLibrary.Common.Security.Credentials;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Versioning;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,34 +15,45 @@ namespace HBLibrary.Common.Authentication;
 #if NET5_0_OR_GREATER
 [SupportedOSPlatform("windows")]
 #endif
-public class LocalAuthenticationService {
+public sealed class LocalAuthenticationService : IAuthenticationService<LocalAuthResult, LocalAuthCredentials> {
     private readonly CredentialStorage credentialStorage;
-    public LocalAuthenticationService(CredentialStorage credentialStorage) {
+    private readonly IAccountService? accountService;
+    public LocalAuthenticationService(CredentialStorage credentialStorage, IAccountService? accountService = null) {
         this.credentialStorage = credentialStorage;
+        this.accountService = accountService;
     }
 
-    public LocalAuthenticationService(string applicationName) {
+    public LocalAuthenticationService(string applicationName, IAccountService? accountService = null) {
         this.credentialStorage = new CredentialStorage(applicationName);
+        this.accountService = accountService;
     }
 
-    public string Authenticate(string username, string password) {
-        if(IsNewUser(username)) {
-            credentialStorage.RegisterUser(username, password);
-            return CreateEncryptionKey(username, password);
+    public Task<LocalAuthResult> Authenticate(LocalAuthCredentials authCredentials) {
+        if (IsNewUser(authCredentials.Username)) {
+            credentialStorage.RegisterUser(authCredentials.Username, authCredentials.Password);
         }
-
-        if(!VerifyCredentials(username, password)) {
+        else if(!VerifyCredentials(authCredentials.Username, authCredentials.Password)) {
             throw new InvalidOperationException("Password is invalid.");
         }
 
-        return CreateEncryptionKey(username, password);
+        string token = CreateEncryptionKey(authCredentials.Password);
+
+        accountService?.SetCurrentAccount(new LocalAccountDetails { 
+            Username = authCredentials.Username,
+            Token = token
+        });
+
+        return Task.FromResult(new LocalAuthResult {
+            Token = token,
+            Username = authCredentials.Username
+        });
     }
 
     private bool IsNewUser(string username) {
         return credentialStorage.GetUserCredentials(username) is null;
     }
 
-    private bool VerifyCredentials(string username, string password) {
+    private bool VerifyCredentials(string username, SecureString password) {
         UserCredentials? credentials = credentialStorage.GetUserCredentials(username);
         if (credentials is null) {
             return false;
@@ -53,9 +66,9 @@ public class LocalAuthenticationService {
         return hashedPassword.SequenceEqual(storedHashedPassword);
     }
 
-    private string CreateEncryptionKey(string username, string password) {
+    private string CreateEncryptionKey(SecureString password) {
         byte[] salt = KeyDerivation.GenerateSalt(16);
-        byte[] key = KeyDerivation.DeriveKey(username + password, salt, 20000, 32);
+        byte[] key = KeyDerivation.DeriveKey(password, salt, 20000, 32);
 
         string saltBase64 = Convert.ToBase64String(salt);
         string keyBase64 = Convert.ToBase64String(key);

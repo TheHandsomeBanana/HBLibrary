@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Models;
-public class LocalLoginModel {
+public class LocalLoginModel{
+    public AccountType AccountType => AccountType.Local;
     public string Username { get; set; } = "";
     public SecureString SecurePassword { get; set; } = new SecureString();
 }

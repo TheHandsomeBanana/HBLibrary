@@ -18,4 +18,17 @@ public static class SStringConverter {
             Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
         }
     }
+
+    public static SecureString StringToSecureString(string input) {
+        if (string.IsNullOrEmpty(input)) {
+            throw new ArgumentNullException(nameof(input));
+        }
+
+        SecureString secureString = new SecureString();
+        foreach (char c in input) {
+            secureString.AppendChar(c);
+        }
+        secureString.MakeReadOnly();
+        return secureString;
+    }
 }
