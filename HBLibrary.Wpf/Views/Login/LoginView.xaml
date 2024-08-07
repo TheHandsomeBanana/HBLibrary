@@ -15,10 +15,6 @@
             xmlns:accountType="clr-namespace:HBLibrary.Common.Account;assembly=HBLibrary.Common"
             Background="Transparent" Width="400">
 
-
-
-
-
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

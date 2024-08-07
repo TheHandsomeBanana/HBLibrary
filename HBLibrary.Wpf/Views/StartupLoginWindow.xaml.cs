@@ -13,15 +13,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace HBLibrary.Wpf.Views
-{
+namespace HBLibrary.Wpf.Views {
     /// <summary>
     /// Interaction logic for StartupLoginWindow.xaml
     /// </summary>
-    public partial class StartupLoginWindow : Window
-    {
-        public StartupLoginWindow()
-        {
+    public partial class StartupLoginWindow : Window {
+        public StartupLoginWindow() {
             InitializeComponent();
         }
 
@@ -47,15 +44,11 @@ namespace HBLibrary.Wpf.Views
         }
 
         private void RegisterButton_Checked(object sender, RoutedEventArgs e) {
-            if(sender is ToggleButton registerButton && registerButton.IsChecked == false) {
-                registerButton.IsChecked = true;
-                tbLogin.IsChecked = false;
-            }
+            tbLogin.IsChecked = false;
         }
 
         private void LoginButton_Checked(object sender, RoutedEventArgs e) {
-            if (sender is ToggleButton loginButton && loginButton.IsChecked == false) {
-                loginButton.IsChecked = true;
+            if (tbRegister is not null) {
                 tbRegister.IsChecked = false;
             }
         }

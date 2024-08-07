@@ -14,4 +14,8 @@ public interface IAccountService {
 
     public Task<AccountInfo?> GetLastAccountAsync(string application, CancellationToken cancellationToken = default);
     public Task SaveAccountAsync(AccountInfo accountInfo);
+
+    public AccountInfo? GetLastAccount(string application);
+    public void SaveAccount(AccountInfo accountInfo);
+
 }

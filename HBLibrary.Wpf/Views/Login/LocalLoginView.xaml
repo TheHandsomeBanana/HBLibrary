@@ -10,8 +10,7 @@
                 xmlns:textBoxes="clr-namespace:HBLibrary.Wpf.Styles.TextBox"
                 xmlns:behaviors="clr-namespace:HBLibrary.Wpf.Behaviors"
                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:viewModel="clr-namespace:HBLibrary.Wpf.ViewModels.Login"
-             d:DesignHeight="80" d:DesignWidth="300">
+             xmlns:viewModel="clr-namespace:HBLibrary.Wpf.ViewModels.Login">
 
     
 

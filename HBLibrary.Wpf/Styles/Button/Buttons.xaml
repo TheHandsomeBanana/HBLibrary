@@ -112,6 +112,8 @@
     <Style x:Key="HBDark_VSButton2" TargetType="Button" BasedOn="{StaticResource HBDark_VSButtonBase}">
         <Setter Property="Background" Value="{StaticResource HBDark_VS2Button_Background}"/>
         <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -119,8 +121,8 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     Padding="{TemplateBinding Padding}">
                         <ContentPresenter Content="{TemplateBinding Content}"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"/>
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
@@ -168,8 +170,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter Content="{TemplateBinding Content}"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"/>
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                        
                     </Border>
 
@@ -225,6 +227,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter Property="BorderBrush" Value="{StaticResource HBDark_Button_Pressed_Background}"/>
+                            <Setter Property="BorderThickness" Value="0 0 0 2"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

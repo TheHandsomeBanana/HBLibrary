@@ -99,7 +99,8 @@
                               Grid.Column="0"
                               Content="Login"
                               Command="{Binding LoginToggleCommand}"
-                              Checked="LoginButton_Checked">
+                              Checked="LoginButton_Checked"
+                              IsChecked="True">
                     
                 </ToggleButton>
                 <ToggleButton x:Name="tbRegister"

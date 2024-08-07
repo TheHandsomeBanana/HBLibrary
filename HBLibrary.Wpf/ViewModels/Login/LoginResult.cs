@@ -22,6 +22,6 @@ public class LocalLoginResult : LoginResult {
 
 public class MicrosoftLoginResult : LoginResult {
     public override AccountType AccountType => AccountType.Microsoft;
-    public string Username { get; set; }
+    public string Username { get; set; } = "";
 
 }

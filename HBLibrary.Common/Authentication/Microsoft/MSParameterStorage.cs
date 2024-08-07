@@ -98,6 +98,10 @@ public class MSParameterStorage {
 #endif
 
         string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
+        if (string.IsNullOrWhiteSpace(json)) {
+            return [];
+        }
+
         return JsonSerializer.Deserialize<List<MicrosoftIdentity>>(json) ?? [];
     }
 }

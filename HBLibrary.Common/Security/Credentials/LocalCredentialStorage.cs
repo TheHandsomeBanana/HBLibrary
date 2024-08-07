@@ -107,6 +107,10 @@ public class LocalCredentialStorage {
         }
 #endif
         string json = GlobalEnvironment.Encoding.GetString(DPApi.Unprotect(encryptedJson));
+        if (string.IsNullOrWhiteSpace(json)) {
+            return [];
+        }
+
         return JsonSerializer.Deserialize<List<UserCredentials>>(json) ?? [];
     }
 }

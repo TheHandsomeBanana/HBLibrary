@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Account;
@@ -16,18 +17,17 @@ public class AccountStorage {
         }
     }
 
-    public async Task<AccountInfo?> GetAccountAsync(string application, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
-
+    public AccountInfo? GetAccount(string application) {
+        List<AccountInfo> accounts = LoadAllAccounts();
         return accounts.FirstOrDefault(e => e.Application == application);
     }
 
-    public async Task AddOrUpdateAccountAsync(AccountInfo accountInfo, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
-        
+    public void AddOrUpdateAccount(AccountInfo accountInfo) {
+        List<AccountInfo> accounts = LoadAllAccounts();
+
         AccountInfo? existingAccount = accounts.FirstOrDefault(e => e.Application == accountInfo.Application);
-        
-        if(existingAccount is not null) {
+
+        if (existingAccount is not null) {
             existingAccount.ModifiedOn = DateTime.UtcNow;
             existingAccount.AccountType = accountInfo.AccountType;
         }
@@ -37,7 +37,41 @@ public class AccountStorage {
             accounts.Add(accountInfo);
         }
 
-        await SaveAllAccounts(accounts);
+        SaveAllAccounts(accounts);
+    }
+
+    public async Task<AccountInfo?> GetAccountAsync(string application, CancellationToken cancellationToken = default) {
+        List<AccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
+
+        return accounts.FirstOrDefault(e => e.Application == application);
+    }
+
+    public async Task AddOrUpdateAccountAsync(AccountInfo accountInfo, CancellationToken cancellationToken = default) {
+        List<AccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
+
+        AccountInfo? existingAccount = accounts.FirstOrDefault(e => e.Application == accountInfo.Application);
+
+        if (existingAccount is not null) {
+            existingAccount.ModifiedOn = DateTime.UtcNow;
+            existingAccount.AccountType = accountInfo.AccountType;
+        }
+        else {
+            accountInfo.CreatedOn = DateTime.UtcNow;
+            accountInfo.ModifiedOn = DateTime.UtcNow;
+            accounts.Add(accountInfo);
+        }
+
+        await SaveAllAccountsAsync(accounts);
+    }
+
+    public List<AccountInfo> LoadAllAccounts() {
+        string base64Json = File.ReadAllText(accountStoragePath);
+        string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
+        if (string.IsNullOrWhiteSpace(json)) {
+            return [];
+        }
+
+        return JsonSerializer.Deserialize<List<AccountInfo>>(json) ?? [];
     }
 
     public async Task<List<AccountInfo>> LoadAllAccountsAsync(CancellationToken cancellationToken = default) {
@@ -53,10 +87,22 @@ public class AccountStorage {
 #endif
 
         string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
+
+        if (string.IsNullOrWhiteSpace(json)) {
+            return [];
+        }
+
         return JsonSerializer.Deserialize<List<AccountInfo>>(json) ?? [];
     }
 
-    private Task SaveAllAccounts(List<AccountInfo> accounts, CancellationToken cancellationToken = default) {
+    private void SaveAllAccounts(List<AccountInfo> accounts) {
+        string json = JsonSerializer.Serialize(accounts);
+        string base64Json = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(json));
+
+        File.WriteAllText(accountStoragePath, base64Json);
+    }
+
+    private Task SaveAllAccountsAsync(List<AccountInfo> accounts, CancellationToken cancellationToken = default) {
         string json = JsonSerializer.Serialize(accounts);
         string base64Json = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(json));
 

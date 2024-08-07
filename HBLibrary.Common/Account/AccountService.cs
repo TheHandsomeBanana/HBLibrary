@@ -60,18 +60,28 @@ public class AccountService : IAccountService {
         }
     }
 
-    public Task SaveAccountAsync(AccountInfo accountInfo) {
-        AccountStorage accountStorage = new AccountStorage();
-        return accountStorage.AddOrUpdateAccountAsync(accountInfo);
-    }
-
     public Task<AccountInfo?> GetLastAccountAsync(string application, CancellationToken cancellationToken = default) {
         Common.Account.AccountStorage accountStorage = new AccountStorage();
         return accountStorage.GetAccountAsync(application);
     }
 
+    public Task SaveAccountAsync(AccountInfo accountInfo) {
+        AccountStorage accountStorage = new AccountStorage();
+        return accountStorage.AddOrUpdateAccountAsync(accountInfo);
+    }
+
+    public AccountInfo? GetLastAccount(string application) {
+        Common.Account.AccountStorage accountStorage = new AccountStorage();
+        return accountStorage.GetAccount(application);
+    }
+
+    public void SaveAccount(AccountInfo accountInfo) {
+        AccountStorage accountStorage = new AccountStorage();
+        accountStorage.AddOrUpdateAccount(accountInfo);
+    }
+
     private Task SaveCurrentAccountAsync() {
-        if(!IsLoggedIn) {
+        if (!IsLoggedIn) {
             throw new InvalidOperationException("Not logged in.");
         }
 
@@ -79,5 +89,16 @@ public class AccountService : IAccountService {
         AccountInfo accountInfo = Account!.GetAccountInfo();
 
         return SaveAccountAsync(accountInfo);
+    }
+
+    private void SaveCurrentAccount() {
+        if (!IsLoggedIn) {
+            throw new InvalidOperationException("Not logged in.");
+        }
+
+        AccountStorage accountStorage = new AccountStorage();
+        AccountInfo accountInfo = Account!.GetAccountInfo();
+
+        SaveAccount(accountInfo);
     }
 }
