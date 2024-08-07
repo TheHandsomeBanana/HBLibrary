@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Wpf.Models; 
-public abstract class LoginModel {
-    public abstract AccountType AccountType { get; }
+namespace HBLibrary.Wpf.ViewModels.Register;
+
+public class RegisterViewModel : ViewModelBase {
 }

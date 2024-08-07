@@ -1,4 +1,5 @@
-﻿using HBLibrary.Common.Security;
+﻿using HBLibrary.Common.Authentication.Microsoft;
+using HBLibrary.Common.Security;
 using Microsoft.Identity.Client;
 using System;
 using System.CodeDom;
@@ -33,23 +34,46 @@ public sealed class MSAuthCredentials : IAuthCredentials {
     public Action<AcquireTokenInteractiveParameterBuilder>? InteractiveParameterBuilder { get; init; }
     public Action<AcquireTokenByUsernamePasswordParameterBuilder>? UsernamePasswordParameterBuilder { get; init; }
     public IEnumerable<string> Scopes { get; init; } = [];
-    internal IAccount? Account { get; init; }
+    internal string? Identifier { get; init; }
     internal string? Username { get; init; }
     internal SecureString? Password { get; init; }
+    internal string? Email { get; init; }
+    internal string? DisplayName { get; init; }
 
     private MSAuthCredentials() { }
 
     internal enum CredentialType {
+        Cached,
         Silent,
         Interactive,
         UsernamePassword
     }
 
-    public static MSAuthCredentials CreateSilent(IEnumerable<string> scopes, IAccount account, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
+    public static async Task<MSAuthCredentials?> CreateFromParameterStorageAsync(string appName, string username, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
+        MSParameterStorage storage = new MSParameterStorage(appName);
+        MicrosoftIdentity? identity = await storage.GetIdentityAsync(username);
+
+        if(identity is null) {
+            return null;
+        }
+
+        MSAuthCredentials credentials = new MSAuthCredentials {
+            Scopes = identity.Scopes,
+            Identifier = identity.Identifier,
+            Email = identity.Email,
+            DisplayName = identity.DisplayName,
+            Type = CredentialType.Cached,
+            SilentParameterBuilder = builder
+        };
+
+        return credentials;
+    }
+
+    public static MSAuthCredentials CreateSilent(IEnumerable<string> scopes, string identifier, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
 
         MSAuthCredentials credentials = new MSAuthCredentials {
             Scopes = scopes,
-            Account = account,
+            Identifier = identifier,
             Type = CredentialType.Silent,
             SilentParameterBuilder = builder
         };

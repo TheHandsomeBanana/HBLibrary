@@ -1,6 +1,8 @@
-﻿using HBLibrary.Wpf.Models;
+﻿using HBLibrary.Common.Account;
+using HBLibrary.Wpf.Models;
 using System;
 using System.Collections.Generic;
+using System.IO.Packaging;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -20,4 +22,6 @@ public class LocalLoginResult : LoginResult {
 
 public class MicrosoftLoginResult : LoginResult {
     public override AccountType AccountType => AccountType.Microsoft;
+    public string Username { get; set; }
+
 }

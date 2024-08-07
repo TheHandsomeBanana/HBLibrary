@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HBLibrary.Wpf.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,10 @@ public partial class HBDarkAccountWindow : Window {
         InitializeComponent();
     }
 
-    public HBDarkAccountWindow(Window owner) {
+    public HBDarkAccountWindow(Window owner, AccountViewModel dataContext) {
         this.Owner = owner;
         InitializeComponent();
+        this.DataContext = dataContext;
     }
 
     // Can execute

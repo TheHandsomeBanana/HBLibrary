@@ -1,7 +1,7 @@
-﻿using HBLibrary.Common.Security;
+﻿using HBLibrary.Common.Account;
+using HBLibrary.Common.Security;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
-using HBLibrary.Wpf.ViewModels.Login;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,9 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace HBLibrary.Wpf.ViewModels;
+namespace HBLibrary.Wpf.ViewModels.Login;
 public class LoginViewModel : ViewModelBase {
-    public event EventHandler<LoginResult?>? LoginCompleted;
+    public event Func<LoginResult?, Task>? LoginCompleted;
 
     public bool CanExecuteLogin { get; set; } = false;
 
@@ -26,49 +26,20 @@ public class LoginViewModel : ViewModelBase {
         }
     }
 
-    private AccountType selectedAccountType;
-    public AccountType SelectedAccountType {
-        get => selectedAccountType;
-        set {
-            selectedAccountType = value;
-            NotifyPropertyChanged();
-
-            if(CurrentLoginViewModel is LocalLoginViewModel localLoginViewModel) {
-                localLoginViewModel.ValidationPropertyChanged -= LocalLoginViewModel_ValidationPropertyChanged;
-            }
-
-            switch (selectedAccountType) {
-                case AccountType.Local:
-                    localLoginViewModel = new LocalLoginViewModel();
-                    localLoginViewModel.ValidationPropertyChanged += LocalLoginViewModel_ValidationPropertyChanged;
-                    localLoginViewModel.NotifyValidationPropertyChanged();
-                    CurrentLoginViewModel = localLoginViewModel;
-
-                    break;
-                case AccountType.Microsoft:
-                    CurrentLoginViewModel = new MicrosoftLoginViewModel();
-                    break;
-            }
-
-        }
-    }
-
     private void LocalLoginViewModel_ValidationPropertyChanged(object? sender, bool e) {
         CanExecuteLogin = e;
         LoginCommand.NotifyCanExecuteChanged();
     }
 
     public RelayCommand<Window> CancelCommand { get; set; }
-    public RelayCommand<Window> LoginCommand { get; set; }
+    public AsyncRelayCommand<Window> LoginCommand { get; set; }
 
-    public LoginViewModel() {
+    public LoginViewModel(IAccountService accountService) {
         LocalLoginViewModel localLoginViewModel = new LocalLoginViewModel();
         localLoginViewModel.ValidationPropertyChanged += LocalLoginViewModel_ValidationPropertyChanged;
         currentLoginViewModel = localLoginViewModel;
-        
-        
 
-        LoginCommand = new RelayCommand<Window>(Login, w => CanExecuteLogin);
+        LoginCommand = new AsyncRelayCommand<Window>(LoginAsync, w => CanExecuteLogin, OnLoginException);
         CancelCommand = new RelayCommand<Window>(Cancel, true);
     }
 
@@ -76,7 +47,7 @@ public class LoginViewModel : ViewModelBase {
         obj.Close();
     }
 
-    private void Login(Window obj) {
+    private async Task LoginAsync(Window obj) {
         LoginResult? result = null;
 
         switch (currentLoginViewModel) {
@@ -88,12 +59,19 @@ public class LoginViewModel : ViewModelBase {
                 break;
             case MicrosoftLoginViewModel microsoftLogin:
                 result = new MicrosoftLoginResult {
-
+                    
                 };
                 break;
         }
 
-        LoginCompleted?.Invoke(this, result);
+        if (LoginCompleted is not null) {
+            await LoginCompleted.Invoke(result);
+        }
+
         obj.Close();
+    }
+
+    private void OnLoginException(Exception exception) {
+        // There are no exceptions
     }
 }

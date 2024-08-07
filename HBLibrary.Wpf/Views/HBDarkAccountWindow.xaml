@@ -43,10 +43,6 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Window.DataContext>
-        <viewModels:AccountViewModel/>
-    </Window.DataContext>
-
     <Border Style="{StaticResource VSCopy}"
          BorderThickness="1"
          CornerRadius="5"

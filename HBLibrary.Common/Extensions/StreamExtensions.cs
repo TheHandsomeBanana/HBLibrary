@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,11 @@ namespace HBLibrary.Common.Extensions {
 
         public static byte[] Read(this Stream s, long length) {
             byte[] buffer = new byte[length];
+
+#if NET5_0_OR_GREATER
+            s.Read(buffer);
+#elif NET472_OR_GREATER
+
             int numBytesToRead = buffer.Length;
             int numBytesRead = 0;
 
@@ -27,7 +33,7 @@ namespace HBLibrary.Common.Extensions {
                 numBytesRead += n;
                 numBytesToRead -= n;
             }
-
+#endif
             return buffer;
         }
 
@@ -35,18 +41,22 @@ namespace HBLibrary.Common.Extensions {
             s.Write(buffer, 0, buffer.Length);
         }
 
-        public static async Task<byte[]> ReadAsync(this Stream s) {
-            return await s.ReadAsync(s.Length);
+        public static async Task<byte[]> ReadAsync(this Stream s, CancellationToken cancellationToken = default) {
+            return await s.ReadAsync(s.Length, cancellationToken);
         }
 
-        public static async Task<byte[]> ReadAsync(this Stream s, long length) {
+        public static async Task<byte[]> ReadAsync(this Stream s, long length, CancellationToken cancellationToken = default) {
             byte[] buffer = new byte[length];
+
+#if NET5_0_OR_GREATER
+            await s.ReadAsync(buffer, cancellationToken);
+#elif NET472_OR_GREATER
             int numBytesToRead = buffer.Length;
             int numBytesRead = 0;
 
-            while (numBytesToRead > 0) {
+            while (!cancellationToken.IsCancellationRequested && numBytesToRead > 0) {
                 // Read may return anything from 0 to numBytesToRead.
-                int n = await s.ReadAsync(buffer, numBytesRead, numBytesToRead);
+                int n = await s.ReadAsync(buffer, numBytesRead, numBytesToRead, cancellationToken);
 
                 // Break when the end of the file is reached.
                 if (n == 0)
@@ -55,12 +65,13 @@ namespace HBLibrary.Common.Extensions {
                 numBytesRead += n;
                 numBytesToRead -= n;
             }
+#endif
 
             return buffer;
         }
 
-        public static async Task WriteAsync(this Stream s, byte[] buffer) {
-            await s.WriteAsync(buffer, 0, buffer.Length);
+        public static async Task WriteAsync(this Stream s, byte[] buffer, CancellationToken cancellationToken = default) {
+            await s.WriteAsync(buffer, cancellationToken);
         }
 
         public static void ResetPosition(this Stream s) {

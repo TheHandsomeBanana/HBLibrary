@@ -16,6 +16,8 @@ public sealed class LocalAuthResult : IAuthResult {
 }
 
 public sealed class MSAuthResult : IAuthResult {
-    public required AuthenticationResult Result { get; init; }
+    public required AuthenticationResult? Result { get; init; }
+    public required string DisplayName { get; init; }
+    public required string Email { get; init; }
 }
 

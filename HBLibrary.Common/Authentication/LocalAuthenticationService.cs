@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Account;
+using HBLibrary.Common.Exceptions;
 using HBLibrary.Common.Security;
 using HBLibrary.Common.Security.Credentials;
 using System;
@@ -15,52 +16,53 @@ namespace HBLibrary.Common.Authentication;
 #if NET5_0_OR_GREATER
 [SupportedOSPlatform("windows")]
 #endif
-public sealed class LocalAuthenticationService : IAuthenticationService<LocalAuthResult, LocalAuthCredentials> {
-    private readonly CredentialStorage credentialStorage;
-    private readonly IAccountService? accountService;
-    public LocalAuthenticationService(CredentialStorage credentialStorage, IAccountService? accountService = null) {
+public sealed class LocalAuthenticationService : ILocalAuthenticationService {
+    private readonly LocalCredentialStorage credentialStorage;
+
+
+    public LocalAuthenticationService(LocalCredentialStorage credentialStorage) {
         this.credentialStorage = credentialStorage;
-        this.accountService = accountService;
     }
 
-    public LocalAuthenticationService(string applicationName, IAccountService? accountService = null) {
-        this.credentialStorage = new CredentialStorage(applicationName);
-        this.accountService = accountService;
+    public LocalAuthenticationService(string applicationName) {
+        this.credentialStorage = new LocalCredentialStorage(applicationName);
     }
 
-    public Task<LocalAuthResult> Authenticate(LocalAuthCredentials authCredentials) {
-        if (IsNewUser(authCredentials.Username)) {
-            credentialStorage.RegisterUser(authCredentials.Username, authCredentials.Password);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="authCredentials"></param>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="AuthenticationException"></exception>
+    /// <returns></returns>
+    public async Task<LocalAuthResult> AuthenticateAsync(LocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
+        if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
+            await credentialStorage.RegisterUserAsync(authCredentials.Username, authCredentials.Password, cancellationToken);
         }
-        else if(!VerifyCredentials(authCredentials.Username, authCredentials.Password)) {
-            throw new InvalidOperationException("Password is invalid.");
+        else if (!await VerifyCredentialsAsync(authCredentials.Username, authCredentials.Password, cancellationToken)) {
+            AuthenticationException.ThrowInvalidCredentials();
         }
 
         string token = CreateEncryptionKey(authCredentials.Password);
 
-        accountService?.SetCurrentAccount(new LocalAccountDetails { 
-            Username = authCredentials.Username,
-            Token = token
-        });
-
-        return Task.FromResult(new LocalAuthResult {
+        return new LocalAuthResult {
             Token = token,
-            Username = authCredentials.Username
-        });
+            Username = authCredentials.Username,
+        };
     }
 
-    private bool IsNewUser(string username) {
-        return credentialStorage.GetUserCredentials(username) is null;
+    private async Task<bool> IsNewUserAsync(string username, CancellationToken cancellationToken = default) {
+        return (await credentialStorage.GetUserCredentialsAsync(username, cancellationToken)) is null;
     }
 
-    private bool VerifyCredentials(string username, SecureString password) {
-        UserCredentials? credentials = credentialStorage.GetUserCredentials(username);
+    private async Task<bool> VerifyCredentialsAsync(string username, SecureString password, CancellationToken cancellationToken = default) {
+        UserCredentials? credentials = await credentialStorage.GetUserCredentialsAsync(username, cancellationToken);
         if (credentials is null) {
             return false;
         }
 
         byte[] salt = Convert.FromBase64String(credentials.Salt);
-        byte[] storedHashedPassword = Convert.FromBase64String(credentials.Password);
+        byte[] storedHashedPassword = Convert.FromBase64String(credentials.PasswordHash);
         byte[] hashedPassword = KeyDerivation.DeriveKey(password, salt, 10000, 32);
 
         return hashedPassword.SequenceEqual(storedHashedPassword);

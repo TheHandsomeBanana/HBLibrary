@@ -12,7 +12,7 @@
         xmlns:viewModels="clr-namespace:HBLibrary.Wpf.ViewModels"
         xmlns:loginViewModels="clr-namespace:HBLibrary.Wpf.ViewModels.Login"
         xmlns:loginViews="clr-namespace:HBLibrary.Wpf.Views.Login"
-        xmlns:accountType="clr-namespace:HBLibrary.Wpf.Models"
+        xmlns:accountType="clr-namespace:HBLibrary.Common.Account;assembly=HBLibrary.Common"
         WindowStyle="SingleBorderWindow"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
@@ -46,9 +46,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Window.DataContext>
-        <viewModels:LoginViewModel/>
-    </Window.DataContext>
+   
 
     <Border Style="{StaticResource VSCopy}"
          BorderThickness="1"

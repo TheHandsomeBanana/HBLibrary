@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HBLibrary.Common.Exceptions;
+public class AuthenticationException : Exception {
+    public AuthenticationException(string? message) : base(message) {
+    }
+
+    public AuthenticationException(string? message, Exception? innerException) : base(message, innerException) {
+    }
+
+    [DoesNotReturn]
+    public static void ThrowInvalidCredentials() => throw new AuthenticationException("Credentials are invalid.");
+    
+    [DoesNotReturn]
+    public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
+
+    public static AuthenticationException AuthenticationFailed(Exception exception) => new AuthenticationException("Authentication failed.", exception);
+
+    
+}
