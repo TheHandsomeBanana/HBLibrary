@@ -12,6 +12,7 @@
             xmlns:viewModels="clr-namespace:HBLibrary.Wpf.ViewModels"
             xmlns:loginViewModels="clr-namespace:HBLibrary.Wpf.ViewModels.Login"
             xmlns:loginViews="clr-namespace:HBLibrary.Wpf.Views.Login"
+            xmlns:converters="clr-namespace:HBLibrary.Wpf.Converters"
             xmlns:accountType="clr-namespace:HBLibrary.Common.Account;assembly=HBLibrary.Common"
             Background="Transparent" Width="400">
 
@@ -30,6 +31,8 @@
                 <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ComboBox/ComboBoxes.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <converters:StringToVisibilityConverter x:Key="s2v"/>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -46,25 +49,48 @@
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
-            <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Username" Margin="0 0 0 2"/>
-            <TextBox Style="{StaticResource HBDark_TextBox}" Text="{Binding Username}" Margin="0 0 0 5"/>
-            <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Password" Margin="0 0 0 2"/>
-            <PasswordBox Style="{StaticResource HBDark_WatermarkPasswordBox}" Margin="0 0 0 5">
-                <i:Interaction.Behaviors>
-                    <behaviors:PasswordBoxPasswordBehavior Password="{Binding SecurePassword}"/>
-                </i:Interaction.Behaviors>
-            </PasswordBox>
-            <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Confirm Password" Margin="0 0 0 2"/>
-            <PasswordBox Style="{StaticResource HBDark_WatermarkPasswordBox}" Margin="0 0 0 20">
-                <i:Interaction.Behaviors>
-                    <behaviors:PasswordBoxPasswordBehavior Password="{Binding ConfirmSecurePassword}"/>
-                </i:Interaction.Behaviors>
-            </PasswordBox>
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <Button Style="{StaticResource HBDark_VSButton2}" Width="Auto" 
+            <StackPanel Grid.Row="0">
+                <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Username" Margin="0 0 0 2"/>
+                <TextBox Style="{StaticResource HBDark_TextBox}" Text="{Binding Username}" Margin="0 0 0 5"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Password" Margin="0 0 0 2"/>
+                <PasswordBox Style="{StaticResource HBDark_WatermarkPasswordBox}" Margin="0 0 0 5">
+                    <i:Interaction.Behaviors>
+                        <behaviors:PasswordBoxPasswordBehavior Password="{Binding SecurePassword}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2">
+                <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Confirm Password" Margin="0 0 0 2"/>
+                <PasswordBox Style="{StaticResource HBDark_WatermarkPasswordBox}"
+                         Margin="0 0 0 5">
+                    <i:Interaction.Behaviors>
+                        <behaviors:PasswordBoxPasswordBehavior Password="{Binding ConfirmSecurePassword}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
+
+                <TextBlock Style="{StaticResource HBDark_ErrorTextBlock}" 
+                       Text="{Binding ErrorMessage}"
+                       Visibility="{Binding ErrorMessage, Converter={StaticResource s2v}, FallbackValue=Collapsed}"/>
+            </StackPanel>
+            <Button Grid.Row="3"
+                    Margin="0 5 0 5"
+                    Style="{StaticResource HBDark_VSButton2}" 
+                    Width="Auto" 
                     HorizontalContentAlignment="Left"
                     VerticalContentAlignment="Center"
+                    VerticalAlignment="Top"
                     Command="{Binding RegisterWithMicrosoftCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <Button.Content>
@@ -74,13 +100,14 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-        </StackPanel>
+        </Grid>
+
 
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" 
                     Margin="0 0 5 0">
             <Button Style="{StaticResource HBDark_VSButton1}" Content="Register"
-                        Command="{Binding RegisterCommand}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
+                    Command="{Binding RegisterCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
             </Button>
         </StackPanel>
     </Grid>

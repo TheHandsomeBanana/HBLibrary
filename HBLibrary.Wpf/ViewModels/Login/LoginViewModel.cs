@@ -15,7 +15,7 @@ using System.Windows.Controls;
 
 namespace HBLibrary.Wpf.ViewModels.Login;
 public class LoginViewModel : ViewModelBase<LoginModel> {
-    public event Func<LoginResult?, Task>? LoginCompleted;
+    public event Func<LoginTriggerData?, Task>? LoginTriggered;
 
     public string Username {
         get => Model.Username;
@@ -24,6 +24,9 @@ public class LoginViewModel : ViewModelBase<LoginModel> {
             NotifyPropertyChanged();
 
             LoginCommand.NotifyCanExecuteChanged();
+            if (ErrorMessage is not null) {
+                ErrorMessage = null;
+            }
         }
     }
 
@@ -34,8 +37,22 @@ public class LoginViewModel : ViewModelBase<LoginModel> {
             NotifyPropertyChanged();
 
             LoginCommand.NotifyCanExecuteChanged();
+            if (ErrorMessage is not null) {
+                ErrorMessage = null;
+            }
         }
     }
+
+    private string? errorMessage;
+
+    public string? ErrorMessage {
+        get { return errorMessage; }
+        set {
+            errorMessage = value;
+            NotifyPropertyChanged();
+        }
+    }
+
 
     public AsyncRelayCommand<UserControl> LoginCommand { get; set; }
     public AsyncRelayCommand<UserControl> LoginWithMicrosoftCommand { get; set; }
@@ -47,38 +64,33 @@ public class LoginViewModel : ViewModelBase<LoginModel> {
     }
 
     private async Task LoginWithMicrosoftAsync(UserControl obj) {
-        MicrosoftLoginResult? result = new MicrosoftLoginResult {
-            Username = Model.Username,
+        ErrorMessage = null;
+
+        MicrosoftLoginTriggerData? result = new MicrosoftLoginTriggerData {
+            ControlContext = obj,
         };
 
-        if (LoginCompleted is not null) {
-            await LoginCompleted.Invoke(result);
+        if (LoginTriggered is not null) {
+            await LoginTriggered.Invoke(result);
         }
-
-        (obj.Parent as Window)?.Close();
     }
 
     private async Task LoginAsync(UserControl obj) {
-        LocalLoginResult? result = new LocalLoginResult {
+        ErrorMessage = null;
+
+        LocalLoginTriggerData? result = new LocalLoginTriggerData {
+            ControlContext = obj,
             Username = Model.Username,
             SecurePassword = Model.SecurePassword
         };
 
-        Window parentWindow = Window.GetWindow(obj);
-        parentWindow.Visibility = Visibility.Hidden;
-
-        if (LoginCompleted is not null) {
-            await LoginCompleted.Invoke(result);
+        if (LoginTriggered is not null) {
+            await LoginTriggered.Invoke(result);
         }
-
-
-
-
-        parentWindow.Close();
     }
 
     private void OnLoginException(Exception exception) {
-        // There are no exceptions!
+        ErrorMessage = exception.Message;
     }
 
     private bool IsLoginInputValid() {

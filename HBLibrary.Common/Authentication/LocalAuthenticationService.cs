@@ -37,7 +37,7 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
     /// <returns></returns>
     public async Task<LocalAuthResult> AuthenticateAsync(LocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
         if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
-            await credentialStorage.RegisterUserAsync(authCredentials.Username, authCredentials.Password, cancellationToken);
+            AuthenticationException.ThrowUserNotFound();
         }
         else if (!await VerifyCredentialsAsync(authCredentials.Username, authCredentials.Password, cancellationToken)) {
             AuthenticationException.ThrowInvalidCredentials();
@@ -51,7 +51,7 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         };
     }
 
-    private async Task<bool> IsNewUserAsync(string username, CancellationToken cancellationToken = default) {
+    public async Task<bool> IsNewUserAsync(string username, CancellationToken cancellationToken = default) {
         return (await credentialStorage.GetUserCredentialsAsync(username, cancellationToken)) is null;
     }
 
@@ -66,6 +66,21 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         byte[] hashedPassword = KeyDerivation.DeriveKey(password, salt, 10000, 32);
 
         return hashedPassword.SequenceEqual(storedHashedPassword);
+    }
+
+    public async Task<LocalAuthResult> AuthenticateNewAsync(LocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
+        if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
+            UserCredentials credentials = await credentialStorage.RegisterUserAsync(authCredentials.Username, authCredentials.Password, cancellationToken);
+
+            string token = CreateEncryptionKey(authCredentials.Password);
+
+            return new LocalAuthResult {
+                Token = token,
+                Username = credentials.Username,
+            };
+        }
+
+        throw AuthenticationException.UserAlreadyExists();
     }
 
     private string CreateEncryptionKey(SecureString password) {

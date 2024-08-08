@@ -14,7 +14,7 @@ using System.Windows.Controls;
 namespace HBLibrary.Wpf.ViewModels.Register;
 
 public class RegisterViewModel : ViewModelBase<RegistrationModel> {
-    public event Func<RegistrationResult?, Task>? RegistrationCompleted;
+    public event Func<RegistrationTriggerData?, Task>? RegistrationTriggered;
 
     public string Username {
         get => Model.Username;
@@ -31,6 +31,10 @@ public class RegisterViewModel : ViewModelBase<RegistrationModel> {
             Model.SecurePassword = value;
             NotifyPropertyChanged();
             RegisterCommand.NotifyCanExecuteChanged();
+
+            if(ErrorMessage is not null) {
+                ErrorMessage = null;
+            }
         }
     }
     
@@ -43,49 +47,50 @@ public class RegisterViewModel : ViewModelBase<RegistrationModel> {
         }
     }
 
+    private string? errorMessage;
+    public string? ErrorMessage {
+        get { return errorMessage; }
+        set {
+            errorMessage = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+
     public AsyncRelayCommand<UserControl> RegisterCommand { get; set; }
     public AsyncRelayCommand<UserControl> RegisterWithMicrosoftCommand { get; set; }
 
     public RegisterViewModel(IAccountService accountService) {
         Model = new RegistrationModel();
-        RegisterCommand = new AsyncRelayCommand<UserControl>(RegisterAsync, w => IsRegisterInputValid(), OnLoginException);
-        RegisterWithMicrosoftCommand = new AsyncRelayCommand<UserControl>(RegisterWithMicrosoftAsync, w => true, OnLoginException);
+        RegisterCommand = new AsyncRelayCommand<UserControl>(RegisterAsync, w => IsRegisterInputValid(), OnRegisterException);
+        RegisterWithMicrosoftCommand = new AsyncRelayCommand<UserControl>(RegisterWithMicrosoftAsync, w => true, OnRegisterException);
     }
 
     private async Task RegisterWithMicrosoftAsync(UserControl obj) {
-        MicrosoftRegistrationResult result = new MicrosoftRegistrationResult {
+        MicrosoftRegistrationTriggerData result = new MicrosoftRegistrationTriggerData {
+            ControlContext = obj,
             Username = Model.Username,
         };
 
-        Window parentWindow = Window.GetWindow(obj);
-        parentWindow.Visibility = Visibility.Hidden;
-
-        if (RegistrationCompleted is not null) {
-            await RegistrationCompleted.Invoke(result);
+        if (RegistrationTriggered is not null) {
+            await RegistrationTriggered.Invoke(result);
         }
-
-        parentWindow.Close();
     }
 
     private async Task RegisterAsync(UserControl obj) {
-        LocalRegistrationResult result = new LocalRegistrationResult {
+        LocalRegistrationTriggerData result = new LocalRegistrationTriggerData {
+            ControlContext = obj,
             Username = Model.Username,
             SecurePassword = Model.SecurePassword
         };
 
-        Window parentWindow = Window.GetWindow(obj);
-        parentWindow.Visibility = Visibility.Hidden;
-
-
-        if (RegistrationCompleted is not null) {
-            await RegistrationCompleted.Invoke(result);
+        if (RegistrationTriggered is not null) {
+            await RegistrationTriggered.Invoke(result);
         }
-
-        parentWindow.Close();
     }
 
-    private void OnLoginException(Exception exception) {
-        // There are no exceptions!
+    private void OnRegisterException(Exception exception) {
+        ErrorMessage = exception.Message;
     }
 
     private bool IsRegisterInputValid() {

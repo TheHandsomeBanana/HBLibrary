@@ -18,8 +18,15 @@ public class AuthenticationException : Exception {
     
     [DoesNotReturn]
     public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
+    
+    [DoesNotReturn]
+    public static void ThrowUserNotFound() => throw new AuthenticationException("User does not exist.");
+    
+    [DoesNotReturn]
+    public static void ThrowUserAlreadyExists() => throw new AuthenticationException("User already exists.");
 
     public static AuthenticationException AuthenticationFailed(Exception exception) => new AuthenticationException("Authentication failed.", exception);
 
-    
+    public static AuthenticationException UserAlreadyExists() => new AuthenticationException("User already exists.");
+
 }

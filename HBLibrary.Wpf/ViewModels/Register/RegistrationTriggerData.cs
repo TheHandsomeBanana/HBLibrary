@@ -1,27 +1,31 @@
 ﻿using HBLibrary.Common.Account;
-using HBLibrary.Wpf.Models;
 using System;
 using System.Collections.Generic;
-using System.IO.Packaging;
 using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
-namespace HBLibrary.Wpf.ViewModels.Login; 
-public abstract class LoginResult {
+namespace HBLibrary.Wpf.ViewModels.Register;
+
+public abstract class RegistrationTriggerData {
     public abstract AccountType AccountType { get; }
+    public required UserControl ControlContext { get; set; }
 }
 
-public class LocalLoginResult : LoginResult {
+public class LocalRegistrationTriggerData : RegistrationTriggerData {
     public override AccountType AccountType => AccountType.Local;
     public string Username { get; set; } = "";
     public SecureString SecurePassword { get; set; } = new SecureString();
 
 }
 
-public class MicrosoftLoginResult : LoginResult {
+public class MicrosoftRegistrationTriggerData : RegistrationTriggerData {
     public override AccountType AccountType => AccountType.Microsoft;
     public string Username { get; set; } = "";
 
 }
+
+
+

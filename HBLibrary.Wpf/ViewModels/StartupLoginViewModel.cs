@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HBLibrary.Wpf.ViewModels;
 
@@ -44,48 +45,64 @@ public class StartupLoginViewModel : ViewModelBase {
 
     private void LoginToggle(object? obj) {
         if (AppLoginContent is RegisterViewModel registerViewModel) {
-            registerViewModel.RegistrationCompleted -= RegisterViewModel_RegistrationCompleted;
+            registerViewModel.RegistrationTriggered -= RegisterViewModel_RegistrationCompleted;
         }
 
-        LoginViewModel loginViewModel = new LoginViewModel(accountService);
-        loginViewModel.LoginCompleted += LoginViewModel_LoginCompleted;
+        LoginViewModel loginViewModel = new LoginViewModel();
+        AccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName);
+
+        if(lastAccount is not null) {
+            loginViewModel.Username = lastAccount.Username;
+        }
+
+
+        loginViewModel.LoginTriggered += LoginViewModel_LoginCompleted;
 
         AppLoginContent = loginViewModel;
     }
 
     private void RegisterToggle(object? obj) {
         if (AppLoginContent is LoginViewModel loginViewModel) {
-            loginViewModel.LoginCompleted -= LoginViewModel_LoginCompleted;
+            loginViewModel.LoginTriggered -= LoginViewModel_LoginCompleted;
         }
 
         RegisterViewModel registerViewModel = new RegisterViewModel(accountService);
-        registerViewModel.RegistrationCompleted += RegisterViewModel_RegistrationCompleted;
+        registerViewModel.RegistrationTriggered += RegisterViewModel_RegistrationCompleted;
         AppLoginContent = registerViewModel;
     }
 
-    private async Task LoginViewModel_LoginCompleted(LoginResult? arg) {
+    private async Task LoginViewModel_LoginCompleted(LoginTriggerData? arg) {
         switch (arg) {
-            case LocalLoginResult localLogin:
+            case LocalLoginTriggerData localLogin:
                 await accountService.LoginAsync(new LocalAuthCredentials(localLogin.Username, localLogin.SecurePassword),
                     appSettings.ApplicationName);
                 break;
-            case MicrosoftLoginResult microsoftLogin:
+            case MicrosoftLoginTriggerData microsoftLogin:
                 break;
         }
 
+
+        Window parentWindow = Window.GetWindow(arg!.ControlContext);
+        parentWindow.Visibility = Visibility.Hidden;
+        
         StartupCompleted?.Invoke();
+        parentWindow.Close();    
     }
 
-    private async Task RegisterViewModel_RegistrationCompleted(RegistrationResult? arg) {
+    private async Task RegisterViewModel_RegistrationCompleted(RegistrationTriggerData? arg) {
         switch (arg) {
-            case LocalRegistrationResult localRegistration:
-                await accountService.LoginAsync(new LocalAuthCredentials(localRegistration.Username, localRegistration.SecurePassword),
+            case LocalRegistrationTriggerData localRegistration:
+                await accountService.RegisterAsync(new LocalAuthCredentials(localRegistration.Username, localRegistration.SecurePassword),
                     appSettings.ApplicationName);
                 break;
-            case MicrosoftRegistrationResult microsoftRegistration:
+            case MicrosoftRegistrationTriggerData microsoftRegistration:
                 break;
         }
 
+        Window parentWindow = Window.GetWindow(arg!.ControlContext);
+        parentWindow.Visibility = Visibility.Hidden;
+
         StartupCompleted?.Invoke();
+        parentWindow.Close();
     }
 }

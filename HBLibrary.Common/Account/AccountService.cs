@@ -52,6 +52,41 @@ public class AccountService : IAccountService {
         await SaveCurrentAccountAsync();
     }
 
+    public async Task RegisterAsync(IAuthCredentials credentials, string application, CancellationToken cancellationToken = default) {
+        switch (credentials) {
+            case LocalAuthCredentials localCredentials:
+                LocalAuthResult localResult = await localAuthService.AuthenticateNewAsync(localCredentials, cancellationToken);
+                Account = new LocalAccount {
+                    Application = application,
+                    Username = localResult.Username,
+                    Token = localResult.Token!
+                };
+
+                break;
+            case MSAuthCredentials msCredentials:
+                MSAuthResult msResult = await msAuthService.AuthenticateAsync(msCredentials, cancellationToken);
+
+                Account = new MicrosoftAccount {
+                    Application = application,
+                    Token = msResult.Result!.AccessToken,
+                    Identifier = msResult.Result!.Account.HomeAccountId.Identifier,
+                    TenantId = msResult.Result!.TenantId,
+                    Account = msResult.Result!.Account,
+                    Username = msResult.Result!.Account.Username,
+                    DisplayName = msResult.DisplayName,
+                    Email = msResult.Email
+                };
+                break;
+            default:
+                throw new NotSupportedException("Credential instance not supported");
+        }
+
+        IsLoggedIn = true;
+
+        await SaveCurrentAccountAsync();
+    }
+
+
     public async Task LogoutAsync(CancellationToken cancellationToken = default) {
         IsLoggedIn = false;
 
