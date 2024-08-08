@@ -15,12 +15,12 @@ namespace HBLibrary.Common.Security;
 public static class DPApi {
     public static byte[] Protect(byte[] data, string? optionalEntropy = null) {
         byte[]? entropy = optionalEntropy is not null ? Encoding.UTF8.GetBytes(optionalEntropy) : null;
-        return ProtectedData.Protect(data, entropy, DataProtectionScope.CurrentUser);
+        return ProtectedData.Protect(data, entropy, DataProtectionScope.LocalMachine);
     }
 
     public static byte[] Unprotect(byte[] data, string? optionalEntropy = null) {
         byte[]? entropy = optionalEntropy is not null ? Encoding.UTF8.GetBytes(optionalEntropy) : null;
-        return ProtectedData.Unprotect(data, entropy, DataProtectionScope.CurrentUser);
+        return ProtectedData.Unprotect(data, entropy, DataProtectionScope.LocalMachine);
     }
 }
 #endif

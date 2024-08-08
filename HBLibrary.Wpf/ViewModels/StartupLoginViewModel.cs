@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace HBLibrary.Wpf.ViewModels;
 
@@ -84,8 +85,12 @@ public class StartupLoginViewModel : ViewModelBase {
                     appSettings.ApplicationName);
                 break;
             case MicrosoftLoginTriggerData microsoftLogin:
+                Window window = Window.GetWindow(arg.ControlContext);
+                IntPtr windowHandle = new WindowInteropHelper(window).Handle;
+
                 MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead], b => {
                     b.WithUseEmbeddedWebView(true);
+                    b.WithParentActivityOrWindow(windowHandle);
                 });
 
                 await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
@@ -105,8 +110,12 @@ public class StartupLoginViewModel : ViewModelBase {
                     appSettings.ApplicationName);
                 break;
             case MicrosoftRegistrationTriggerData microsoftRegistration:
+                Window window = Window.GetWindow(arg.ControlContext);
+                IntPtr windowHandle = new WindowInteropHelper(window).Handle;
+
                 MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead], b => {
                     b.WithUseEmbeddedWebView(true);
+                    b.WithParentActivityOrWindow(windowHandle);
                 });
 
                 await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
