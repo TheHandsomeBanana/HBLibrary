@@ -106,6 +106,11 @@ public class LocalCredentialStorage {
             encryptedJson = await fs.ReadAsync(cancellationToken);
         }
 #endif
+
+        if(encryptedJson.Length == 0) {
+            return [];
+        }
+
         string json = GlobalEnvironment.Encoding.GetString(DPApi.Unprotect(encryptedJson));
         if (string.IsNullOrWhiteSpace(json)) {
             return [];

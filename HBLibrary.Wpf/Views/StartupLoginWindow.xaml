@@ -16,9 +16,10 @@
         xmlns:registerViewModels="clr-namespace:HBLibrary.Wpf.ViewModels.Register"        
         xmlns:selectors="clr-namespace:HBLibrary.Wpf.Views.Templates.Selectors"
         WindowStyle="SingleBorderWindow"
-        SizeToContent="Height"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         Background="Transparent"
         Width="400">
 
@@ -60,7 +61,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
@@ -88,7 +89,7 @@
                     Height="30"
                 Command="{x:Static SystemCommands.CloseWindowCommand}"/>
             </StackPanel>
-            <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="10">
+            <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="10 5 10 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -97,19 +98,21 @@
                 <ToggleButton x:Name="tbLogin"
                               Style="{StaticResource HBDark_NavigationBarButton}"
                               Grid.Column="0"
-                              Content="Login"
                               Command="{Binding LoginToggleCommand}"
                               Checked="LoginButton_Checked"
                               IsChecked="True">
-                    
+                    <ToggleButton.Content>
+                        <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Login"/>
+                    </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton x:Name="tbRegister"
                               Style="{StaticResource HBDark_NavigationBarButton}"
                               Grid.Column="1"
-                              Content="Register"
                               Command="{Binding RegisterToggleCommand}"
                               Checked="RegisterButton_Checked">
-                    
+                    <ToggleButton.Content>
+                        <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Register"/>
+                    </ToggleButton.Content>
                 </ToggleButton>
             </Grid>
 

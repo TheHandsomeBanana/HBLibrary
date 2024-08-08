@@ -5,6 +5,7 @@ using HBLibrary.Common.Authentication.Microsoft;
 using HBLibrary.Common.DI.Unity;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
+using HBLibrary.Wpf.ViewModels.Account;
 using HBLibrary.Wpf.ViewModels.Login;
 using HBLibrary.Wpf.Views;
 using System;
@@ -36,31 +37,9 @@ public class AccountViewModel : ViewModelBase {
         this.commonAppSettings = commonAppSettings;
 
         SwitchUserCommand = new RelayCommand<Window>(SwitchUser, true);
-        accountDetailViewModel = new LocalLoginViewModel();
+        accountDetailViewModel = new LocalAccountViewModel();
     }
 
     private void SwitchUser(Window obj) {
-        HBDarkLoginWindow loginWindow = new HBDarkLoginWindow(obj);
-        LoginViewModel dataContext = (LoginViewModel)loginWindow.DataContext;
-        dataContext.LoginCompleted += LoginCompleted;
-        loginWindow.ShowDialog();
-    }
-
-    private async Task LoginCompleted(LoginResult? e) {
-        switch (e) {
-            case LocalLoginResult localLogin:
-                await accountService.LoginAsync(new LocalAuthCredentials(localLogin.Username, localLogin.SecurePassword),
-                    commonAppSettings.ApplicationName);
-
-                AccountDetailViewModel = new LocalLoginViewModel(new LocalLoginModel {
-                    Username = localLogin.Username
-                });
-                break;
-            case MicrosoftLoginResult microsoftLogin:
-
-
-                AccountDetailViewModel = new MicrosoftLoginViewModel();
-                break;
-        }
     }
 }

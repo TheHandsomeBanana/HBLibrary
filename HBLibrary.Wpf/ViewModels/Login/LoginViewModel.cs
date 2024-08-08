@@ -2,6 +2,7 @@
 using HBLibrary.Common.Security;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
+using HBLibrary.Wpf.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,68 +11,78 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace HBLibrary.Wpf.ViewModels.Login;
-public class LoginViewModel : ViewModelBase {
+public class LoginViewModel : ViewModelBase<LoginModel> {
     public event Func<LoginResult?, Task>? LoginCompleted;
 
-    public bool CanExecuteLogin { get; set; } = false;
-
-    public ViewModelBase currentLoginViewModel;
-    public ViewModelBase CurrentLoginViewModel {
-        get => currentLoginViewModel;
+    public string Username {
+        get => Model.Username;
         set {
-            currentLoginViewModel = value;
+            Model.Username = value;
             NotifyPropertyChanged();
+
+            LoginCommand.NotifyCanExecuteChanged();
         }
     }
 
-    private void LocalLoginViewModel_ValidationPropertyChanged(object? sender, bool e) {
-        CanExecuteLogin = e;
-        LoginCommand.NotifyCanExecuteChanged();
-    }
+    public SecureString SecurePassword {
+        get => Model.SecurePassword;
+        set {
+            Model.SecurePassword = value;
+            NotifyPropertyChanged();
 
-    public RelayCommand<Window> CancelCommand { get; set; }
-    public AsyncRelayCommand<Window> LoginCommand { get; set; }
-
-    public LoginViewModel(IAccountService accountService) {
-        LocalLoginViewModel localLoginViewModel = new LocalLoginViewModel();
-        localLoginViewModel.ValidationPropertyChanged += LocalLoginViewModel_ValidationPropertyChanged;
-        currentLoginViewModel = localLoginViewModel;
-
-        LoginCommand = new AsyncRelayCommand<Window>(LoginAsync, w => CanExecuteLogin, OnLoginException);
-        CancelCommand = new RelayCommand<Window>(Cancel, true);
-    }
-
-    private void Cancel(Window obj) {
-        obj.Close();
-    }
-
-    private async Task LoginAsync(Window obj) {
-        LoginResult? result = null;
-
-        switch (currentLoginViewModel) {
-            case LocalLoginViewModel localLogin:
-                result = new LocalLoginResult {
-                    Username = localLogin.Username,
-                    SecurePassword = localLogin.SecurePassword
-                };
-                break;
-            case MicrosoftLoginViewModel microsoftLogin:
-                result = new MicrosoftLoginResult {
-                    
-                };
-                break;
+            LoginCommand.NotifyCanExecuteChanged();
         }
+    }
+
+    public AsyncRelayCommand<UserControl> LoginCommand { get; set; }
+    public AsyncRelayCommand<UserControl> LoginWithMicrosoftCommand { get; set; }
+
+    public LoginViewModel() {
+        Model = new LoginModel();
+        LoginCommand = new AsyncRelayCommand<UserControl>(LoginAsync, w => IsLoginInputValid(), OnLoginException);
+        LoginWithMicrosoftCommand = new AsyncRelayCommand<UserControl>(LoginWithMicrosoftAsync, w => true, OnLoginException);
+    }
+
+    private async Task LoginWithMicrosoftAsync(UserControl obj) {
+        MicrosoftLoginResult? result = new MicrosoftLoginResult {
+            Username = Model.Username,
+        };
 
         if (LoginCompleted is not null) {
             await LoginCompleted.Invoke(result);
         }
 
-        obj.Close();
+        (obj.Parent as Window)?.Close();
+    }
+
+    private async Task LoginAsync(UserControl obj) {
+        LocalLoginResult? result = new LocalLoginResult {
+            Username = Model.Username,
+            SecurePassword = Model.SecurePassword
+        };
+
+        Window parentWindow = Window.GetWindow(obj);
+        parentWindow.Visibility = Visibility.Hidden;
+
+        if (LoginCompleted is not null) {
+            await LoginCompleted.Invoke(result);
+        }
+
+
+
+
+        parentWindow.Close();
     }
 
     private void OnLoginException(Exception exception) {
-        // There are no exceptions
+        // There are no exceptions!
+    }
+
+    private bool IsLoginInputValid() {
+        return !string.IsNullOrEmpty(Model.Username)
+            && !string.IsNullOrEmpty(SStringConverter.SecureStringToString(Model.SecurePassword));
     }
 }

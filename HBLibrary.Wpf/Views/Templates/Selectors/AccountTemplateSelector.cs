@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Wpf.Models;
 using HBLibrary.Wpf.ViewModels;
+using HBLibrary.Wpf.ViewModels.Account;
 using HBLibrary.Wpf.ViewModels.Login;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace HBLibrary.Wpf.Views.Templates.Selectors {
         public override DataTemplate SelectTemplate(object item, DependencyObject container) {
             if (item is ViewModelBase accountViewModel) {
                 switch (accountViewModel) {
-                    case LocalLoginViewModel:
+                    case LocalAccountViewModel:
                         return LocalTemplate;
-                    case MicrosoftLoginViewModel:
+                    case MicrosoftAccountViewModel:
                         return MicrosoftTemplate;
                 }
             }
