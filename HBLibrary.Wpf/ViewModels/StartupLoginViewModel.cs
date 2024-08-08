@@ -57,7 +57,7 @@ public class StartupLoginViewModel : ViewModelBase {
         LoginViewModel loginViewModel = new LoginViewModel();
         AccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName);
 
-        if(lastAccount is not null) {
+        if(lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
             loginViewModel.Username = lastAccount.Username;
         }
 
@@ -84,7 +84,10 @@ public class StartupLoginViewModel : ViewModelBase {
                     appSettings.ApplicationName);
                 break;
             case MicrosoftLoginTriggerData microsoftLogin:
-                MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead]);
+                MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead], b => {
+                    b.WithUseEmbeddedWebView(true);
+                });
+
                 await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
                 break;
         }
@@ -102,7 +105,10 @@ public class StartupLoginViewModel : ViewModelBase {
                     appSettings.ApplicationName);
                 break;
             case MicrosoftRegistrationTriggerData microsoftRegistration:
-                MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead]);
+                MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead], b => {
+                    b.WithUseEmbeddedWebView(true);
+                });
+
                 await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
                 break;
         }

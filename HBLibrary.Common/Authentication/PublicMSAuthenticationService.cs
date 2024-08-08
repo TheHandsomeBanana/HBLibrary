@@ -14,25 +14,30 @@ using System.Net.Http;
 using Microsoft.Graph.Users;
 using HBLibrary.Common.Authentication.Microsoft;
 using Microsoft.Graph.Models;
+using static HBLibrary.Common.Authentication.MSAuthCredentials;
+
+
 
 namespace HBLibrary.Common.Authentication;
 public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationService {
     private readonly IPublicClientApplication app;
     private readonly MSParameterStorage parameterStorage;
 
-    public PublicMSAuthenticationService(string appName, string clientId) {
-        app = PublicClientApplicationBuilder.Create(clientId)
+    public PublicMSAuthenticationService(CommonAppSettings appSettings, AzureAdOptions azureAdOptions) {
+        app = PublicClientApplicationBuilder.Create(azureAdOptions.ClientId)
             .WithAuthority(AzureCloudInstance.AzurePublic, AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
-            .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+            .WithRedirectUri(azureAdOptions.RedirectUri)
             .Build();
 
-        parameterStorage = new MSParameterStorage(appName);
+        parameterStorage = new MSParameterStorage(appSettings.ApplicationName);
     }
 
-    public PublicMSAuthenticationService(string appName, IPublicClientApplication clientApp) {
-        app = clientApp;
-        parameterStorage = new MSParameterStorage(appName);
+    public PublicMSAuthenticationService(IPublicClientApplication app, CommonAppSettings appSettings) {
+        this.app = app;
+        parameterStorage = new MSParameterStorage(appSettings.ApplicationName);
     }
+
+    
 
     public async Task<MSAuthResult> AuthenticateAsync(MSAuthCredentials authCredentials, CancellationToken cancellationToken) {
         AuthenticationResult? result = null;
@@ -43,7 +48,11 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         try {
             switch (authCredentials.Type) {
                 case MSAuthCredentials.CredentialType.Cached:
-                    IAccount account = await app.GetAccountAsync(authCredentials.Identifier);
+                    IAccount? account = await app.GetAccountAsync(authCredentials.Identifier);
+                    if(account is null) {
+                        goto case MSAuthCredentials.CredentialType.Interactive;
+                    }
+
                     AcquireTokenSilentParameterBuilder silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
                     authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
                     result = await silentBuilder.ExecuteAsync(cancellationToken);

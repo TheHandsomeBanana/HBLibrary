@@ -62,6 +62,10 @@ public class MSParameterStorage {
         await SaveCredentialsAsync(identityList, cancellationToken);
     }
 
+    public MicrosoftIdentity? GetIdentity(string username) {
+        return LoadIdentities().FirstOrDefault(e => e.Username == username);
+    }
+    
     public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {
         return (await LoadIdentitiesAsync(cancellationToken)).FirstOrDefault(e => e.Username == username);
     }
@@ -83,6 +87,16 @@ public class MSParameterStorage {
             }
         }
 #endif
+    }
+
+    private List<MicrosoftIdentity> LoadIdentities() {
+        string base64Json = File.ReadAllText(appMSParameterPath);
+        string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
+        if (string.IsNullOrWhiteSpace(json)) {
+            return [];
+        }
+
+        return JsonSerializer.Deserialize<List<MicrosoftIdentity>>(json) ?? [];
     }
 
     private async Task<List<MicrosoftIdentity>> LoadIdentitiesAsync(CancellationToken cancellationToken = default) {

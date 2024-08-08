@@ -68,6 +68,26 @@ public sealed class MSAuthCredentials : IAuthCredentials {
 
         return credentials;
     }
+    
+    public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
+        MSParameterStorage storage = new MSParameterStorage(appName);
+        MicrosoftIdentity? identity = storage.GetIdentity(username);
+
+        if(identity is null) {
+            return null;
+        }
+
+        MSAuthCredentials credentials = new MSAuthCredentials {
+            Scopes = identity.Scopes,
+            Identifier = identity.Identifier,
+            Email = identity.Email,
+            DisplayName = identity.DisplayName,
+            Type = CredentialType.Cached,
+            SilentParameterBuilder = builder
+        };
+
+        return credentials;
+    }
 
     public static MSAuthCredentials CreateSilent(IEnumerable<string> scopes, string identifier, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
 
