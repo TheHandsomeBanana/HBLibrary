@@ -12,14 +12,15 @@
     <DataTemplate x:Key="LocalTemplate">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top"
                     Background="Transparent">
-            <TextBlock Style="{StaticResource HBDark_H1TextBlock}" Text="Local Account" Margin="0 0 0 5"/>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0">
-                <Path Data="M19.07,4.93C17.22,3 14.66,1.96 12,2C9.34,1.96 6.79,3 4.94,4.93C3,6.78 1.96,9.34 2,12C1.96,14.66 3,17.21 4.93,19.06C6.78,21 9.34,22.04 12,22C14.66,22.04 17.21,21 19.06,19.07C21,17.22 22.04,14.66 22,12C22.04,9.34 21,6.78 19.07,4.93M17,12V18H13.5V13H10.5V18H7V12H5L12,5L19.5,12H17Z"
-                      Fill="{StaticResource Foreground}"
+                <Path Data="M12 4C14.2 4 16 5.8 16 8C16 10.1 13.9 13.5 12 15.9C10.1 13.4 8 10.1 8 8C8 5.8 9.8 4 12 4M12 2C8.7 2 6 4.7 6 8C6 12.5 12 19 12 19S18 12.4 18 8C18 4.7 15.3 2 12 2M12 6C10.9 6 10 6.9 10 8S10.9 10 12 10 14 9.1 14 8 13.1 6 12 6M20 19C20 21.2 16.4 23 12 23S4 21.2 4 19C4 17.7 5.2 16.6 7.1 15.8L7.7 16.7C6.7 17.2 6 17.8 6 18.5C6 19.9 8.7 21 12 21S18 19.9 18 18.5C18 17.8 17.3 17.2 16.2 16.7L16.8 15.8C18.8 16.6 20 17.7 20 19Z"
+                      Fill="#fd919e"
+                      Stroke="#4b4372"
+                      StrokeThickness="1"
                       Stretch="Uniform"
-                      Width="48"
-                      Height="48"
+                      Width="32"
+                      Height="32"
                       Margin="0 0 10 0"/>
 
                 <TextBlock Style="{StaticResource HBDark_BigTextBlock}" 
@@ -32,7 +33,6 @@
     <DataTemplate x:Key="MicrosoftTemplate">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top"
                     Background="Transparent">
-            <TextBlock Style="{StaticResource HBDark_H1TextBlock}" Text="Microsoft Account"  Margin="0 0 0 5"/>
 
             <StackPanel Orientation="Horizontal">
                 <Image Source="../../Resources/Images/microsoft-icon.png" 
@@ -40,11 +40,18 @@
                        Width="48"/>
 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="{Binding Username}" Margin="0 0 0 3"/>
-                    <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="{Binding Email}"/>
+                    <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="{Binding DisplayName}" Margin="0 0 0 3"/>
+                    <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="{Binding Username}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="EmptyAccountTemplate">
+        <TextBlock Style="{StaticResource HBDark_BigTextBlock}" 
+                   Text="No account information available"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"/>
     </DataTemplate>
 
     <DataTemplate x:Key="HBTemplate">

@@ -23,3 +23,9 @@ public abstract class ViewModelBase<TModel> : ViewModelBase {
         Model = model;
     }
 }
+
+public abstract class ModelledViewModelBase<TModel> : ViewModelBase<TModel> where TModel : new() {
+    public ModelledViewModelBase() { 
+        Model = new TModel();
+    }
+}

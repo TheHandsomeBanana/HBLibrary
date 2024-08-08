@@ -84,6 +84,8 @@ public class StartupLoginViewModel : ViewModelBase {
                     appSettings.ApplicationName);
                 break;
             case MicrosoftLoginTriggerData microsoftLogin:
+                MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead]);
+                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
                 break;
         }
 
@@ -100,6 +102,8 @@ public class StartupLoginViewModel : ViewModelBase {
                     appSettings.ApplicationName);
                 break;
             case MicrosoftRegistrationTriggerData microsoftRegistration:
+                MSAuthCredentials mSAuthCredentials = MSAuthCredentials.CreateInteractive([MsalScopes.UserRead]);
+                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
                 break;
         }
 

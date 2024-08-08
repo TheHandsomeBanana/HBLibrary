@@ -59,10 +59,10 @@
             </Grid.RowDefinitions>
 
             <Border BorderBrush="{StaticResource HBDark_Border}"
-                BorderThickness="0 0 0 1"
-                CornerRadius="5 5 0 0"
-                Background="{StaticResource HBDark_Background}"
-                Grid.ColumnSpan="2">
+                    BorderThickness="0 0 0 1"
+                    CornerRadius="5 5 0 0"
+                    Background="{StaticResource HBDark_Background}"
+                    Grid.ColumnSpan="2">
             </Border>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10 0 0 0">
@@ -75,7 +75,7 @@
                       Margin="0 0 10 0"/>
 
 
-                <TextBlock Text="Account"
+                <TextBlock Text="{Binding AccountTypeName}"
                             VerticalAlignment="Center"
                             FontFamily="Bahnschrift SemiBold"
                             Foreground="White" FontSize="16" />
@@ -94,52 +94,47 @@
                         Command="{x:Static SystemCommands.CloseWindowCommand}"/>
             </StackPanel>
 
-            <Button Style="{StaticResource HBDark_VSButton2}"
-                    HorizontalAlignment="Right"
-                    Grid.Row="2"
-                    Content="Close"
-                    Margin="0 0 10 0"
-                    Command="{x:Static SystemCommands.CloseWindowCommand}">
+            <ContentControl Grid.Row="1"
+                       HorizontalContentAlignment="Left"
+                       Content="{Binding AccountDetailViewModel}"
+                       ContentTemplateSelector="{StaticResource AccountTemplateSelector}"
+                       Margin="10 10 10 5">
 
-            </Button>
-
-
-            <Grid Grid.Row="1" Margin="10 5 10 0">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            </ContentControl>
 
 
-                    <Button Style="{StaticResource HBDark_VSButton2}" 
-                            Width="110"
-                            HorizontalAlignment="Left"
-                            Command="{Binding SwitchUserCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                
-                                <TextBlock Style="{StaticResource HBDark_TextBlock}"
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+
+                <Button Style="{StaticResource HBDark_VSButton2}" 
+                    Width="120"
+                    Margin="0 0 5 0"
+                    HorizontalAlignment="Left"
+                    Command="{Binding SwitchUserCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" Margin="5 0 5 0">
+
+                            <TextBlock Style="{StaticResource HBDark_TextBlock}"
                                     Text="Switch Account"
                                     Margin="0 0 5 0"/>
                             <Path Data="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z"
-                                  Fill="{StaticResource VSGreen}"
-                                  Stretch="Uniform"/>
+                                Fill="{StaticResource VSGreen}"
+                                Stretch="Uniform"/>
                         </StackPanel>
-                            
-                        </Button.Content>
-                    </Button>
-                    
 
-                <ContentControl Grid.Row="1"
-                                HorizontalContentAlignment="Left"
-                                Content="{Binding AccountDetailViewModel}"
-                                ContentTemplateSelector="{StaticResource AccountTemplateSelector}"
-                                Margin="0 5 0 0">
+                    </Button.Content>
+                </Button>
 
-                </ContentControl>
-            </Grid>
+                <Button Style="{StaticResource HBDark_VSButton2}"
+                        HorizontalAlignment="Right"
+                        Grid.Row="2"
+                        Content="Close"
+                        Margin="0 0 10 0"
+                        Command="{x:Static SystemCommands.CloseWindowCommand}">
+                </Button>
+            </StackPanel>
 
         </Grid>
     </Border>

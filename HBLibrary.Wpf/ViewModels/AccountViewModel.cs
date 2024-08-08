@@ -20,11 +20,12 @@ namespace HBLibrary.Wpf.ViewModels;
 public class AccountViewModel : ViewModelBase {
     private readonly IAccountService accountService;
     private readonly CommonAppSettings commonAppSettings;
+    private readonly Window owner;
 
     public RelayCommand<Window> SwitchUserCommand { get; set; }
 
-    private ViewModelBase accountDetailViewModel;
-    public ViewModelBase AccountDetailViewModel { 
+    private ViewModelBase? accountDetailViewModel;
+    public ViewModelBase? AccountDetailViewModel { 
         get => accountDetailViewModel; 
         set {
             accountDetailViewModel = value;
@@ -32,14 +33,43 @@ public class AccountViewModel : ViewModelBase {
         }
     }
 
-    public AccountViewModel(IAccountService accountService, CommonAppSettings commonAppSettings) {
+    private string accountTypeName;
+
+    public string AccountTypeName {
+        get { return accountTypeName; }
+        set { 
+            accountTypeName = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+
+    public AccountViewModel(Window owner, IAccountService accountService, CommonAppSettings commonAppSettings) {
         this.accountService = accountService;
         this.commonAppSettings = commonAppSettings;
+        this.owner = owner;
 
         SwitchUserCommand = new RelayCommand<Window>(SwitchUser, true);
-        accountDetailViewModel = new LocalAccountViewModel();
+
+        switch(accountService.Account) {
+            case LocalAccount localAccount:
+                AccountDetailViewModel = new LocalAccountViewModel(new LocalAccountModel {
+                    Username = localAccount.Username,
+                });
+                AccountTypeName = "Local Account";
+                break;
+            case MicrosoftAccount microsoftAccount:
+                AccountDetailViewModel = new MicrosoftAccountViewModel(new MicrosoftAccountModel {
+                    Username = microsoftAccount.Username,
+                    DisplayName = microsoftAccount.DisplayName,
+                });
+
+                AccountTypeName = "Microsoft Account";
+                break;
+        }
     }
 
     private void SwitchUser(Window obj) {
+
     }
 }

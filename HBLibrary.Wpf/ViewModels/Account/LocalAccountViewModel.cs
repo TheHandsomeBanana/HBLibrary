@@ -8,4 +8,16 @@ using System.Threading.Tasks;
 namespace HBLibrary.Wpf.ViewModels.Account;
 
 public class LocalAccountViewModel : ViewModelBase<LocalAccountModel> {
+
+    public string Username {
+        get { return Model.Username; }
+        set {
+            Model.Username = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public LocalAccountViewModel(LocalAccountModel localAccount) : base(localAccount) {
+
+    }
 }

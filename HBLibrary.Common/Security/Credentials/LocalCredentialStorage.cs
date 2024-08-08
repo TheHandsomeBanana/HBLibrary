@@ -63,6 +63,28 @@ public class LocalCredentialStorage {
         return credentials;
     }
 
+    public async Task UnregisterUserAsync(string username, CancellationToken cancellationToken = default) {
+        UserCredentials? existingUserCredentials = await GetUserCredentialsAsync(username, cancellationToken);
+        if(existingUserCredentials is null) {
+            return;
+        }
+
+        List<UserCredentials> credentialsList = await LoadCredentialsAsync(cancellationToken);
+        credentialsList.Remove(existingUserCredentials);
+        await SaveCredentialsAsync(credentialsList, cancellationToken);
+    }
+    
+    public void UnregisterUser(string username) {
+        UserCredentials? existingUserCredentials = GetUserCredentials(username);
+        if(existingUserCredentials is null) {
+            return;
+        }
+
+        List<UserCredentials> credentialsList = LoadCredentials();
+        credentialsList.Remove(existingUserCredentials);
+        SaveCredentials(credentialsList);
+    }
+
     public UserCredentials? GetUserCredentials(string username) {
         return LoadCredentials().FirstOrDefault(e => e.Username == username);
     }
