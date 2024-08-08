@@ -19,7 +19,7 @@ public class StartupLoginViewModel : ViewModelBase {
     private readonly IAccountService accountService;
     private readonly CommonAppSettings appSettings;
 
-    public event Action? StartupCompleted;
+    public event Action<bool>? StartupCompleted;
 
     private ViewModelBase? appLoginContent;
     public ViewModelBase? AppLoginContent {
@@ -30,6 +30,7 @@ public class StartupLoginViewModel : ViewModelBase {
         }
     }
 
+    public RelayCommand<Window> CloseWindowCommand { get; set; }
     public RelayCommand LoginToggleCommand { get; set; }
     public RelayCommand RegisterToggleCommand { get; set; }
 
@@ -37,10 +38,15 @@ public class StartupLoginViewModel : ViewModelBase {
         this.accountService = accountService;
         this.appSettings = appSettings;
 
+        CloseWindowCommand = new RelayCommand<Window>(CloseWindow, true);
         LoginToggleCommand = new RelayCommand(LoginToggle, true);
         RegisterToggleCommand = new RelayCommand(RegisterToggle, true);
 
         LoginToggle(null);
+    }
+
+    private void CloseWindow(Window window) {
+        StartupCompleted?.Invoke(false);
     }
 
     private void LoginToggle(object? obj) {
@@ -83,10 +89,8 @@ public class StartupLoginViewModel : ViewModelBase {
 
 
         Window parentWindow = Window.GetWindow(arg!.ControlContext);
-        parentWindow.Visibility = Visibility.Hidden;
-        
-        StartupCompleted?.Invoke();
         parentWindow.Close();    
+        StartupCompleted?.Invoke(true);
     }
 
     private async Task RegisterViewModel_RegistrationCompleted(RegistrationTriggerData? arg) {
@@ -101,8 +105,8 @@ public class StartupLoginViewModel : ViewModelBase {
 
         Window parentWindow = Window.GetWindow(arg!.ControlContext);
         parentWindow.Visibility = Visibility.Hidden;
-
-        StartupCompleted?.Invoke();
         parentWindow.Close();
+
+        StartupCompleted?.Invoke(true);
     }
 }

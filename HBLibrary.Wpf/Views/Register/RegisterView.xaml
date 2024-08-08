@@ -85,12 +85,11 @@
                        Visibility="{Binding ErrorMessage, Converter={StaticResource s2v}, FallbackValue=Collapsed}"/>
             </StackPanel>
             <Button Grid.Row="3"
-                    Margin="0 5 0 5"
+                    Margin="0 5 0 0"
                     Style="{StaticResource HBDark_VSButton2}" 
                     Width="Auto" 
                     HorizontalContentAlignment="Left"
                     VerticalContentAlignment="Center"
-                    VerticalAlignment="Top"
                     Command="{Binding RegisterWithMicrosoftCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <Button.Content>

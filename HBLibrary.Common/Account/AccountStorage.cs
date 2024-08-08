@@ -54,6 +54,7 @@ public class AccountStorage {
         if (existingAccount is not null) {
             existingAccount.ModifiedOn = DateTime.UtcNow;
             existingAccount.AccountType = accountInfo.AccountType;
+            existingAccount.Username = accountInfo.Username;
         }
         else {
             accountInfo.CreatedOn = DateTime.UtcNow;

@@ -32,12 +32,12 @@ public class RegisterViewModel : ViewModelBase<RegistrationModel> {
             NotifyPropertyChanged();
             RegisterCommand.NotifyCanExecuteChanged();
 
-            if(ErrorMessage is not null) {
+            if (ErrorMessage is not null) {
                 ErrorMessage = null;
             }
         }
     }
-    
+
     public SecureString ConfirmSecurePassword {
         get => Model.ConfirmSecurePassword;
         set {

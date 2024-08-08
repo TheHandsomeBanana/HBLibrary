@@ -23,17 +23,6 @@ namespace HBLibrary.Wpf.Views {
         }
 
 
-        // Can execute
-        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = true;
-        }
-
-
-        // Close
-        private void CommandBinding_Executed_Close(object sender, ExecutedRoutedEventArgs e) {
-            SystemCommands.CloseWindow(this);
-        }
-
         protected override void OnContentRendered(EventArgs e) {
             base.OnContentRendered(e);
 

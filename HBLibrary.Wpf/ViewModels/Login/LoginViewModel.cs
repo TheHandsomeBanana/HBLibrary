@@ -84,6 +84,8 @@ public class LoginViewModel : ViewModelBase<LoginModel> {
             SecurePassword = Model.SecurePassword
         };
 
+        Window parentWindow = Window.GetWindow(obj);
+
         if (LoginTriggered is not null) {
             await LoginTriggered.Invoke(result);
         }
