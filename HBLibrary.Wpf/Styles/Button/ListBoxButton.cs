@@ -87,8 +87,6 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty IconStrokeProperty =
         DependencyProperty.Register("IconStroke", typeof(SolidColorBrush), typeof(ListBoxButton), new PropertyMetadata(null));
 
-
-
     public Thickness IconStrokeThickness {
         get { return (Thickness)GetValue(IconStrokeThicknessProperty); }
         set { SetValue(IconStrokeThicknessProperty, value); }

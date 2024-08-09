@@ -55,6 +55,10 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         return (await credentialStorage.GetUserCredentialsAsync(username, cancellationToken)) is null;
     }
 
+    public Task DeleteLocalUser(string username, CancellationToken cancellationToken = default) {
+        return credentialStorage.UnregisterUserAsync(username, cancellationToken);
+    }
+
     private async Task<bool> VerifyCredentialsAsync(string username, SecureString password, CancellationToken cancellationToken = default) {
         UserCredentials? credentials = await credentialStorage.GetUserCredentialsAsync(username, cancellationToken);
         if (credentials is null) {

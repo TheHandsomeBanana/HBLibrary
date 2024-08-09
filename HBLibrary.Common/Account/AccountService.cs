@@ -88,29 +88,42 @@ public class AccountService : IAccountService {
 
 
     public async Task LogoutAsync(CancellationToken cancellationToken = default) {
-        IsLoggedIn = false;
 
-        if(Account is MicrosoftAccount msAccount) {
-            await msAuthService.SignOutAsync(msAccount.Account!, cancellationToken);
+        switch (Account) {
+            case MicrosoftAccount msAccount:
+                await msAuthService.SignOutAsync(msAccount.Account!, cancellationToken);
+                IsLoggedIn = false;
+                ApplicationAccountInfo accountInfo = Account.GetApplicationAccountInfo();
+                accountInfo.Username = "";
+                await SaveAccountAsync(accountInfo);
+                break;
+            case LocalAccount localAccount:
+                await localAuthService.DeleteLocalUser(localAccount.Username, cancellationToken);
+                IsLoggedIn = false;
+                
+                accountInfo = Account.GetApplicationAccountInfo();
+                accountInfo.Username = "";
+                await SaveAccountAsync(accountInfo);
+                break;
         }
     }
 
-    public Task<AccountInfo?> GetLastAccountAsync(string application, CancellationToken cancellationToken = default) {
-        Common.Account.AccountStorage accountStorage = new AccountStorage();
+    public Task<ApplicationAccountInfo?> GetLastAccountAsync(string application, CancellationToken cancellationToken = default) {
+        AccountStorage accountStorage = new AccountStorage();
         return accountStorage.GetAccountAsync(application);
     }
 
-    public Task SaveAccountAsync(AccountInfo accountInfo) {
+    public Task SaveAccountAsync(ApplicationAccountInfo accountInfo) {
         AccountStorage accountStorage = new AccountStorage();
         return accountStorage.AddOrUpdateAccountAsync(accountInfo);
     }
 
-    public AccountInfo? GetLastAccount(string application) {
-        Common.Account.AccountStorage accountStorage = new AccountStorage();
+    public ApplicationAccountInfo? GetLastAccount(string application) {
+        AccountStorage accountStorage = new AccountStorage();
         return accountStorage.GetAccount(application);
     }
 
-    public void SaveAccount(AccountInfo accountInfo) {
+    public void SaveAccount(ApplicationAccountInfo accountInfo) {
         AccountStorage accountStorage = new AccountStorage();
         accountStorage.AddOrUpdateAccount(accountInfo);
     }
@@ -121,7 +134,7 @@ public class AccountService : IAccountService {
         }
 
         AccountStorage accountStorage = new AccountStorage();
-        AccountInfo accountInfo = Account!.GetAccountInfo();
+        ApplicationAccountInfo accountInfo = Account!.GetApplicationAccountInfo();
 
         return SaveAccountAsync(accountInfo);
     }
@@ -132,7 +145,7 @@ public class AccountService : IAccountService {
         }
 
         AccountStorage accountStorage = new AccountStorage();
-        AccountInfo accountInfo = Account!.GetAccountInfo();
+        ApplicationAccountInfo accountInfo = Account!.GetApplicationAccountInfo();
 
         SaveAccount(accountInfo);
     }

@@ -244,13 +244,21 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ListBoxButton}">
                     <Border x:Name="Border"
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            VerticalAlignment="Stretch" 
+                            HorizontalAlignment="Stretch">
                         <Grid>
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Path x:Name="icon" Height="{TemplateBinding IconHeight}" Width="{TemplateBinding IconWidth}" Stretch="Uniform" Fill="{TemplateBinding IconFill}" Data="{TemplateBinding Icon}" Margin="0 0 0 5"/>
+                                <Path Height="{TemplateBinding IconHeight}" 
+                                      Width="{TemplateBinding IconWidth}" 
+                                      Stretch="{TemplateBinding IconStretch}" 
+                                      Fill="{TemplateBinding IconFill}" 
+                                      Data="{TemplateBinding Icon}"
+                                      Stroke="{TemplateBinding IconStroke}"
+                                      StrokeThickness="{TemplateBinding IconStrokeThickness}"
+                                      Margin="0 0 0 5"/>
                                 <TextBlock Text="{TemplateBinding Text}" Foreground="{TemplateBinding Foreground}"></TextBlock>
                             </StackPanel>
                         </Grid>
@@ -383,9 +391,7 @@
                               StrokeThickness="{TemplateBinding IconStrokeThickness}"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"/>
-                            
-                            <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"/>
+                          
                         </Grid>
                     </Border>
 

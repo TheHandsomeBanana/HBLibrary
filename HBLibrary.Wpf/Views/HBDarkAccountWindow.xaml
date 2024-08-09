@@ -16,7 +16,8 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         Background="Transparent"
-        Width="400">
+        Width="400"
+        ResizeMode="NoResize">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" GlassFrameThickness="0" ResizeBorderThickness="5" CornerRadius="6" NonClientFrameEdges="None"/>
@@ -39,7 +40,8 @@
 
             <selectors:AccountTemplateSelector x:Key="AccountTemplateSelector"
                                                LocalTemplate="{StaticResource LocalTemplate}"
-                                               MicrosoftTemplate="{StaticResource MicrosoftTemplate}"/>
+                                               MicrosoftTemplate="{StaticResource MicrosoftTemplate}"
+                                               EmptyAccountTemplate="{StaticResource EmptyAccountTemplate}"/>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -103,7 +105,7 @@
 
                 <Button Style="{StaticResource HBDark_VSButton2}" 
                     Width="120"
-                    Margin="0 0 5 0"
+                    Margin="0 0 10 0"
                     HorizontalAlignment="Left"
                     Command="{Binding SwitchUserCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
@@ -119,14 +121,6 @@
                         </StackPanel>
 
                     </Button.Content>
-                </Button>
-
-                <Button Style="{StaticResource HBDark_VSButton2}"
-                        HorizontalAlignment="Right"
-                        Grid.Row="2"
-                        Content="Close"
-                        Margin="0 0 10 0"
-                        Command="{x:Static SystemCommands.CloseWindowCommand}">
                 </Button>
             </StackPanel>
 

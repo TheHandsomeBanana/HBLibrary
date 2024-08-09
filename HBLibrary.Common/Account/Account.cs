@@ -14,7 +14,7 @@ public abstract class Account {
     public required string Application { get; set; }
     public required string Username { get; set; }
 
-    public AccountInfo GetAccountInfo() => new AccountInfo {
+    public ApplicationAccountInfo GetApplicationAccountInfo() => new ApplicationAccountInfo {
         Application = Application,
         AccountType = AccountType,
         Username = Username

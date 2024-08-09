@@ -26,7 +26,7 @@ public class AccountViewModel : ViewModelBase {
 
     public RelayCommand<Window> SwitchUserCommand { get; set; }
 
-    private ViewModelBase? accountDetailViewModel;
+    private ViewModelBase? accountDetailViewModel = null;
     public ViewModelBase? AccountDetailViewModel { 
         get => accountDetailViewModel; 
         set {
@@ -58,16 +58,18 @@ public class AccountViewModel : ViewModelBase {
 
         switch(accountService.Account) {
             case LocalAccount localAccount:
-                AccountDetailViewModel = new LocalAccountViewModel(new LocalAccountModel {
+                AccountDetailViewModel = new LocalAccountViewModel(accountService, owner, new LocalAccountModel {
                     Username = localAccount.Username,
-                });
+                }, appSettings, userSwitchCallback, preventShutdownCallback);
+                
+
                 AccountTypeName = "Local Account";
                 break;
             case MicrosoftAccount microsoftAccount:
-                AccountDetailViewModel = new MicrosoftAccountViewModel(new MicrosoftAccountModel {
+                AccountDetailViewModel = new MicrosoftAccountViewModel(accountService, owner, new MicrosoftAccountModel {
                     Username = microsoftAccount.Username,
                     DisplayName = microsoftAccount.DisplayName,
-                });
+                }, appSettings, userSwitchCallback, preventShutdownCallback);
 
                 AccountTypeName = "Microsoft Account";
                 break;
@@ -80,7 +82,7 @@ public class AccountViewModel : ViewModelBase {
         obj.Close();
         this.owner.Close();
 
-        AccountInfo lastAccount = accountService.Account!.GetAccountInfo();
+        ApplicationAccountInfo lastAccount = accountService.Account!.GetApplicationAccountInfo();
         StartupLoginViewModel dataContext = new StartupLoginViewModel(accountService, appSettings);
 
         if (lastAccount.AccountType == AccountType.Local && dataContext.AppLoginContent is LoginViewModel loginViewModel) {

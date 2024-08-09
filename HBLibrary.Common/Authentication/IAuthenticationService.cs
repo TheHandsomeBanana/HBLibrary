@@ -13,6 +13,7 @@ public interface IAuthenticationService<TAuthResult, TAuthCredentials> where TAu
 public interface ILocalAuthenticationService : IAuthenticationService<LocalAuthResult, LocalAuthCredentials> {
     public Task<bool> IsNewUserAsync(string username, CancellationToken cancellationToken = default);
     public Task<LocalAuthResult> AuthenticateNewAsync(LocalAuthCredentials authCredentials, CancellationToken cancellationToken = default);
+    public Task DeleteLocalUser(string username, CancellationToken cancellationToken = default);
 }
 
 public interface IPublicMSAuthenticationService : IAuthenticationService<MSAuthResult, MSAuthCredentials> {

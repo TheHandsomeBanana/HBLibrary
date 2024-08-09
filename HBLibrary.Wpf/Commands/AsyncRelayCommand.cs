@@ -21,7 +21,7 @@ public class AsyncRelayCommand<TParameter> : AsyncCommandBase {
     private readonly Func<TParameter, Task> callback;
     private readonly Predicate<TParameter> canExecute;
 
-    public AsyncRelayCommand(Func<TParameter, Task> callback, Predicate<TParameter?> canExecute, Action<Exception> onException) : base(onException) {
+    public AsyncRelayCommand(Func<TParameter, Task> callback, Predicate<TParameter> canExecute, Action<Exception> onException) : base(onException) {
         this.callback = callback ?? throw new ArgumentNullException(nameof(callback));
         this.canExecute = canExecute;
     }

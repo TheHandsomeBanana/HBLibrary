@@ -92,13 +92,15 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         return credentials;
     }
 
-    public static MSAuthCredentials CreateSilent(IEnumerable<string> scopes, string identifier, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
+    public static MSAuthCredentials CreateSilent(IEnumerable<string> scopes, string identifier,
+        Action<AcquireTokenSilentParameterBuilder>? builder = null, Action<AcquireTokenInteractiveParameterBuilder>? fallbackBuilder = null) {
 
         MSAuthCredentials credentials = new MSAuthCredentials {
             Scopes = scopes,
             Identifier = identifier,
             Type = CredentialType.Silent,
-            SilentParameterBuilder = builder
+            SilentParameterBuilder = builder,
+            InteractiveParameterBuilder = fallbackBuilder
         };
 
         return credentials;

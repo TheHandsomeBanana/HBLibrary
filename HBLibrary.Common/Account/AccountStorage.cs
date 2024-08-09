@@ -17,15 +17,15 @@ public class AccountStorage {
         }
     }
 
-    public AccountInfo? GetAccount(string application) {
-        List<AccountInfo> accounts = LoadAllAccounts();
+    public ApplicationAccountInfo? GetAccount(string application) {
+        List<ApplicationAccountInfo> accounts = LoadAllAccounts();
         return accounts.FirstOrDefault(e => e.Application == application);
     }
 
-    public void AddOrUpdateAccount(AccountInfo accountInfo) {
-        List<AccountInfo> accounts = LoadAllAccounts();
+    public void AddOrUpdateAccount(ApplicationAccountInfo accountInfo) {
+        List<ApplicationAccountInfo> accounts = LoadAllAccounts();
 
-        AccountInfo? existingAccount = accounts.FirstOrDefault(e => e.Application == accountInfo.Application);
+        ApplicationAccountInfo? existingAccount = accounts.FirstOrDefault(e => e.Application == accountInfo.Application);
 
         if (existingAccount is not null) {
             existingAccount.ModifiedOn = DateTime.UtcNow;
@@ -40,16 +40,16 @@ public class AccountStorage {
         SaveAllAccounts(accounts);
     }
 
-    public async Task<AccountInfo?> GetAccountAsync(string application, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
+    public async Task<ApplicationAccountInfo?> GetAccountAsync(string application, CancellationToken cancellationToken = default) {
+        List<ApplicationAccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
 
         return accounts.FirstOrDefault(e => e.Application == application);
     }
 
-    public async Task AddOrUpdateAccountAsync(AccountInfo accountInfo, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
+    public async Task AddOrUpdateAccountAsync(ApplicationAccountInfo accountInfo, CancellationToken cancellationToken = default) {
+        List<ApplicationAccountInfo> accounts = await LoadAllAccountsAsync(cancellationToken);
 
-        AccountInfo? existingAccount = accounts.FirstOrDefault(e => e.Application == accountInfo.Application);
+        ApplicationAccountInfo? existingAccount = accounts.FirstOrDefault(e => e.Application == accountInfo.Application);
 
         if (existingAccount is not null) {
             existingAccount.ModifiedOn = DateTime.UtcNow;
@@ -65,17 +65,17 @@ public class AccountStorage {
         await SaveAllAccountsAsync(accounts);
     }
 
-    public List<AccountInfo> LoadAllAccounts() {
+    public List<ApplicationAccountInfo> LoadAllAccounts() {
         string base64Json = File.ReadAllText(accountStoragePath);
         string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
         if (string.IsNullOrWhiteSpace(json)) {
             return [];
         }
 
-        return JsonSerializer.Deserialize<List<AccountInfo>>(json) ?? [];
+        return JsonSerializer.Deserialize<List<ApplicationAccountInfo>>(json) ?? [];
     }
 
-    public async Task<List<AccountInfo>> LoadAllAccountsAsync(CancellationToken cancellationToken = default) {
+    public async Task<List<ApplicationAccountInfo>> LoadAllAccountsAsync(CancellationToken cancellationToken = default) {
         string base64Json;
 #if NET5_0_OR_GREATER
         base64Json = await File.ReadAllTextAsync(accountStoragePath, cancellationToken);
@@ -93,17 +93,17 @@ public class AccountStorage {
             return [];
         }
 
-        return JsonSerializer.Deserialize<List<AccountInfo>>(json) ?? [];
+        return JsonSerializer.Deserialize<List<ApplicationAccountInfo>>(json) ?? [];
     }
 
-    private void SaveAllAccounts(List<AccountInfo> accounts) {
+    private void SaveAllAccounts(List<ApplicationAccountInfo> accounts) {
         string json = JsonSerializer.Serialize(accounts);
         string base64Json = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(json));
 
         File.WriteAllText(accountStoragePath, base64Json);
     }
 
-    private Task SaveAllAccountsAsync(List<AccountInfo> accounts, CancellationToken cancellationToken = default) {
+    private Task SaveAllAccountsAsync(List<ApplicationAccountInfo> accounts, CancellationToken cancellationToken = default) {
         string json = JsonSerializer.Serialize(accounts);
         string base64Json = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(json));
 

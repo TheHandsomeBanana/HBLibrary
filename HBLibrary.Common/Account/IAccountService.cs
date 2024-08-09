@@ -14,10 +14,10 @@ public interface IAccountService {
     public Task LoginAsync(IAuthCredentials credentials, string application, CancellationToken cancellationToken = default);
     public Task LogoutAsync(CancellationToken cancellationToken = default);
 
-    public Task<AccountInfo?> GetLastAccountAsync(string application, CancellationToken cancellationToken = default);
-    public Task SaveAccountAsync(AccountInfo accountInfo);
+    public Task<ApplicationAccountInfo?> GetLastAccountAsync(string application, CancellationToken cancellationToken = default);
+    public Task SaveAccountAsync(ApplicationAccountInfo accountInfo);
 
-    public AccountInfo? GetLastAccount(string application);
-    public void SaveAccount(AccountInfo accountInfo);
+    public ApplicationAccountInfo? GetLastAccount(string application);
+    public void SaveAccount(ApplicationAccountInfo accountInfo);
 
 }

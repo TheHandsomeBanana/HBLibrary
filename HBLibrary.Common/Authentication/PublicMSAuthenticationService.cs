@@ -37,7 +37,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         parameterStorage = new MSParameterStorage(appSettings.ApplicationName);
     }
 
-    
+
 
     public async Task<MSAuthResult> AuthenticateAsync(MSAuthCredentials authCredentials, CancellationToken cancellationToken) {
         AuthenticationResult? result = null;
@@ -49,23 +49,36 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
             switch (authCredentials.Type) {
                 case MSAuthCredentials.CredentialType.Cached:
                     IAccount? account = await app.GetAccountAsync(authCredentials.Identifier);
-                    if(account is null) {
+                    if (account is null) {
                         goto case MSAuthCredentials.CredentialType.Interactive;
                     }
 
-                    AcquireTokenSilentParameterBuilder silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
-                    authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
-                    result = await silentBuilder.ExecuteAsync(cancellationToken);
+                    AcquireTokenSilentParameterBuilder silentBuilder;
+                    try {
+                        silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
+                        authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
+                        result = await silentBuilder.ExecuteAsync(cancellationToken);
 
-                    email = authCredentials.Email!;
-                    displayName = authCredentials.DisplayName!;
+                        email = authCredentials.Email!;
+                        displayName = authCredentials.DisplayName!;
+
+                    }
+                    catch (MsalException) {
+                        goto case MSAuthCredentials.CredentialType.Interactive;
+                    }
                     break;
 
                 case MSAuthCredentials.CredentialType.Silent:
-                    account = await app.GetAccountAsync(authCredentials.Identifier);
-                    silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
-                    authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
-                    result = await silentBuilder.ExecuteAsync(cancellationToken);
+                    try {
+
+                        account = await app.GetAccountAsync(authCredentials.Identifier);
+                        silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
+                        authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
+                        result = await silentBuilder.ExecuteAsync(cancellationToken);
+                    }
+                    catch(MsalUiRequiredException) {
+                        goto case MSAuthCredentials.CredentialType.Interactive;
+                    }
                     break;
 
                 case MSAuthCredentials.CredentialType.Interactive:

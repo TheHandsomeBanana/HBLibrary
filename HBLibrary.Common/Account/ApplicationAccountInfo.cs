@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Account;
-public class AccountInfo : IEquatable<AccountInfo> {
+public class ApplicationAccountInfo : IEquatable<ApplicationAccountInfo> {
     public AccountType AccountType { get; set; }
     public required string Application { get; set; }
     public required string Username { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime ModifiedOn { get; set; }
 
-    public bool Equals(AccountInfo? other) {
+    public bool Equals(ApplicationAccountInfo? other) {
         return other is not null
             && AccountType == other.AccountType
             && Application == other.Application
@@ -20,7 +20,7 @@ public class AccountInfo : IEquatable<AccountInfo> {
     }
 
     public override bool Equals(object? obj) {
-        return Equals(obj as AccountInfo);
+        return Equals(obj as ApplicationAccountInfo);
     }
 
     public override int GetHashCode() {

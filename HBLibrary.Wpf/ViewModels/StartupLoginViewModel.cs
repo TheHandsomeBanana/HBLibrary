@@ -56,7 +56,7 @@ public class StartupLoginViewModel : ViewModelBase {
         }
 
         LoginViewModel loginViewModel = new LoginViewModel();
-        AccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName);
+        ApplicationAccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName);
 
         if(lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
             loginViewModel.Username = lastAccount.Username;
