@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Extensions {
+﻿namespace HBLibrary.Common.Extensions {
     public static class StreamExtensions {
         public static byte[] Read(this Stream s) {
             return s.Read(s.Length);

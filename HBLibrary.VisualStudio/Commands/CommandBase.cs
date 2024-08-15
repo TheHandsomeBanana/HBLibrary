@@ -2,10 +2,10 @@
 using System;
 using System.ComponentModel.Design;
 
-namespace HBLibrary.VisualStudio.Commands; 
+namespace HBLibrary.VisualStudio.Commands;
 public abstract class CommandBase {
     protected AsyncPackage Package { get; }
-    protected abstract Guid CommandSet { get; }     
+    protected abstract Guid CommandSet { get; }
     protected abstract int CommandId { get; }
 
     protected CommandBase(AsyncPackage package, IMenuCommandService commandService) {

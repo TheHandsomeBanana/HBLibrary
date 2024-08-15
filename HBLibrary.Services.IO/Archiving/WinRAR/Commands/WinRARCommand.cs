@@ -1,15 +1,12 @@
 ﻿using HBLibrary.Common.Limiter;
 using HBLibrary.Common.RegularExpressions;
-using HBLibrary.Services.IO.Exceptions;
-using System.Collections.Immutable;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public abstract class WinRARCommand : IWinRARCommand {
     public virtual WinRARCommandName Command { get; }
     public required string TargetArchive { get; init; }
-    public WinRARProcessPriority? Priority { get; init; } 
+    public WinRARProcessPriority? Priority { get; init; }
     public WinRARPassword? Password { get; init; }
 
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace HBLibrary.Code.Interpreter;
 public readonly struct LineSpan : IEquatable<LineSpan> {
@@ -26,8 +21,8 @@ public readonly struct LineSpan : IEquatable<LineSpan> {
     }
 
     public bool Equals(LineSpan other) {
-        return StartLine == other.StartLine &&  
-            LineLength == other.LineLength && 
+        return StartLine == other.StartLine &&
+            LineLength == other.LineLength &&
             Span == other.Span;
     }
 

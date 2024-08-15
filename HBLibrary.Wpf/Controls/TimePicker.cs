@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace HBLibrary.Wpf.Controls;
@@ -45,7 +34,7 @@ public class TimePicker : Control {
         get { return (Style)GetValue(SeperatorStyleProperty); }
         set { SetValue(SeperatorStyleProperty, value); }
     }
-    
+
 
     // Using a DependencyProperty as the backing store for SeperatorStyle.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty SeperatorStyleProperty =
@@ -85,7 +74,7 @@ public class TimePicker : Control {
         if (hourComboBox != null) {
             hourComboBox.SelectionChanged += (s, e) => UpdateSelectedTime();
             PopulateComboBox(hourComboBox, 24);
-            
+
         }
 
         if (minuteComboBox != null) {
@@ -120,13 +109,13 @@ public class TimePicker : Control {
     }
 
     private void UpdateComboBoxes() {
-        if(isUpdating) {
+        if (isUpdating) {
             return;
         }
 
         if (hourComboBox != null && minuteComboBox != null) {
             isUpdating = true;
-            hourComboBox.SelectedIndex = SelectedTime.HasValue 
+            hourComboBox.SelectedIndex = SelectedTime.HasValue
                 ? SelectedTime.Value.Hour
                 : -1;
 

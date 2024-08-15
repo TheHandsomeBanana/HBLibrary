@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace HBLibrary.Common.Account;
 public class AccountStorage {
@@ -80,8 +74,8 @@ public class AccountStorage {
 #if NET5_0_OR_GREATER
         base64Json = await File.ReadAllTextAsync(accountStoragePath, cancellationToken);
 #elif NET472_OR_GREATER
-        using(FileStream fs = new FileStream(accountStoragePath, FileMode.Open, FileAccess.Read)) {
-            using(StreamReader sr = new StreamReader(fs)) {           
+        using (FileStream fs = new FileStream(accountStoragePath, FileMode.Open, FileAccess.Read)) {
+            using (StreamReader sr = new StreamReader(fs)) {
                 base64Json = await sr.ReadToEndAsync();
             }
         }

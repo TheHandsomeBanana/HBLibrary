@@ -1,8 +1,11 @@
-﻿using HBLibrary.Common.Account;
+﻿using HBLibrary.Common.Authentication.Microsoft;
 using HBLibrary.Common.Exceptions;
 using HBLibrary.Common.Security;
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
+using Microsoft.Graph.Models;
+
+/* Unmerged change from project 'HBLibrary.Common (net8.0)'
+Before:
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +17,20 @@ using System.Net.Http;
 using Microsoft.Graph.Users;
 using HBLibrary.Common.Authentication.Microsoft;
 using Microsoft.Graph.Models;
-using static HBLibrary.Common.Authentication.MSAuthCredentials;
+After:
+using Microsoft.Graph.Users;
+using Microsoft.Identity.Client;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+*/
+using Microsoft.Identity.Client;
+using System.Net.Http;
 
 
 
@@ -76,7 +92,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                         authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
                         result = await silentBuilder.ExecuteAsync(cancellationToken);
                     }
-                    catch(MsalUiRequiredException) {
+                    catch (MsalUiRequiredException) {
                         goto case MSAuthCredentials.CredentialType.Interactive;
                     }
                     break;

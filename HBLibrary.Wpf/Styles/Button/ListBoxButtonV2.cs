@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace HBLibrary.Wpf.Styles.Button; 
+namespace HBLibrary.Wpf.Styles.Button;
 public class ListBoxButtonV2 : ListBoxItem {
 
     static ListBoxButtonV2() {
@@ -60,7 +55,7 @@ public class ListBoxButtonV2 : ListBoxItem {
     // Using a DependencyProperty as the backing store for IconWidth.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ImageWidthProperty =
         DependencyProperty.Register("ImageWidth", typeof(double), typeof(ListBoxButtonV2), new PropertyMetadata(0.0));
-   
+
     public Stretch ImageStretch {
         get { return (Stretch)GetValue(ImageStretchProperty); }
         set { SetValue(ImageStretchProperty, value); }

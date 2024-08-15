@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HBLibrary.VisualStudio.Commands; 
+namespace HBLibrary.VisualStudio.Commands;
 public class CommandException : Exception {
     public CommandException(string message) : base(message) {
     }

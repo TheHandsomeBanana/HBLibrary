@@ -2,10 +2,10 @@
 
 public readonly struct TextSpan : IEquatable<TextSpan>, IComparable<TextSpan> {
     public TextSpan(int start, int length) {
-        if(start < 0)
+        if (start < 0)
             throw new ArgumentOutOfRangeException(nameof(start));
 
-        if(start > start + length)
+        if (start > start + length)
             throw new ArgumentOutOfRangeException(nameof(length));
 
         Start = start;

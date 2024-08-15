@@ -1,13 +1,6 @@
 ﻿using HBLibrary.Services.Logging.Configuration;
 using HBLibrary.Services.Logging.Statements;
 using HBLibrary.Services.Logging.Targets;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.Logging.Tests;
 [TestClass]
@@ -253,7 +246,7 @@ public class StandardLoggerTests {
         try {
             logger.Info("Testinformation");
         }
-        catch(Exception e) {
+        catch (Exception e) {
             Assert.Fail(e.ToString());
         }
 

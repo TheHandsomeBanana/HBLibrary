@@ -4,11 +4,7 @@ using HBLibrary.Services.Security.Cryptography.Rsa;
 using HBLibrary.Services.Security.Cryptography.Settings;
 using HBLibrary.Services.Security.DataProtection;
 using HBLibrary.Services.Security.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.Security.Cryptography;
 public class Cryptographer : ICryptographer {
@@ -39,7 +35,7 @@ public class Cryptographer : ICryptographer {
                 return dpService.Unprotect(data);
 #endif
             case CryptographyMode.AES:
-                if(settings.Key.Name != nameof(AesKey))
+                if (settings.Key.Name != nameof(AesKey))
                     CryptographerException.ThrowIncorrectKey(settings.Key.Name);
 
                 return aesCryptographer.Decrypt(data, (AesKey)settings.Key);

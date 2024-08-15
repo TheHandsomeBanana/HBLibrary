@@ -1,6 +1,4 @@
-﻿using CsvHelper.Configuration.Attributes;
-using Microsoft.Win32;
-using System.Diagnostics;
+﻿using Microsoft.Win32;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public static class WinRARManager {
@@ -36,7 +34,7 @@ public static class WinRARManager {
         if (!PathValidator.ValidatePath(path) || !Directory.Exists(path))
             return false;
 
-        foreach(string filename in Directory.EnumerateFiles(path)) {
+        foreach (string filename in Directory.EnumerateFiles(path)) {
             if (filename.Split('\\').Last() == "Rar.exe")
                 return true;
         }

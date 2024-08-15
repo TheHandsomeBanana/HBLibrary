@@ -1,5 +1,4 @@
 ﻿using HBLibrary.Common.Process;
-using System;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public static class ProcessExitEventArgsExtension {

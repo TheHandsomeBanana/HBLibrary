@@ -1,5 +1,4 @@
 ﻿using HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
-using HBLibrary.Services.IO.Archiving.WinRAR.ConfigModels;
 
 namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands;
 public interface IWinRARCommandProvider {

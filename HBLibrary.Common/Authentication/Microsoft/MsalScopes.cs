@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Authentication.Microsoft;
+﻿namespace HBLibrary.Common.Authentication.Microsoft;
 public static class MsalScopes {
     // User scopes
     public const string UserRead = "User.Read";

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace HBLibrary.Wpf.ViewModels; 
+namespace HBLibrary.Wpf.ViewModels;
 public class WindowCloser {
 
 

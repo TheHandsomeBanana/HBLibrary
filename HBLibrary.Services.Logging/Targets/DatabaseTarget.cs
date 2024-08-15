@@ -1,12 +1,7 @@
 ﻿using HBLibrary.Services.Logging.Configuration;
 using HBLibrary.Services.Logging.Statements;
 using HBLibrary.Services.Logging.Targets.SqlHelper;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.Logging.Targets;
 internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
@@ -34,7 +29,7 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
         connection.ConnectionString = connectionString;
         connection.Open();
 
-        using DbCommand command = connection.CreateLogTableCreateCommand(providerName, TableName); 
+        using DbCommand command = connection.CreateLogTableCreateCommand(providerName, TableName);
         command.ExecuteNonQuery();
     }
 

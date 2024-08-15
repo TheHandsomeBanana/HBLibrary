@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Account;
+﻿namespace HBLibrary.Common.Account;
 public class ApplicationAccountInfo : IEquatable<ApplicationAccountInfo> {
     public AccountType AccountType { get; set; }
     public required string Application { get; set; }

@@ -1,9 +1,4 @@
 ﻿using HBLibrary.Common.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Account;
 public class AccountService : IAccountService {
@@ -100,7 +95,7 @@ public class AccountService : IAccountService {
             case LocalAccount localAccount:
                 await localAuthService.DeleteLocalUser(localAccount.Username, cancellationToken);
                 IsLoggedIn = false;
-                
+
                 accountInfo = Account.GetApplicationAccountInfo();
                 accountInfo.Username = "";
                 await SaveAccountAsync(accountInfo);

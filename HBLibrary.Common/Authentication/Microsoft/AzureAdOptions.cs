@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Authentication.Microsoft;
+﻿namespace HBLibrary.Common.Authentication.Microsoft;
 public class AzureAdOptions {
     public string ClientId { get; set; }
     public string TenantId { get; set; }

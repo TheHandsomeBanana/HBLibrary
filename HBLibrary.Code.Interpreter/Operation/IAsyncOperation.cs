@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Code.Interpreter.Operation;
+﻿namespace HBLibrary.Code.Interpreter.Operation;
 public interface IAsyncOperation {
     public Task Run();
 }

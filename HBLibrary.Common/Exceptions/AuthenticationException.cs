@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace HBLibrary.Common.Exceptions;
 public class AuthenticationException : Exception {
@@ -15,13 +10,24 @@ public class AuthenticationException : Exception {
 
     [DoesNotReturn]
     public static void ThrowInvalidCredentials() => throw new AuthenticationException("Credentials are invalid.");
-    
+
     [DoesNotReturn]
+
+    /* Unmerged change from project 'HBLibrary.Common (net8.0)'
+    Before:
+        public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
+
+        [DoesNotReturn]
+    After:
+        public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
+
+        [DoesNotReturn]
+    */
     public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
-    
+
     [DoesNotReturn]
     public static void ThrowUserNotFound() => throw new AuthenticationException("User does not exist.");
-    
+
     [DoesNotReturn]
     public static void ThrowUserAlreadyExists() => throw new AuthenticationException("User already exists.");
 

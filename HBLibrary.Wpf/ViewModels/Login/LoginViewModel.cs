@@ -1,15 +1,7 @@
-﻿using HBLibrary.Common.Account;
-using HBLibrary.Common.Security;
+﻿using HBLibrary.Common.Security;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
-using HBLibrary.Wpf.Views;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 

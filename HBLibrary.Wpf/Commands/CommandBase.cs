@@ -1,7 +1,6 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
-namespace HBLibrary.Wpf.Commands; 
+namespace HBLibrary.Wpf.Commands;
 public abstract class CommandBase : ICommand {
     public event EventHandler? CanExecuteChanged;
 

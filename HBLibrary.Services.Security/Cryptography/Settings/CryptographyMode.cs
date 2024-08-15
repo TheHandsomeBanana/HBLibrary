@@ -1,4 +1,4 @@
-﻿namespace HBLibrary.Services.Security.Cryptography.Settings; 
+﻿namespace HBLibrary.Services.Security.Cryptography.Settings;
 public enum CryptographyMode {
 #if WINDOWS
     DPApiUser,

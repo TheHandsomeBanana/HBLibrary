@@ -1,10 +1,24 @@
-﻿using HBLibrary.Services.Security.Cryptography.Keys;
-using System;
-using System.IO;
-using System.Security.Cryptography;
+﻿
+/* Unmerged change from project 'HBLibrary.Services.Security (net472)'
+Before:
+using HBLibrary.Services.Security.Cryptography.Keys;
+After:
+using HBLibrary.Common.Extensions;
+using HBLibrary.Services.Security.Cryptography;
+using HBLibrary.Services.Security.Cryptography.Keys;
+*/
+using HBLibrary.Common.Extensions;
+using HBLibrary.Services.Security.Cryptography.Keys;
+
+/* Unmerged change from project 'HBLibrary.Services.Security (net472)'
+Before:
 using System.Threading.Tasks;
 using HBLibrary.Common.Extensions;
 using HBLibrary.Services.Security.Cryptography;
+After:
+using System.Threading.Tasks;
+*/
+using System.Security.Cryptography;
 
 namespace HBLibrary.Services.Security.Cryptography.Aes;
 

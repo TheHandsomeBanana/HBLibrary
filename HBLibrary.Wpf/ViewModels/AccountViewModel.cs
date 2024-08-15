@@ -1,20 +1,11 @@
 ﻿using HBLibrary.Common;
 using HBLibrary.Common.Account;
-using HBLibrary.Common.Authentication;
-using HBLibrary.Common.Authentication.Microsoft;
-using HBLibrary.Common.DI.Unity;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
 using HBLibrary.Wpf.ViewModels.Account;
 using HBLibrary.Wpf.ViewModels.Login;
 using HBLibrary.Wpf.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Unity;
 
 namespace HBLibrary.Wpf.ViewModels;
 public class AccountViewModel : ViewModelBase {
@@ -27,8 +18,8 @@ public class AccountViewModel : ViewModelBase {
     public RelayCommand<Window> SwitchUserCommand { get; set; }
 
     private ViewModelBase? accountDetailViewModel = null;
-    public ViewModelBase? AccountDetailViewModel { 
-        get => accountDetailViewModel; 
+    public ViewModelBase? AccountDetailViewModel {
+        get => accountDetailViewModel;
         set {
             accountDetailViewModel = value;
             NotifyPropertyChanged();
@@ -38,14 +29,14 @@ public class AccountViewModel : ViewModelBase {
     private string? accountTypeName;
     public string? AccountTypeName {
         get { return accountTypeName; }
-        set { 
+        set {
             accountTypeName = value;
             NotifyPropertyChanged();
         }
     }
 
 
-    public AccountViewModel(Window owner, IAccountService accountService, CommonAppSettings appSettings, 
+    public AccountViewModel(Window owner, IAccountService accountService, CommonAppSettings appSettings,
         Action<bool>? userSwitchCallback = null, Action? preventShutdownCallback = null) {
 
         this.accountService = accountService;
@@ -56,12 +47,12 @@ public class AccountViewModel : ViewModelBase {
 
         SwitchUserCommand = new RelayCommand<Window>(SwitchUser, true);
 
-        switch(accountService.Account) {
+        switch (accountService.Account) {
             case LocalAccount localAccount:
                 AccountDetailViewModel = new LocalAccountViewModel(accountService, owner, new LocalAccountModel {
                     Username = localAccount.Username,
                 }, appSettings, userSwitchCallback, preventShutdownCallback);
-                
+
 
                 AccountTypeName = "Local Account";
                 break;

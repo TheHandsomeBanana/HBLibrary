@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Tests;
+﻿namespace HBLibrary.Common.Tests;
 [TestClass]
 public class IOTests {
     [TestMethod]

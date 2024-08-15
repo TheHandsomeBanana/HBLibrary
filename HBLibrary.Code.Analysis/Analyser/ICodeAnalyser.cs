@@ -1,12 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.VisualStudio.Text;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HBLibrary.Code.Analysis.Analyser; 
+namespace HBLibrary.Code.Analysis.Analyser;
 public interface ICodeAnalyser {
     IAnalyserRegistry Registry { get; }
     Task<object> RunAsync(SyntaxNode syntaxNode);

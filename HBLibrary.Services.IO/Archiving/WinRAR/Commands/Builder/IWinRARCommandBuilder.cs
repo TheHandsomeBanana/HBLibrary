@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
+﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
 public interface IWinRARCommandBuilder<TArgumentsBuilder> {
     TArgumentsBuilder SetTargetArchive(ValidPath targetArchive);
     TArgumentsBuilder SetPassword(WinRARPassword password); // -h, -hp

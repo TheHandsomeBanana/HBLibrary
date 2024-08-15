@@ -1,6 +1,4 @@
-﻿using HBLibrary.Code.Interpreter;
-
-namespace HBLibrary.Code.Interpreter.Syntax;
+﻿namespace HBLibrary.Code.Interpreter.Syntax;
 public interface ISyntaxNode { // Flag for constraint
     public TextSpan Span { get; }
     public LineSpan LineSpan { get; }

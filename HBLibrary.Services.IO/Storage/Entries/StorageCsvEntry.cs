@@ -1,12 +1,7 @@
 ﻿using CsvHelper;
 using HBLibrary.Services.IO.Storage.Settings;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
 internal class StorageCsvEntry : StorageEntry, IStorageEntry {
@@ -14,7 +9,7 @@ internal class StorageCsvEntry : StorageEntry, IStorageEntry {
     }
 
     public object? Get(Type type) {
-        if(!typeof(IEnumerable).IsAssignableFrom(type)) {
+        if (!typeof(IEnumerable).IsAssignableFrom(type)) {
             throw new InvalidOperationException("Invalid type, needs to be enumerable.");
         }
 
@@ -38,7 +33,7 @@ internal class StorageCsvEntry : StorageEntry, IStorageEntry {
     }
 
     public override void Set(object value) {
-        if(value is not IEnumerable) {
+        if (value is not IEnumerable) {
             throw new InvalidOperationException("Cannot set entry, object needs to be enumerable.");
         }
 

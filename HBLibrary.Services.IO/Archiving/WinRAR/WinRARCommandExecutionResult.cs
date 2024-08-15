@@ -1,11 +1,4 @@
-﻿using HBLibrary.Common.Process;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO.Archiving.WinRAR;
+﻿namespace HBLibrary.Services.IO.Archiving.WinRAR;
 public class WinRARCommandExecutionResult {
     public required string StdOutput { get; init; }
     public required string StdError { get; init; }

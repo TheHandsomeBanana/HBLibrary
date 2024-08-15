@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace HBLibrary.Common.Timer;
 public static class TimeTracker {
@@ -66,7 +61,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult<TResult>(result, sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult<TResult> ExecuteTimed<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) {
         if (func is null) {
             throw new ArgumentNullException(nameof(func));
@@ -78,7 +73,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult<TResult>(result, sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult<TResult> ExecuteTimed<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) {
         if (func is null) {
             throw new ArgumentNullException(nameof(func));
@@ -90,7 +85,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult<TResult>(result, sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult<TResult> ExecuteTimed<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7) {
         if (func is null) {
             throw new ArgumentNullException(nameof(func));
@@ -102,7 +97,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult<TResult>(result, sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult<TResult> ExecuteTimed<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8) {
         if (func is null) {
             throw new ArgumentNullException(nameof(func));
@@ -138,7 +133,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult(sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult ExecuteTimed<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2) {
         if (action == null) {
             throw new ArgumentNullException(nameof(action));
@@ -150,7 +145,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult(sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult ExecuteTimed<T1, T2, T3>(Action<T1, T2, T3> action, T1 arg1, T2 arg2, T3 arg3) {
         if (action == null) {
             throw new ArgumentNullException(nameof(action));
@@ -185,7 +180,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult(sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult ExecuteTimed<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) {
         if (action == null) {
             throw new ArgumentNullException(nameof(action));
@@ -197,7 +192,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult(sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult ExecuteTimed<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7) {
         if (action == null) {
             throw new ArgumentNullException(nameof(action));
@@ -209,7 +204,7 @@ public static class TimeTracker {
 
         return new TimeTrackerResult(sw.Elapsed);
     }
-    
+
     public static TimeTrackerResult ExecuteTimed<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8) {
         if (action == null) {
             throw new ArgumentNullException(nameof(action));

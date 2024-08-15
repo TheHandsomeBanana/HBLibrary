@@ -70,7 +70,7 @@ public class JsonFileService : IJsonFileService {
         try {
             return JsonSerializer.Deserialize<TJson?>(content, serializerOptions ?? options);
         }
-        catch(JsonException) {
+        catch (JsonException) {
             return default;
         }
     }

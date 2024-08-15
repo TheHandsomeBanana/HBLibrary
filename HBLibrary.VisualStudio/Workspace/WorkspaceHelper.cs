@@ -11,7 +11,7 @@ public static class WorkspaceHelper {
         ThreadHelper.ThrowIfNotOnUIThread();
         return (DTE)Package.GetGlobalService(typeof(DTE));
     }
-    
+
     public static DTE2 GetDTE2() {
         ThreadHelper.ThrowIfNotOnUIThread();
         return (DTE2)Package.GetGlobalService(typeof(DTE));

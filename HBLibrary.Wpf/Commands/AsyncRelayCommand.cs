@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Wpf.Commands; 
+﻿namespace HBLibrary.Wpf.Commands;
 public class AsyncRelayCommand : AsyncCommandBase {
     private readonly Func<object?, Task> callback;
     private readonly Predicate<object?> canExecute;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Common;
 
 namespace HBLibrary.Services.Logging.Targets.SqlHelper;
 public static class DbConnectionExtensions {
@@ -31,7 +26,7 @@ public static class DbConnectionExtensions {
 
         return command;
     }
-    
+
     public static DbCommand CreateLogTableCreateCommand(this DbConnection connection, string providerName, string tableName) {
         DbCommand command = connection.CreateCommand();
 

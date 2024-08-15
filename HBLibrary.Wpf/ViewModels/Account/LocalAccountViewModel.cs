@@ -2,16 +2,8 @@
 using HBLibrary.Common.Account;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
-using HBLibrary.Wpf.ViewModels.Login;
 using HBLibrary.Wpf.Views;
-using Microsoft.Graph.Applications.Item.Owners;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace HBLibrary.Wpf.ViewModels.Account;
 

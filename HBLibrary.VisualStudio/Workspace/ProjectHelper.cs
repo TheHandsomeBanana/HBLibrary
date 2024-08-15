@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HBLibrary.VisualStudio.Workspace; 
+namespace HBLibrary.VisualStudio.Workspace;
 public static class ProjectHelper {
     public static void AddExistingFile(Project project, string fileName) {
         ThreadHelper.ThrowIfNotOnUIThread();

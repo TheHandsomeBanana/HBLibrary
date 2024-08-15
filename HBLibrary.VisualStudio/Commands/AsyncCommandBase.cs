@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
 
-namespace HBLibrary.VisualStudio.Commands; 
+namespace HBLibrary.VisualStudio.Commands;
 public abstract class AsyncCommandBase : CommandBase {
     private readonly Action<Exception> onException;
     private bool isRunning = false;

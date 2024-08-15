@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.Logging.Targets.SqlHelper;
+﻿namespace HBLibrary.Services.Logging.Targets.SqlHelper;
 public static class SqliteLoggingCommands {
     public static string GetCreateTableCommand(string tableName) {
         return $@"
@@ -24,7 +18,7 @@ public static class SqliteLoggingCommands {
     }
 }
 
-public static class SqlServerLoggingCommands  {
+public static class SqlServerLoggingCommands {
     public static string GetCreateTableCommand(string tableName) {
         return $@"
         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='{tableName}' and xtype='U')

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HBLibrary.Wpf.Exceptions; 
+﻿namespace HBLibrary.Wpf.Exceptions;
 public class CommandException : Exception {
     public CommandException(Exception innerException) : base(null, innerException) {
     }

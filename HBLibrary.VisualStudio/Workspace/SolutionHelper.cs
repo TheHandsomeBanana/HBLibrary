@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HBLibrary.VisualStudio.Workspace; 
+namespace HBLibrary.VisualStudio.Workspace;
 public static class SolutionHelper {
 #pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
     public static IEnumerable<Project> GetProjects(Solution solution) {

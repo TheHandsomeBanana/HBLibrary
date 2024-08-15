@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
-namespace HBLibrary.Wpf.Styles.TextBox; 
+namespace HBLibrary.Wpf.Styles.TextBox;
 public static class PasswordBoxAttachedProperties {
     public static readonly DependencyProperty WatermarkProperty =
         DependencyProperty.RegisterAttached("Watermark", typeof(string), typeof(PasswordBoxAttachedProperties), new PropertyMetadata(string.Empty));

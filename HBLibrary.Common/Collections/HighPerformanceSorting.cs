@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Collections;
+﻿namespace HBLibrary.Common.Collections;
 public static class HighPerformanceSorting {
     /// <summary>
     /// Monkey
@@ -39,7 +32,7 @@ public static class HighPerformanceSorting {
         bool isSorted = false;
         while (!isSorted) {
             BogoBogoShuffle(list, size);
-            if(size == 1)
+            if (size == 1)
                 isSorted = true;
             else {
                 BogoBogoSortInternal(list, size - 1);
@@ -125,7 +118,7 @@ public static class HighPerformanceSorting {
     }
 
     public static void IntelligentDesignSort<T>(this IList<T> list) {
-        Console.WriteLine("List already sorted.");        
+        Console.WriteLine("List already sorted.");
     }
 
     public static bool IsSorted<T>(this IList<T> list) where T : IComparable<T> {

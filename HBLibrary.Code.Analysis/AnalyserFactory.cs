@@ -1,15 +1,7 @@
 ﻿using HBLibrary.Code.Analysis.Analyser;
 using HBLibrary.Code.Analysis.Exceptions;
-using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HBLibrary.Code.Analysis; 
+namespace HBLibrary.Code.Analysis;
 public class AnalyserFactory : IAnalyserFactory {
     public IAnalyserRegistry Registry { get; }
     public TAnalyser CreateAnalyser<TAnalyser>() where TAnalyser : ICodeAnalyser => Activator.CreateInstance<TAnalyser>();

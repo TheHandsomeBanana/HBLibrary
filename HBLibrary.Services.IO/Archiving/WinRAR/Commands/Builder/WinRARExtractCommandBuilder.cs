@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
+﻿namespace HBLibrary.Services.IO.Archiving.WinRAR.Commands.Builder;
 internal class WinRARExtractCommandBuilder : IWinRARExtractCommandBuilder {
     public IWinRARExtractCommandBuilder AddDirectory(DirectorySnapshot directory) {
         throw new NotImplementedException();

@@ -1,15 +1,8 @@
-﻿using HBLibrary.Common.Account;
-using HBLibrary.Common.Exceptions;
+﻿using HBLibrary.Common.Exceptions;
 using HBLibrary.Common.Security;
 using HBLibrary.Common.Security.Credentials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Versioning;
 using System.Security;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Authentication;
 #if WINDOWS

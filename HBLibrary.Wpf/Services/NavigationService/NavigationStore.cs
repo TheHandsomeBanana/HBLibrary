@@ -1,11 +1,4 @@
 ﻿using HBLibrary.Wpf.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Services.NavigationService;
 public class NavigationStore : INavigationStore {
@@ -19,7 +12,7 @@ public class NavigationStore : INavigationStore {
     }
 
     public NavigationStore() {
-    }    
+    }
 
     public void SwitchViewModel(string parentTypename, ViewModelBase viewModel) {
         if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {

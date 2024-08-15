@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HBLibrary.Services.Security.Exceptions {
+﻿namespace HBLibrary.Services.Security.Exceptions {
     public class CryptographerException : Exception {
         public CryptographerException(string message) : base(message) {
         }

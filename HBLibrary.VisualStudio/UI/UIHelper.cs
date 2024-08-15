@@ -1,14 +1,11 @@
 ﻿using HBLibrary.VisualStudio.Workspace;
 using Microsoft;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Internal.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Threading;
 using System;
-using System.Threading.Tasks;
 
-namespace HBLibrary.VisualStudio.UI; 
+namespace HBLibrary.VisualStudio.UI;
 public static class UIHelper {
     public static IServiceProvider Package { get; set; }
 

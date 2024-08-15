@@ -1,13 +1,7 @@
 ﻿using HBLibrary.Common.Authentication.Microsoft;
 using HBLibrary.Common.Security;
 using Microsoft.Identity.Client;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Authentication;
 public interface IAuthCredentials { // Flag
@@ -53,7 +47,7 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         MSParameterStorage storage = new MSParameterStorage(appName);
         MicrosoftIdentity? identity = await storage.GetIdentityAsync(username);
 
-        if(identity is null) {
+        if (identity is null) {
             return null;
         }
 
@@ -67,15 +61,26 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         };
 
         return credentials;
+
+        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
+        Before:
+            }
+
+            public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,
+        After:
+            }
+
+            public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,
+        */
     }
-    
+
     public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,
         Action<AcquireTokenSilentParameterBuilder>? builder = null, Action<AcquireTokenInteractiveParameterBuilder>? fallbackBuilder = null) {
 
         MSParameterStorage storage = new MSParameterStorage(appName);
         MicrosoftIdentity? identity = storage.GetIdentity(username);
 
-        if(identity is null) {
+        if (identity is null) {
             return null;
         }
 

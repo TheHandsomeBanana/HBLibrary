@@ -1,13 +1,4 @@
-﻿using HBLibrary.Common.Extensions;
-using HBLibrary.Common.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace HBLibrary.Common.Authentication.Microsoft;
 public class MSParameterStorage {
@@ -49,8 +40,19 @@ public class MSParameterStorage {
         List<MicrosoftIdentity> identityList = await LoadIdentitiesAsync(cancellationToken);
         identityList.Remove(existingIdentity);
         await SaveCredentialsAsync(identityList, cancellationToken);
+
+        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
+        Before:
+            }
+
+            public async Task UnregisterIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
+        After:
+            }
+
+            public async Task UnregisterIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
+        */
     }
-    
+
     public async Task UnregisterIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
         MicrosoftIdentity? existingIdentity = await GetIdentityByIdAsync(identifier, cancellationToken);
         if (existingIdentity is null) {
@@ -64,12 +66,23 @@ public class MSParameterStorage {
 
     public MicrosoftIdentity? GetIdentity(string username) {
         return LoadIdentities().FirstOrDefault(e => e.Username == username);
+
+        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
+        Before:
+            }
+
+            public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {
+        After:
+            }
+
+            public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {
+        */
     }
-    
+
     public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {
         return (await LoadIdentitiesAsync(cancellationToken)).FirstOrDefault(e => e.Username == username);
     }
-    
+
     public async Task<MicrosoftIdentity?> GetIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
         return (await LoadIdentitiesAsync(cancellationToken)).FirstOrDefault(e => e.Identifier == identifier);
     }
@@ -104,8 +117,8 @@ public class MSParameterStorage {
 #if NET5_0_OR_GREATER
         base64Json = await File.ReadAllTextAsync(appMSParameterPath, cancellationToken);
 #elif NET472_OR_GREATER
-        using(FileStream fs = new FileStream(appMSParameterPath, FileMode.Open, FileAccess.Read)) {
-            using(StreamReader sr = new StreamReader(fs)) {           
+        using (FileStream fs = new FileStream(appMSParameterPath, FileMode.Open, FileAccess.Read)) {
+            using (StreamReader sr = new StreamReader(fs)) {
                 base64Json = await sr.ReadToEndAsync();
             }
         }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
+﻿using System.Security;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Security;
 public static class KeyDerivation {
@@ -12,7 +7,7 @@ public static class KeyDerivation {
         using Rfc2898DeriveBytes rfc = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA512);
         return rfc.GetBytes(keySize);
     }
-    
+
     public static byte[] DeriveKey(SecureString password, byte[] salt, int iterations, int keySize) {
         using Rfc2898DeriveBytes rfc = new Rfc2898DeriveBytes(SStringConverter.SecureStringToString(password)!, salt, iterations, HashAlgorithmName.SHA512);
         return rfc.GetBytes(keySize);

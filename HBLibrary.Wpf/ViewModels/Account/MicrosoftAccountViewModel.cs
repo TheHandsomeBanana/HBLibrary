@@ -3,11 +3,6 @@ using HBLibrary.Common.Account;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
 using HBLibrary.Wpf.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace HBLibrary.Wpf.ViewModels.Account;
@@ -41,7 +36,7 @@ public class MicrosoftAccountViewModel : ViewModelBase<MicrosoftAccountModel> {
         Action<bool>? userSwitchCallback = null, Action? preventShutdownCallback = null) : base(microsoftAccount) {
 
         SignOutCommand = new AsyncRelayCommand(SignOut, _ => true, OnException);
-        
+
         this.accountService = accountService;
         this.parentOwner = parentOwner;
         this.appSettings = appSettings;

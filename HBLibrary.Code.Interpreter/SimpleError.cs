@@ -1,9 +1,5 @@
 ﻿using HBLibrary.Code.Interpreter.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Code.Interpreter;
 public struct SimpleError {
@@ -21,7 +17,7 @@ public struct SimpleError {
 
     public void SetAffected(string content) {
         StringBuilder sb = new StringBuilder();
-        for(int i = Span.Start; i <= Span.End; i++) {
+        for (int i = Span.Start; i <= Span.End; i++) {
             sb.Append(content[i]);
         }
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-#if WINDOWS
+﻿#if WINDOWS
 namespace HBLibrary.Common.Security.Credentials;
 public class UserCredentials : IEquatable<UserCredentials> {
     public required string Username { get; set; }

@@ -1,5 +1,4 @@
-﻿using HBLibrary.Wpf.Services;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace HBLibrary.Wpf.ViewModels;
@@ -25,7 +24,7 @@ public abstract class ViewModelBase<TModel> : ViewModelBase {
 }
 
 public abstract class ModelledViewModelBase<TModel> : ViewModelBase<TModel> where TModel : new() {
-    public ModelledViewModelBase() { 
+    public ModelledViewModelBase() {
         Model = new TModel();
     }
 }

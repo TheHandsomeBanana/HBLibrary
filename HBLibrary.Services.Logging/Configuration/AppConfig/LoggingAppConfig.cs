@@ -1,10 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
+/* Unmerged change from project 'HBLibrary.Services.Logging (net472)'
+Before:
+using System;
+After:
+using HBLibrary.Services.Logging.Configuration;
+using System;
+*/
+
+/* Unmerged change from project 'HBLibrary.Services.Logging (net472)'
+Before:
 using System.Threading.Tasks;
 using HBLibrary.Services.Logging.Configuration;
-
+After:
+using System.Threading.Tasks;
+*/
 namespace HBLibrary.Services.Logging.Configuration.AppConfig;
 
 public class LoggingAppConfig {

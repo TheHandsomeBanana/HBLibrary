@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Common;
 public static class AutoMapper {
@@ -81,5 +72,5 @@ public static class AutoMapper {
         }
 
         return destination;
-    } 
+    }
 }

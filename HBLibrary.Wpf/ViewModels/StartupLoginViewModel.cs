@@ -5,12 +5,6 @@ using HBLibrary.Common.Authentication.Microsoft;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.ViewModels.Login;
 using HBLibrary.Wpf.ViewModels.Register;
-using Microsoft.Graph.Models.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -58,7 +52,7 @@ public class StartupLoginViewModel : ViewModelBase {
         LoginViewModel loginViewModel = new LoginViewModel();
         ApplicationAccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName);
 
-        if(lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
+        if (lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
             loginViewModel.Username = lastAccount.Username;
         }
 
@@ -99,7 +93,7 @@ public class StartupLoginViewModel : ViewModelBase {
 
 
         Window parentWindow = Window.GetWindow(arg!.ControlContext);
-        parentWindow.Close();    
+        parentWindow.Close();
         StartupCompleted?.Invoke(true);
     }
 

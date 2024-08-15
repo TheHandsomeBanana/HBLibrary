@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Code.Analysis.Analyser.Results; 
+﻿namespace HBLibrary.Code.Analysis.Analyser.Results;
 public enum ObjectAssignmentType {
     Simple,
     Complex

@@ -1,27 +1,19 @@
 ﻿using HBLibrary.Services.Logging.Statements;
-using Microsoft.Graph.Models;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HBLibrary.Services.Logging.Targets.SqlHelper;
 public static class DbCommandExtensions {
     public static void AddLogParameters(this DbCommand command, string providerName, LogStatement logStatement) {
         char prefix = GetParameterPrefix(providerName);
 
-
-
         DbParameter dateParameter = command.CreateParameter();
         dateParameter.ParameterName = $"{prefix}Date";
-        
+
         // Handle Date as string for SQLite
         dateParameter.Value = providerName == Providers.SQLiteProvider
             ? logStatement.CreatedOn.ToString("o")
             : logStatement.CreatedOn;
-        
+
         command.Parameters.Add(dateParameter);
 
         DbParameter loggerNameParameter = command.CreateParameter();

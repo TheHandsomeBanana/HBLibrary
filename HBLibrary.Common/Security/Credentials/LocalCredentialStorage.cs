@@ -1,13 +1,7 @@
 ﻿using HBLibrary.Common.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Versioning;
 using System.Security;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 #if WINDOWS
 namespace HBLibrary.Common.Security.Credentials;
 
@@ -65,18 +59,29 @@ public class LocalCredentialStorage {
 
     public async Task UnregisterUserAsync(string username, CancellationToken cancellationToken = default) {
         UserCredentials? existingUserCredentials = await GetUserCredentialsAsync(username, cancellationToken);
-        if(existingUserCredentials is null) {
+        if (existingUserCredentials is null) {
             return;
         }
 
         List<UserCredentials> credentialsList = await LoadCredentialsAsync(cancellationToken);
         credentialsList.Remove(existingUserCredentials);
         await SaveCredentialsAsync(credentialsList, cancellationToken);
+
+        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
+        Before:
+            }
+
+            public void UnregisterUser(string username) {
+        After:
+            }
+
+            public void UnregisterUser(string username) {
+        */
     }
-    
+
     public void UnregisterUser(string username) {
         UserCredentials? existingUserCredentials = GetUserCredentials(username);
-        if(existingUserCredentials is null) {
+        if (existingUserCredentials is null) {
             return;
         }
 
@@ -112,7 +117,7 @@ public class LocalCredentialStorage {
 #if NET5_0_OR_GREATER
         return File.WriteAllBytesAsync(appCredentialPath, encryptedJson, cancellationToken);
 #elif NET472_OR_GREATER
-        using(FileStream fs = new FileStream(appCredentialPath, FileMode.Open, FileAccess.Read)) {
+        using (FileStream fs = new FileStream(appCredentialPath, FileMode.Open, FileAccess.Read)) {
             return fs.WriteAsync(encryptedJson, cancellationToken);
         }
 #endif
@@ -120,16 +125,16 @@ public class LocalCredentialStorage {
 
     private async Task<List<UserCredentials>> LoadCredentialsAsync(CancellationToken cancellationToken = default) {
         byte[] encryptedJson;
-        
+
 #if NET5_0_OR_GREATER
         encryptedJson = await File.ReadAllBytesAsync(appCredentialPath, cancellationToken);
 #elif NET472_OR_GREATER
-        using(FileStream fs = new FileStream(appCredentialPath, FileMode.Open, FileAccess.Read)) {
+        using (FileStream fs = new FileStream(appCredentialPath, FileMode.Open, FileAccess.Read)) {
             encryptedJson = await fs.ReadAsync(cancellationToken);
         }
 #endif
 
-        if(encryptedJson.Length == 0) {
+        if (encryptedJson.Length == 0) {
             return [];
         }
 

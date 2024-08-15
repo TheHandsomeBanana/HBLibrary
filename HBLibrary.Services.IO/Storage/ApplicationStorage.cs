@@ -1,17 +1,25 @@
-﻿using HBLibrary.Services.IO.Exceptions;
+﻿
+/* Unmerged change from project 'HBLibrary.Services.IO (net472)'
+Before:
+using HBLibrary.Services.IO.Exceptions;
+After:
+using HBLibrary.Common.Extensions;
+using HBLibrary.Services.IO.Exceptions;
+*/
+using HBLibrary.Common.Extensions;
 using HBLibrary.Services.IO.Json;
 using HBLibrary.Services.IO.Storage.Builder;
-using HBLibrary.Services.IO.Storage.Config;
 using HBLibrary.Services.IO.Storage.Container;
 using HBLibrary.Services.IO.Storage.Entries;
 using HBLibrary.Services.IO.Xml;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
+/* Unmerged change from project 'HBLibrary.Services.IO (net472)'
+Before:
 using System.Threading.Tasks;
 using HBLibrary.Common.Extensions;
+After:
+using System.Threading.Tasks;
+*/
+
 
 namespace HBLibrary.Services.IO.Storage;
 public class ApplicationStorage : IApplicationStorage {
@@ -30,7 +38,7 @@ public class ApplicationStorage : IApplicationStorage {
                 .UseXmlFileService(() => new XmlFileService());
             })
             .Build();
-            
+
         Containers.Add(DefaultContainerId, defaultContainer);
     }
 
@@ -39,7 +47,7 @@ public class ApplicationStorage : IApplicationStorage {
     }
 
     public IStorageEntry? GetStorageEntry(Guid containerId, string filename) {
-        if(!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
+        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
             return null;
         }
 

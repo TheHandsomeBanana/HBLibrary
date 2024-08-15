@@ -1,7 +1,7 @@
 ﻿using HBLibrary.Services.Security.Cryptography.Keys;
 using System.Security.Cryptography;
 
-namespace HBLibrary.Services.Security.Cryptography.Rsa; 
+namespace HBLibrary.Services.Security.Cryptography.Rsa;
 public interface IRsaCryptographer {
     byte[] Encrypt(byte[] data, RsaKey key);
     byte[] Decrypt(byte[] cipher, RsaKey key);

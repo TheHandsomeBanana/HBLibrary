@@ -1,7 +1,7 @@
 ﻿using HBLibrary.VisualStudio.Workspace;
 using System;
 
-namespace HBLibrary.VisualStudio.Commands; 
+namespace HBLibrary.VisualStudio.Commands;
 public static class CommandHelper {
     public static void RunVSCommand(Guid guid, uint id) {
         object pvaln = null;

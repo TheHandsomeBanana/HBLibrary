@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Authentication.Microsoft;
+﻿namespace HBLibrary.Common.Authentication.Microsoft;
 public class MicrosoftIdentity : IEquatable<MicrosoftIdentity> {
     public required string Username { get; set; }
     public required string Identifier { get; set; }
@@ -14,7 +8,7 @@ public class MicrosoftIdentity : IEquatable<MicrosoftIdentity> {
     public required string[] Scopes { get; set; }
 
     public bool Equals(MicrosoftIdentity? other) {
-        return other is not null 
+        return other is not null
             && Username == other.Username
             && Identifier == other.Identifier
             && Email == other.Email;

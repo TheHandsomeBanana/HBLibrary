@@ -1,13 +1,7 @@
 ﻿using HBLibrary.Code.Analysis.Analyser.Results;
 using Microsoft.CodeAnalysis;
-using Microsoft.VisualStudio.Text;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HBLibrary.Code.Analysis.Analyser; 
+namespace HBLibrary.Code.Analysis.Analyser;
 public class ObjectAssignmentAnalyser : IObjectAssignmentAnalyser {
     public IAnalyserRegistry Registry => throw new NotImplementedException();
 

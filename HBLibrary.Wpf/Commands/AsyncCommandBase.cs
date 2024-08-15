@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Wpf.Commands; 
+﻿namespace HBLibrary.Wpf.Commands;
 public abstract class AsyncCommandBase : CommandBase {
     private bool isExecuting;
     private readonly Action<Exception> onException;

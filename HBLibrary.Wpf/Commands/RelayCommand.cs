@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HBLibrary.Wpf.Commands;
+﻿namespace HBLibrary.Wpf.Commands;
 public class RelayCommand : CommandBase {
     private readonly Action<object?> callback;
     private readonly Predicate<object?> canExecute;
@@ -34,7 +32,7 @@ public class RelayCommand<TParameter> : CommandBase {
 
     public override bool CanExecute(object? parameter) {
 
-        if(parameter is TParameter tParameter) {
+        if (parameter is TParameter tParameter) {
             return canExecute != null
            ? canExecute(tParameter) && base.CanExecute(tParameter)
            : base.CanExecute(tParameter);
