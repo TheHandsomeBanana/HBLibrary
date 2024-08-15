@@ -11,6 +11,7 @@ public interface ILogConfigurationBuilder {
     ILogConfigurationBuilder AddFileTarget(string filePath, bool useAsync, LogLevel? levelThreshold = null);
     ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel? levelThreshold = null);
     ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? levelThreshold = null);
+    ILogConfigurationBuilder AddDatabaseTarget(string providerName, string connectionString, bool useAsync, LogLevel? levelThreshold = null, string tableName = "Logs");
     ILogConfigurationBuilder WithDisplayFormat(LogDisplayFormat format);
     /// <summary>
     /// Requires to be called before adding targets to overwrite the target level threshold.

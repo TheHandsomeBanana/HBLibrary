@@ -9,7 +9,7 @@ public class EFCoreDatabaseTarget : ILogTarget, IAsyncLogTarget {
     private readonly DbContextOptions<LoggingContext> dbContextOptions;
     public LogLevel? LevelThreshold { get; }
 
-    public EFCoreDatabaseTarget(DbContextOptions<LoggingContext> dbContextOptions, string tableName) {
+    public EFCoreDatabaseTarget(DbContextOptions<LoggingContext> dbContextOptions, string tableName = "Logs") {
         this.dbContextOptions = dbContextOptions;
         using LoggingContext context = new LoggingContext(dbContextOptions, tableName);
         context.Database.EnsureCreated();

@@ -43,6 +43,17 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         return this;
     }
 
+    public ILogConfigurationBuilder AddDatabaseTarget(string providerName, string connectionString, bool useAsync, LogLevel? levelThreshold = null, string tableName = "Logs") {
+        if(useAsync) {
+            asyncTargets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, tableName));
+        }
+        else {
+            targets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, tableName));
+        }
+
+        return this;
+    }
+
     private ILogConfiguration? logConfiguration;
     public ILogConfigurationBuilder OverrideConfig(ILogConfiguration logConfiguration) {
         this.logConfiguration = logConfiguration;
@@ -59,6 +70,8 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         this.levelThreshold = level;
         return this;
     }
+
+    
 
     public ILogConfiguration Build() {
         if (overrideConfig) {
@@ -78,4 +91,6 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         displayFormat = LogDisplayFormat.Full;
         levelThreshold = LogLevel.Debug;
     }
+
+   
 }
