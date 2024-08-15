@@ -18,7 +18,7 @@ public static class DbCommandExtensions {
         dateParameter.ParameterName = $"{prefix}Date";
         
         // Handle Date as string for SQLite
-        dateParameter.Value = providerName == DbConnectionExtensions.SQLiteProvider
+        dateParameter.Value = providerName == Providers.SQLiteProvider
             ? logStatement.CreatedOn.ToString("o")
             : logStatement.CreatedOn;
         
@@ -41,7 +41,7 @@ public static class DbCommandExtensions {
     }
 
     public static char GetParameterPrefix(string providerName) {
-        return providerName == DbConnectionExtensions.OracleProvider
+        return providerName == Providers.OracleProvider
             ? ':'
             : '@';
     }

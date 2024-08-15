@@ -17,7 +17,7 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
 
     public LogLevel? LevelThreshold { get; }
 
-    public DatabaseTarget(string providerName, string connectionString, LogLevel? minLevel = null, string tableName = "Logs", ) {
+    public DatabaseTarget(string providerName, string connectionString, LogLevel? minLevel = null, string tableName = "Logs") {
         this.providerName = providerName;
         this.dbProviderFactory = DbProviderFactories.GetFactory(providerName);
         this.connectionString = connectionString;
