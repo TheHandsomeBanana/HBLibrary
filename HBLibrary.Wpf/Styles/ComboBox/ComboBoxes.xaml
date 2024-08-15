@@ -44,7 +44,7 @@
 
 
     <Style x:Key="HBDark_ComboBox" TargetType="ComboBox">
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Background" Value="{StaticResource HBDark_TextBox_Background}"/>
         <Setter Property="BorderBrush" Value="{StaticResource ControlBorder}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="White"/>
@@ -97,7 +97,7 @@
                                       SnapsToDevicePixels="True"
                                       MinWidth="{TemplateBinding ActualWidth}"
                                       MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                      Background="{StaticResource HBDark_Background}">
+                                      Background="{StaticResource HBDark_TextBox_Background}">
 
                                     <Border x:Name="DropDownBorder"
                                             BorderBrush="{TemplateBinding BorderBrush}"

@@ -49,6 +49,9 @@
         </Setter>
     </Style>
 
+    <Style x:Key="HBDark_NumberTextBox" TargetType="TextBox" BasedOn="{StaticResource HBDark_TextBox}">
+        <Setter Property="MinWidth" Value="20"/>
+    </Style>
 
     <Style x:Key="HBDark_VSTextBox" TargetType="TextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
