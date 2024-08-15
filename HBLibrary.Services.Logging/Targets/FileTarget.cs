@@ -13,8 +13,8 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
          @"                                   /____/                                   |" + "\n" +
          @"____________________________________________________________________________|" + "\n";
 
-    private FileStream fileStream;
-    private StreamWriter fileStreamWriter;
+    private FileStream? fileStream;
+    private StreamWriter? fileStreamWriter;
     private bool keepFileHandle;
 
     public string FileName { get; }
@@ -58,7 +58,7 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
 
     public void WriteLog(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) {
         if (keepFileHandle) {
-            fileStreamWriter.WriteLine(log.Format(format) + "\n");
+            fileStreamWriter!.WriteLine(log.Format(format) + "\n");
             return;
         }
 
@@ -70,7 +70,7 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
 
     public Task WriteLogAsync(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) {
         if (keepFileHandle)
-            return fileStreamWriter.WriteLineAsync(log.Format(format) + "\n");
+            return fileStreamWriter!.WriteLineAsync(log.Format(format) + "\n");
 
         using (FileStream fs = new FileStream(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite, 4096, true)) {
             using (StreamWriter sw = new StreamWriter(fs))
@@ -83,16 +83,16 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
         fileStream?.Dispose();
     }
 
-    public bool Equals(FileTarget other) {
-        return other.fileStream.Name == fileStream.Name;
+    public bool Equals(FileTarget? other) {
+        return other?.fileStream?.Name == fileStream?.Name;
     }
 
-    public override bool Equals(object obj) {
+    public override bool Equals(object? obj) {
         return obj is FileTarget ft && Equals(ft);
     }
 
     public override int GetHashCode() {
-        return fileStream.Name.GetHashCode();
+        return fileStream?.Name.GetHashCode() ?? 0;
     }
 
     public static bool operator ==(FileTarget a, FileTarget b) => a.Equals(b);
