@@ -1,5 +1,4 @@
 ﻿using HBLibrary.Services.Logging.Configuration;
-using HBLibrary.Services.Logging.Statements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.Logging.Tests; 
+namespace HBLibrary.Services.Logging.Tests;
 [TestClass]
 public class AsyncLoggerTests {
     private const string LogFile = "../../../assets/asyncLogFile";

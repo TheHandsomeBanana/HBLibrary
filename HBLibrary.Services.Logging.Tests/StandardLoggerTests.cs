@@ -1,5 +1,4 @@
-﻿using HBLibrary.Services.Logging;
-using HBLibrary.Services.Logging.Configuration;
+﻿using HBLibrary.Services.Logging.Configuration;
 using HBLibrary.Services.Logging.Statements;
 using HBLibrary.Services.Logging.Targets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +9,7 @@ using System.IO;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Services.Logging.Tests; 
+namespace HBLibrary.Services.Logging.Tests;
 [TestClass]
 public class StandardLoggerTests {
     private const string LogFile = "../../../assets/standardLogFile";

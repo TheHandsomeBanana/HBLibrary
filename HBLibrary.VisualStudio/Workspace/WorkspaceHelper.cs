@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell;
@@ -9,6 +10,11 @@ public static class WorkspaceHelper {
     public static DTE GetDTE() {
         ThreadHelper.ThrowIfNotOnUIThread();
         return (DTE)Package.GetGlobalService(typeof(DTE));
+    }
+    
+    public static DTE2 GetDTE2() {
+        ThreadHelper.ThrowIfNotOnUIThread();
+        return (DTE2)Package.GetGlobalService(typeof(DTE));
     }
 
     // Deprecated according to https://stackoverflow.com/questions/31194968/how-to-register-my-service-as-a-global-service-or-how-can-i-use-mef-in-my-scenar

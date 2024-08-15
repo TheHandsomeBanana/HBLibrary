@@ -31,6 +31,12 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter"  
+                    Command="{Binding LoginCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+    </UserControl.InputBindings>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>

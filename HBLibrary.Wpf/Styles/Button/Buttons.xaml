@@ -29,6 +29,39 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style x:Key="TitleBarButtonV2" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="LayoutRoot" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="LayoutRoot"  Property="Background" Value="{StaticResource HBDark_IconButton_MouseOver_Background}"/>
+                            <Setter TargetName="LayoutRoot" Property="BorderBrush" Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="LayoutRoot" Property="Background" Value="{StaticResource HBDark_IconButton_Pressed_Background}"/>
+                            <Setter TargetName="LayoutRoot" Property="BorderBrush" Value="{StaticResource HBDark_IconButton_Pressed_BorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="LayoutRoot" Property="Background" Value="{StaticResource HBDark_IconButton_Disabled_Background}"/>
+                            <Setter TargetName="LayoutRoot" Property="BorderBrush" Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="MaximizeButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
         <Setter Property="Content" Value="&#xE739;"/>
