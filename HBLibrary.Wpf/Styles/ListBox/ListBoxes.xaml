@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:scrollViewers="clr-namespace:HBLibrary.Wpf.Styles.ScrollViewer">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml"/>
@@ -9,16 +10,20 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="{StaticResource ControlBorder}"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBox">
                     <Border Background="{TemplateBinding Background}" 
                             BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <ScrollViewer Focusable="false" 
-                                      VerticalScrollBarVisibility="Hidden"
-                                      HorizontalScrollBarVisibility="Hidden">
-                            <ItemsPresenter/>
+                        <ScrollViewer Style="{StaticResource HBDark_VSScrollViewer}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      scrollViewers:ScrollViewerAttachedProperties.ScrollOnMouseOver="True">
+                            <ItemsPresenter HorizontalAlignment="Stretch"/>
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>

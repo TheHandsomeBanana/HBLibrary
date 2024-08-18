@@ -6,7 +6,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="HBDark_GroupBox" TargetType="GroupBox">
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBorder}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="10"/>
@@ -38,6 +38,12 @@
                                           Panel.ZIndex="1"
                                           RecognizesAccessKey="True"/>
                     </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
