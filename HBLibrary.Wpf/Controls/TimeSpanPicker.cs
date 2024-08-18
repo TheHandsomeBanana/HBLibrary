@@ -30,6 +30,33 @@ public class TimeSpanPicker : Control {
         DependencyProperty.Register("Text", typeof(string), typeof(TimeSpanPicker), new PropertyMetadata(null, OnTextValueChanged));
 
     private static void OnTextValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        OnAnyChanged(d, e);
+    }
+
+
+    public TimeSpan ParsedText {
+        get { return (TimeSpan)GetValue(ParsedTextProperty); }
+        set { SetValue(ParsedTextProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ParsedText.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ParsedTextProperty =
+        DependencyProperty.Register("ParsedText", typeof(TimeSpan), typeof(TimeSpanPicker), new PropertyMetadata(TimeSpan.FromSeconds(0)));
+
+    public TimeUnit TimeUnit {
+        get { return (TimeUnit)GetValue(TimeUnitProperty); }
+        set { SetValue(TimeUnitProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for TimeUnit.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty TimeUnitProperty =
+        DependencyProperty.Register("TimeUnit", typeof(TimeUnit), typeof(TimeSpanPicker), new PropertyMetadata(TimeUnit.Seconds, OnTimeUnitChanged));
+
+    private static void OnTimeUnitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        OnAnyChanged(d, e);
+    }
+
+    private static void OnAnyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         var control = (TimeSpanPicker)d;
 
         if (int.TryParse(control.Text, out int parsed)) {
@@ -63,27 +90,6 @@ public class TimeSpanPicker : Control {
             control.ParsedText = TimeSpan.FromSeconds(0); // Default value or handle the error as needed
         }
     }
-
-
-    public TimeSpan ParsedText {
-        get { return (TimeSpan)GetValue(ParsedTextProperty); }
-        set { SetValue(ParsedTextProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for ParsedText.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty ParsedTextProperty =
-        DependencyProperty.Register("ParsedText", typeof(TimeSpan), typeof(TimeSpanPicker), new PropertyMetadata(TimeSpan.FromSeconds(0)));
-
-    public TimeUnit TimeUnit {
-        get { return (TimeUnit)GetValue(TimeUnitProperty); }
-        set { SetValue(TimeUnitProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for TimeUnit.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty TimeUnitProperty =
-        DependencyProperty.Register("TimeUnit", typeof(TimeUnit), typeof(TimeSpanPicker), new PropertyMetadata(TimeUnit.Seconds));
-
-
 
     public override void OnApplyTemplate() {
         base.OnApplyTemplate();

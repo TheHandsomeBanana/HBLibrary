@@ -1,18 +1,23 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-
+    <Color x:Key="ControlBorderColor">#424242</Color>
+    <Color x:Key="ControlBorderColor2">#737373</Color>
+    
+    
     <SolidColorBrush x:Key="VSGreen" Color="#8ae28a"/>
     <SolidColorBrush x:Key="VSRed" Color="#e25964"/>
     <SolidColorBrush x:Key="VSViolet" Color="#403582"/>
     <SolidColorBrush x:Key="VSAccentViolet" Color="#7464ec"/>
     <SolidColorBrush x:Key="InfoBlue" Color="#1a79ca"/>
-    <SolidColorBrush x:Key="ControlBorder" Color="#acacb4"/>
+    <SolidColorBrush x:Key="ControlBorder" Color="{StaticResource ControlBorderColor}"/>
+    <SolidColorBrush x:Key="ControlBorder2" Color="{StaticResource ControlBorderColor2}"/>
     <SolidColorBrush x:Key="Foreground" Color="#e6e6e6"/>
     <SolidColorBrush x:Key="SelectionViolet" Color="#343042"/>
 
     <SolidColorBrush x:Key="HBDark_ForegroundH1" Color="#7464ec"/>
 
+    <SolidColorBrush x:Key="HBDark_ControlBackground" Color="#242424"/>
 
     <SolidColorBrush x:Key="HBDark_Background">#1f1f1f</SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_Background_Overlay">#2F2F2F</SolidColorBrush>
@@ -28,7 +33,7 @@
 
     <!-- Buttons -->
     <SolidColorBrush x:Key="HBDark_Button_Background" Color="#242424"></SolidColorBrush>
-    <SolidColorBrush x:Key="HBDark_Button_BorderBrush" Color="#acacb4"></SolidColorBrush>
+    <SolidColorBrush x:Key="HBDark_Button_BorderBrush" Color="{StaticResource ControlBorderColor}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="HBDark_Button_MouseOver_Background" Color="#242424"></SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_Button_MouseOver_BorderBrush" Color="#7464ec"></SolidColorBrush>
@@ -102,7 +107,7 @@
 
     <!-- TextBox -->
     <SolidColorBrush x:Key="HBDark_TextBox_Background" Color="#242424"></SolidColorBrush>
-    <SolidColorBrush x:Key="HBDark_TextBox_BorderBrush" Color="#acacb4"></SolidColorBrush>
+    <SolidColorBrush x:Key="HBDark_TextBox_BorderBrush" Color="{StaticResource ControlBorderColor}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="HBDark_TextBox_MouseOver_Background" Color="#242424"></SolidColorBrush>
     <SolidColorBrush x:Key="HBDark_TextBox_MouseOver_BorderBrush" Color="#7464ec"></SolidColorBrush>
@@ -115,10 +120,10 @@
     
     <!-- Visual Studio TextBox -->
     <SolidColorBrush x:Key="HBDark_VSTextBox_Background" Color="#383838"></SolidColorBrush>
-    <SolidColorBrush x:Key="HBDark_VSTextBox_BorderBrush" Color="#424242"></SolidColorBrush>
+    <SolidColorBrush x:Key="HBDark_VSTextBox_BorderBrush" Color="{StaticResource ControlBorderColor}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="HBDark_VSTextBox_MouseOver_Background" Color="#3d3d3d"></SolidColorBrush>
-    <SolidColorBrush x:Key="HBDark_VSTextBox_MouseOver_BorderBrush" Color="#424242"></SolidColorBrush>
+    <SolidColorBrush x:Key="HBDark_VSTextBox_MouseOver_BorderBrush" Color="{StaticResource ControlBorderColor}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="HBDark_VSTextBox_IsKeyboardFocusWithin_Background" Color="#1f1f1f"></SolidColorBrush>
 
@@ -127,6 +132,9 @@
 
     <!-- TextBlock -->
     <SolidColorBrush x:Key="HBDark_TextBlock_ErrorForeground" Color="#E15656"/>
+    
+    <!-- ListView -->
+    
 
 </ResourceDictionary>
 

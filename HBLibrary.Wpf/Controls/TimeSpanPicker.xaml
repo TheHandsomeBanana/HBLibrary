@@ -35,7 +35,7 @@
 
                             <ComboBox Style="{StaticResource HBDark_ComboBox}"
                                       ItemsSource="{Binding Source={StaticResource TimeUnitValues}}"
-                                      SelectedItem="{TemplateBinding TimeUnit}"
+                                      SelectedItem="{Binding TimeUnit, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
                                       Width="75">
                             </ComboBox>
                         </StackPanel>
