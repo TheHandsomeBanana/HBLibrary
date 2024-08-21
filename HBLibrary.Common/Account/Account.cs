@@ -8,6 +8,8 @@ public abstract class Account {
     public required string Application { get; set; }
     public required string Username { get; set; }
 
+    public abstract string AccountId { get; }
+
     public ApplicationAccountInfo GetApplicationAccountInfo() => new ApplicationAccountInfo {
         Application = Application,
         AccountType = AccountType,
@@ -17,6 +19,8 @@ public abstract class Account {
 
 public class LocalAccount : Account {
     public override AccountType AccountType => AccountType.Local;
+
+    public override string AccountId => Username;
 }
 
 
@@ -27,6 +31,8 @@ public class MicrosoftAccount : Account {
     public required string Email { get; set; }
     public required string DisplayName { get; set; }
     public required string TenantId { get; set; }
+
+    public override string AccountId => Identifier;
 
     public async Task SetAccountAsync(IPublicClientApplication app) {
         Account = await app.GetAccountAsync(Identifier);

@@ -2,6 +2,7 @@
 using HBLibrary.Services.IO.Storage.Entries;
 using HBLibrary.Services.IO.Storage.Settings;
 using HBLibrary.Services.IO.Xml;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HBLibrary.Services.IO.Storage.Container;
 public interface IStorageEntryContainer {
@@ -12,7 +13,7 @@ public interface IStorageEntryContainer {
 
     public IStorageEntry? this[string filename] { get; set; }
     public IStorageEntry? Get(string filename);
-    public bool TryGet(string filename, out IStorageEntry? entry);
+    public bool TryGet(string filename, [MaybeNullWhen(false)] out IStorageEntry? entry);
     public bool Contains(string filename);
 
     public IEnumerable<IStorageEntry> GetAll();

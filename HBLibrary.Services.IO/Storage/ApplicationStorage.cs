@@ -1,24 +1,9 @@
-﻿
-/* Unmerged change from project 'HBLibrary.Services.IO (net472)'
-Before:
-using HBLibrary.Services.IO.Exceptions;
-After:
-using HBLibrary.Common.Extensions;
-using HBLibrary.Services.IO.Exceptions;
-*/
-using HBLibrary.Common.Extensions;
+﻿using HBLibrary.Common.Extensions;
 using HBLibrary.Services.IO.Json;
 using HBLibrary.Services.IO.Storage.Builder;
 using HBLibrary.Services.IO.Storage.Container;
 using HBLibrary.Services.IO.Storage.Entries;
 using HBLibrary.Services.IO.Xml;
-/* Unmerged change from project 'HBLibrary.Services.IO (net472)'
-Before:
-using System.Threading.Tasks;
-using HBLibrary.Common.Extensions;
-After:
-using System.Threading.Tasks;
-*/
 
 
 namespace HBLibrary.Services.IO.Storage;
@@ -62,8 +47,12 @@ public class ApplicationStorage : IApplicationStorage {
         return container.Create(filename, contentType);
     }
 
-    public void AddOrUpdateStorageEntry(Guid containerId, string filename, StorageEntryContentType contentType) {
-        throw new NotImplementedException();
+    public void AddOrUpdateStorageEntry(Guid containerId, string filename, object entry, StorageEntryContentType contentType) {
+        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
+            throw new InvalidOperationException($"Container with id {containerId} not found");
+        }
+
+        container.AddOrUpdate(filename, entry, contentType);
     }
 
     public bool ContainsEntry(Guid containerId, string filename) {
@@ -96,5 +85,22 @@ public class ApplicationStorage : IApplicationStorage {
         foreach (IStorageEntryContainer container in Containers.Values) {
             container.Save();
         }
+    }
+
+    public void CreateContainer(Guid containerId, Func<IStorageEntryContainerBuilder, IStorageEntryContainer> builder) {
+        if (Containers.ContainsKey(containerId)) {
+            throw new InvalidOperationException($"Container with id {containerId} already created");
+        }
+
+        IStorageEntryContainer newContainer = builder(new StorageEntryContainerBuilder(BasePath));
+        Containers.Add(containerId, newContainer);
+    }
+
+    public bool RemoveContainer(Guid containerId) {
+        return Containers.Remove(containerId);
+    }
+
+    public void RemoveAllContainers() {
+        Containers.Clear();
     }
 }
