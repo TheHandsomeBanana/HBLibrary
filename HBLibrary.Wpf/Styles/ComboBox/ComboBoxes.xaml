@@ -105,7 +105,8 @@
                                             Background="{TemplateBinding Background}"/>
 
                                     <ScrollViewer x:Name="DropDownScrollViewer"
-                                                  VerticalScrollBarVisibility="Hidden"
+                                                  Style="{StaticResource HBDark_VSScrollViewer}"
+                                                  VerticalScrollBarVisibility="Auto"
                                             SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True"
                                                 KeyboardNavigation.DirectionalNavigation="Contained"

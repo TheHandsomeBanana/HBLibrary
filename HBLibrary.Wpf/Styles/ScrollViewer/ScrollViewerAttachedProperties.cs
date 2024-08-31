@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace HBLibrary.Wpf.Styles.ScrollViewer;
@@ -51,6 +53,60 @@ public static class ScrollViewerAttachedProperties {
             }
 
             e.Handled = true;
+        }
+    }
+
+
+
+    public static readonly DependencyProperty VerticalScrollBarMarginProperty =
+             DependencyProperty.RegisterAttached(
+                 "VerticalScrollBarMargin",
+                 typeof(Thickness),
+                 typeof(ScrollViewerAttachedProperties),
+                 new PropertyMetadata(new Thickness(0), OnVerticalScrollBarMarginChanged));
+
+    public static readonly DependencyProperty HorizontalScrollBarMarginProperty =
+        DependencyProperty.RegisterAttached(
+            "HorizontalScrollBarMargin",
+            typeof(Thickness),
+            typeof(ScrollViewerAttachedProperties),
+            new PropertyMetadata(new Thickness(0), OnHorizontalScrollBarMarginChanged));
+
+    public static void SetVerticalScrollBarMargin(UIElement element, Thickness value) {
+        element.SetValue(VerticalScrollBarMarginProperty, value);
+    }
+
+    public static Thickness GetVerticalScrollBarMargin(UIElement element) {
+        return (Thickness)element.GetValue(VerticalScrollBarMarginProperty);
+    }
+
+    public static void SetHorizontalScrollBarMargin(UIElement element, Thickness value) {
+        element.SetValue(HorizontalScrollBarMarginProperty, value);
+    }
+
+    public static Thickness GetHorizontalScrollBarMargin(UIElement element) {
+        return (Thickness)element.GetValue(HorizontalScrollBarMarginProperty);
+    }
+
+    private static void OnVerticalScrollBarMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is System.Windows.Controls.ScrollViewer scrollViewer) {
+            ApplyMarginToScrollBar(scrollViewer, "PART_VerticalScrollBar", (Thickness)e.NewValue);
+        }
+    }
+
+    private static void OnHorizontalScrollBarMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is System.Windows.Controls.ScrollViewer scrollViewer) {
+            ApplyMarginToScrollBar(scrollViewer, "PART_HorizontalScrollBar", (Thickness)e.NewValue);
+        }
+    }
+
+    private static void ApplyMarginToScrollBar(System.Windows.Controls.ScrollViewer scrollViewer, string partName, Thickness margin) {
+        if (scrollViewer.Template != null) {
+            scrollViewer.ApplyTemplate();
+            var scrollBar = scrollViewer.Template.FindName(partName, scrollViewer) as ScrollBar;
+            if (scrollBar != null) {
+                scrollBar.Margin = margin;
+            }
         }
     }
 }
