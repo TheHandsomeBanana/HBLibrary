@@ -34,23 +34,23 @@ public class TimeSpanPicker : Control {
     }
 
 
-    public TimeSpan ParsedText {
-        get { return (TimeSpan)GetValue(ParsedTextProperty); }
+    public TimeSpan? ParsedText {
+        get { return (TimeSpan?)GetValue(ParsedTextProperty); }
         set { SetValue(ParsedTextProperty, value); }
     }
 
     // Using a DependencyProperty as the backing store for ParsedText.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ParsedTextProperty =
-        DependencyProperty.Register("ParsedText", typeof(TimeSpan), typeof(TimeSpanPicker), new PropertyMetadata(TimeSpan.FromSeconds(0)));
+        DependencyProperty.Register("ParsedText", typeof(TimeSpan?), typeof(TimeSpanPicker), new PropertyMetadata(TimeSpan.FromSeconds(0)));
 
-    public TimeUnit TimeUnit {
-        get { return (TimeUnit)GetValue(TimeUnitProperty); }
+    public TimeUnit? TimeUnit {
+        get { return (TimeUnit?)GetValue(TimeUnitProperty); }
         set { SetValue(TimeUnitProperty, value); }
     }
 
     // Using a DependencyProperty as the backing store for TimeUnit.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TimeUnitProperty =
-        DependencyProperty.Register("TimeUnit", typeof(TimeUnit), typeof(TimeSpanPicker), new PropertyMetadata(TimeUnit.Seconds, OnTimeUnitChanged));
+        DependencyProperty.Register("TimeUnit", typeof(TimeUnit?), typeof(TimeSpanPicker), new PropertyMetadata(Models.TimeUnit.Seconds, OnTimeUnitChanged));
 
     private static void OnTimeUnitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         OnAnyChanged(d, e);
@@ -61,27 +61,27 @@ public class TimeSpanPicker : Control {
 
         if (int.TryParse(control.Text, out int parsed)) {
             switch (control.TimeUnit) {
-                case TimeUnit.Seconds:
+                case Models.TimeUnit.Seconds:
                     control.ParsedText = TimeSpan.FromSeconds(parsed);
                     break;
 
-                case TimeUnit.Minutes:
+                case Models.TimeUnit.Minutes:
                     control.ParsedText = TimeSpan.FromMinutes(parsed);
                     break;
 
-                case TimeUnit.Hours:
+                case Models.TimeUnit.Hours:
                     control.ParsedText = TimeSpan.FromHours(parsed);
                     break;
 
-                case TimeUnit.Days:
+                case Models.TimeUnit.Days:
                     control.ParsedText = TimeSpan.FromDays(parsed);
                     break;
 
-                case TimeUnit.Weeks:
+                case Models.TimeUnit.Weeks:
                     control.ParsedText = TimeSpan.FromDays(parsed * 7);
                     break;
 
-                case TimeUnit.Years:
+                case Models.TimeUnit.Years:
                     control.ParsedText = TimeSpan.FromDays(parsed * 365);
                     break;
             }

@@ -1,4 +1,6 @@
 ﻿
+using HBLibrary.Common.Limiter;
+
 namespace HBLibrary.Services.IO;
 public class FileEntryService : IFileEntryService {
     #region Copy
@@ -32,6 +34,22 @@ public class FileEntryService : IFileEntryService {
         return CopyDirectoryInternalAsync(source, target, action);
     }
 
+    private static SemaphoreSlim semaphore = new SemaphoreSlim(4);
+    /// <summary>
+    /// <paramref name="maxConcurrency"/> will always be limited to the range of 1 to 20.
+    /// <br></br>
+    /// For HDDs: A maximum concurrency of around 4-8 is usually sufficient
+    /// <br></br>
+    /// For SSDs: Depending on the performance of your SSD a range of 10-20 should be optimal
+    /// </summary>
+    /// <param name="maxConcurrency"></param>
+    public static void SetAsyncThrottle(int maxConcurrency) {
+        semaphore.Dispose();
+
+        Int32Limiter.LimitToRangeRef(ref maxConcurrency, 1, 20);
+        semaphore = new SemaphoreSlim(maxConcurrency);
+    }
+
     public Task CopyFileAsync(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
         if (PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
@@ -55,6 +73,9 @@ public class FileEntryService : IFileEntryService {
     }
 
     private static void CopyFileInternal(string source, string target, CopyConflictAction action) {
+        string targetDir = Path.GetDirectoryName(target)!;
+        Directory.CreateDirectory(targetDir);
+
         switch (action) {
             case CopyConflictAction.Skip:
                 if (!File.Exists(target))
@@ -78,22 +99,24 @@ public class FileEntryService : IFileEntryService {
     }
 
     private static async Task CopyDirectoryInternalAsync(string source, string target, CopyConflictAction action) {
-        List<Task> copyFileTasks = [];
+        List<Task> copyTasks = [];
         foreach (string file in Directory.GetFiles(source)) {
             string targetFile = Path.Combine(target, Path.GetFileName(file));
-            copyFileTasks.Add(CopyFileInternalAsync(file, FileSnapshot.GetOptimalBufferSize(file), targetFile, action));
+            copyTasks.Add(CopyFileThrottledAsync(file, FileSnapshot.GetOptimalBufferSize(file), targetFile, action));
         }
-        await Task.WhenAll(copyFileTasks);
 
-        List<Task> copyDirectoryTasks = [];
         foreach (string directory in Directory.GetDirectories(source)) {
             string targetDirectory = Path.Combine(target, Path.GetFileName(directory));
-            copyFileTasks.Add(CopyDirectoryInternalAsync(directory, targetDirectory, action));
+            copyTasks.Add(CopyDirectoryInternalAsync(directory, targetDirectory, action));
         }
-        await Task.WhenAll(copyDirectoryTasks);
+
+        await Task.WhenAll(copyTasks);
     }
 
     private static async Task CopyFileInternalAsync(string source, int bufferSize, string target, CopyConflictAction action) {
+        string targetDir = Path.GetDirectoryName(target)!;
+        Directory.CreateDirectory(targetDir);
+
         switch (action) {
             case CopyConflictAction.Skip:
                 if (!File.Exists(target))
@@ -107,6 +130,32 @@ public class FileEntryService : IFileEntryService {
                     await CopyAsync(source, bufferSize, target);
 
                 break;
+        }
+    }
+
+    private static async Task CopyFileThrottledAsync(string source, int bufferSize, string target, CopyConflictAction action) {
+        await semaphore.WaitAsync();
+        
+        string targetDir = Path.GetDirectoryName(target)!;
+        Directory.CreateDirectory(targetDir);
+
+        try {
+            switch (action) {
+                case CopyConflictAction.Skip:
+                    if (!File.Exists(target))
+                        await CopyAsync(source, bufferSize, target);
+                    break;
+                case CopyConflictAction.OverwriteAll:
+                    await CopyAsync(source, bufferSize, target);
+                    break;
+                case CopyConflictAction.OverwriteModifiedOnly:
+                    if (!File.Exists(target) || new FileInfo(source).Length != new FileInfo(target).Length)
+                        await CopyAsync(source, bufferSize, target);
+                    break;
+            }
+        }
+        finally {
+            semaphore.Release();
         }
     }
 

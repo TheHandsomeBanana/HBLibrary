@@ -13,6 +13,7 @@ public class DirectorySnapshot {
     /// <param name="createNew"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="DirectoryNotFoundException"></exception>
     public static DirectorySnapshot Create(string path, bool createNew = false) {
         if (!PathValidator.ValidatePath(path))
             throw new ArgumentException("The given path contains illegal characters", nameof(path));
