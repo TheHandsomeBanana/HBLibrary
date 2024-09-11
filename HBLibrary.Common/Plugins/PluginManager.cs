@@ -55,8 +55,7 @@ public class PluginManager : IPluginManager {
             return;
         }
 
-        List<T> instances = GetInstances<T>();
-        plugins.Add(typeof(T).FullName!, instances);
+        plugins.Add(typeof(T).FullName!, GetInstances<T>());
     }
 
     private List<T> GetInstances<T>() where T : class {

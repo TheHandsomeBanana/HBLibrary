@@ -50,7 +50,7 @@ public class StartupLoginViewModel : ViewModelBase {
         }
 
         LoginViewModel loginViewModel = new LoginViewModel();
-        ApplicationAccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName);
+        ApplicationAccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName!);
 
         if (lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
             loginViewModel.Username = lastAccount.Username;
@@ -76,7 +76,7 @@ public class StartupLoginViewModel : ViewModelBase {
         switch (arg) {
             case LocalLoginTriggerData localLogin:
                 await accountService.LoginAsync(new LocalAuthCredentials(localLogin.Username, localLogin.SecurePassword),
-                    appSettings.ApplicationName);
+                    appSettings.ApplicationName!);
                 break;
             case MicrosoftLoginTriggerData microsoftLogin:
                 Window window = Window.GetWindow(arg.ControlContext);
@@ -87,7 +87,7 @@ public class StartupLoginViewModel : ViewModelBase {
                     b.WithParentActivityOrWindow(windowHandle);
                 });
 
-                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
+                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName!);
                 break;
         }
 
@@ -101,7 +101,7 @@ public class StartupLoginViewModel : ViewModelBase {
         switch (arg) {
             case LocalRegistrationTriggerData localRegistration:
                 await accountService.RegisterAsync(new LocalAuthCredentials(localRegistration.Username, localRegistration.SecurePassword),
-                    appSettings.ApplicationName);
+                    appSettings.ApplicationName!);
                 break;
             case MicrosoftRegistrationTriggerData microsoftRegistration:
                 Window window = Window.GetWindow(arg.ControlContext);
@@ -112,7 +112,7 @@ public class StartupLoginViewModel : ViewModelBase {
                     b.WithParentActivityOrWindow(windowHandle);
                 });
 
-                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName);
+                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName!);
                 break;
         }
 

@@ -5,11 +5,11 @@ using System.Windows.Controls;
 
 namespace HBLibrary.Wpf.Views.Templates.Selectors {
     public class AccountTemplateSelector : DataTemplateSelector {
-        public DataTemplate LocalTemplate { get; set; }
-        public DataTemplate MicrosoftTemplate { get; set; }
-        public DataTemplate EmptyAccountTemplate { get; set; }
+        public DataTemplate? LocalTemplate { get; set; }
+        public DataTemplate? MicrosoftTemplate { get; set; }
+        public DataTemplate? EmptyAccountTemplate { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container) {
+        public override DataTemplate? SelectTemplate(object item, DependencyObject container) {
             if (item is ViewModelBase accountViewModel) {
                 switch (accountViewModel) {
                     case LocalAccountViewModel:

@@ -45,12 +45,12 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
             .WithRedirectUri(azureAdOptions.RedirectUri)
             .Build();
 
-        parameterStorage = new MSParameterStorage(appSettings.ApplicationName);
+        parameterStorage = new MSParameterStorage(appSettings.ApplicationName!);
     }
 
     public PublicMSAuthenticationService(IPublicClientApplication app, CommonAppSettings appSettings) {
         this.app = app;
-        parameterStorage = new MSParameterStorage(appSettings.ApplicationName);
+        parameterStorage = new MSParameterStorage(appSettings.ApplicationName!);
     }
 
 

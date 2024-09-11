@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace HBLibrary.Wpf.Converters;
 public class ValidationErrorConverter : IMultiValueConverter {
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo cultureInfo) {
+    public object? Convert(object[] values, Type targetType, object parameter, CultureInfo cultureInfo) {
         if (values != null && values.Length == 2) {
             var error = values[0] as string;
             var hasError = (bool)values[1];

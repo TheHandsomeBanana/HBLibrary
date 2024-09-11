@@ -17,7 +17,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                     return default;
                 }
 
-                if (Settings.LifeTime.Type != EntryLifetimeType.NoLifetime) {
+                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
                     Value = jsonService.ReadJson(type, file!);
                 }
             }
@@ -52,7 +52,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                     return default;
                 }
 
-                if (Settings.LifeTime.Type != EntryLifetimeType.NoLifetime) {
+                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
                     Value = jsonService.ReadJson<T>(file!);
                 }
             }

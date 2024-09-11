@@ -15,7 +15,7 @@ public abstract class StorageEntry {
         this.ContentType = contentType;
         this.Settings = settings;
 
-        if (settings.LifeTime.Countdown is not null) {
+        if (settings.LifeTime!.Countdown is not null) {
             settings.LifeTime.Countdown.CountdownCompleted += OnLifetimeOver;
         }
     }
@@ -23,7 +23,7 @@ public abstract class StorageEntry {
     protected abstract void OnLifetimeOver(object sender, TimeSpan fullTime);
 
     public virtual void Set(object value) {
-        if (Settings.LifeTime.Type == EntryLifetimeType.NoLifetime) {
+        if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
             return;
         }
 
@@ -31,7 +31,7 @@ public abstract class StorageEntry {
     }
 
     public virtual void Set<T>(T value) {
-        if (Settings.LifeTime.Type == EntryLifetimeType.NoLifetime) {
+        if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
             return;
         }
 

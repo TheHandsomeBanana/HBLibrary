@@ -4,86 +4,82 @@ using System.Text.Json;
 
 namespace HBLibrary.Common;
 public readonly struct HBHashCode {
-    public static int Combine<T1, T2>(T1 item1, T2 item2) where T1 : notnull where T2 : notnull {
+    public static int Combine<T1, T2>(T1 item1, T2 item2) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2);
 #endif
     }
 
-    public static int Combine<T1, T2, T3>(T1 item1, T2 item2, T3 item3) where T1 : notnull where T2 : notnull where T3 : notnull {
+    public static int Combine<T1, T2, T3>(T1 item1, T2 item2, T3 item3) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2, item3);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
-        int hash3 = item3.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
+        int hash3 = item3?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2, hash3);
 #endif
     }
 
-    public static int Combine<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull {
+    public static int Combine<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2, item3, item4);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
-        int hash3 = item3.GetHashCode();
-        int hash4 = item4.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
+        int hash3 = item3?.GetHashCode() ?? 0;
+        int hash4 = item4?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2, hash3, hash4);
 #endif
     }
 
-    public static int Combine<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
-    where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull {
+    public static int Combine<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2, item3, item4, item5);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
-        int hash3 = item3.GetHashCode();
-        int hash4 = item4.GetHashCode();
-        int hash5 = item5.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
+        int hash3 = item3?.GetHashCode() ?? 0;
+        int hash4 = item4?.GetHashCode() ?? 0;
+        int hash5 = item5?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2, hash3, hash4, hash5);
 #endif
     }
 
-    public static int Combine<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6)
-    where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull where T6 : notnull {
+    public static int Combine<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2, item3, item4, item5, item6);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
-        int hash3 = item3.GetHashCode();
-        int hash4 = item4.GetHashCode();
-        int hash5 = item5.GetHashCode();
-        int hash6 = item6.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
+        int hash3 = item3?.GetHashCode() ?? 0;
+        int hash4 = item4?.GetHashCode() ?? 0;
+        int hash5 = item5?.GetHashCode() ?? 0;
+        int hash6 = item6?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2, hash3, hash4, hash5, hash6);
 #endif
     }
 
-    public static int Combine<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
-    where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull where T6 : notnull where T7 : notnull {
+    public static int Combine<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2, item3, item4, item5, item6, item7);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
-        int hash3 = item3.GetHashCode();
-        int hash4 = item4.GetHashCode();
-        int hash5 = item5.GetHashCode();
-        int hash6 = item6.GetHashCode();
-        int hash7 = item7.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
+        int hash3 = item3?.GetHashCode() ?? 0;
+        int hash4 = item4?.GetHashCode() ?? 0;
+        int hash5 = item5?.GetHashCode() ?? 0;
+        int hash6 = item6?.GetHashCode() ?? 0;
+        int hash7 = item7?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2, hash3, hash4, hash5, hash6, hash7);
 #endif
@@ -95,14 +91,14 @@ public readonly struct HBHashCode {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2, item3, item4, item5, item6, item7, item8);
 #elif NET472_OR_GREATER
-        int hash1 = item1.GetHashCode();
-        int hash2 = item2.GetHashCode();
-        int hash3 = item3.GetHashCode();
-        int hash4 = item4.GetHashCode();
-        int hash5 = item5.GetHashCode();
-        int hash6 = item6.GetHashCode();
-        int hash7 = item7.GetHashCode();
-        int hash8 = item8.GetHashCode();
+        int hash1 = item1?.GetHashCode() ?? 0;
+        int hash2 = item2?.GetHashCode() ?? 0;
+        int hash3 = item3?.GetHashCode() ?? 0;
+        int hash4 = item4?.GetHashCode() ?? 0;
+        int hash5 = item5?.GetHashCode() ?? 0;
+        int hash6 = item6?.GetHashCode() ?? 0;
+        int hash7 = item7?.GetHashCode() ?? 0;
+        int hash8 = item8?.GetHashCode() ?? 0;
 
         return Combine(hash1, hash2, hash3, hash4, hash5, hash6, hash7, hash8);
 #endif
@@ -163,8 +159,7 @@ public readonly struct HBHashCode {
     /// Combines four items by serializing them to JSON and then hashing the combined JSON string using SHA512.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA512<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull {
+    public static string CombineSHA512<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4 });
         return ComputeSHA512(combinedJson);
@@ -174,8 +169,7 @@ public readonly struct HBHashCode {
     /// Combines five items by serializing them to JSON and then hashing the combined JSON string using SHA512.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA512<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull {
+    public static string CombineSHA512<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5 });
         return ComputeSHA512(combinedJson);
@@ -185,8 +179,7 @@ public readonly struct HBHashCode {
     /// Combines six items by serializing them to JSON and then hashing the combined JSON string using SHA512.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA512<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull where T6 : notnull {
+    public static string CombineSHA512<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5, item6 });
         return ComputeSHA512(combinedJson);
@@ -196,31 +189,17 @@ public readonly struct HBHashCode {
     /// Combines seven items by serializing them to JSON and then hashing the combined JSON string using SHA512.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA512<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull where T6 : notnull where T7 : notnull {
+    public static string CombineSHA512<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5, item6, item7 });
         return ComputeSHA512(combinedJson);
-
-        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
-        Before:
-            }
-
-            /// <summary>
-        After:
-            }
-
-            /// <summary>
-        */
     }
 
     /// <summary>
     /// Combines eight items by serializing them to JSON and then hashing the combined JSON string using SHA512.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA512<T1, T2, T3, T4, T5, T6, T7, T8>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull
-        where T5 : notnull where T6 : notnull where T7 : notnull where T8 : notnull {
+    public static string CombineSHA512<T1, T2, T3, T4, T5, T6, T7, T8>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5, item6, item7, item8 });
         return ComputeSHA512(combinedJson);
@@ -230,7 +209,7 @@ public readonly struct HBHashCode {
     /// Combines two items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2>(T1 item1, T2 item2) where T1 : notnull where T2 : notnull {
+    public static string CombineSHA256<T1, T2>(T1 item1, T2 item2) {
         string combinedJson = JsonSerializer.Serialize(new { item1, item2 });
         return ComputeSHA265(combinedJson);
     }
@@ -239,7 +218,7 @@ public readonly struct HBHashCode {
     /// Combines three items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2, T3>(T1 item1, T2 item2, T3 item3) where T1 : notnull where T2 : notnull where T3 : notnull {
+    public static string CombineSHA256<T1, T2, T3>(T1 item1, T2 item2, T3 item3) {
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3 });
         return ComputeSHA265(combinedJson);
     }
@@ -248,8 +227,7 @@ public readonly struct HBHashCode {
     /// Combines four items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull {
+    public static string CombineSHA256<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4 });
         return ComputeSHA265(combinedJson);
@@ -259,9 +237,7 @@ public readonly struct HBHashCode {
     /// Combines five items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull {
-
+    public static string CombineSHA256<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5) {
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5 });
         return ComputeSHA265(combinedJson);
     }
@@ -270,8 +246,7 @@ public readonly struct HBHashCode {
     /// Combines six items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull where T6 : notnull {
+    public static string CombineSHA256<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5, item6 });
         return ComputeSHA265(combinedJson);
@@ -281,8 +256,7 @@ public readonly struct HBHashCode {
     /// Combines seven items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull where T5 : notnull where T6 : notnull where T7 : notnull {
+    public static string CombineSHA256<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7) {
 
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5, item6, item7 });
         return ComputeSHA265(combinedJson);
@@ -292,10 +266,7 @@ public readonly struct HBHashCode {
     /// Combines eight items by serializing them to JSON and then hashing the combined JSON string using SHA265.
     /// The items will be serialized to JSON before hashing.
     /// </summary>
-    public static string CombineSHA256<T1, T2, T3, T4, T5, T6, T7, T8>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8)
-        where T1 : notnull where T2 : notnull where T3 : notnull where T4 : notnull
-        where T5 : notnull where T6 : notnull where T7 : notnull where T8 : notnull {
-
+    public static string CombineSHA256<T1, T2, T3, T4, T5, T6, T7, T8>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8) {
         string combinedJson = JsonSerializer.Serialize(new { item1, item2, item3, item4, item5, item6, item7, item8 });
         return ComputeSHA265(combinedJson);
     }

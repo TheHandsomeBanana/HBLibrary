@@ -11,7 +11,9 @@ public sealed class AsyncMethodTarget : IAsyncLogTarget, IEquatable<AsyncMethodT
         LevelThreshold = minLevel;
     }
 
-    public Task WriteLogAsync(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) => Method.Invoke(log, format);
+    public Task WriteLogAsync(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) 
+        => Method?.Invoke(log, format)
+        ?? Task.CompletedTask;
 
     public void Dispose() {
         Method = null;
@@ -23,7 +25,7 @@ public sealed class AsyncMethodTarget : IAsyncLogTarget, IEquatable<AsyncMethodT
     }
 
     public override int GetHashCode() {
-        return Method.GetHashCode();
+        return Method?.GetHashCode() ?? 0;
     }
 
 
