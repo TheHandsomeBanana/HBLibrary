@@ -77,12 +77,12 @@ public class PluginManager : IPluginManager {
         Result<string> result;
         try {
             Assembly assembly = Assembly.LoadFrom(assemblyPath);
-            result = Result<string>.Success(assembly.FullName!);
+            result = Result<string>.Ok(assembly.FullName!);
 
             assemblies.Add(assemblyPath, assembly);
         }
         catch (Exception e) {
-            result = Result<string>.Failure(e);
+            result = Result<string>.Fail(e);
         }
 
         AssemblyLoaded?.Invoke(result);
