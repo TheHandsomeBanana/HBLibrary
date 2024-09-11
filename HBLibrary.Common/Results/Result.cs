@@ -220,8 +220,9 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TValue> Fail(Exception value) => new Result<TValue>(ResultState.Faulted, default, value);
 
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator Result<TValue>(TValue value) => new Result<TValue>(ResultState.Success, value, default);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator Result<TValue>(Exception error) => new Result<TValue>(ResultState.Faulted, default, error);
 
     [Pure]
