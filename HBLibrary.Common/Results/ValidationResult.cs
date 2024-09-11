@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Immutable;
 
 namespace HBLibrary.Common.Results;
 public readonly struct ValidationResult {
@@ -22,8 +17,8 @@ public readonly struct ValidationResult {
     public static ValidationResult Failure(Exception exception) => new ValidationResult(false, [exception.Message], [exception]);
     public static ValidationResult Failure(string message, Exception exception) => new ValidationResult(false, [message], [exception]);
 
-    public static ValidationResult Failure(IEnumerable<string> messages) =>  new ValidationResult(false, messages, []);
-    public static ValidationResult Failure(IEnumerable<Exception> exceptions) =>  new ValidationResult(false, exceptions.Select(e => e.Message), exceptions);
+    public static ValidationResult Failure(IEnumerable<string> messages) => new ValidationResult(false, messages, []);
+    public static ValidationResult Failure(IEnumerable<Exception> exceptions) => new ValidationResult(false, exceptions.Select(e => e.Message), exceptions);
     public static ValidationResult Failure(IEnumerable<string> messages, IEnumerable<Exception> exceptions) => new ValidationResult(false, messages, exceptions);
 
 }

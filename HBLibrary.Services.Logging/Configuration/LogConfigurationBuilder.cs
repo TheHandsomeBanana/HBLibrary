@@ -44,7 +44,7 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
     }
 
     public ILogConfigurationBuilder AddDatabaseTarget(string providerName, string connectionString, bool useAsync, LogLevel? levelThreshold = null, string tableName = "Logs") {
-        if(useAsync) {
+        if (useAsync) {
             asyncTargets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, tableName));
         }
         else {
@@ -71,7 +71,7 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         return this;
     }
 
-    
+
 
     public ILogConfiguration Build() {
         if (overrideConfig) {
@@ -92,5 +92,5 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         levelThreshold = LogLevel.Debug;
     }
 
-   
+
 }

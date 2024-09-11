@@ -135,7 +135,7 @@ public class FileEntryService : IFileEntryService {
 
     private static async Task CopyFileThrottledAsync(string source, int bufferSize, string target, CopyConflictAction action) {
         await semaphore.WaitAsync();
-        
+
         string targetDir = Path.GetDirectoryName(target)!;
         Directory.CreateDirectory(targetDir);
 

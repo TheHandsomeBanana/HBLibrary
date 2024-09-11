@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HBLibrary.Common.Results;
+﻿namespace HBLibrary.Common.Results;
 public readonly struct SimpleValidationResult {
     public bool IsValid { get; }
     public string? Message { get; }

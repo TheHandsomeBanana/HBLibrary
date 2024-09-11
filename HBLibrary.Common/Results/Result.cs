@@ -1,5 +1,8 @@
-﻿namespace HBLibrary.Common.Results;
+﻿using System.Diagnostics.Contracts;
+
+namespace HBLibrary.Common.Results;
 public readonly struct Result<TValue, TError> {
+    [Pure]
     public bool IsValid { get; }
     public TValue? Value { get; }
     public TError? Error { get; }
@@ -21,6 +24,8 @@ public readonly struct Result<TValue, TError> {
         value = Value;
         error = Error;
     }
+
+    public R Match<R>(Func<TValue, R> success, Func<TError, R> failure) => IsValid ? success(Value!) : failure(Error!);
 }
 
 public readonly struct Result<TValue> {
@@ -46,4 +51,7 @@ public readonly struct Result<TValue> {
         value = Value;
         error = Error;
     }
+
+    public R Match<R>(Func<TValue, R> success, Func<Exception, R> failure) => IsValid ? success(Value!) : failure(Error!);
+
 }
