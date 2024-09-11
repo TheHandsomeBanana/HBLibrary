@@ -25,30 +25,17 @@ public class PluginManager : IPluginManager {
     }
 
     public void RemoveAssembly(string assemblyFileName) {
-        assemblies.Remo
+        assemblies.Remove(assemblyFileName);
         File.Delete(Path.Combine(BasePath, assemblyFileName));
     }
 
-
-
     public void LoadAssemblies() {
-        if (AssembliesLoaded) {
-            return;
-        }
-
-        AssembliesLoadingEvent?.Invoke();
-        AssembliesLoading = true;
-
         IEnumerable<string> assembliesToLoad = Directory.EnumerateFiles(BasePath, "*.dll", SearchOption.AllDirectories)
-            .Where(e => !assemblies.Any(a => a.Location == e));
+            .Where(e => !assemblies.Any(a => a.Key == e));
 
         foreach (string file in assembliesToLoad) {
             LoadAssembly(file);
         }
-
-        AssembliesLoading = false;
-        AssembliesLoaded = true;
-        AssembliesLoadedEvent?.Invoke();
     }
 
     public T[] GetPlugins<T>() where T : class {
@@ -57,17 +44,9 @@ public class PluginManager : IPluginManager {
                 .ToArray();
         }
 
-        List<T> instances = [];
-        foreach (Type type in assemblies.SelectMany(e => e.GetTypes())) {
-            if (type.IsAssignableFrom(typeof(T))) {
-                T? instance = Activator.CreateInstance(type) as T;
-
-                if (instance is not null) {
-                    instances.Add(instance);
-                }
-            }
-        }
+        List<T> instances = GetInstances<T>();
         plugins.Add(typeof(T).FullName!, instances);
+
         return [.. instances];
     }
 
@@ -76,8 +55,13 @@ public class PluginManager : IPluginManager {
             return;
         }
 
+        List<T> instances = GetInstances<T>();
+        plugins.Add(typeof(T).FullName!, instances);
+    }
+
+    private List<T> GetInstances<T>() where T : class {
         List<T> instances = [];
-        foreach (Type type in assemblies.SelectMany(e => e.GetTypes())) {
+        foreach (Type type in assemblies.SelectMany(e => e.Value.GetTypes())) {
             if (type.IsAssignableFrom(typeof(T))) {
                 T? instance = Activator.CreateInstance(type) as T;
 
@@ -86,9 +70,9 @@ public class PluginManager : IPluginManager {
                 }
             }
         }
-        plugins.Add(typeof(T).FullName!, instances);
-    }
 
+        return instances;
+    }
 
     private void LoadAssembly(string assemblyPath) {
         Result<string> result;
