@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Graph.Models;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HBLibrary.Common.Results;
 [DebuggerDisplay("State = {ResultState}, Value = {Value}, Error = {Error}")]
@@ -376,6 +379,113 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
     [Pure]
     public override int GetHashCode() {
         return HBHashCode.Combine(ResultState, Value, Error);
+    }
+}
+
+[DebuggerDisplay("State = {ResultState}")]
+public readonly struct Result : IEquatable<Result> {
+    public ResultState ResultState { get; }
+    public bool IsSuccess => ResultState == ResultState.Success;
+    public bool IsFaulted => ResultState == ResultState.Faulted;
+    public string? Message { get; }
+    public Exception? Exception { get; }
+
+    public Result(ResultState resultState, string? message, Exception? exception) {
+        ResultState = resultState;
+        Message = message;
+        Exception = exception;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Ok() => new Result(ResultState.Success, null, null);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Ok(string message) => new Result(ResultState.Success, message, null);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Fail(string message) => new Result(ResultState.Faulted, message, null);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Fail(Exception exception) => new Result(ResultState.Faulted, exception.Message, exception);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Fail(string message, Exception exception) => new Result(ResultState.Faulted, message, exception);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator Result(Exception error) => new Result(ResultState.Faulted, default, error);
+
+    [Pure]
+    public void ThrowIfFaulted() {
+        if (IsFaulted) {
+            throw Exception!;
+        }
+    }
+
+    [Pure]
+    public R Match<R>(Func<R> success, Func<Exception, R> failure) {
+        return IsSuccess
+        ? success()
+        : failure(Exception!);
+    }
+
+    [Pure]
+    public Task<R> MatchAsync<R>(Func<Task<R>> success, Func<Exception, Task<R>> failure) {
+        return IsSuccess
+        ? success()
+        : failure(Exception!);
+    }
+
+    [Pure]
+    public Result TapError(Action<Exception> errorAction) {
+        if (IsFaulted) {
+            errorAction(Exception!);
+        }
+        return this;
+    }
+
+    [Pure]
+    public async Task<Result> TapErrorAsync(Func<Exception, Task> errorAction) {
+        if (ResultState == ResultState.Faulted) {
+            await errorAction(Exception!);
+        }
+        return this;
+    }
+
+
+    [Pure]
+    public bool Equals(Result other) {
+        return ResultState == other.ResultState &&
+            Message == other.Message &&
+            Exception == other.Exception;
+    }
+
+    [Pure]
+    public override bool Equals(object? obj) {
+        return obj is Result res && Equals(res);
+    }
+
+    [Pure]
+    public override int GetHashCode() {
+        return HBHashCode.Combine(ResultState, Message, Exception);
+    }
+
+    [Pure]
+    public static bool operator ==(Result left, Result right) {
+        return left.Equals(right);
+    }
+
+    [Pure]
+    public static bool operator !=(Result left, Result right) {
+        return !(left == right);
+    }
+
+    [Pure]
+    public void Deconstruct(out ResultState resultState, out string? message, out Exception? exception) {
+        resultState = ResultState;
+        message = Message;
+        exception = Exception;
+    }
+    
+    [Pure]
+    public void Deconstruct(out string? message, out Exception? exception) {
+        message = Message;
+        exception = Exception;
     }
 }
 

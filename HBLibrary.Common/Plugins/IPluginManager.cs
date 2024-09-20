@@ -1,55 +1,34 @@
-﻿using HBLibrary.Common.Results;
+﻿using HBLibrary.Common.Plugins.Configuration;
+using HBLibrary.Common.Plugins.Loader;
+using HBLibrary.Common.Plugins.Provider;
+using HBLibrary.Common.Results;
+using Microsoft.SqlServer.Server;
+using System.Collections.Immutable;
 
 namespace HBLibrary.Common.Plugins;
 public interface IPluginManager {
-    /// <summary>
-    /// Base directory path.
-    /// </summary>
-    public string BasePath { get; }
-    /// <summary>
-    /// True after <see cref="LoadAssemblies"/> is called.
-    /// </summary>
-    public bool AllAssembliesLoaded { get; }
-    /// <summary>
-    /// Set to true to cache plugin instances.
-    /// </summary>
-    public bool CachePluginInstances { get; set; }
-    /// <summary>
-    /// Copies a new assembly to the <see cref="BasePath"/> directory and loads it.
-    /// </summary>
-    /// <param name="assemblyFullPath"></param>
-    public void AddAssembly(string assemblyFullPath);
-    /// <summary>
-    /// Removes an assembly from the <see cref="BasePath"/> directory.
-    /// </summary>
-    /// <param name="assemblyFileName"></param>
-    public void RemoveAssembly(string assemblyFileName);
+    public bool AssembliesLoaded { get; }
+    public IPMConfiguration Configuration { get; }
+    public IAssemblyLoader Loader { get; }
+    public IPluginTypeProvider TypeProvider { get; }
 
-    public event Action<Result<string>>? AssemblyLoaded;
+    public Result AddPluginAssembly(string assemblyFileName);
+    public Result RemovePluginAssembly(string assemblyFileName);
+
+    public CollectionResult LoadAssemblies();
+    public Result LoadAssembly(string assemblyFileName);
+
+
+
+
+
+
+
+
     /// <summary>
-    /// Loads all the assemblies from the <see cref="BasePath"/> directory.
+    /// Allows the plugin manager to switch to a different plugin directory
     /// </summary>
-    public void LoadAssemblies();
-    /// <summary>
-    /// Loads the plugins of the specified type and caches the instances.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public void LoadPlugins<T>() where T : class;
-    /// <summary>
-    /// Loads uncached plugins of the specified type into the cache and and returns all of them.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T[] GetPlugins<T>() where T : class;
-    /// <summary>
-    /// Loads the instantiable plugin types of the specified type into the cache.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public void LoadPluginTypes<T>() where T : class;
-    /// <summary>
-    /// Loads uncached plugin types of the specified type into the cache and and returns all of them.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public Type[] GetPluginTypes<T>() where T : class;
+    /// <param name="basePath"></param>
+    /// <param name="cachePluginInstances"></param>
+    public void SwitchContext(string basePath);
 }

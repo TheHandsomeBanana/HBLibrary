@@ -1,31 +1,9 @@
 ﻿using System.Runtime.Versioning;
 
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-Before:
+
 using System.
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-After:
-using System.Security.Cryptography;
-using System.
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-*/
-using System.
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-Before:
-using System.Security.Cryptography;
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-After:
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-*/
+
 Security.Cryptography;
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-Before:
-using System.Threading.Tasks;
-using System.Runtime.Versioning;
-After:
-using System.Text;
-using System.Threading.Tasks;
-*/
 
 
 namespace HBLibrary.Common.Security;
