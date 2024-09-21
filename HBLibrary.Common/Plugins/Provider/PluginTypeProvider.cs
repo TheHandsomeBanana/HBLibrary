@@ -27,8 +27,10 @@ public class PluginTypeProvider : IPluginTypeProvider {
             .Select(e => new PluginType {
                 BaseType = baseType,
                 ConcreteType = e,
-                TypeName = e.GetCustomAttribute<PluginTypeNameAttribute>()?.TypeName ?? e.FullName!,
-                Description = e.GetCustomAttribute<PluginDescriptionAttribute>()?.Description
+                Metadata = new PluginMetadata {
+                    TypeName = e.GetCustomAttribute<PluginTypeNameAttribute>()?.TypeName ?? e.FullName!,
+                    Description = e.GetCustomAttribute<PluginDescriptionAttribute>()?.Description
+                }
             });
     }
 
@@ -50,8 +52,10 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 return new PluginType {
                     BaseType = pluginAttribute.BaseType,
                     ConcreteType = e,
-                    TypeName = e.GetCustomAttribute<PluginTypeNameAttribute>()?.TypeName ?? e.FullName!,
-                    Description = e.GetCustomAttribute<PluginDescriptionAttribute>()?.Description
+                    Metadata = new PluginMetadata {
+                        TypeName = e.GetCustomAttribute<PluginTypeNameAttribute>()?.TypeName ?? e.FullName!,
+                        Description = e.GetCustomAttribute<PluginDescriptionAttribute>()?.Description
+                    }
                 };
             });
     }
@@ -70,8 +74,11 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 return new PluginType {
                     BaseType = pluginAttribute.BaseType,
                     ConcreteType = e,
-                    TypeName = e.GetCustomAttribute<PluginTypeNameAttribute>()?.TypeName ?? e.FullName!,
-                    Description = e.GetCustomAttribute<PluginDescriptionAttribute>()?.Description
+                    Metadata = new PluginMetadata {
+
+                        TypeName = e.GetCustomAttribute<PluginTypeNameAttribute>()?.TypeName ?? e.FullName!,
+                        Description = e.GetCustomAttribute<PluginDescriptionAttribute>()?.Description
+                    }
                 };
             });
     }

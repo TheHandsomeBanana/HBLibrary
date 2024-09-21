@@ -1,0 +1,180 @@
+﻿
+/* Unmerged change from project 'HBLibrary.Common (net8.0)'
+Before:
+using Microsoft.Graph.Models;
+After:
+using HBLibrary;
+using HBLibrary.Common;
+using HBLibrary.Common;
+using HBLibrary.Common.Monoids;
+using HBLibrary.Common.Monoids.Results;
+using Microsoft.Graph.Models;
+*/
+using Microsoft.Graph.Models;
+using System.Collections;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
+
+namespace HBLibrary.Common;
+[DebuggerDisplay("State = {ResultState}")]
+public class ResultCollection : IEquatable<ResultCollection>, IEnumerable<Result>, ICollection<Result>, IReadOnlyCollection<Result>, IReadOnlyList<Result> {
+    private ResultState resultState;
+    private readonly List<Result> results = [];
+
+
+    public ResultState ResultState => resultState;
+    public bool IsSuccess => ResultState == ResultState.Success;
+    public bool IsFaulted => ResultState == ResultState.Faulted;
+
+    public int Count => results.Count;
+    public bool IsReadOnly => false;
+
+    public Result this[int index] => results[index];
+
+    private ResultCollection(ResultState resultState, IEnumerable<Result> results) {
+        this.resultState = resultState;
+        this.results = [.. results];
+    }
+
+    public ResultCollection(int size) {
+        results = new List<Result>(size);
+    }
+
+    public ResultCollection() { }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResultCollection Ok() => new ResultCollection(ResultState.Success, [Result.Ok()]);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResultCollection Fail(string message) => new ResultCollection(ResultState.Faulted, [Result.Fail(message)]);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResultCollection Fail(Exception exception) => new ResultCollection(ResultState.Faulted, [Result.Fail(exception)]);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResultCollection Fail(string message, Exception exception) => new ResultCollection(ResultState.Faulted, [Result.Fail(message, exception)]);
+    public static ResultCollection Create(IEnumerable<Result> results) {
+        ImmutableArray<Result> resultsArray = [.. results];
+        if (resultsArray.Length == 0) {
+            return Ok();
+        }
+
+        return new ResultCollection(resultsArray.All(r => r.IsSuccess) ? ResultState.Success : ResultState.Faulted, resultsArray);
+    }
+
+    public bool Equals(ResultCollection? other) {
+        return resultState == other?.resultState &&
+            results.SequenceEqual(other.results);
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is ResultCollection res && Equals(res);
+    }
+
+    public override int GetHashCode() {
+        return HBHashCode.Combine(resultState, results);
+    }
+
+    public static bool operator ==(ResultCollection left, ResultCollection right) {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(ResultCollection left, ResultCollection right) {
+        return !(left == right);
+    }
+
+    public void Deconstruct(out ResultState resultState, out IReadOnlyCollection<Result> results) {
+        resultState = this.resultState;
+        results = this.results;
+    }
+
+    public IEnumerator<Result> GetEnumerator() {
+        foreach (Result res in results) {
+            yield return res;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        return GetEnumerator();
+    }
+
+    public void Add(Result item) {
+        if (IsSuccess && item.IsFaulted)
+            resultState = ResultState.Faulted;
+
+        results.Add(item);
+    }
+
+    public void Clear() {
+        resultState = ResultState.Success;
+        results.Clear();
+    }
+
+    public bool Contains(Result item) {
+        return results.Contains(item);
+    }
+
+    public void CopyTo(Result[] array, int arrayIndex) {
+        results.CopyTo(array, arrayIndex);
+    }
+
+    public bool Remove(Result item) {
+        bool removedSuccess = results.Remove(item);
+        if (removedSuccess && item.IsFaulted && results.Any(e => e.IsFaulted)) {
+            resultState = ResultState.Faulted;
+        }
+        return removedSuccess;
+    }
+
+    public ImmutableResultCollection ToImmutableResultCollection() {
+        return new ImmutableResultCollection(this);
+    }
+}
+
+
+public readonly struct ImmutableResultCollection : IEquatable<ImmutableResultCollection>, IEnumerable<Result>, IReadOnlyCollection<Result>, IReadOnlyList<Result> {
+    private readonly ResultState resultState;
+    private readonly ImmutableArray<Result> results;
+    public int Count => results.Length;
+
+    public Result this[int index] => results[index];
+
+    public ImmutableResultCollection(ResultCollection results) {
+        this.resultState = results.ResultState;
+        this.results = [.. results];
+    }
+
+
+    public static implicit operator ImmutableResultCollection(ResultCollection results) => new ImmutableResultCollection(results);
+
+
+    public IEnumerator<Result> GetEnumerator() {
+        foreach(Result res in results) {
+            yield return res;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        return GetEnumerator();
+    }
+
+    public bool Equals(ImmutableResultCollection other) {
+        return resultState == other.resultState &&
+            results.SequenceEqual(other.results);
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is ImmutableResultCollection res && Equals(res);
+    }
+
+    public override int GetHashCode() {
+        return HBHashCode.Combine(resultState, results);
+    }
+
+    public static bool operator ==(ImmutableResultCollection left, ImmutableResultCollection right) {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(ImmutableResultCollection left, ImmutableResultCollection right) {
+        return !(left == right);
+    }
+}

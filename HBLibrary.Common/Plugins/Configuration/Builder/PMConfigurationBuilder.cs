@@ -8,8 +8,8 @@ namespace HBLibrary.Common.Plugins.Configuration.Builder;
 internal class PMConfigurationBuilder : IPMConfigurationBuilder {
     private string? location;
     private bool cachePluginInstances = false;
-    private bool preloadAssemblies = false;
-    private bool overrideAssemblies = false;
+    private bool preloadAssemblies = true;
+    private bool overrideAssemblies = true;
     
     public IPMConfiguration Build() {
         if(location is null) {
@@ -24,7 +24,7 @@ internal class PMConfigurationBuilder : IPMConfigurationBuilder {
         };
     }
 
-    public IPMConfigurationBuilder SetPluginLocation(string location) {
+    public IPMConfigurationBuilder SetPluginsLocation(string location) {
         this.location = location;
         return this;
     }

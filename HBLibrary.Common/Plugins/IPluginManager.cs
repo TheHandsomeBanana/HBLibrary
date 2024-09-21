@@ -1,7 +1,7 @@
 ﻿using HBLibrary.Common.Plugins.Configuration;
+using HBLibrary.Common.Plugins.Configuration.Builder;
 using HBLibrary.Common.Plugins.Loader;
 using HBLibrary.Common.Plugins.Provider;
-using HBLibrary.Common.Results;
 using Microsoft.SqlServer.Server;
 using System.Collections.Immutable;
 
@@ -12,23 +12,18 @@ public interface IPluginManager {
     public IAssemblyLoader Loader { get; }
     public IPluginTypeProvider TypeProvider { get; }
 
-    public Result AddPluginAssembly(string assemblyFileName);
+    public Result AddPluginAssembly(string assemblyFullPath);
     public Result RemovePluginAssembly(string assemblyFileName);
+    public bool ContainsPluginAssembly(string assemblyFileName);
+    public bool IsPluginAssemblyLoaded(string assemblyFileName);
 
-    public CollectionResult LoadAssemblies();
+    public ImmutableResultCollection LoadAssemblies();
     public Result LoadAssembly(string assemblyFileName);
-
-
-
-
-
-
+    public AssemblyContext[] GetLoadedAssemblies();
 
 
     /// <summary>
     /// Allows the plugin manager to switch to a different plugin directory
     /// </summary>
-    /// <param name="basePath"></param>
-    /// <param name="cachePluginInstances"></param>
-    public void SwitchContext(string basePath);
+    public void SwitchContext(Action<IPMConfigurationBuilder> configBuilder);
 }
