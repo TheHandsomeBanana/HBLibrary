@@ -18,4 +18,16 @@ public interface IPluginTypeProvider {
 
     public IEnumerable<PluginType> QueryByAttribute(AssemblyContext[] usedContexts);
     public IEnumerable<PluginType> QueryByAttribute<T>(AssemblyContext[] usedContexts) where T : class;
+    
+    public PluginType[] GetCachedFromBaseType(Type baseType, AssemblyContext[] usedContexts);
+    public PluginType[] GetCachedFromBaseType<T>(AssemblyContext[] usedContexts) where T : class;
+
+    public IEnumerable<PluginType> QueryCachedFromBaseType(Type baseType, AssemblyContext[] usedContexts);
+    public IEnumerable<PluginType> QueryCachedFromBaseType<T>(AssemblyContext[] usedContexts) where T : class;
+
+    public PluginType[] GetCachedByAttribute(AssemblyContext[] usedContexts);
+    public PluginType[] GetCachedByAttribute<T>(AssemblyContext[] usedContexts) where T : class;
+
+    public IEnumerable<PluginType> QueryCachedByAttribute(AssemblyContext[] usedContexts);
+    public IEnumerable<PluginType> QueryCachedByAttribute<T>(AssemblyContext[] usedContexts) where T : class;
 }

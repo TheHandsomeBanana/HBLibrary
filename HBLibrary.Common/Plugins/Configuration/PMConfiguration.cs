@@ -10,4 +10,6 @@ internal class PMConfiguration : IPMConfiguration {
     public required string Location { get; set; }
     public bool OverrideAssemblies { get; set; } = true;
     public bool PreloadAssemblies { get; set; } = true;
+
+    public bool CachePluginTypes { get; set; } = true;
 }

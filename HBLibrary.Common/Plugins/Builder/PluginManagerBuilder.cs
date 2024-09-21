@@ -3,6 +3,7 @@ using HBLibrary.Common.Plugins.Configuration;
 using HBLibrary.Common.Plugins.Configuration.Builder;
 using HBLibrary.Common.Plugins.Loader;
 using HBLibrary.Common.Plugins.Provider;
+using HBLibrary.Common.Plugins.Provider.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ internal class PluginManagerBuilder : IPluginManagerBuilder {
     }
 
     public IPluginManagerBuilder SetDefaultTypeProvider() {
-        typeProvider = new PluginTypeProvider();
+        typeProvider = new PluginTypeProvider(new PluginTypeCache());
         return this;
     }
 
