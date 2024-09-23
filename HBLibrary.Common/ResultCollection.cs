@@ -18,15 +18,12 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 namespace HBLibrary.Common;
-[DebuggerDisplay("State = {ResultState}")]
+[DebuggerDisplay("State = {resultState}")]
 public class ResultCollection : IEquatable<ResultCollection>, IEnumerable<Result>, ICollection<Result>, IReadOnlyCollection<Result>, IReadOnlyList<Result> {
     private ResultState resultState;
     private readonly List<Result> results = [];
-
-
-    public ResultState ResultState => resultState;
-    public bool IsSuccess => ResultState == ResultState.Success;
-    public bool IsFaulted => ResultState == ResultState.Faulted;
+    public bool IsSuccess => resultState == ResultState.Success;
+    public bool IsFaulted => resultState == ResultState.Faulted;
 
     public int Count => results.Count;
     public bool IsReadOnly => false;
@@ -139,10 +136,18 @@ public readonly struct ImmutableResultCollection : IEquatable<ImmutableResultCol
     public Result this[int index] => results[index];
 
     public ImmutableResultCollection(ResultCollection results) {
-        this.resultState = results.ResultState;
+        this.resultState = results.IsSuccess ? ResultState.Success : ResultState.Faulted;
         this.results = [.. results];
     }
 
+    private ImmutableResultCollection(Result result) {
+        results = [result];
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ImmutableResultCollection Ok() => new ImmutableResultCollection(Result.Ok());
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ImmutableResultCollection Fail(Exception e) => new ImmutableResultCollection(Result.Fail(e));
 
     public static implicit operator ImmutableResultCollection(ResultCollection results) => new ImmutableResultCollection(results);
 

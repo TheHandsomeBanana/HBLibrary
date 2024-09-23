@@ -5,33 +5,46 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Immutable;
+using System.IO;
+
 
 #if NET5_0_OR_GREATER
 using System.Runtime.Loader;
 #endif
 
-namespace HBLibrary.Common.Plugins.Loader;
+namespace HBLibrary.Common.Plugins;
 
 #if NET5_0_OR_GREATER
 public sealed class AssemblyContext : IDisposable {
     private readonly AssemblyLoadContext context;
     private readonly AssemblyName initialAssemblyName;
 
-    private AssemblyContext(string[] assemblyFullPaths) {
-        this.initialAssemblyName = AssemblyName.GetAssemblyName(assemblyFullPaths[0]);
-
+    private AssemblyContext(string initialAssemblyFullPath) {
+        this.initialAssemblyName = AssemblyName.GetAssemblyName(initialAssemblyFullPath);
         context = new AssemblyLoadContext("LoadContext", true);
-        foreach (string assemblyFullPath in assemblyFullPaths) {
-            context.LoadFromAssemblyPath(assemblyFullPath);
-        }
+
     }
+
 
     public static AssemblyContext CreateSingle(string assemblyFullPath) {
-        return new AssemblyContext([assemblyFullPath]);
+        AssemblyContext context = new AssemblyContext(assemblyFullPath);
+
+        byte[] assemblyBuffer = File.ReadAllBytes(assemblyFullPath);
+        using MemoryStream memoryStream = new MemoryStream(assemblyBuffer);
+        context.context.LoadFromStream(memoryStream);
+        return context;
     }
 
-    public static AssemblyContext Create(string[] assemblyFullPath) {
-        return new AssemblyContext(assemblyFullPath);
+    public static AssemblyContext Create(string[] assemblyFullPaths) {
+        AssemblyContext context = new AssemblyContext(assemblyFullPaths[0]);
+
+        foreach (string path in assemblyFullPaths) {
+            byte[] assemblyBuffer = File.ReadAllBytes(path);
+            using MemoryStream memoryStream = new MemoryStream(assemblyBuffer);
+            context.context.LoadFromStream(memoryStream);
+        }
+
+        return context;
     }
 
     public Assembly GetFirst() {
@@ -60,9 +73,10 @@ public sealed class AssemblyContext : IDisposable {
     }
 
     public void Dispose() {
-        context.Unload();
+        context.Unload(); // Managed by GC
         GC.Collect();
         GC.WaitForPendingFinalizers();
+        GC.Collect(); // Try to force unload
     }
 }
 #endif

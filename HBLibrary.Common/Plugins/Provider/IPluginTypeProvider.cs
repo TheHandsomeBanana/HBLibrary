@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Plugins.Loader;
+using HBLibrary.Common.Plugins.Provider.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Plugins.Provider;
 public interface IPluginTypeProvider {
+    public IPluginTypeCache TypeCache { get; }
+
     public PluginType[] GetFromBaseType(Type baseType, AssemblyContext[] usedContexts);
     public PluginType[] GetFromBaseType<T>(AssemblyContext[] usedContexts) where T : class;
 

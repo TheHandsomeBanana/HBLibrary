@@ -1,4 +1,4 @@
-﻿namespace HBLibrary.Common.Parallelism;
+﻿namespace HBLibrary.Common.Parallel;
 public static class AsyncParallel {
     // example usage: await ParallelForEachAsync(source, async func => list.Add(await func())
     public static Task ForEachAsync<T>(IEnumerable<T> source, Func<T, Task> func, int degreeOfParallelism = 0) {

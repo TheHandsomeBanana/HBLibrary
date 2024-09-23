@@ -18,7 +18,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 namespace HBLibrary.Common;
-[DebuggerDisplay("State = {ResultState}, Value = {Value}, Error = {Error}")]
+[DebuggerDisplay("State = {resultState}, Value = {value}, Error = {error}")]
 public readonly struct Result<TValue, TError> : IEquatable<Result<TValue, TError>>, IEquatable<TValue>
 {
     private readonly TValue? value;
@@ -236,7 +236,7 @@ public readonly struct Result<TValue, TError> : IEquatable<Result<TValue, TError
     }
 }
 
-[DebuggerDisplay("State = {ResultState}, Value = {Value}, Error = {Error}")]
+[DebuggerDisplay("State = {resultState}, Value = {value}, Error = {error}")]
 public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<TValue>
 {
     private readonly ResultState resultState;
@@ -439,17 +439,17 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
 [DebuggerDisplay("State = {ResultState}")]
 public readonly struct Result : IEquatable<Result>
 {
-    public ResultState ResultState { get; }
-    public bool IsSuccess => ResultState == ResultState.Success;
-    public bool IsFaulted => ResultState == ResultState.Faulted;
-    public string? Message { get; }
-    public Exception? Exception { get; }
+    private readonly ResultState resultState;
+    public bool IsSuccess => resultState == ResultState.Success;
+    public bool IsFaulted => resultState == ResultState.Faulted;
+    private readonly string? message;
+    private readonly Exception? exception;
 
     public Result(ResultState resultState, string? message, Exception? exception)
     {
-        ResultState = resultState;
-        Message = message;
-        Exception = exception;
+        this.resultState = resultState;
+        this.message = message;
+        this.exception = exception;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -470,7 +470,7 @@ public readonly struct Result : IEquatable<Result>
     {
         if (IsFaulted)
         {
-            throw Exception!;
+            throw exception!;
         }
     }
 
@@ -478,30 +478,30 @@ public readonly struct Result : IEquatable<Result>
     {
         return IsSuccess
         ? success()
-        : failure(Exception!);
+        : failure(exception!);
     }
 
     public Task<R> MatchAsync<R>(Func<Task<R>> success, Func<Exception, Task<R>> failure)
     {
         return IsSuccess
         ? success()
-        : failure(Exception!);
+        : failure(exception!);
     }
 
     public Result TapError(Action<Exception> errorAction)
     {
         if (IsFaulted)
         {
-            errorAction(Exception!);
+            errorAction(exception!);
         }
         return this;
     }
 
     public async Task<Result> TapErrorAsync(Func<Exception, Task> errorAction)
     {
-        if (ResultState == ResultState.Faulted)
+        if (resultState == ResultState.Faulted)
         {
-            await errorAction(Exception!);
+            await errorAction(exception!);
         }
         return this;
     }
@@ -509,9 +509,9 @@ public readonly struct Result : IEquatable<Result>
 
     public bool Equals(Result other)
     {
-        return ResultState == other.ResultState &&
-            Message == other.Message &&
-            Exception == other.Exception;
+        return resultState == other.resultState &&
+            message == other.message &&
+            exception == other.exception;
     }
 
     public override bool Equals(object? obj)
@@ -521,7 +521,7 @@ public readonly struct Result : IEquatable<Result>
 
     public override int GetHashCode()
     {
-        return HBHashCode.Combine(ResultState, Message, Exception);
+        return HBHashCode.Combine(resultState, message, exception);
     }
 
     public static bool operator ==(Result left, Result right)
@@ -536,15 +536,15 @@ public readonly struct Result : IEquatable<Result>
 
     public void Deconstruct(out ResultState resultState, out string? message, out Exception? exception)
     {
-        resultState = ResultState;
-        message = Message;
-        exception = Exception;
+        resultState = this.resultState;
+        message = this.message;
+        exception = this.exception;
     }
 
     public void Deconstruct(out string? message, out Exception? exception)
     {
-        message = Message;
-        exception = Exception;
+        message = this.message;
+        exception = this.exception;
     }
 }
 

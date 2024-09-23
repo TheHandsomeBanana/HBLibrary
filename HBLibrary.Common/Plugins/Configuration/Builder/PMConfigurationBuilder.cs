@@ -16,6 +16,8 @@ internal class PMConfigurationBuilder : IPMConfigurationBuilder {
             throw new InvalidOperationException("Location is not set.");
         }
 
+        Directory.CreateDirectory(location);
+
         return new PMConfiguration() {
             Location = location,
             CachePluginInstances = cachePluginInstances,

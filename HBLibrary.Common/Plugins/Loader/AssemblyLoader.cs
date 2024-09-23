@@ -29,6 +29,7 @@ public class AssemblyLoader : IAssemblyLoader {
     }
 
     public void Unload(AssemblyContext context) {
+        WeakReference weakReference = new WeakReference(context);
         context.Dispose();
     }
 }

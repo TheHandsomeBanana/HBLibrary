@@ -14,7 +14,7 @@ public class PluginAttribute : Attribute {
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public class PluginAttribute<T> : Attribute {
+public class PluginAttribute<T> : Attribute where T : class {
     public Type BaseType { get; set; }
     public PluginAttribute() {
         BaseType = typeof(T);

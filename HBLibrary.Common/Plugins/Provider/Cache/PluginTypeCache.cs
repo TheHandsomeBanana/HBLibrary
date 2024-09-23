@@ -45,6 +45,10 @@ public class PluginTypeCache : IPluginTypeCache {
         return false;
     }
 
+    public bool RemoveAll(AssemblyContext assemblyContext) {
+        return pluginTypes.Remove(assemblyContext);
+    }
+
     public bool ContainsContext(AssemblyContext assemblyContext) {
         return pluginTypes.ContainsKey(assemblyContext);
     }

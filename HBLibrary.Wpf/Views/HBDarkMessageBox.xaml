@@ -1,5 +1,5 @@
 ﻿<Window x:Class="HBLibrary.Wpf.Views.HBDarkMessageBox"
-                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,46 +8,56 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:buttons="clr-namespace:HBLibrary.Wpf.Styles.Button"
         WindowStyle="SingleBorderWindow"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         Background="Transparent"
         SizeToContent="Height"
-        Width="322"
+        Width="350"
+        MinWidth="350"
+        MinHeight="150"
         WindowStartupLocation="CenterScreen">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="30" GlassFrameThickness="0" ResizeBorderThickness="5" CornerRadius="6" NonClientFrameEdges="None"/>
+        <WindowChrome CaptionHeight="30"
+                      GlassFrameThickness="0"
+                      ResizeBorderThickness="5"
+                      CornerRadius="6"
+                      NonClientFrameEdges="None" />
     </WindowChrome.WindowChrome>
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="CommandBinding_Executed_Close" />
     </Window.CommandBindings>
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBlock/TextBlocks.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBlock/TextBlocks.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Key="Enter" Command="{x:Static SystemCommands.CloseWindowCommand}"/>
-        <KeyBinding Key="Esc" Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+        <KeyBinding Key="Enter"
+                    Command="{x:Static SystemCommands.CloseWindowCommand}" />
+        <KeyBinding Key="Esc"
+                    Command="{x:Static SystemCommands.CloseWindowCommand}" />
     </Window.InputBindings>
 
     <Border Style="{StaticResource VSCopy}"
-             BorderThickness="1"
-             CornerRadius="5"
-             Margin="0"
-             Background="{StaticResource HBDark_Background}">
+            BorderThickness="1"
+            CornerRadius="5"
+            Margin="0"
+            Background="{StaticResource HBDark_Background}">
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -65,32 +75,39 @@
             <TextBlock  x:Name="txbTitle"
                         Text="Title"
                         VerticalAlignment="Center"
-                        Grid.Row="0" Grid.ColumnSpan="2"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
                         FontFamily="Bahnschrift SemiBold"
-                        Foreground="White" FontSize="16" Margin="10 0 0 0"/>
+                        Foreground="White"
+                        FontSize="16"
+                        Margin="10 0 0 0" />
 
-            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1"
-                         HorizontalAlignment="Right" 
-                         VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center">
                 <Button x:Name="CloseButton"
-                     buttons:ButtonAttachedProperties.CornerRadius="0 5 0 0"
-                     Style="{StaticResource CloseButtonRed}" 
-                     WindowChrome.IsHitTestVisibleInChrome="True" 
-                     ToolTip="Close"
+                        buttons:ButtonAttachedProperties.CornerRadius="0 5 0 0"
+                        Style="{StaticResource CloseButtonRed}"
+                        WindowChrome.IsHitTestVisibleInChrome="True"
+                        ToolTip="Close"
                         Height="30"
-                     Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                        Command="{x:Static SystemCommands.CloseWindowCommand}" />
             </StackPanel>
 
-            <Grid Margin="5 10 5 5" Grid.ColumnSpan="2" Grid.Row="1">
+            <Grid Margin="5 10 5 5"
+                  Grid.ColumnSpan="2"
+                  Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="260" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
 
@@ -111,8 +128,8 @@
                       Grid.Column="0"
                       Height="30"
                       Width="30"
-                      Visibility="Hidden"/>
-                
+                      Visibility="Hidden" />
+
                 <Path x:Name="errorIcon"
                       Data="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"
                       Fill="#f43c1c"
@@ -120,10 +137,10 @@
                       Grid.Column="0"
                       Height="30"
                       Width="30"
-                      Visibility="Hidden"/>
-                
-               
-                
+                      Visibility="Hidden" />
+
+
+
                 <Path x:Name="questionIcon"
                       Data="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z"
                       Fill="#1a79ca"
@@ -131,39 +148,40 @@
                       Grid.Column="0"
                       Height="30"
                       Width="30"
-                      Visibility="Hidden"/>
-                
-                <TextBlock x:Name="txbMessage" 
+                      Visibility="Hidden" />
+
+                <TextBlock x:Name="txbMessage"
                            Style="{StaticResource HBDark_TextBlock}"
-                       TextWrapping="Wrap"
+                           TextWrapping="Wrap"
                            Grid.Column="1"
-                       Grid.ColumnSpan="2"
+                           Grid.ColumnSpan="2"
                            FontSize="14"
                            Margin="0 0 10 0"
-                       Text="Custom text message"
-                           VerticalAlignment="Center"/>
+                           Text="Custom text message"
+                           VerticalAlignment="Center" />
 
-                
 
-                <StackPanel Grid.Row="1" 
-                            Grid.Column="3" 
+
+                <StackPanel Grid.Row="1"
+                            Grid.Column="3"
                             Margin="0 20 0 0"
                             Orientation="Horizontal"
-                            VerticalAlignment="Top"
+                            VerticalAlignment="Bottom"
                             HorizontalAlignment="Right">
 
                     <Button x:Name="btnOk"
-                            Style="{StaticResource HBDark_VSButton1}" Grid.Row="1" 
+                            Style="{StaticResource HBDark_VSButton1}"
+                            Grid.Row="1"
                             Content="Ok"
                             Click="ButtonOk_Click"
                             Margin="0 0 5 0"
-                            Visibility="Collapsed"/>
+                            Visibility="Collapsed" />
 
                     <Button x:Name="btnYes"
-                            Style="{StaticResource HBDark_VSButton1}" 
-                            Grid.Row="1" 
-                            Grid.Column="3" 
-                            VerticalAlignment="Top" 
+                            Style="{StaticResource HBDark_VSButton1}"
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            VerticalAlignment="Top"
                             Content="Yes"
                             Margin="0 0 5 0"
                             Click="btnYes_Click"
@@ -171,8 +189,9 @@
                     </Button>
 
                     <Button x:Name="btnNo"
-                            Style="{StaticResource HBDark_VSButton2}" Grid.Row="1" 
-                            Grid.Column="3" 
+                            Style="{StaticResource HBDark_VSButton2}"
+                            Grid.Row="1"
+                            Grid.Column="3"
                             Content="No"
                             Margin="0 0 5 0"
                             Click="btnNo_Click"
@@ -180,8 +199,9 @@
                     </Button>
 
                     <Button x:Name="btnCancel"
-                            Style="{StaticResource HBDark_VSButton2}" Grid.Row="1" 
-                            Grid.Column="3" 
+                            Style="{StaticResource HBDark_VSButton2}"
+                            Grid.Row="1"
+                            Grid.Column="3"
                             Content="Cancel"
                             Margin="0 0 5 0"
                             Click="btnCancel_Click"

@@ -18,5 +18,6 @@ public interface IPluginTypeCache {
     public void Add(PluginType type, AssemblyContext assemblyContext);
     public void AddRange(IEnumerable<PluginType> types, AssemblyContext assemblyContext);
     public bool Remove(PluginType type, AssemblyContext assemblyContext);
+    public bool RemoveAll(AssemblyContext assemblyContext);
     public bool ContainsContext(AssemblyContext assemblyContext); 
 }

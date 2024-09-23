@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace HBLibrary.Common.Parallelism;
+namespace HBLibrary.Common.Parallel;
 public class AsyncParallelQuery<T> {
     private readonly IEnumerable<T> source;
     private readonly int degreeOfParallelism;

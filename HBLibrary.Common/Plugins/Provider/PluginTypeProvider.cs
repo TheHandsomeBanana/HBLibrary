@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Common.Plugins.Attributes;
 using HBLibrary.Common.Plugins.Loader;
 using HBLibrary.Common.Plugins.Provider.Cache;
+using HBLibrary.Common.Plugins.Provider.Registry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Plugins.Provider;
 public class PluginTypeProvider : IPluginTypeProvider {
-    private readonly IPluginTypeCache pluginTypeCache;
+    public IPluginTypeCache TypeCache { get; }
     public PluginTypeProvider(IPluginTypeCache pluginTypeCache) {
-        this.pluginTypeCache = pluginTypeCache;
+        this.TypeCache = pluginTypeCache;
     }
 
     public PluginType[] GetFromBaseType(Type baseType, AssemblyContext[] usedContexts) {
@@ -93,12 +94,12 @@ public class PluginTypeProvider : IPluginTypeProvider {
         List<PluginType> cachedTypes = [];
 
         foreach (AssemblyContext context in usedContexts) {
-            if (!pluginTypeCache.ContainsContext(context)) {
+            if (!TypeCache.ContainsContext(context)) {
                 uncachedContexts.Add(context);
                 continue;
             }
 
-            cachedTypes.AddRange(pluginTypeCache.QueryByBaseType(baseType, context));
+            cachedTypes.AddRange(TypeCache.QueryByBaseType(baseType, context));
         }
 
 
@@ -115,7 +116,7 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 })
                 .ToArray(); // Execute query because of cache AddRange
 
-            pluginTypeCache.AddRange(types, uncachedContext);
+            TypeCache.AddRange(types, uncachedContext);
 
             cachedTypes.AddRange(types);
         }
@@ -132,12 +133,12 @@ public class PluginTypeProvider : IPluginTypeProvider {
         IEnumerable<PluginType> cachedTypes = [];
 
         foreach (AssemblyContext context in usedContexts) {
-            if (!pluginTypeCache.ContainsContext(context)) {
+            if (!TypeCache.ContainsContext(context)) {
                 uncachedContexts.Add(context);
                 continue;
             }
 
-            cachedTypes = cachedTypes.Concat(pluginTypeCache.QueryByBaseType(baseType, context));
+            cachedTypes = cachedTypes.Concat(TypeCache.QueryByBaseType(baseType, context));
         }
 
 
@@ -154,7 +155,7 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 })
                 .ToArray(); // Execute query because of cache AddRange
 
-            pluginTypeCache.AddRange(types, uncachedContext);
+            TypeCache.AddRange(types, uncachedContext);
 
             cachedTypes = cachedTypes.Concat(types);
         }
@@ -171,12 +172,12 @@ public class PluginTypeProvider : IPluginTypeProvider {
         List<PluginType> cachedTypes = [];
 
         foreach (AssemblyContext context in usedContexts) {
-            if (!pluginTypeCache.ContainsContext(context)) {
+            if (!TypeCache.ContainsContext(context)) {
                 uncachedContexts.Add(context);
                 continue;
             }
 
-            cachedTypes.AddRange(pluginTypeCache.Get(context));
+            cachedTypes.AddRange(TypeCache.Get(context));
         }
 
         foreach (AssemblyContext uncachedContext in uncachedContexts) {
@@ -196,7 +197,7 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 })
                 .ToArray();
 
-            pluginTypeCache.AddRange(types, uncachedContext);
+            TypeCache.AddRange(types, uncachedContext);
 
             cachedTypes.AddRange(types);
         }
@@ -209,19 +210,19 @@ public class PluginTypeProvider : IPluginTypeProvider {
         List<PluginType> cachedTypes = [];
 
         foreach (AssemblyContext context in usedContexts) {
-            if (!pluginTypeCache.ContainsContext(context)) {
+            if (!TypeCache.ContainsContext(context)) {
                 uncachedContexts.Add(context);
                 continue;
             }
 
-            cachedTypes.AddRange(pluginTypeCache.QueryByBaseType(typeof(T), context));
+            cachedTypes.AddRange(TypeCache.QueryByBaseType(typeof(T), context));
         }
 
         foreach (AssemblyContext uncachedContext in uncachedContexts) {
             PluginType[] types = uncachedContext.QueryAll().SelectMany(e => e.GetExportedTypes())
-                .Where(e => e.IsDefined(typeof(PluginAttribute), false))
+                .Where(e => e.IsDefined(typeof(PluginAttribute<T>), false))
                 .Select(e => {
-                    PluginAttribute pluginAttribute = e.GetCustomAttribute<PluginAttribute>()!;
+                    PluginAttribute<T> pluginAttribute = e.GetCustomAttribute<PluginAttribute<T>>()!;
 
                     return new PluginType {
                         BaseType = pluginAttribute.BaseType,
@@ -234,7 +235,7 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 })
                 .ToArray();
 
-            pluginTypeCache.AddRange(types, uncachedContext);
+            TypeCache.AddRange(types, uncachedContext);
 
             cachedTypes.AddRange(types);
         }
@@ -247,12 +248,12 @@ public class PluginTypeProvider : IPluginTypeProvider {
         IEnumerable<PluginType> cachedTypes = [];
 
         foreach (AssemblyContext context in usedContexts) {
-            if (!pluginTypeCache.ContainsContext(context)) {
+            if (!TypeCache.ContainsContext(context)) {
                 uncachedContexts.Add(context);
                 continue;
             }
 
-            cachedTypes = cachedTypes.Concat(pluginTypeCache.Get(context));
+            cachedTypes = cachedTypes.Concat(TypeCache.Get(context));
         }
 
         foreach (AssemblyContext uncachedContext in uncachedContexts) {
@@ -272,7 +273,7 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 })
                 .ToArray();
 
-            pluginTypeCache.AddRange(types, uncachedContext);
+            TypeCache.AddRange(types, uncachedContext);
 
             cachedTypes = cachedTypes.Concat(types);
         }
@@ -285,19 +286,19 @@ public class PluginTypeProvider : IPluginTypeProvider {
         IEnumerable<PluginType> cachedTypes = [];
 
         foreach (AssemblyContext context in usedContexts) {
-            if (!pluginTypeCache.ContainsContext(context)) {
+            if (!TypeCache.ContainsContext(context)) {
                 uncachedContexts.Add(context);
                 continue;
             }
 
-            cachedTypes = cachedTypes.Concat(pluginTypeCache.QueryByBaseType(typeof(T), context));
+            cachedTypes = cachedTypes.Concat(TypeCache.QueryByBaseType(typeof(T), context));
         }
 
         foreach (AssemblyContext uncachedContext in uncachedContexts) {
             PluginType[] types = uncachedContext.QueryAll().SelectMany(e => e.GetExportedTypes())
-                .Where(e => e.IsDefined(typeof(PluginAttribute), false))
+                .Where(e => e.IsDefined(typeof(PluginAttribute<T>), false))
                 .Select(e => {
-                    PluginAttribute pluginAttribute = e.GetCustomAttribute<PluginAttribute>()!;
+                    PluginAttribute<T> pluginAttribute = e.GetCustomAttribute<PluginAttribute<T>>()!;
 
                     return new PluginType {
                         BaseType = pluginAttribute.BaseType,
@@ -310,7 +311,7 @@ public class PluginTypeProvider : IPluginTypeProvider {
                 })
                 .ToArray();
 
-            pluginTypeCache.AddRange(types, uncachedContext);
+            TypeCache.AddRange(types, uncachedContext);
 
             cachedTypes = cachedTypes.Concat(types);
         }

@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.Code.Interpreter\HBLibrary.Code.Interpreter.csproj" />
     <ProjectReference Include="..\HBLibrary.Common\HBLibrary.Common.csproj" />
   </ItemGroup>
 
