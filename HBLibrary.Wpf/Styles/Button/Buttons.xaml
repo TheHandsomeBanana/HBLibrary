@@ -3,59 +3,98 @@
                     xmlns:local="clr-namespace:HBLibrary.Wpf.Styles.Button">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="TitleBarButton" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="Width" Value="50"/>
+    <Style x:Key="TitleBarButton"
+           TargetType="Button">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="Width"
+                Value="50" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="LayoutRoot" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
-                        <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10" 
-                                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  
-                                       TextOptions.TextFormattingMode="Display"/>
+                    <Grid x:Name="LayoutRoot"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"
+                          Background="Transparent">
+                        <TextBlock x:Name="txt"
+                                   Text="{TemplateBinding Content}"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   FontSize="10"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   RenderOptions.ClearTypeHint="Auto"
+                                   TextOptions.TextRenderingMode="Aliased"
+                                   TextOptions.TextFormattingMode="Display" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="LayoutRoot" Property="Background" Value="{StaticResource HBDark_TitlebarButtonBackground}"/>
-                            <Setter TargetName="txt" Property="Foreground" Value="White"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="LayoutRoot"
+                                    Property="Background"
+                                    Value="{StaticResource HBDark_TitlebarButtonBackground}" />
+                            <Setter TargetName="txt"
+                                    Property="Foreground"
+                                    Value="White" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="TitleBarButtonV2" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="Width" Value="50"/>
+
+    <Style x:Key="TitleBarButtonV2"
+           TargetType="Button">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="Width"
+                Value="50" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="LayoutRoot" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}">
+                    <Border x:Name="LayoutRoot"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="LayoutRoot"  Property="Background" Value="{StaticResource HBDark_IconButton_MouseOver_Background}"/>
-                            <Setter TargetName="LayoutRoot" Property="BorderBrush" Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="LayoutRoot"
+                                    Property="Background"
+                                    Value="{StaticResource HBDark_IconButton_MouseOver_Background}" />
+                            <Setter TargetName="LayoutRoot"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="LayoutRoot" Property="Background" Value="{StaticResource HBDark_IconButton_Pressed_Background}"/>
-                            <Setter TargetName="LayoutRoot" Property="BorderBrush" Value="{StaticResource HBDark_IconButton_Pressed_BorderBrush}"/>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="LayoutRoot"
+                                    Property="Background"
+                                    Value="{StaticResource HBDark_IconButton_Pressed_Background}" />
+                            <Setter TargetName="LayoutRoot"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource HBDark_IconButton_Pressed_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="LayoutRoot" Property="Background" Value="{StaticResource HBDark_IconButton_Disabled_Background}"/>
-                            <Setter TargetName="LayoutRoot" Property="BorderBrush" Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}"/>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="LayoutRoot"
+                                    Property="Background"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_Background}" />
+                            <Setter TargetName="LayoutRoot"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -63,23 +102,37 @@
         </Setter>
     </Style>
 
-    <Style x:Key="MaximizeButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
-        <Setter Property="Content" Value="&#xE739;"/>
+    <Style x:Key="MaximizeButton"
+           TargetType="Button"
+           BasedOn="{StaticResource TitleBarButton}">
+        <Setter Property="Content"
+                Value="&#xE739;" />
     </Style>
 
-    <Style x:Key="RestoreButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
-        <Setter Property="Content" Value="&#xE923;"/>
+    <Style x:Key="RestoreButton"
+           TargetType="Button"
+           BasedOn="{StaticResource TitleBarButton}">
+        <Setter Property="Content"
+                Value="&#xE923;" />
     </Style>
 
-    <Style x:Key="MinimizeButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
-        <Setter Property="Content" Value="&#xE949;"/>
+    <Style x:Key="MinimizeButton"
+           TargetType="Button"
+           BasedOn="{StaticResource TitleBarButton}">
+        <Setter Property="Content"
+                Value="&#xE949;" />
     </Style>
 
-    <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
-        <Setter Property="Content" Value="&#xE106;"/>
+    <Style x:Key="CloseButton"
+           TargetType="Button"
+           BasedOn="{StaticResource TitleBarButton}">
+        <Setter Property="Content"
+                Value="&#xE106;" />
     </Style>
 
-    <Style x:Key="CloseButtonRed" TargetType="Button" BasedOn="{StaticResource CloseButton}">
+    <Style x:Key="CloseButtonRed"
+           TargetType="Button"
+           BasedOn="{StaticResource CloseButton}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -87,16 +140,27 @@
                             Background="Transparent"
                             CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:ButtonAttachedProperties.CornerRadius)}">
                         <Grid>
-                            <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10" 
-                                   Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  
-                                   TextOptions.TextFormattingMode="Display"/>
+                            <TextBlock x:Name="txt"
+                                       Text="{TemplateBinding Content}"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       FontSize="10"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       RenderOptions.ClearTypeHint="Auto"
+                                       TextOptions.TextRenderingMode="Aliased"
+                                       TextOptions.TextFormattingMode="Display" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="LayoutRoot" Property="Background" Value="#ED4245"/>
-                            <Setter TargetName="txt" Property="Foreground" Value="White"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="LayoutRoot"
+                                    Property="Background"
+                                    Value="#ED4245" />
+                            <Setter TargetName="txt"
+                                    Property="Foreground"
+                                    Value="White" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -104,37 +168,55 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_VSButtonBase" TargetType="Button">
-        <Setter Property="Height" Value="25"/>
-        <Setter Property="Width" Value="80"/>
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="BorderThickness" Value="0"/>
+    <Style x:Key="HBDark_VSButtonBase"
+           TargetType="Button">
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Width"
+                Value="80" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="BorderThickness"
+                Value="0" />
     </Style>
 
 
-    <Style x:Key="HBDark_VSButton1" TargetType="Button" BasedOn="{StaticResource HBDark_VSButtonBase}">
-        <Setter Property="Background" Value="{StaticResource HBDark_VSButton_Background}"/>
-        <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
+    <Style x:Key="HBDark_VSButton1"
+           TargetType="Button"
+           BasedOn="{StaticResource HBDark_VSButtonBase}">
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSButton_Background}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource HBDark_Label_Foreground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        Padding="{TemplateBinding Padding}">
-                        <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
-                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_VSButton_MouseOver_Background}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_VSButton_MouseOver_Background}" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_VSButton_Pressed_Background}"/>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_VSButton_Pressed_Background}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{StaticResource HBDark_Button_Disabled_Background}"/>
-                            <Setter Property="Foreground" Value="{StaticResource HBDark_Button_Disabled_Foreground}"/>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_Button_Disabled_Background}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource HBDark_Button_Disabled_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -142,35 +224,51 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_VSButton2" TargetType="Button" BasedOn="{StaticResource HBDark_VSButtonBase}">
-        <Setter Property="Background" Value="{StaticResource HBDark_VS2Button_Background}"/>
-        <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Style x:Key="HBDark_VSButton2"
+           TargetType="Button"
+           BasedOn="{StaticResource HBDark_VSButtonBase}">
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VS2Button_Background}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource HBDark_Label_Foreground}" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    Padding="{TemplateBinding Padding}">
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Padding="{TemplateBinding Padding}">
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_VS2Button_MouseOver_Background}"/>
-                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_VS2Button_MouseOver_BorderBrush}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_VS2Button_MouseOver_Background}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_VS2Button_MouseOver_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_VS2Button_Pressed_Background}"/>
-                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_VS2Button_Pressed_BorderBrush}"/>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_VS2Button_Pressed_Background}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_VS2Button_Pressed_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{StaticResource HBDark_Button_Disabled_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_Button_Disabled_BorderBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource HBDark_Button_Disabled_Foreground}"/>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_Button_Disabled_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_Button_Disabled_BorderBrush}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource HBDark_Button_Disabled_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -178,24 +276,39 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_VSBrowseButton" TargetType="Button" BasedOn="{StaticResource HBDark_VSButton2}">
-        <Setter Property="Height" Value="25"/>
-        <Setter Property="Width" Value="30"/>
-        <Setter Property="Content" Value=". . ."/>
-        <Setter Property="ToolTip" Value="Browse"/>
+    <Style x:Key="HBDark_VSBrowseButton"
+           TargetType="Button"
+           BasedOn="{StaticResource HBDark_VSButton2}">
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Width"
+                Value="30" />
+        <Setter Property="Content"
+                Value=". . ." />
+        <Setter Property="ToolTip"
+                Value="Browse" />
     </Style>
 
-    <Style x:Key="HBDark_ButtonBase" TargetType="Button">
-        <Setter Property="Height" Value="25"/>
-        <Setter Property="Width" Value="80"/>
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="Foreground" Value="{StaticResource HBDark_Label_Foreground}"/>
-        <Setter Property="Background" Value="{StaticResource HBDark_Button_Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_Button_BorderBrush}"/>
+    <Style x:Key="HBDark_ButtonBase"
+           TargetType="Button">
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Width"
+                Value="80" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="Foreground"
+                Value="{StaticResource HBDark_Label_Foreground}" />
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_Button_Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_Button_BorderBrush}" />
     </Style>
 
 
-    <Style x:Key="HBDark_DefaultButton" TargetType="Button" BasedOn="{StaticResource HBDark_ButtonBase}">
+    <Style x:Key="HBDark_DefaultButton"
+           TargetType="Button"
+           BasedOn="{StaticResource HBDark_ButtonBase}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -205,23 +318,33 @@
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                       
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_Button_MouseOver_Background}"/>
-                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_Button_MouseOver_BorderBrush}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_Button_MouseOver_Background}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_Button_MouseOver_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_Button_Pressed_Background}"/>
-                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_Button_Pressed_BorderBrush}"/>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_Button_Pressed_Background}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_Button_Pressed_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{StaticResource HBDark_Button_Disabled_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_Button_Disabled_BorderBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource HBDark_Button_Disabled_Foreground}"/>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_Button_Disabled_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_Button_Disabled_BorderBrush}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource HBDark_Button_Disabled_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -229,25 +352,43 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_BrowseButton" TargetType="Button" BasedOn="{StaticResource HBDark_DefaultButton}">
-        <Setter Property="Height" Value="25"/>
-        <Setter Property="Width" Value="25"/>
-        <Setter Property="Content" Value=". . ."/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="ToolTip" Value="Browse"/>
+    <Style x:Key="HBDark_BrowseButton"
+           TargetType="Button"
+           BasedOn="{StaticResource HBDark_DefaultButton}">
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Width"
+                Value="25" />
+        <Setter Property="Content"
+                Value=". . ." />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="Browse" />
     </Style>
 
-    <Style x:Key="HBDark_NavigationBarButton" TargetType="ToggleButton">
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_Button_BorderBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource Foreground}"/>
-        <Setter Property="Padding" Value="2"/>
-        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+    <Style x:Key="HBDark_NavigationBarButton"
+           TargetType="ToggleButton">
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_Button_BorderBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Foreground}" />
+        <Setter Property="Padding"
+                Value="2" />
+        <Setter Property="BorderThickness"
+                Value="0 0 0 1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
@@ -258,13 +399,16 @@
 
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_Button_Pressed_Background}"/>
-                            <Setter Property="BorderThickness" Value="0 0 0 2"/>
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_Button_Pressed_Background}" />
+                            <Setter Property="BorderThickness"
+                                    Value="0 0 0 2" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -273,10 +417,14 @@
     </Style>
 
     <Style TargetType="{x:Type local:ListBoxButton}">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Cursor"
+                Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ListBoxButton}">
@@ -284,43 +432,61 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            VerticalAlignment="Stretch" 
+                            VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch">
                         <Grid>
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Path Height="{TemplateBinding IconHeight}" 
-                                      Width="{TemplateBinding IconWidth}" 
-                                      Stretch="{TemplateBinding IconStretch}" 
-                                      Fill="{TemplateBinding IconFill}" 
+                            <StackPanel Orientation="Vertical"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                <Path Height="{TemplateBinding IconHeight}"
+                                      Width="{TemplateBinding IconWidth}"
+                                      Stretch="{TemplateBinding IconStretch}"
+                                      Fill="{TemplateBinding IconFill}"
                                       Data="{TemplateBinding Icon}"
                                       Stroke="{TemplateBinding IconStroke}"
                                       StrokeThickness="{TemplateBinding IconStrokeThickness}"
-                                      Margin="0 0 0 5"/>
-                                <TextBlock Text="{TemplateBinding Text}" Foreground="{TemplateBinding Foreground}"></TextBlock>
+                                      Margin="0 0 0 5" />
+                                <TextBlock Text="{TemplateBinding Text}"
+                                           Foreground="{TemplateBinding Foreground}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectionViolet}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{StaticResource SelectionViolet}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource VSAccentViolet}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectionViolet}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{StaticResource SelectionViolet}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource VSAccentViolet}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="HBDark_HorizontalListBoxButton" TargetType="{x:Type local:ListBoxButton}">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Cursor" Value="Hand"/>
+
+    <Style x:Key="HBDark_HorizontalListBoxButton"
+           TargetType="{x:Type local:ListBoxButton}">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Cursor"
+                Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ListBoxButton}">
@@ -329,33 +495,46 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch">
                         <Grid>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                <Path x:Name="icon" 
-                                      Height="{TemplateBinding IconHeight}" 
-                                      Width="{TemplateBinding IconWidth}" 
-                                      Stretch="{TemplateBinding IconStretch}" 
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left">
+                                <Path x:Name="icon"
+                                      Height="{TemplateBinding IconHeight}"
+                                      Width="{TemplateBinding IconWidth}"
+                                      Stretch="{TemplateBinding IconStretch}"
                                       Fill="{TemplateBinding IconFill}"
                                       Stroke="{TemplateBinding IconStroke}"
                                       StrokeThickness="{TemplateBinding IconStrokeThickness}"
-                                      Data="{TemplateBinding Icon}" 
-                                      Margin="0 0 5 0"/>
-                                <TextBlock VerticalAlignment="Center" 
-                                           Text="{TemplateBinding Text}" 
+                                      Data="{TemplateBinding Icon}"
+                                      Margin="0 0 5 0" />
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{TemplateBinding Text}"
                                            Foreground="{TemplateBinding Foreground}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectionViolet}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{StaticResource SelectionViolet}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource VSAccentViolet}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectionViolet}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{StaticResource SelectionViolet}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource VSAccentViolet}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -363,42 +542,60 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_ListBoxButtonV2" TargetType="{x:Type local:ListBoxButtonV2}">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="Transparent"/>
+    <Style x:Key="HBDark_ListBoxButtonV2"
+           TargetType="{x:Type local:ListBoxButtonV2}">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ListBoxButtonV2}">
                     <Border x:Name="Border"
-                        Padding="5"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            Padding="5"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch">
                         <Grid>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left">
                                 <Image Source="{TemplateBinding ImageSource}"
-                                       Height="{TemplateBinding ImageHeight}" 
-                                       Width="{TemplateBinding ImageWidth}" 
-                                       Stretch="{TemplateBinding ImageStretch}" 
-                                       Margin="0 0 5 0"/>
-                                <TextBlock VerticalAlignment="Center" 
-                                       Text="{TemplateBinding Text}" 
-                                       Foreground="{TemplateBinding Foreground}"></TextBlock>
+                                       Height="{TemplateBinding ImageHeight}"
+                                       Width="{TemplateBinding ImageWidth}"
+                                       Stretch="{TemplateBinding ImageStretch}"
+                                       Margin="0 0 5 0" />
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{TemplateBinding Text}"
+                                           Foreground="{TemplateBinding Foreground}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectionViolet}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{StaticResource SelectionViolet}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource VSAccentViolet}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectionViolet}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource VSAccentViolet}"/>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{StaticResource SelectionViolet}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{StaticResource VSAccentViolet}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -408,9 +605,12 @@
 
 
     <Style TargetType="{x:Type local:IconButton}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="Width" Value="50"/>
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="Width"
+                Value="50" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconButton}">
@@ -419,32 +619,54 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}">
                         <Grid>
-                            <Path Data="{TemplateBinding IconData}"
-                              Width="{TemplateBinding IconWidth}"
-                              Height="{TemplateBinding IconHeight}"
-                              Fill="{TemplateBinding IconFill}"
-                              Stroke="{TemplateBinding IconStroke}"
-                              Stretch="{TemplateBinding IconStretch}"
-                              StrokeThickness="{TemplateBinding IconStrokeThickness}"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"/>
-                          
+                            <Path x:Name="iconPath"
+                                  Data="{TemplateBinding IconData}"
+                                  Width="{TemplateBinding IconWidth}"
+                                  Height="{TemplateBinding IconHeight}"
+                                  Fill="{TemplateBinding IconFill}"
+                                  Stroke="{TemplateBinding IconStroke}"
+                                  Stretch="{TemplateBinding IconStretch}"
+                                  StrokeThickness="{TemplateBinding IconStrokeThickness}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+
                         </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_IconButton_MouseOver_Background}"/>
-                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_IconButton_MouseOver_Background}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter  Property="Background" Value="{StaticResource HBDark_IconButton_Pressed_Background}"/>
-                            <Setter  Property="BorderBrush" Value="{StaticResource HBDark_IconButton_Pressed_BorderBrush}"/>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource HBDark_IconButton_Pressed_Background}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_IconButton_Pressed_BorderBrush}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{StaticResource HBDark_IconButton_Disabled_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource HBDark_IconButton_Disabled_Foreground}"/>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_Background}" />
+                            
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}" />
+                            
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_Foreground}" />
+                            <Setter TargetName="iconPath"
+                                    Property="Fill"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_Foreground}" />
+                            
+                            <Setter TargetName="iconPath"
+                                    Property="Stroke"
+                                    Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}" />
+                
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
