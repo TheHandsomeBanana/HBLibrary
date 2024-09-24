@@ -6,14 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-Added:
-using HBLibrary;
-using HBLibrary.Common;
-using HBLibrary.Common;
-using HBLibrary.Common.Monoids;
-*/
-
 namespace HBLibrary.Common;
 [DebuggerDisplay("HasValue = {HasValue}, Value = {value}")]
 public readonly struct Option<T> : IEquatable<Option<T>>, IEquatable<T>

@@ -532,9 +532,7 @@
                             <Setter TargetName="Border"
                                     Property="Background"
                                     Value="{StaticResource SelectionViolet}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{StaticResource VSAccentViolet}" />
+
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -673,4 +671,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+   
+
 </ResourceDictionary>

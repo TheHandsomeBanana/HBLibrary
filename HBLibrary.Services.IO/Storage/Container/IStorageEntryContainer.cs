@@ -13,7 +13,7 @@ public interface IStorageEntryContainer {
 
     public IStorageEntry? this[string filename] { get; set; }
     public IStorageEntry? Get(string filename);
-    public bool TryGet(string filename, [MaybeNullWhen(false)] out IStorageEntry? entry);
+    public bool TryGet(string filename, [NotNullWhen(true)] out IStorageEntry? entry);
     public bool Contains(string filename);
 
     public IEnumerable<IStorageEntry> GetAll();

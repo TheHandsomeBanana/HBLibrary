@@ -14,8 +14,8 @@ internal class ApplicationStorageBuilder : IApplicationStorageBuilder {
     public IApplicationStorage Build() {
         ApplicationStorage applicationStorage = new ApplicationStorage(basePath);
 
-        if (containers.Count != 0) {
-            applicationStorage.Containers = containers;
+        foreach(KeyValuePair<Guid, IStorageEntryContainer> item in containers) {
+            applicationStorage.Containers.Add(item.Key, item.Value);
         }
 
         return applicationStorage;

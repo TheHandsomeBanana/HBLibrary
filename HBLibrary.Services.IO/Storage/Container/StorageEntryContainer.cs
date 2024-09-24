@@ -4,6 +4,7 @@ using HBLibrary.Services.IO.Storage.Config;
 using HBLibrary.Services.IO.Storage.Entries;
 using HBLibrary.Services.IO.Storage.Settings;
 using HBLibrary.Services.IO.Xml;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HBLibrary.Services.IO.Storage.Container;
 public class StorageEntryContainer : IStorageEntryContainer {
@@ -64,7 +65,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
         return null;
     }
 
-    public bool TryGet(string filename, out IStorageEntry? entry) {
+    public bool TryGet(string filename, [NotNullWhen(true)] out IStorageEntry? entry) {
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
 
         return entries.TryGetValue(path, out entry);

@@ -11,6 +11,7 @@ public class ApplicationStorage : IApplicationStorage {
     internal Dictionary<Guid, IStorageEntryContainer> Containers { get; set; } = [];
     public string BasePath { get; }
     public Guid DefaultContainerId { get; }
+    public IStorageEntryContainer DefaultContainer => Containers[DefaultContainerId];
 
     public ApplicationStorage(string basePath) {
         BasePath = basePath;

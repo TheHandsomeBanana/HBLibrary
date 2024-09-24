@@ -1,16 +1,4 @@
-﻿
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-Before:
-using Microsoft.Graph.Models;
-After:
-using HBLibrary;
-using HBLibrary.Common;
-using HBLibrary.Common;
-using HBLibrary.Common.Monoids;
-using HBLibrary.Common.Monoids.Results;
-using Microsoft.Graph.Models;
-*/
-using Microsoft.Graph.Models;
+﻿using Microsoft.Graph.Models;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;

@@ -147,7 +147,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="CustomHorizontalScrollBar" TargetType="ScrollBar">
+    <Style x:Key="HBDark_HorizontalScrollBar" TargetType="ScrollBar">
         <Setter Property="Background" Value="{StaticResource HBDark_VSScrollBar_Background}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -187,7 +187,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="CustomVerticalScrollBar" TargetType="ScrollBar">
+    <Style x:Key="HBDark_VerticalScrollBar" TargetType="ScrollBar">
         <Setter Property="Background" Value="{StaticResource HBDark_VSScrollBar_Background}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -253,7 +253,7 @@
                                    Maximum="{TemplateBinding ScrollableHeight}"
                                    ViewportSize="{TemplateBinding ViewportHeight}"
                                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                                   Style="{StaticResource CustomVerticalScrollBar}" />
+                                   Style="{StaticResource HBDark_VerticalScrollBar}" />
 
                         <ScrollBar x:Name="PART_HorizontalScrollBar"
                                    Orientation="Horizontal"
@@ -263,7 +263,7 @@
                                    Maximum="{TemplateBinding ScrollableWidth}"
                                    ViewportSize="{TemplateBinding ViewportWidth}"
                                    Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                                   Style="{StaticResource CustomHorizontalScrollBar}" />
+                                   Style="{StaticResource HBDark_HorizontalScrollBar}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
