@@ -3,7 +3,7 @@ using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
 using HBLibrary.Code.Analysis.Utilities;
-using HBLibrary.Common.Parallelism;
+using HBLibrary.Common.Parallel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Collections.Concurrent;
