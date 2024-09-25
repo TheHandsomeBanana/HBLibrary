@@ -7,5 +7,6 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/SlideToggleButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/TimePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/TimeSpanPicker.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/NumberBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
