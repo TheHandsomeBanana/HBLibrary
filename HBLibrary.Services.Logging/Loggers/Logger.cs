@@ -2,7 +2,7 @@
 using HBLibrary.Services.Logging.Statements;
 using HBLibrary.Services.Logging.Targets;
 
-namespace HBLibrary.Services.Logging;
+namespace HBLibrary.Services.Logging.Loggers;
 public class Logger : ILogger {
     public ILoggerRegistry? Registry { get; set; }
     public bool IsEnabled => Registry?.IsEnabled ?? true;

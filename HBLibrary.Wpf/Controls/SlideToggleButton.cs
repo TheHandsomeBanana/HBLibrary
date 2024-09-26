@@ -176,7 +176,7 @@ public class SlideToggleButton : ToggleButton {
         // Create a new ThicknessAnimation to move the slider
         var thicknessAnimation = new ThicknessAnimation {
             To = isChecked 
-                ? new Thickness(Width - (SliderWidth + SliderMargin.Left), SliderMargin.Top, SliderMargin.Right, SliderMargin.Bottom) 
+                ? new Thickness(Width - (SliderWidth + SliderMargin.Left) - (BorderThickness.Left + BorderThickness.Right), SliderMargin.Top, SliderMargin.Right, SliderMargin.Bottom) 
                 : SliderMargin,
             
             Duration = TimeSpan.FromSeconds(0.2)
@@ -192,7 +192,7 @@ public class SlideToggleButton : ToggleButton {
             : BackgroundUnchecked;
 
         slider.Margin = isChecked
-            ? new Thickness(Width - (SliderWidth + SliderMargin.Left), SliderMargin.Top, SliderMargin.Right, SliderMargin.Bottom)
+            ? new Thickness(Width - (SliderWidth + SliderMargin.Left) - (BorderThickness.Left + BorderThickness.Right), SliderMargin.Top, SliderMargin.Right, SliderMargin.Bottom)
             : SliderMargin;
     }
 }

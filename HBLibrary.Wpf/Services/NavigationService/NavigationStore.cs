@@ -16,6 +16,10 @@ public class NavigationStore : INavigationStore {
 
     public void SwitchViewModel(string parentTypename, ViewModelBase viewModel) {
         if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
+            if (activeViewModel.ViewModel is IDisposable disposableViewModel) {
+                disposableViewModel.Dispose();
+            }
+
             activeViewModel.ViewModel = viewModel;
         }
         else {
@@ -25,6 +29,10 @@ public class NavigationStore : INavigationStore {
 
     public void SwitchViewModel<TViewModel>(string parentTypename, TViewModel viewModel) where TViewModel : ViewModelBase {
         if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
+            if(activeViewModel.ViewModel is IDisposable disposableViewModel) {
+                disposableViewModel.Dispose();
+            }
+
             activeViewModel.ViewModel = viewModel;
         }
         else {

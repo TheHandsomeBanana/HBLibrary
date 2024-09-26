@@ -3,8 +3,10 @@
 
     <Color x:Key="ControlBorderColor">#424242</Color>
     <Color x:Key="ControlBorderColor2">#737373</Color>
-    
-    
+
+    <Color x:Key="HBDark_DefaultDisabledColor">#4E4E4E</Color>
+    <SolidColorBrush x:Key="HBDark_DefaultDisabled" Color="{StaticResource HBDark_DefaultDisabledColor}"/>
+
     <SolidColorBrush x:Key="VSGreen" Color="#8ae28a"/>
     <SolidColorBrush x:Key="VSRed" Color="#e25964"/>
     <SolidColorBrush x:Key="VSViolet" Color="#403582"/>

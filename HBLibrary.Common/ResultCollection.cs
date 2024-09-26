@@ -120,6 +120,10 @@ public class ResultCollection : IEquatable<ResultCollection>, IEnumerable<Result
 public readonly struct ImmutableResultCollection : IEquatable<ImmutableResultCollection>, IEnumerable<Result>, IReadOnlyCollection<Result>, IReadOnlyList<Result> {
     private readonly ResultState resultState;
     private readonly ImmutableArray<Result> results;
+
+    public bool IsSuccess => resultState == ResultState.Success;
+    public bool IsFaulted => resultState == ResultState.Faulted;
+
     public int Count => results.Length;
 
     public Result this[int index] => results[index];
