@@ -2,6 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:HBLibrary.Wpf.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style TargetType="local:SlideToggleButton">
         <Setter Property="Background"
                 Value="IndianRed" />
@@ -49,6 +53,24 @@
                             </Border>
                         </Border>
                     </Viewbox>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+
+                            <Setter Property="SliderFill"
+                                    Value="{StaticResource HBDark_DefaultDisabledBorder}" />
+
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+
+                            <Setter Property="SliderStroke"
+                                    Value="{StaticResource HBDark_DefaultDisabledBorder}" />
+
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

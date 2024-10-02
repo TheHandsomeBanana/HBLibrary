@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.ViewModels;
 public abstract class InitializerViewModelBase : ViewModelBase, IInitializer {
+    private bool isInitialized;
+    public bool IsInitialized {
+        get => isInitialized;
+        private set {
+            isInitialized = value;
+            NotifyPropertyChanged();
+        }
+    }
+
     private bool isLoading;
 
     public bool IsLoading {
@@ -32,9 +41,7 @@ public abstract class InitializerViewModelBase : ViewModelBase, IInitializer {
         try {
             IsLoading = true;
             InitializeViewModel();
-        }
-        catch (Exception ex) {
-            OnException(ex);
+            IsInitialized = true;
         }
         finally {
             IsLoading = false;
@@ -42,9 +49,17 @@ public abstract class InitializerViewModelBase : ViewModelBase, IInitializer {
     }
 
     protected abstract void InitializeViewModel();
-    protected abstract void OnException(Exception exception);
 }
 public abstract class InitializerViewModelBase<TModel> : ViewModelBase<TModel>, IInitializer {
+    private bool isInitialized;
+    public bool IsInitialized {
+        get => isInitialized;
+        private set {
+            isInitialized = value;
+            NotifyPropertyChanged();
+        }
+    }
+
     private bool isLoading;
 
     public bool IsLoading {
@@ -70,9 +85,7 @@ public abstract class InitializerViewModelBase<TModel> : ViewModelBase<TModel>, 
         try {
             IsLoading = true;
             InitializeViewModel();
-        }
-        catch (Exception ex) {
-            OnException(ex);
+            IsInitialized = true;
         }
         finally {
             IsLoading = false;
@@ -80,5 +93,4 @@ public abstract class InitializerViewModelBase<TModel> : ViewModelBase<TModel>, 
     }
 
     protected abstract void InitializeViewModel();
-    protected abstract void OnException(Exception exception);
 }

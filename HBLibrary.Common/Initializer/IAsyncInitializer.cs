@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 namespace HBLibrary.Common.Initializer;
 public interface IAsyncInitializer {
     public Task InitializeAsync();
+    public bool IsInitialized { get; }
 }

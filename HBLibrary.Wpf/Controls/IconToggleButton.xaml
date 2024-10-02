@@ -56,16 +56,12 @@
                                     Property="StrokeThickness"
                                     Value="1.2"/>
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-
-                            <Setter Property="Background" 
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
-
-                            <Setter Property="BorderBrush"
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
 
                             <Setter Property="Foreground"
                                     Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
                             <Setter TargetName="Icon" Property="Fill"
                                     Value="{StaticResource HBDark_DefaultDisabled}" />
 

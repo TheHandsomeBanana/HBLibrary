@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Graph.Reports.GetTeamsDeviceUsageDistributionUserCountsWithPeriod;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,10 @@ namespace HBLibrary.Wpf.Controls;
 public class SlideToggleButton : ToggleButton {
     static SlideToggleButton() {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(SlideToggleButton), new FrameworkPropertyMetadata(typeof(SlideToggleButton)));
+    }
+
+    ~SlideToggleButton() {
+        IsEnabledChanged -= SlideToggleButton_IsEnabledChanged;
     }
 
     public Effect BorderEffect {
@@ -97,7 +102,7 @@ public class SlideToggleButton : ToggleButton {
 
 
 
-   
+
 
     public CornerRadius SliderCornerRadius {
         get { return (CornerRadius)GetValue(SliderCornerRadiusProperty); }
@@ -148,20 +153,31 @@ public class SlideToggleButton : ToggleButton {
         DependencyProperty.Register("SliderEffect", typeof(Effect), typeof(SlideToggleButton), new PropertyMetadata());
 
 
-
+    private Border? border;
+    private Border? slider;
     public override void OnApplyTemplate() {
         base.OnApplyTemplate();
 
-        Border? border = GetTemplateChild("Border") as Border;
-        Border? slider = GetTemplateChild("Slider") as Border;
+        border = GetTemplateChild("Border") as Border;
+        slider = GetTemplateChild("Slider") as Border;
 
         if (border is null || slider is null)
             return;
 
-        UpdateVisualState(border, slider, IsChecked.GetValueOrDefault());
+        IsEnabledChanged += SlideToggleButton_IsEnabledChanged;
+
+        if (IsEnabled) {
+            UpdateVisualState(border, slider, IsChecked.GetValueOrDefault());
+        }
 
         this.Checked += (_, _) => AnimateToggle(border, slider, true);
         this.Unchecked += (_, _) => AnimateToggle(border, slider, false);
+    }
+
+    private void SlideToggleButton_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e) {
+        if(IsEnabled && border is not null && slider is not null) {
+            UpdateVisualState(border, slider, IsChecked.GetValueOrDefault());
+        }
     }
 
     private void AnimateToggle(Border border, Border slider, bool isChecked) {
@@ -173,19 +189,17 @@ public class SlideToggleButton : ToggleButton {
         border.Background = new SolidColorBrush(((SolidColorBrush)border.Background).Color); // Unfreeze background brush
         border.Background.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
 
-        // Create a new ThicknessAnimation to move the slider
         var thicknessAnimation = new ThicknessAnimation {
-            To = isChecked 
-                ? new Thickness(Width - (SliderWidth + SliderMargin.Left) - (BorderThickness.Left + BorderThickness.Right), SliderMargin.Top, SliderMargin.Right, SliderMargin.Bottom) 
+            To = isChecked
+                ? new Thickness(Width - (SliderWidth + SliderMargin.Left) - (BorderThickness.Left + BorderThickness.Right), SliderMargin.Top, SliderMargin.Right, SliderMargin.Bottom)
                 : SliderMargin,
-            
+
             Duration = TimeSpan.FromSeconds(0.2)
         };
 
         slider.BeginAnimation(Border.MarginProperty, thicknessAnimation);
     }
 
-    // Required for custom colors to load when template is applied
     private void UpdateVisualState(Border border, Border slider, bool isChecked) {
         border.Background = isChecked
             ? BackgroundChecked

@@ -71,7 +71,7 @@
                                    ViewportSize="{TemplateBinding ViewportHeight}"
                                    Value="{TemplateBinding VerticalOffset}"
                                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                                   Style="{StaticResource HBDark_HorizontalScrollBar}" />
+                                   Style="{StaticResource HBDark_VerticalScrollBar}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

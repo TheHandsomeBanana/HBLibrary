@@ -2,6 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:HBLibrary.Wpf.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
     <Style TargetType="{x:Type local:AnimatedPath}">
         <Setter Property="Template">
             <Setter.Value>
@@ -19,6 +23,34 @@
                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
                         Effect="{TemplateBinding ShadowEffect}">
                     </Path>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            
+                            <Setter Property="Fill"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                            <Setter Property="FromFill"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                            <Setter Property="FromStroke"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                            <Setter Property="ToFill"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                            <Setter Property="ToStroke"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                            <Setter Property="FromShadowEffect"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                            <Setter Property="ToShadowEffect"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

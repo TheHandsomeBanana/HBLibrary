@@ -24,6 +24,10 @@ public class IconToggleButton : ToggleButton {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(IconToggleButton), new FrameworkPropertyMetadata(typeof(IconToggleButton)));
     }
 
+    ~IconToggleButton() {
+        IsEnabledChanged -= IconToggleButton_IsEnabledChanged;
+    }
+
     public Geometry Data {
         get { return (Geometry)GetValue(DataProperty); }
         set { SetValue(DataProperty, value); }
@@ -193,23 +197,34 @@ public class IconToggleButton : ToggleButton {
         }
     }
 
+    private Path? icon;
     public override void OnApplyTemplate() {
         base.OnApplyTemplate();
 
-        Path? icon = GetTemplateChild("Icon") as Path;
+        IsEnabledChanged += IconToggleButton_IsEnabledChanged;
+
+        icon = GetTemplateChild("Icon") as Path;
 
         if (icon is null) {
             return;
         }
 
-        UpdateVisualState(icon, IsChecked.GetValueOrDefault());
-
+        
         this.Checked += (_, _) => AnimateIcon(icon, true);
         this.Unchecked += (_, _) => AnimateIcon(icon, false);
+    }
 
+    private void IconToggleButton_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e) {
+        if (IsEnabled && icon is not null) {
+            UpdateVisualState(icon, IsChecked.GetValueOrDefault());
+        }
     }
 
     private void AnimateIcon(Path icon, bool state) {
+        if (!IsEnabled) {
+            return;
+        }
+
         if (FromFill is not null && ToFill is not null) {
 
             ColorAnimation colorAnimation = new ColorAnimation {

@@ -22,6 +22,12 @@ public class AnimatedPath : Control {
     }
 
 
+    public AnimatedPath() {
+    }
+
+    ~AnimatedPath() {
+        IsEnabledChanged -= AnimatedPath_IsEnabledChanged;
+    }
 
     public bool State {
         get { return (bool)GetValue(StateProperty); }
@@ -174,8 +180,6 @@ public class AnimatedPath : Control {
         DependencyProperty.Register("FromShadowBlurRadius", typeof(double), typeof(AnimatedPath), new PropertyMetadata(0.0));
 
 
-
-
     public double ToShadowBlurRadius {
         get { return (double)GetValue(ToShadowBlurRadiusProperty); }
         set { SetValue(ToShadowBlurRadiusProperty, value); }
@@ -187,16 +191,17 @@ public class AnimatedPath : Control {
 
 
 
-
-
-
     private Path? icon;
     public override void OnApplyTemplate() {
         base.OnApplyTemplate();
 
+        IsEnabledChanged += AnimatedPath_IsEnabledChanged;
+
         icon = (Path)GetTemplateChild("Icon");
 
-        UpdateVisualState(icon, State);
+        if (IsEnabled) {
+            UpdateVisualState(icon, State);
+        }
     }
 
     private void AnimateIcon(bool stateTrue) {
@@ -275,6 +280,11 @@ public class AnimatedPath : Control {
                 Opacity = temp.Opacity,
             };
         }
+    }
 
+    private void AnimatedPath_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e) {
+        if (IsEnabled && icon != null) {
+            UpdateVisualState(icon, State);
+        }
     }
 }

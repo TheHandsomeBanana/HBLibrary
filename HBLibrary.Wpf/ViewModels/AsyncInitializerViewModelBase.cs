@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.ViewModels;
 public abstract class AsyncInitializerViewModelBase : ViewModelBase, IAsyncInitializer {
-
+    private bool isInitialized;
+    public bool IsInitialized {
+        get => isInitialized;
+        private set {
+            isInitialized = value;
+            NotifyPropertyChanged();
+        }
+    }
     private bool isLoading;
 
     public bool IsLoading {
@@ -31,10 +38,11 @@ public abstract class AsyncInitializerViewModelBase : ViewModelBase, IAsyncIniti
         try {
             IsLoading = true;
             await InitializeViewModelAsync();
+            IsInitialized = true;
         }
         catch (Exception ex) {
             IsFaulted = true;
-            OnException(ex);
+            OnInitializeException(ex);
         }
         finally {
             IsLoading = false;
@@ -42,10 +50,19 @@ public abstract class AsyncInitializerViewModelBase : ViewModelBase, IAsyncIniti
     }
 
     protected abstract Task InitializeViewModelAsync();
-    protected abstract void OnException(Exception exception);
+    protected abstract void OnInitializeException(Exception exception);
 }
 
 public abstract class AsyncInitializerViewModelBase<TModel> : ViewModelBase<TModel>, IAsyncInitializer {
+
+    private bool isInitialized;
+    public bool IsInitialized {
+        get => isInitialized;
+        private set {
+            isInitialized = value;
+            NotifyPropertyChanged();
+        }
+    }
 
     private bool isLoading;
 
@@ -73,10 +90,11 @@ public abstract class AsyncInitializerViewModelBase<TModel> : ViewModelBase<TMod
         try {
             IsLoading = true;
             await InitializeViewModelAsync();
+            IsInitialized = true;
         }
         catch (Exception ex) {
             IsFaulted = true;
-            OnException(ex);
+            OnInitializeException(ex);
         }
         finally {
             IsLoading = false;
@@ -84,5 +102,5 @@ public abstract class AsyncInitializerViewModelBase<TModel> : ViewModelBase<TMod
     }
 
     protected abstract Task InitializeViewModelAsync();
-    protected abstract void OnException(Exception exception);
+    protected abstract void OnInitializeException(Exception exception);
 }

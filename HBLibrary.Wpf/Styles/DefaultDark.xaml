@@ -7,6 +7,11 @@
     <Color x:Key="HBDark_DefaultDisabledColor">#4E4E4E</Color>
     <SolidColorBrush x:Key="HBDark_DefaultDisabled" Color="{StaticResource HBDark_DefaultDisabledColor}"/>
 
+    <Color x:Key="HBDark_DefaultDisabledBorderColor">#737373</Color>
+    <SolidColorBrush x:Key="HBDark_DefaultDisabledBorder"
+                     Color="{StaticResource HBDark_DefaultDisabledBorderColor}" />
+
+
     <SolidColorBrush x:Key="VSGreen" Color="#8ae28a"/>
     <SolidColorBrush x:Key="VSRed" Color="#e25964"/>
     <SolidColorBrush x:Key="VSViolet" Color="#403582"/>
