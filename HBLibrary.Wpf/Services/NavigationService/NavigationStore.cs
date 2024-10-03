@@ -1,22 +1,41 @@
-﻿using HBLibrary.Wpf.ViewModels;
+﻿using HBLibrary.Wpf.Services.NavigationService.Builder;
+using HBLibrary.Wpf.ViewModels;
 
 namespace HBLibrary.Wpf.Services.NavigationService;
 public class NavigationStore : INavigationStore {
 
     private readonly Dictionary<string, ActiveViewModel> activeViewModels = [];
 
+    private readonly NavigationStoreSettings settings;
 
     public ActiveViewModel this[string parentTypename] {
         get => activeViewModels[parentTypename];
         set => activeViewModels[parentTypename] = value;
     }
 
-    public NavigationStore() {
+    public NavigationStore(NavigationStoreSettings settings, List<string> parentTypeNames) {
+        this.settings = settings;
+        foreach (string parentTypeName in parentTypeNames) {
+            activeViewModels[parentTypeName] = new ActiveViewModel();
+        }
+    }
+
+    public static INavigationStoreBuilder CreateBuilder() {
+        return new NavigationStoreBuilder();
     }
 
     public void SwitchViewModel(string parentTypename, ViewModelBase viewModel) {
         if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
-            if (activeViewModel.ViewModel is IDisposable disposableViewModel) {
+            if (activeViewModel.ViewModel is null) {
+                activeViewModel.ViewModel = viewModel;
+                return;
+            }
+
+            if (!settings.AllowRenavigation && activeViewModel.ViewModel.GetType() == viewModel.GetType()) {
+                return;
+            }
+
+            if (settings.DisposeOnLeave && activeViewModel.ViewModel is IDisposable disposableViewModel) {
                 disposableViewModel.Dispose();
             }
 
@@ -29,7 +48,16 @@ public class NavigationStore : INavigationStore {
 
     public void SwitchViewModel<TViewModel>(string parentTypename, TViewModel viewModel) where TViewModel : ViewModelBase {
         if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
-            if(activeViewModel.ViewModel is IDisposable disposableViewModel) {
+            if (activeViewModel.ViewModel is null) {
+                activeViewModel.ViewModel = viewModel;
+                return;
+            }
+
+            if (!settings.AllowRenavigation && activeViewModel.ViewModel.GetType() == viewModel.GetType()) {
+                return;
+            }
+
+            if (settings.DisposeOnLeave && activeViewModel.ViewModel is IDisposable disposableViewModel) {
                 disposableViewModel.Dispose();
             }
 
@@ -38,10 +66,6 @@ public class NavigationStore : INavigationStore {
         else {
             activeViewModels[parentTypename] = new ActiveViewModel(viewModel);
         }
-    }
-
-    public void AddDefaultViewModel(string parentTypename, ViewModelBase viewModel) {
-        activeViewModels[parentTypename] = new ActiveViewModel(viewModel);
     }
 }
 
