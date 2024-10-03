@@ -12,17 +12,6 @@ public class AuthenticationException : Exception {
     public static void ThrowInvalidCredentials() => throw new AuthenticationException("Credentials are invalid.");
 
     [DoesNotReturn]
-
-    /* Unmerged change from project 'HBLibrary.Common (net8.0)'
-    Before:
-        public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
-
-        [DoesNotReturn]
-    After:
-        public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
-
-        [DoesNotReturn]
-    */
     public static void ThrowAuthenticationFailed(Exception exception) => throw new AuthenticationException("Authentication failed.", exception);
 
     [DoesNotReturn]
