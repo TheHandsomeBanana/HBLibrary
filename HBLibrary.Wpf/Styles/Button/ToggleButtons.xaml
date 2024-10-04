@@ -4,7 +4,46 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <Style x:Key="HBDark_ToggleButton"
+           TargetType="ToggleButton">
 
-    
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource HBDark_Button_BorderBrush}" />
+
+                            <Setter Property="BorderThickness"
+                                    Value="1" />
+                        </Trigger>
+                        
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_Button_Disabled_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_Button_Disabled_BorderBrush}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource HBDark_Button_Disabled_Foreground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 </ResourceDictionary>

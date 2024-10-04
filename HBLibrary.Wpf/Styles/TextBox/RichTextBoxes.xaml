@@ -3,10 +3,56 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBlock/TextBlocks.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="HBDark_RichTextBox"
            TargetType="RichTextBox">
+        
+        <Setter Property="Foreground"
+                Value="{StaticResource Foreground}" />
+
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_TextBox_Background}" />
+
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_VSTextBox_BorderBrush}" />
+
+        <Setter Property="BorderThickness"
+                Value="1" />
+
+        <Setter Property="MinHeight"
+                Value="20" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RichTextBox">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Style="{StaticResource HBDark_VSScrollViewer}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}">
+                        </ScrollViewer>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_DefaultDisabledBorder}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource HBDark_DefaultDisabledForeground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
 
     </Style>
 </ResourceDictionary>

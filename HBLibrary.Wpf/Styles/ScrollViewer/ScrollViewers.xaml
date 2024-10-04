@@ -1,13 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="HBDark_UpScrollBarButtonStyle" TargetType="RepeatButton">
-        <Setter Property="IsHitTestVisible" Value="True"/>
-        <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}"/>
+    <Style x:Key="HBDark_UpScrollBarButtonStyle"
+           TargetType="RepeatButton">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSRepeatButton_Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
@@ -17,25 +21,34 @@
                               Data="M7,15L12,10L17,15H7Z"
                               Stretch="Uniform"
                               Margin="3"
-                              Fill="{StaticResource HBDark_VSRepeatButton_Foreground}"/>
+                              Fill="{StaticResource HBDark_VSRepeatButton_Foreground}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}"/>
-                            <Setter TargetName="foreground" Property="Fill" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}" />
+                            <Setter TargetName="foreground"
+                                    Property="Fill"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="HBDark_DownScrollBarButtonStyle" TargetType="RepeatButton">
-        <Setter Property="IsHitTestVisible" Value="True"/>
-        <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}"/>
+
+    <Style x:Key="HBDark_DownScrollBarButtonStyle"
+           TargetType="RepeatButton">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSRepeatButton_Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
@@ -45,25 +58,34 @@
                               Data="M7,10L12,15L17,10H7Z"
                               Margin="3"
                               Fill="{StaticResource HBDark_VSRepeatButton_Foreground}"
-                              Stretch="Uniform"/>
+                              Stretch="Uniform" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}"/>
-                            <Setter TargetName="foreground" Property="Fill" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}" />
+                            <Setter TargetName="foreground"
+                                    Property="Fill"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="HBDark_LeftScrollBarButtonStyle" TargetType="RepeatButton">
-        <Setter Property="IsHitTestVisible" Value="True"/>
-        <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}"/>
+
+    <Style x:Key="HBDark_LeftScrollBarButtonStyle"
+           TargetType="RepeatButton">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSRepeatButton_Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
@@ -73,25 +95,34 @@
                               Data="M14,7L9,12L14,17V7Z"
                               Stretch="Uniform"
                               Margin="3"
-                              Fill="{StaticResource HBDark_VSRepeatButton_Foreground}"/>
+                              Fill="{StaticResource HBDark_VSRepeatButton_Foreground}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}"/>
-                            <Setter TargetName="foreground" Property="Fill" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}" />
+                            <Setter TargetName="foreground"
+                                    Property="Fill"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="HBDark_RightScrollBarButtonStyle" TargetType="RepeatButton">
-        <Setter Property="IsHitTestVisible" Value="True"/>
-        <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}"/>
+
+    <Style x:Key="HBDark_RightScrollBarButtonStyle"
+           TargetType="RepeatButton">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSRepeatButton_Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_VSRepeatButton_BorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
@@ -101,14 +132,19 @@
                               Data="M10,17L15,12L10,7V17Z"
                               Stretch="Uniform"
                               Margin="3"
-                              Fill="{StaticResource HBDark_VSRepeatButton_Foreground}"/>
+                              Fill="{StaticResource HBDark_VSRepeatButton_Foreground}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}"/>
-                            <Setter TargetName="foreground" Property="Fill" Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Background}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_BorderBrush}" />
+                            <Setter TargetName="foreground"
+                                    Property="Fill"
+                                    Value="{StaticResource HBDark_VSRepeatButton_MouseOver_Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -116,7 +152,8 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ScrollBarPageButtonStyle" TargetType="RepeatButton">
+    <Style x:Key="ScrollBarPageButtonStyle"
+           TargetType="RepeatButton">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
@@ -125,21 +162,27 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="ScrollBarThumbStyle" TargetType="Thumb">
-        <Setter Property="BorderBrush" Value="{StaticResource HBDark_VSScrollBar_Background}"/>
-        <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_Background}"/>
-        <Setter Property="BorderThickness" Value="3.5"/>
+
+    <Style x:Key="ScrollBarThumbStyle"
+           TargetType="Thumb">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HBDark_VSScrollBar_Background}" />
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSThumb_Background}" />
+        <Setter Property="BorderThickness"
+                Value="3.5" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
-                    <Border Background="{TemplateBinding Background}" 
-                        BorderBrush="{TemplateBinding BorderBrush}" 
-                        BorderThickness="{TemplateBinding BorderThickness}" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource HBDark_VSThumb_MouseOver_Background}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{StaticResource HBDark_VSThumb_MouseOver_Background}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -147,8 +190,10 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_HorizontalScrollBar" TargetType="ScrollBar">
-        <Setter Property="Background" Value="{StaticResource HBDark_VSScrollBar_Background}"/>
+    <Style x:Key="HBDark_HorizontalScrollBar"
+           TargetType="ScrollBar">
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSScrollBar_Background}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollBar">
@@ -160,35 +205,41 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Left Button -->
-                        <RepeatButton Grid.Column="0" Command="ScrollBar.LineLeftCommand" 
-                                  Style="{StaticResource HBDark_LeftScrollBarButtonStyle}" />
+                        <RepeatButton Grid.Column="0"
+                                      Command="ScrollBar.LineLeftCommand"
+                                      Style="{StaticResource HBDark_LeftScrollBarButtonStyle}" />
 
                         <!-- Track with Thumb -->
-                        <Track x:Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
+                        <Track x:Name="PART_Track"
+                               Grid.Column="1"
+                               IsDirectionReversed="False">
                             <Track.DecreaseRepeatButton>
                                 <RepeatButton Command="ScrollBar.PageLeftCommand"
-                                          Style="{StaticResource ScrollBarPageButtonStyle}" />
+                                              Style="{StaticResource ScrollBarPageButtonStyle}" />
                             </Track.DecreaseRepeatButton>
                             <Track.Thumb>
                                 <Thumb Style="{StaticResource ScrollBarThumbStyle}" />
                             </Track.Thumb>
                             <Track.IncreaseRepeatButton>
                                 <RepeatButton Command="ScrollBar.PageRightCommand"
-                                          Style="{StaticResource ScrollBarPageButtonStyle}" />
+                                              Style="{StaticResource ScrollBarPageButtonStyle}" />
                             </Track.IncreaseRepeatButton>
                         </Track>
 
                         <!-- Right Button -->
-                        <RepeatButton Grid.Column="2" Command="ScrollBar.LineRightCommand"
-                                  Style="{StaticResource HBDark_RightScrollBarButtonStyle}" />
+                        <RepeatButton Grid.Column="2"
+                                      Command="ScrollBar.LineRightCommand"
+                                      Style="{StaticResource HBDark_RightScrollBarButtonStyle}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_VerticalScrollBar" TargetType="ScrollBar">
-        <Setter Property="Background" Value="{StaticResource HBDark_VSScrollBar_Background}"/>
+    <Style x:Key="HBDark_VerticalScrollBar"
+           TargetType="ScrollBar">
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_VSScrollBar_Background}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollBar">
@@ -200,17 +251,20 @@
                         </Grid.RowDefinitions>
 
                         <!-- Top Button -->
-                        <RepeatButton Grid.Row="0" Command="ScrollBar.LineUpCommand" 
-                                  Style="{StaticResource HBDark_UpScrollBarButtonStyle}" />
+                        <RepeatButton Grid.Row="0"
+                                      Command="ScrollBar.LineUpCommand"
+                                      Style="{StaticResource HBDark_UpScrollBarButtonStyle}" />
 
                         <!-- Track with Thumb -->
-                        <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="True">
+                        <Track x:Name="PART_Track"
+                               Grid.Row="1"
+                               IsDirectionReversed="True">
                             <Track.DecreaseRepeatButton>
-                                <RepeatButton Command="ScrollBar.PageUpCommand" 
+                                <RepeatButton Command="ScrollBar.PageUpCommand"
                                               Style="{StaticResource ScrollBarPageButtonStyle}" />
                             </Track.DecreaseRepeatButton>
                             <Track.Thumb>
-                                <Thumb Style="{StaticResource ScrollBarThumbStyle}"/>
+                                <Thumb Style="{StaticResource ScrollBarThumbStyle}" />
                             </Track.Thumb>
                             <Track.IncreaseRepeatButton>
                                 <RepeatButton Command="ScrollBar.PageDownCommand"
@@ -219,8 +273,9 @@
                         </Track>
 
                         <!-- Bottom Button -->
-                        <RepeatButton Grid.Row="2" Command="ScrollBar.LineDownCommand"
-                                  Style="{StaticResource HBDark_DownScrollBarButtonStyle}" />
+                        <RepeatButton Grid.Row="2"
+                                      Command="ScrollBar.LineDownCommand"
+                                      Style="{StaticResource HBDark_DownScrollBarButtonStyle}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -228,7 +283,21 @@
     </Style>
 
 
-    <Style x:Key="HBDark_VSScrollViewer" TargetType="ScrollViewer">
+    <Style x:Key="HBDark_VSScrollViewer"
+           TargetType="ScrollViewer">
+
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
+
+        <Setter Property="HorizontalScrollBarVisibility"
+                Value="Disabled" />
+
+        <Setter Property="VerticalScrollBarVisibility"
+                Value="Auto" />
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollViewer">
@@ -242,10 +311,13 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <ScrollContentPresenter Grid.Column="0" Grid.Row="0"
-                                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                                            Content="{TemplateBinding Content}"
-                                            CanContentScroll="{TemplateBinding CanContentScroll}" />
+                        <ScrollContentPresenter Grid.Column="0"
+                                                Grid.Row="0"
+                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                Content="{TemplateBinding Content}"
+                                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 
                         <ScrollBar x:Name="PART_VerticalScrollBar"
                                    Grid.Column="1"

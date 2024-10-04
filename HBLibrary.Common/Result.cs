@@ -445,7 +445,7 @@ public readonly struct Result : IEquatable<Result>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result Ok(string message) => new Result(ResultState.Success, message, null);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result Fail(string message) => new Result(ResultState.Faulted, message, null);
+    public static Result Fail(string message) => new Result(ResultState.Faulted, message, new Exception(message));
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result Fail(Exception exception) => new Result(ResultState.Faulted, exception.Message, exception);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -7,6 +7,9 @@
     <Color x:Key="HBDark_DefaultDisabledColor">#4E4E4E</Color>
     <SolidColorBrush x:Key="HBDark_DefaultDisabled" Color="{StaticResource HBDark_DefaultDisabledColor}"/>
 
+    <Color x:Key="HBDark_DefaultDisabledForegroundColor">#757575</Color>
+    <SolidColorBrush x:Key="HBDark_DefaultDisabledForeground" Color="{StaticResource HBDark_DefaultDisabledForegroundColor}"/>
+
     <Color x:Key="HBDark_DefaultDisabledBorderColor">#737373</Color>
     <SolidColorBrush x:Key="HBDark_DefaultDisabledBorder"
                      Color="{StaticResource HBDark_DefaultDisabledBorderColor}" />

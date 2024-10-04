@@ -226,6 +226,14 @@ public class AnimatedPath : Control {
             icon.Stroke.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
         }
 
+        DropShadowEffect temp = ShadowEffect;
+        ShadowEffect = new DropShadowEffect {
+            Color = temp.Color,
+            BlurRadius = stateTrue ? FromShadowBlurRadius : ToShadowBlurRadius,
+            Direction = temp.Direction,
+            ShadowDepth = temp.ShadowDepth,
+            Opacity = temp.Opacity,
+        };
 
         if (FromShadowEffect is not null || ToShadowEffect is not null) {
             ColorAnimation colorAnimation = new ColorAnimation {
