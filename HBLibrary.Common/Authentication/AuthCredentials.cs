@@ -61,17 +61,6 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         };
 
         return credentials;
-
-        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
-        Before:
-            }
-
-            public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,
-        After:
-            }
-
-            public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,
-        */
     }
 
     public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,

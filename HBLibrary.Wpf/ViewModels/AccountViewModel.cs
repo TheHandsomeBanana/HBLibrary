@@ -73,10 +73,11 @@ public class AccountViewModel : ViewModelBase {
         obj.Close();
         this.owner.Close();
 
-        ApplicationAccountInfo lastAccount = accountService.Account!.GetApplicationAccountInfo();
         StartupLoginViewModel dataContext = new StartupLoginViewModel(accountService, appSettings);
 
-        if (lastAccount.AccountType == AccountType.Local && dataContext.AppLoginContent is LoginViewModel loginViewModel) {
+        AccountInfo? lastAccount = accountService.AccountStorage.GetLatestAccount(accountService.Account!.Application);
+
+        if (lastAccount?.AccountType == AccountType.Local && dataContext.AppLoginContent is LoginViewModel loginViewModel) {
             loginViewModel.Username = lastAccount.Username;
         }
 

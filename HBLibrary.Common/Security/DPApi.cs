@@ -1,10 +1,7 @@
 ﻿using System.Runtime.Versioning;
 
 
-using System.
-
-Security.Cryptography;
-
+using System.Security.Cryptography;
 
 namespace HBLibrary.Common.Security;
 

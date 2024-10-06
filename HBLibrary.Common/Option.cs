@@ -48,8 +48,10 @@ public readonly struct Option<T> : IEquatable<Option<T>>, IEquatable<T>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T GetValueOrDefault(T defaultValue) => hasValue ? value! : defaultValue;
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T GetValueOrDefault(Func<T> defaultFunc) => hasValue ? value! : defaultFunc();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T? GetValueOrDefault() => hasValue ? value! : default;
 
     public R Match<R>(Func<T, R> someFunc, Func<R> noneFunc)
     {

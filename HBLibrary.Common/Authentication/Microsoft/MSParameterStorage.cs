@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Threading;
 
 namespace HBLibrary.Common.Authentication.Microsoft;
 public class MSParameterStorage {
@@ -8,6 +9,11 @@ public class MSParameterStorage {
         if (!File.Exists(appMSParameterPath)) {
             File.Create(appMSParameterPath).Dispose();
         }
+    }
+
+    public async Task<bool> IdentityExistsAsync(string username, CancellationToken cancellationToken = default) {
+        MicrosoftIdentity? existingIdentity = await GetIdentityAsync(username, cancellationToken);
+        return existingIdentity is not null;
     }
 
     public async Task<MicrosoftIdentity> RegisterIdentityAsync(string username, string identifier, string email, string displayName, string[] scopes, string tenantId, CancellationToken cancellationToken = default) {
@@ -40,17 +46,6 @@ public class MSParameterStorage {
         List<MicrosoftIdentity> identityList = await LoadIdentitiesAsync(cancellationToken);
         identityList.Remove(existingIdentity);
         await SaveCredentialsAsync(identityList, cancellationToken);
-
-        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
-        Before:
-            }
-
-            public async Task UnregisterIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
-        After:
-            }
-
-            public async Task UnregisterIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
-        */
     }
 
     public async Task UnregisterIdentityByIdAsync(string identifier, CancellationToken cancellationToken = default) {
@@ -66,17 +61,6 @@ public class MSParameterStorage {
 
     public MicrosoftIdentity? GetIdentity(string username) {
         return LoadIdentities().FirstOrDefault(e => e.Username == username);
-
-        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
-        Before:
-            }
-
-            public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {
-        After:
-            }
-
-            public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {
-        */
     }
 
     public async Task<MicrosoftIdentity?> GetIdentityAsync(string username, CancellationToken cancellationToken = default) {

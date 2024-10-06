@@ -1,7 +1,7 @@
 ﻿using Microsoft.Identity.Client;
 
 namespace HBLibrary.Common.Authentication;
-public interface IAuthenticationService<TAuthResult, TAuthCredentials> where TAuthResult : IAuthResult where TAuthCredentials : IAuthCredentials {
+public interface IAuthenticationService<TAuthResult, TAuthCredentials> where TAuthResult : AuthResult where TAuthCredentials : IAuthCredentials {
     public Task<TAuthResult> AuthenticateAsync(TAuthCredentials authCredentials, CancellationToken cancellationToken = default);
 }
 

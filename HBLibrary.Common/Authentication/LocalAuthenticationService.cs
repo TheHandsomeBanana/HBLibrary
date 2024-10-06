@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Common.Exceptions;
 using HBLibrary.Common.Security;
 using HBLibrary.Common.Security.Credentials;
+using HBLibrary.Common.Security.Keys;
 using System.Runtime.Versioning;
 using System.Security;
 
@@ -17,8 +18,8 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         this.credentialStorage = credentialStorage;
     }
 
-    public LocalAuthenticationService(string applicationName) {
-        this.credentialStorage = new LocalCredentialStorage(applicationName);
+    public LocalAuthenticationService() {
+        this.credentialStorage = new LocalCredentialStorage();
     }
 
     /// <summary>
@@ -36,11 +37,17 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
             AuthenticationException.ThrowInvalidCredentials();
         }
 
-        string token = CreateEncryptionKey(authCredentials.Password);
+        UserCredentials credentials = (await credentialStorage.GetUserCredentialsAsync(authCredentials.Username))!;
+
+        AccountKeyManager accountKeyManager = new AccountKeyManager();
+        Result<RsaKey> publicKeyResult = await accountKeyManager.GetPublicKeyAsync(authCredentials.Username);
+
+        RsaKey publicKey = publicKeyResult.GetValueOrThrow(); 
 
         return new LocalAuthResult {
-            Token = token,
+            Salt = credentials.Salt,
             Username = authCredentials.Username,
+            PublicKey = publicKey
         };
     }
 
@@ -69,24 +76,20 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
             UserCredentials credentials = await credentialStorage.RegisterUserAsync(authCredentials.Username, authCredentials.Password, cancellationToken);
 
-            string token = CreateEncryptionKey(authCredentials.Password);
+            AccountKeyManager accountKeyManager = new AccountKeyManager();
+            byte[] salt = GlobalEnvironment.Encoding.GetBytes(credentials.Salt);
+            Result<RsaKeyPair> keyPair = await accountKeyManager.CreateAccountKeysAsync(credentials.Username, salt);
+
+            RsaKey publicKey = keyPair.GetValueOrThrow().PublicKey;
 
             return new LocalAuthResult {
-                Token = token,
+                PublicKey = publicKey,
                 Username = credentials.Username,
+                Salt = credentials.Salt
             };
         }
 
         throw AuthenticationException.UserAlreadyExists();
-    }
-
-    private string CreateEncryptionKey(SecureString password) {
-        byte[] salt = KeyDerivation.GenerateSalt(16);
-        byte[] key = KeyDerivation.DeriveKey(password, salt, 20000, 32);
-
-        string saltBase64 = Convert.ToBase64String(salt);
-        string keyBase64 = Convert.ToBase64String(key);
-        return $"{saltBase64}:{keyBase64}";
     }
 }
 #endif

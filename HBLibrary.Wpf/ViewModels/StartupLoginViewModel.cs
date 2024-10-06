@@ -50,12 +50,11 @@ public class StartupLoginViewModel : ViewModelBase {
         }
 
         LoginViewModel loginViewModel = new LoginViewModel();
-        ApplicationAccountInfo? lastAccount = accountService.GetLastAccount(appSettings.ApplicationName!);
+        AccountInfo? lastAccount = accountService.AccountStorage.GetLatestAccount(appSettings.ApplicationName!);
 
         if (lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
             loginViewModel.Username = lastAccount.Username;
         }
-
 
         loginViewModel.LoginTriggered += LoginViewModel_LoginCompleted;
 
@@ -112,7 +111,7 @@ public class StartupLoginViewModel : ViewModelBase {
                     b.WithParentActivityOrWindow(windowHandle);
                 });
 
-                await accountService.LoginAsync(mSAuthCredentials, appSettings.ApplicationName!);
+                await accountService.RegisterAsync(mSAuthCredentials, appSettings.ApplicationName!);
                 break;
         }
 

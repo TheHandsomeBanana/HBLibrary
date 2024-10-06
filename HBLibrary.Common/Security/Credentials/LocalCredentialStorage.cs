@@ -11,8 +11,8 @@ namespace HBLibrary.Common.Security.Credentials;
 public class LocalCredentialStorage {
     private readonly string appCredentialPath;
 
-    public LocalCredentialStorage(string appName) {
-        this.appCredentialPath = Path.Combine(GlobalEnvironment.IdentityPath, appName + ".creds");
+    public LocalCredentialStorage() {
+        this.appCredentialPath = Path.Combine(GlobalEnvironment.IdentityPath, "credentialstorage");
         if (!File.Exists(appCredentialPath)) {
             File.Create(appCredentialPath).Dispose();
         }
@@ -66,17 +66,6 @@ public class LocalCredentialStorage {
         List<UserCredentials> credentialsList = await LoadCredentialsAsync(cancellationToken);
         credentialsList.Remove(existingUserCredentials);
         await SaveCredentialsAsync(credentialsList, cancellationToken);
-
-        /* Unmerged change from project 'HBLibrary.Common (net8.0)'
-        Before:
-            }
-
-            public void UnregisterUser(string username) {
-        After:
-            }
-
-            public void UnregisterUser(string username) {
-        */
     }
 
     public void UnregisterUser(string username) {

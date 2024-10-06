@@ -1,34 +1,9 @@
 ﻿using HBLibrary.Common.Authentication.Microsoft;
 using HBLibrary.Common.Exceptions;
 using HBLibrary.Common.Security;
+using HBLibrary.Common.Security.Keys;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
-
-/* Unmerged change from project 'HBLibrary.Common (net8.0)'
-Before:
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Net.Http;
-using Microsoft.Graph.Users;
-using HBLibrary.Common.Authentication.Microsoft;
-using Microsoft.Graph.Models;
-After:
-using Microsoft.Graph.Users;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-*/
 using Microsoft.Identity.Client;
 using System.Net.Http;
 
@@ -125,7 +100,27 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
             throw AuthenticationException.AuthenticationFailed(ex);
         }
 
+        string identifier = result.Account.HomeAccountId.Identifier;
+        AccountKeyManager accountKeyManager = new AccountKeyManager();
+        Result<RsaKey> publicKeyResult;
+
+        // Check if the microsoft identity is registered locally
+        if (!(await parameterStorage.IdentityExistsAsync(result.Account.Username, cancellationToken))) {
+
+            // TODO: Create secure way to get salt
+            // Idea -> Pass salt from outside i.e. application
+            byte[] salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
+            Result<RsaKeyPair> keyPair = await accountKeyManager.CreateAccountKeysAsync(identifier, salt);
+            publicKeyResult = keyPair.Map(e => e.PublicKey);
+        }
+        else {
+            publicKeyResult = await accountKeyManager.GetPublicKeyAsync(identifier);
+        }
+
+        RsaKey publicKey = publicKeyResult.GetValueOrThrow();
+
         return new MSAuthResult {
+            PublicKey = publicKey,
             Result = result,
             Email = email,
             DisplayName = displayName
@@ -172,6 +167,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
 
     private async Task<MicrosoftIdentity> RegisterStorageIdentity(AuthenticationResult result, CancellationToken cancellationToken = default) {
         (string email, string displayName) = await GetUserDetailsAsync(result.AccessToken);
+
 
         return await parameterStorage.RegisterIdentityAsync(result.Account.Username,
                         result.Account.HomeAccountId.Identifier,
