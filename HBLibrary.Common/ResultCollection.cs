@@ -116,7 +116,7 @@ public class ResultCollection : IEquatable<ResultCollection>, IEnumerable<Result
     }
 }
 
-
+[DebuggerDisplay("State = {resultState}")]
 public readonly struct ImmutableResultCollection : IEquatable<ImmutableResultCollection>, IEnumerable<Result>, IReadOnlyCollection<Result>, IReadOnlyList<Result> {
     private readonly ResultState resultState;
     private readonly ImmutableArray<Result> results;

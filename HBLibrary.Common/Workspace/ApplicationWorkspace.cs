@@ -4,6 +4,7 @@ using HBLibrary.Common.Security.Keys;
 using HBLibrary.Common.Security.Rsa;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -12,18 +13,18 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Workspace;
-public class ApplicationWorkspace : IDisposable {
-    public AccountInfo Owner { get; private set; }
-    public IReadOnlyList<AccountInfo> SharedAccess { get; private set; } = [];
-    public string FullPath { get; set; } = "";
+public class ApplicationWorkspace {
+    public AccountInfo? Owner { get; set; }
+    public AccountInfo[] SharedAccess { get; set; } = [];
+    public string? FullPath { get; set; }
     public bool UsesEncryption { get; set; }
 
-    [JsonIgnore]
+    
+    
     private string? name;
-    private bool disposedValue;
 
     [JsonIgnore]
-    public string Name {
+    public string? Name {
         get {
             name ??= Path.GetFileNameWithoutExtension(FullPath);
 
@@ -32,30 +33,44 @@ public class ApplicationWorkspace : IDisposable {
     }
 
     [JsonIgnore]
-    public Account.Account OpenedBy { get; set; }
+    public bool IsOpen { get; private set; }
+    [JsonIgnore]
+    public Account.Account? OpenedBy { get; set; }
 
     [JsonConstructor]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public ApplicationWorkspace() { }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    internal ApplicationWorkspace(string fullPath, bool usesEncryption, Account.Account openedBy, AccountInfo owner) {
-        this.UsesEncryption = usesEncryption;
-        this.FullPath = fullPath;
-        this.OpenedBy = openedBy;
-        this.Owner = owner;
+   
+    public virtual Task OpenAsync(Account.Account openedBy) {
+        if (IsOpen) {
+            throw ApplicationWorkspaceException.CannotOpen("already opened");
+        }
+
+        IsOpen = true;
+        OpenedBy = openedBy;
+        return Task.CompletedTask;
+    }
+
+    public virtual Task CloseAsync() {
+        IsOpen = false;
+        OpenedBy = null;
+        return Task.CompletedTask;
     }
 
     protected async Task<Result<AesKey>> GetKeyAsync() {
+        if (!IsOpen) {
+            return ApplicationWorkspaceException.NotOpened(Name!);
+        }
+
         if(!UsesEncryption) {
             return new ApplicationWorkspaceException("Workspaces does not use encryption");
         }
 
         string workspaceKeyPath = Path.Combine(
                 GlobalEnvironment.ApplicationDataBasePath,
-                OpenedBy.Application,
+                OpenedBy!.Application,
                 "workspaces",
-                Path.GetFileNameWithoutExtension(FullPath),
+                Path.GetFileNameWithoutExtension(FullPath)!,
                 OpenedBy.AccountId
             );
 
@@ -74,40 +89,9 @@ public class ApplicationWorkspace : IDisposable {
 
         AesKey? workspaceAesKey = JsonSerializer.Deserialize<AesKey>(workspaceKey);
         if (workspaceAesKey is null) {
-            return ApplicationWorkspaceException.CannotOpen("data is corrupted");
+            return new ApplicationWorkspaceException("Key data is corrupted");
         }
 
         return workspaceAesKey;
-    }
-
-
-
-
-    protected virtual void Dispose(bool disposing) {
-        if (!disposedValue) {
-            if (disposing) {
-                // TODO: dispose managed state (managed objects)
-            }
-
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
-            OpenedBy = null;
-            Owner = null;
-            SharedAccess = null;
-            name = null;
-            disposedValue = true;
-        }
-    }
-
-    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-    // ~ApplicationWorkspace()
-    // {
-    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-    //     Dispose(disposing: false);
-    // }
-
-    public void Dispose() {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

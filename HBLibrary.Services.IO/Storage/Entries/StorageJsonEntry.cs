@@ -29,20 +29,44 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         }
     }
 
-    public void Save(Type type) {
-        if (Value is not null) {
-            if (Value.GetType() != type) {
-                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+    public async Task<object?> GetAsync(Type type) {
+        try {
+            if (Value is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return default;
+                }
+
+                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
+                    Value = await jsonService.ReadJsonAsync(type, file!);
+                }
             }
 
-            jsonService.WriteJson(type, FileSnapshot.Create(Filename, true), Value);
+            return Value;
+        }
+        catch {
+            return default;
         }
     }
 
+
+
+    public void Save(Type type) {
+
+    }
+
     public void Save() {
-        if (CurrentEntryType is not null) {
-            Save(CurrentEntryType);
+        if (Value is not null) {
+            jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+
         }
+    }
+
+    public Task SaveAsync() {
+        if (Value is not null) {
+            return jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+        }
+
+        return Task.CompletedTask;
     }
 
     public T? Get<T>() {
@@ -64,6 +88,25 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         }
     }
 
+    public async Task<T?> GetAsync<T>() {
+        try {
+            if (Value is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return default;
+                }
+
+                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
+                    Value = await jsonService.ReadJsonAsync<T>(file!);
+                }
+            }
+
+            return (T?)Value;
+        }
+        catch {
+            return default;
+        }
+    }
+
     public void Save<T>() {
         if (Value is not null) {
             if (Value is T tValue) {
@@ -73,6 +116,19 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                 throw new InvalidOperationException("Cannot save, entry does not equal given type.");
             }
         }
+    }
+
+    public Task SaveAsync<T>() {
+        if (Value is not null) {
+            if (Value is T tValue) {
+                return jsonService.WriteJsonAsync<T>(FileSnapshot.Create(Filename, true), tValue);
+            }
+            else {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+            }
+        }
+
+        return Task.CompletedTask;
     }
 
     protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {

@@ -16,6 +16,7 @@ namespace HBLibrary.Common.Workspace;
 public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
     private readonly IAccountStorage accountStorage;
     public string Application { get; }
+    public ApplicationWorkspace? CurrentWorkspace { get; private set; }
     public ApplicationWorkspaceManager(string application, IAccountStorage accountStorage) {
         this.Application = application;
         this.accountStorage = accountStorage;
@@ -35,26 +36,28 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         }
     }
 
-    public async Task<Result<ApplicationWorkspace>> CreateAsync(string fullPath, Account.Account executingAccount) {
-        if (File.Exists(fullPath)) {
-            return new InvalidOperationException("Workspace already exists.");
+    public async Task<Result<TApplicationWorkspace>> GetAsync<TApplicationWorkspace>(string fullPath) where TApplicationWorkspace : ApplicationWorkspace {
+        if (!File.Exists(fullPath)) {
+            return ApplicationWorkspaceException.DoesNotExist();
         }
 
-        AccountInfo? accountInfo = accountStorage.GetAccount(executingAccount.AccountId);
 
-        if (accountInfo is null) {
-            return new InvalidOperationException($"Cannot create workspace, account information corrupted");
+        try {
+            byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
+            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
+            
+            if(applicationWorkspace is null) {
+                return ApplicationWorkspaceException.CannotGet("data is corrupted");
+            }   
+            
+            return applicationWorkspace;
         }
-
-        ApplicationWorkspace workspace = new ApplicationWorkspace(fullPath, false, executingAccount, accountInfo);
-        string serializedWorkspace = JsonSerializer.Serialize(workspace);
-
-        await UnifiedFile.WriteAllTextAsync(fullPath, serializedWorkspace);
-
-        return workspace;
+        catch(Exception ex) {
+            return ex;
+        }
     }
 
-    public async Task<Result<ApplicationWorkspace>> OpenAsync(string fullPath, Account.Account executingAccount) {
+    public async Task<Result<TApplicationWorkspace>> OpenAsync<TApplicationWorkspace>(string fullPath, Account.Account executingAccount) where TApplicationWorkspace : ApplicationWorkspace {
         if (!File.Exists(fullPath)) {
             return ApplicationWorkspaceException.DoesNotExist();
         }
@@ -62,7 +65,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         try {
             byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
 
-            ApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<ApplicationWorkspace>(workspace);
+            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
             if (applicationWorkspace is null) {
                 return ApplicationWorkspaceException.CannotOpen("data is corrupted");
             }
@@ -77,6 +80,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
                 return ApplicationWorkspaceException.AccessDenied(fullPath);
             }
 
+            CurrentWorkspace = applicationWorkspace;
             return applicationWorkspace;
         }
         catch (Exception ex) {
@@ -84,7 +88,35 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         }
     }
 
-    public async Task<Result<ApplicationWorkspace>> CreateEncryptedAsync(string fullPath, Account.Account executingAccount) {
+    public async Task<Result<TApplicationWorkspace>> CreateAndOpenAsync<TApplicationWorkspace>(string fullPath, Account.Account executingAccount) where TApplicationWorkspace : ApplicationWorkspace, new() {
+        if (File.Exists(fullPath)) {
+            return new InvalidOperationException("Workspace already exists.");
+        }
+
+        AccountInfo? accountInfo = accountStorage.GetAccount(executingAccount.AccountId);
+
+        if (accountInfo is null) {
+            return new InvalidOperationException($"Cannot create workspace, account information corrupted");
+        }
+
+        TApplicationWorkspace workspace = new TApplicationWorkspace {
+            Owner = accountInfo,
+            FullPath = fullPath,
+            UsesEncryption = false
+        };
+
+
+        await workspace.OpenAsync(executingAccount);
+
+        CurrentWorkspace = workspace;
+
+        string serializedWorkspace = JsonSerializer.Serialize(workspace);
+
+        await UnifiedFile.WriteAllTextAsync(fullPath, serializedWorkspace);
+        return workspace;
+    }
+
+    public async Task<Result<TApplicationWorkspace>> CreateAndOpenEncryptedAsync<TApplicationWorkspace>(string fullPath, Account.Account executingAccount) where TApplicationWorkspace : ApplicationWorkspace, new() {
         try {
             AccountInfo? accountInfo = await accountStorage.GetAccountAsync(executingAccount.AccountId);
             if (accountInfo is null) {
@@ -108,7 +140,13 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
 
             await UnifiedFile.WriteAllBytesAsync(workspaceKeyPath, encryptedWorkspaceKey);
 
-            ApplicationWorkspace workspace = new ApplicationWorkspace(fullPath, true, executingAccount, accountInfo);
+            TApplicationWorkspace workspace = new TApplicationWorkspace {
+                Owner = accountInfo,
+                FullPath = fullPath,
+                UsesEncryption = true
+            };
+
+            await workspace.OpenAsync(executingAccount);
             byte[] serializedWorkspace = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(workspace));
 
             await UnifiedFile.WriteAllBytesAsync(fullPath, serializedWorkspace);
@@ -119,40 +157,127 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         }
     }
 
+    public async Task<Result> ShareAccess(ApplicationWorkspace workspace, params AccountInfo[] accounts) {
+        if (!workspace.IsOpen) {
+            return ApplicationWorkspaceException.NotOpened(workspace.Name);
+        }
 
-    public async Task<Result<ApplicationWorkspace>> OpenEncryptedAsync(string fullPath, Account.Account executingAccount) {
+        if (workspace.OpenedBy!.AccountId != workspace.Owner.AccountId) {
+            return new ApplicationWorkspaceException("Not authorized to share access");
+        }
+
+        AccountInfo[] distinctNewAccounts = accounts.Where(e =>
+            workspace.Owner.AccountId != e.AccountId &&
+            workspace.SharedAccess.All(f => f.AccountId != e.AccountId)
+        ).ToArray();
+
+        workspace.SharedAccess = [.. workspace.SharedAccess.Concat(distinctNewAccounts)];
+
+        if (!workspace.UsesEncryption) {
+            return Result.Ok();
+        }
+
+        foreach (AccountInfo account in distinctNewAccounts) {
+            // TODO: Share new access request with user
+            // -> Create notification logic
+            // --> Notify other when logged in about 
+            // --> On accept generate new workspace key
+        }
+
+        return Result.Ok();
+    }
+
+    public async Task<Result> RevokeAccess(ApplicationWorkspace workspace, params AccountInfo[] accounts) {
+        if (!workspace.IsOpen) {
+            return ApplicationWorkspaceException.NotOpened(workspace.Name);
+        }
+
+        if (workspace.OpenedBy!.AccountId != workspace.Owner.AccountId) {
+            return new ApplicationWorkspaceException("Not authorized to share access");
+        }
+
+        AccountInfo[] distinctRevokableAccounts = accounts.Where(e =>
+            workspace.Owner.AccountId != e.AccountId &&
+            workspace.SharedAccess.All(f => f.AccountId != e.AccountId)
+        ).ToArray();
+
+        workspace.SharedAccess = [.. workspace.SharedAccess.Except(distinctRevokableAccounts)];
+
+        if (!workspace.UsesEncryption) {
+            return Result.Ok();
+        }
+
+        foreach (AccountInfo accountInfo in distinctRevokableAccounts) {
+            string workspaceKeyPath = Path.Combine(
+                GlobalEnvironment.ApplicationDataBasePath,
+                Application,
+                "workspaces",
+                workspace.Name,
+                accountInfo.AccountId
+            );
+
+            if (File.Exists(workspaceKeyPath)) {
+                File.Delete(workspaceKeyPath);
+            }
+        }
+
+        return Result.Ok();
+    }
+}
+
+public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWorkspaceManager<TApplicationWorkspace> where TApplicationWorkspace : ApplicationWorkspace, new() {
+    private readonly IAccountStorage accountStorage;
+    public string Application { get; }
+    public TApplicationWorkspace? CurrentWorkspace { get; private set; }
+    public ApplicationWorkspaceManager(string application, IAccountStorage accountStorage) {
+        this.Application = application;
+        this.accountStorage = accountStorage;
+    }
+
+    public async Task<bool> WorkspaceExistsAsync(string fullPath) {
+        if (!File.Exists(fullPath)) {
+            return false;
+        }
+        try {
+            byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
+            ApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<ApplicationWorkspace>(workspace);
+            return applicationWorkspace is not null;
+        }
+        catch {
+            return false;
+        }
+    }
+
+    public async Task<Result<TApplicationWorkspace>> GetAsync(string fullPath) {
+        if (!File.Exists(fullPath)) {
+            return ApplicationWorkspaceException.DoesNotExist();
+        }
+
+
+        try {
+            byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
+            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
+            
+            if(applicationWorkspace is null) {
+                return ApplicationWorkspaceException.CannotGet("data is corrupted");
+            }   
+            
+            return applicationWorkspace;
+        }
+        catch(Exception ex) {
+            return ex;
+        }
+    }
+
+    public async Task<Result<TApplicationWorkspace>> OpenAsync(string fullPath, Account.Account executingAccount) {
         if (!File.Exists(fullPath)) {
             return ApplicationWorkspaceException.DoesNotExist();
         }
 
         try {
-            string workspaceKeyPath = Path.Combine(
-                GlobalEnvironment.ApplicationDataBasePath,
-                Application,
-                "workspaces",
-                Path.GetFileNameWithoutExtension(fullPath),
-                executingAccount.AccountId
-            );
-
-            if (!File.Exists(workspaceKeyPath)) {
-                return ApplicationWorkspaceException.CannotOpen("data is corrupted");
-            }
-
-            byte[] encryptedWorkspaceKey = await UnifiedFile.ReadAllBytesAsync(workspaceKeyPath);
-
-            Result<RsaKey> privateKeyResult = await executingAccount.GetPrivateKeyAsync();
-            RsaKey privateKey = privateKeyResult.GetValueOrThrow();
-
-            byte[] workspaceKey = new RsaCryptographer().Decrypt(encryptedWorkspaceKey, privateKey);
-
-            AesKey? workspaceAesKey = JsonSerializer.Deserialize<AesKey>(workspaceKey);
-            if (workspaceAesKey is null) {
-                return ApplicationWorkspaceException.CannotOpen("data is corrupted");
-            }
-
             byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
 
-            ApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<ApplicationWorkspace>(workspace);
+            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
             if (applicationWorkspace is null) {
                 return ApplicationWorkspaceException.CannotOpen("data is corrupted");
             }
@@ -167,6 +292,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
                 return ApplicationWorkspaceException.AccessDenied(fullPath);
             }
 
+            CurrentWorkspace = applicationWorkspace;
             return applicationWorkspace;
         }
         catch (Exception ex) {
@@ -174,13 +300,139 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         }
     }
 
-    public Task<Result> ShareAccess(ApplicationWorkspace workspace, params AccountInfo[] accounts) {
-        throw new NotImplementedException();
+    public async Task<Result<TApplicationWorkspace>> CreateAndOpenAsync(string fullPath, Account.Account executingAccount) {
+        if (File.Exists(fullPath)) {
+            return new InvalidOperationException("Workspace already exists.");
+        }
+
+        AccountInfo? accountInfo = accountStorage.GetAccount(executingAccount.AccountId);
+
+        if (accountInfo is null) {
+            return new InvalidOperationException($"Cannot create workspace, account information corrupted");
+        }
+
+        TApplicationWorkspace workspace = new TApplicationWorkspace {
+            Owner = accountInfo,
+            FullPath = fullPath,
+            UsesEncryption = false
+        };
+
+
+        await workspace.OpenAsync(executingAccount);
+
+        CurrentWorkspace = workspace;
+
+        string serializedWorkspace = JsonSerializer.Serialize(workspace);
+
+        await UnifiedFile.WriteAllTextAsync(fullPath, serializedWorkspace);
+        return workspace;
     }
 
-    public Task<Result> RevokeAccess(ApplicationWorkspace workspace, params AccountInfo[] accounts) {
-        throw new NotImplementedException();
+    public async Task<Result<TApplicationWorkspace>> CreateAndOpenEncryptedAsync(string fullPath, Account.Account executingAccount) {
+        try {
+            AccountInfo? accountInfo = await accountStorage.GetAccountAsync(executingAccount.AccountId);
+            if (accountInfo is null) {
+                return ApplicationWorkspaceException.CannotOpen("account information is corrupted");
+            }
+
+            Result<RsaKey> accountPrivateKeyResult = await executingAccount.GetPrivateKeyAsync();
+            RsaKey accountPrivateKey = accountPrivateKeyResult.GetValueOrThrow();
+
+            AesKey aesKey = KeyGenerator.GenerateAesKey();
+            string workspaceKeyPath = Path.Combine(
+                GlobalEnvironment.ApplicationDataBasePath,
+                Application,
+                "workspaces",
+                Path.GetFileNameWithoutExtension(fullPath),
+                executingAccount.AccountId
+            );
+
+            byte[] workspaceKey = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(aesKey));
+            byte[] encryptedWorkspaceKey = new RsaCryptographer().Encrypt(workspaceKey, accountPrivateKey);
+
+            await UnifiedFile.WriteAllBytesAsync(workspaceKeyPath, encryptedWorkspaceKey);
+
+            TApplicationWorkspace workspace = new TApplicationWorkspace {
+                Owner = accountInfo,
+                FullPath = fullPath,
+                UsesEncryption = true
+            };
+
+            await workspace.OpenAsync(executingAccount);
+            byte[] serializedWorkspace = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(workspace));
+
+            await UnifiedFile.WriteAllBytesAsync(fullPath, serializedWorkspace);
+            return workspace;
+        }
+        catch (Exception ex) {
+            return ex;
+        }
     }
 
+    public async Task<Result> ShareAccess(TApplicationWorkspace workspace, params AccountInfo[] accounts) {
+        if (!workspace.IsOpen) {
+            return ApplicationWorkspaceException.NotOpened(workspace.Name);
+        }
 
+        if (workspace.OpenedBy!.AccountId != workspace.Owner.AccountId) {
+            return new ApplicationWorkspaceException("Not authorized to share access");
+        }
+
+        AccountInfo[] distinctNewAccounts = accounts.Where(e =>
+            workspace.Owner.AccountId != e.AccountId &&
+            workspace.SharedAccess.All(f => f.AccountId != e.AccountId)
+        ).ToArray();
+
+        workspace.SharedAccess = [.. workspace.SharedAccess.Concat(distinctNewAccounts)];
+
+        if (!workspace.UsesEncryption) {
+            return Result.Ok();
+        }
+
+        foreach (AccountInfo account in distinctNewAccounts) {
+            // TODO: Share new access request with user
+            // -> Create notification logic
+            // --> Notify other when logged in about 
+            // --> On accept generate new workspace key
+        }
+
+        return Result.Ok();
+    }
+
+    public async Task<Result> RevokeAccess(TApplicationWorkspace workspace, params AccountInfo[] accounts) {
+        if (!workspace.IsOpen) {
+            return ApplicationWorkspaceException.NotOpened(workspace.Name);
+        }
+
+        if (workspace.OpenedBy!.AccountId != workspace.Owner.AccountId) {
+            return new ApplicationWorkspaceException("Not authorized to share access");
+        }
+
+        AccountInfo[] distinctRevokableAccounts = accounts.Where(e =>
+            workspace.Owner.AccountId != e.AccountId &&
+            workspace.SharedAccess.All(f => f.AccountId != e.AccountId)
+        ).ToArray();
+
+        workspace.SharedAccess = [.. workspace.SharedAccess.Except(distinctRevokableAccounts)];
+
+        if (!workspace.UsesEncryption) {
+            return Result.Ok();
+        }
+
+        foreach (AccountInfo accountInfo in distinctRevokableAccounts) {
+            string workspaceKeyPath = Path.Combine(
+                GlobalEnvironment.ApplicationDataBasePath,
+                Application,
+                "workspaces",
+                workspace.Name,
+                accountInfo.AccountId
+            );
+
+            if (File.Exists(workspaceKeyPath)) {
+                File.Delete(workspaceKeyPath);
+            }
+        }
+
+        return Result.Ok();
+    }
 }

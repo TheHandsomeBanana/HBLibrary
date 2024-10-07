@@ -16,8 +16,13 @@ public interface IApplicationStorage {
     public void SaveStorageEntries(Guid containerId);
     public void SaveAll();
 
+
     public IStorageEntryContainer GetContainer(Guid containerId);
+    public IStorageEntryContainer GetContainer(Type containerType);
     public void CreateContainer(Guid containerId, Func<IStorageEntryContainerBuilder, IStorageEntryContainer> builder);
     public bool RemoveContainer(Guid containerId);
     public void RemoveAllContainers();
+
+    public Task SaveStorageEntriesAsync(Guid containerId);
+    public Task SaveAllAsync();
 }

@@ -24,25 +24,38 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             return null;
         }
     }
+    
+    public async Task<object?> GetAsync(Type type) {
+        try {
+            if (Value is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return null;
+                }
 
-    public void Save(Type type) {
+                Value = await xmlService.ReadXmlAsync(type, file!);
+            }
+
+            return Value;
+        }
+        catch {
+            return null;
+        }
+    }
+
+    public void Save() {
         if (Value is null) {
             throw new InvalidOperationException(nameof(Value));
         }
 
-        if (Value.GetType() != type) {
-            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
-        }
-
-        xmlService.WriteXml(type, FileSnapshot.Create(Filename, true), Value);
+        xmlService.WriteXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
     }
-
-    public void Save() {
-        if (CurrentEntryType is null) {
-            throw new InvalidOperationException($"{nameof(Value)} is null.");
+    
+    public Task SaveAsync() {
+        if (Value is null) {
+            throw new InvalidOperationException(nameof(Value));
         }
 
-        Save(CurrentEntryType);
+        return xmlService.WriteXmlAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
     }
 
     public T? Get<T>() {
@@ -53,6 +66,23 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                 }
 
                 Value = xmlService.ReadXml<T>(file!);
+            }
+
+            return (T?)Value;
+        }
+        catch {
+            return default;
+        }
+    }
+    
+    public async Task<T?> GetAsync<T>() {
+        try {
+            if (Value is null) {
+                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                    return default;
+                }
+
+                Value = await xmlService.ReadXmlAsync<T>(file!);
             }
 
             return (T?)Value;
@@ -72,6 +102,18 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
         }
 
         xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
+    }
+    
+    public Task SaveAsync<T>() {
+        if (Value is null) {
+            throw new InvalidOperationException(nameof(Value));
+        }
+
+        if (Value is not T tValue) {
+            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+        }
+
+        return xmlService.WriteXmlAsync(FileSnapshot.Create(Filename, true), tValue);
     }
 
     protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {

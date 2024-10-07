@@ -9,12 +9,16 @@ public interface IStorageEntry {
 
     public object? Get(Type type);
     public void Set(object value);
-    public void Save(Type type);
     public void Save();
 
     public T? Get<T>();
     public void Set<T>(T value);
     public void Save<T>();
+
+    public Task<object?> GetAsync(Type type);
+    public Task SaveAsync();
+    public Task<T?> GetAsync<T>();
+    public Task SaveAsync<T>();
 }
 
 public enum StorageEntryContentType {

@@ -6,6 +6,7 @@ using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Identity.Client;
 using System.Net.Http;
+using System.Security;
 
 
 
@@ -14,18 +15,18 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
     private readonly IPublicClientApplication app;
     private readonly MSParameterStorage parameterStorage;
 
-    public PublicMSAuthenticationService(CommonAppSettings appSettings, AzureAdOptions azureAdOptions) {
+    public PublicMSAuthenticationService(AzureAdOptions azureAdOptions) {
         app = PublicClientApplicationBuilder.Create(azureAdOptions.ClientId)
             .WithAuthority(AzureCloudInstance.AzurePublic, AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
             .WithRedirectUri(azureAdOptions.RedirectUri)
             .Build();
 
-        parameterStorage = new MSParameterStorage(appSettings.ApplicationName!);
+        parameterStorage = new MSParameterStorage();
     }
 
-    public PublicMSAuthenticationService(IPublicClientApplication app, CommonAppSettings appSettings) {
+    public PublicMSAuthenticationService(IPublicClientApplication app) {
         this.app = app;
-        parameterStorage = new MSParameterStorage(appSettings.ApplicationName!);
+        parameterStorage = new MSParameterStorage();
     }
 
 
@@ -79,7 +80,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                     result = await interactiveBuilder.ExecuteAsync(cancellationToken);
 
                     await RegisterStorageIdentity(result, cancellationToken);
-                    (email, displayName) = await GetUserDetailsAsync(result.AccessToken);
+                    (_, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     break;
 
                 case MSAuthCredentials.CredentialType.UsernamePassword:
@@ -90,7 +91,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                     result = await usernamePasswordBuilder.ExecuteAsync(cancellationToken);
 
                     await RegisterStorageIdentity(result, cancellationToken);
-                    (email, displayName) = await GetUserDetailsAsync(result.AccessToken);
+                    (_, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     break;
                 default:
                     throw new NotSupportedException(authCredentials.Type.ToString());
@@ -100,22 +101,8 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
             throw AuthenticationException.AuthenticationFailed(ex);
         }
 
-        string identifier = result.Account.HomeAccountId.Identifier;
         AccountKeyManager accountKeyManager = new AccountKeyManager();
-        Result<RsaKey> publicKeyResult;
-
-        // Check if the microsoft identity is registered locally
-        if (!(await parameterStorage.IdentityExistsAsync(result.Account.Username, cancellationToken))) {
-
-            // TODO: Create secure way to get salt
-            // Idea -> Pass salt from outside i.e. application
-            byte[] salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
-            Result<RsaKeyPair> keyPair = await accountKeyManager.CreateAccountKeysAsync(identifier, salt);
-            publicKeyResult = keyPair.Map(e => e.PublicKey);
-        }
-        else {
-            publicKeyResult = await accountKeyManager.GetPublicKeyAsync(identifier);
-        }
+        Result<RsaKey> publicKeyResult = await accountKeyManager.GetPublicKeyAsync(result.Account.HomeAccountId.Identifier);
 
         RsaKey publicKey = publicKeyResult.GetValueOrThrow();
 
@@ -151,7 +138,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         await parameterStorage.UnregisterIdentityAsync(account.Username, cancellationToken);
     }
 
-    private async Task<(string, string)> GetUserDetailsAsync(string accessToken) {
+    private async Task<(string, string, string)> GetUserDetailsAsync(string accessToken) {
         using (HttpClient httpClient = new HttpClient()) {
             httpClient.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
@@ -161,12 +148,22 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
             User? me = await graphServiceClient.Me.GetAsync();
             string email = me?.Mail ?? me?.UserPrincipalName ?? string.Empty;
             string displayName = me?.DisplayName ?? string.Empty;
-            return (email, displayName);
+            string id = me?.Id ?? string.Empty;
+
+            return (id, email, displayName);
         }
     }
 
     private async Task<MicrosoftIdentity> RegisterStorageIdentity(AuthenticationResult result, CancellationToken cancellationToken = default) {
-        (string email, string displayName) = await GetUserDetailsAsync(result.AccessToken);
+        (string id, string email, string displayName) = await GetUserDetailsAsync(result.AccessToken);
+
+        byte[] salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
+        string temp = $"{result.TenantId}.{result.Account.HomeAccountId.Identifier}";
+        SecureString password = KeyDerivation.DeriveNewSecureString(temp, salt);
+
+        AccountKeyManager accountKeyManager = new AccountKeyManager();
+        // Try to create keys, they might already exist -> swallow exception
+        await accountKeyManager.CreateAccountKeysAsync(id, password, salt);
 
 
         return await parameterStorage.RegisterIdentityAsync(result.Account.Username,

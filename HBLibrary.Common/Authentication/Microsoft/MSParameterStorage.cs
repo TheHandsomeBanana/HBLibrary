@@ -4,8 +4,8 @@ using System.Threading;
 namespace HBLibrary.Common.Authentication.Microsoft;
 public class MSParameterStorage {
     private readonly string appMSParameterPath;
-    public MSParameterStorage(string appName) {
-        this.appMSParameterPath = Path.Combine(GlobalEnvironment.IdentityPath, appName + ".msparams");
+    public MSParameterStorage() {
+        this.appMSParameterPath = Path.Combine(GlobalEnvironment.IdentityPath, "msaccountidentity");
         if (!File.Exists(appMSParameterPath)) {
             File.Create(appMSParameterPath).Dispose();
         }
@@ -75,15 +75,7 @@ public class MSParameterStorage {
         string json = JsonSerializer.Serialize(identityList);
         string base64Json = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(json));
 
-#if NET5_0_OR_GREATER
-        return File.WriteAllTextAsync(appMSParameterPath, base64Json, cancellationToken);
-#elif NET472_OR_GREATER
-        using (FileStream fs = new FileStream(appMSParameterPath, FileMode.Open, FileAccess.Read)) {
-            using (StreamWriter sw = new StreamWriter(fs)) {
-                return sw.WriteAsync(base64Json);
-            }
-        }
-#endif
+        return UnifiedFile.WriteAllTextAsync(appMSParameterPath, base64Json, cancellationToken);
     }
 
     private List<MicrosoftIdentity> LoadIdentities() {
@@ -97,16 +89,7 @@ public class MSParameterStorage {
     }
 
     private async Task<List<MicrosoftIdentity>> LoadIdentitiesAsync(CancellationToken cancellationToken = default) {
-        string base64Json;
-#if NET5_0_OR_GREATER
-        base64Json = await File.ReadAllTextAsync(appMSParameterPath, cancellationToken);
-#elif NET472_OR_GREATER
-        using (FileStream fs = new FileStream(appMSParameterPath, FileMode.Open, FileAccess.Read)) {
-            using (StreamReader sr = new StreamReader(fs)) {
-                base64Json = await sr.ReadToEndAsync();
-            }
-        }
-#endif
+        string base64Json = await UnifiedFile.ReadAllTextAsync(appMSParameterPath, cancellationToken);
 
         string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
         if (string.IsNullOrWhiteSpace(json)) {

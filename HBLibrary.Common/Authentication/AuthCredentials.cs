@@ -43,8 +43,8 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         UsernamePassword
     }
 
-    public static async Task<MSAuthCredentials?> CreateFromParameterStorageAsync(string appName, string username, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
-        MSParameterStorage storage = new MSParameterStorage(appName);
+    public static async Task<MSAuthCredentials?> CreateFromParameterStorageAsync(string username, Action<AcquireTokenSilentParameterBuilder>? builder = null) {
+        MSParameterStorage storage = new MSParameterStorage();
         MicrosoftIdentity? identity = await storage.GetIdentityAsync(username);
 
         if (identity is null) {
@@ -63,10 +63,10 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         return credentials;
     }
 
-    public static MSAuthCredentials? CreateFromParameterStorage(string appName, string username,
+    public static MSAuthCredentials? CreateFromParameterStorage(string username,
         Action<AcquireTokenSilentParameterBuilder>? builder = null, Action<AcquireTokenInteractiveParameterBuilder>? fallbackBuilder = null) {
 
-        MSParameterStorage storage = new MSParameterStorage(appName);
+        MSParameterStorage storage = new MSParameterStorage();
         MicrosoftIdentity? identity = storage.GetIdentity(username);
 
         if (identity is null) {

@@ -124,6 +124,14 @@ public class StorageEntryContainer : IStorageEntryContainer {
         config.Save();
     }
 
+    public async Task SaveAsync() {
+        foreach(IStorageEntry entry in entries.Values) {
+            await entry.SaveAsync();
+        }
+
+        await config.SaveAsync();
+    }
+
     private IStorageEntry Create(string filename, ContainerEntry containerEntry) {
         switch (containerEntry.ContentType) {
             case StorageEntryContentType.Json:

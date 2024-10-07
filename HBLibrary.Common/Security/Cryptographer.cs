@@ -1,14 +1,15 @@
-﻿using HBLibrary.Services.Security.Cryptography.Aes;
-using HBLibrary.Services.Security.Cryptography.Keys;
-using HBLibrary.Services.Security.Cryptography.Rsa;
-using HBLibrary.Services.Security.Cryptography.Settings;
-using HBLibrary.Services.Security.DataProtection;
-using HBLibrary.Services.Security.Exceptions;
+﻿
+using HBLibrary.Common.Security;
+using HBLibrary.Common.Security.Aes;
+using HBLibrary.Common.Security.Exceptions;
+using HBLibrary.Common.Security.Keys;
+using HBLibrary.Common.Security.Rsa;
+using HBLibrary.Common.Security.Settings;
+using System.Security.Cryptography;
 using System.Text;
 
-namespace HBLibrary.Services.Security.Cryptography;
+namespace HBLibrary.Common.Security;
 public class Cryptographer : ICryptographer {
-    private readonly static DataProtectionService dpService = new DataProtectionService();
     private readonly static AesCryptographer aesCryptographer = new AesCryptographer();
     private readonly static RsaCryptographer rsaCryptographer = new RsaCryptographer();
 
@@ -20,19 +21,13 @@ public class Cryptographer : ICryptographer {
                 if (settings.Key.Name != nameof(DPEntropy))
                     CryptographerException.ThrowIncorrectKey(settings.Key.Name);
 
-#pragma warning disable CA1416 // Validate platform compatibility
-                dpService.SetScope(System.Security.Cryptography.DataProtectionScope.CurrentUser);
-                dpService.SetEntropy(settings.Key.Key);
-                return dpService.Unprotect(data);
+                return ProtectedData.Unprotect(data, settings.Key.Key, DataProtectionScope.CurrentUser);
 
             case CryptographyMode.DPApiMachine:
                 if (settings.Key.Name != nameof(DPEntropy))
                     CryptographerException.ThrowIncorrectKey(settings.Key.Name);
 
-                dpService.SetScope(System.Security.Cryptography.DataProtectionScope.LocalMachine);
-#pragma warning restore CA1416 // Validate platform compatibility
-                dpService.SetEntropy(settings.Key.Key);
-                return dpService.Unprotect(data);
+                return ProtectedData.Unprotect(data, settings.Key.Key, DataProtectionScope.LocalMachine);
 #endif
             case CryptographyMode.AES:
                 if (settings.Key.Name != nameof(AesKey))
@@ -62,19 +57,13 @@ public class Cryptographer : ICryptographer {
                 if (settings.Key.Name != nameof(DPEntropy))
                     CryptographerException.ThrowIncorrectKey(settings.Key.Name);
 
-#pragma warning disable CA1416 // Validate platform compatibility
-                dpService.SetScope(System.Security.Cryptography.DataProtectionScope.CurrentUser);
-                dpService.SetEntropy(settings.Key.Key);
-                return dpService.Protect(data);
+                return ProtectedData.Protect(data, settings.Key.Key, DataProtectionScope.CurrentUser);
 
             case CryptographyMode.DPApiMachine:
                 if (settings.Key.Name != nameof(DPEntropy))
                     CryptographerException.ThrowIncorrectKey(settings.Key.Name);
 
-                dpService.SetScope(System.Security.Cryptography.DataProtectionScope.LocalMachine);
-#pragma warning restore CA1416 // Validate platform compatibility
-                dpService.SetEntropy(settings.Key.Key);
-                return dpService.Protect(data);
+                return ProtectedData.Protect(data, settings.Key.Key, DataProtectionScope.LocalMachine);
 #endif
             case CryptographyMode.AES:
                 if (settings.Key.Name != nameof(AesKey))

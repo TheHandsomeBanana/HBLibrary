@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Common.Authentication;
 using HBLibrary.Common.Security;
 using System.Runtime.Versioning;
+using System.Security;
 
 namespace HBLibrary.Common.Account;
 
@@ -28,16 +29,25 @@ public class AccountService : IAccountService {
         switch (credentials) {
             case LocalAuthCredentials localCredentials:
                 LocalAuthResult localResult = await localAuthService.AuthenticateAsync(localCredentials, cancellationToken);
+
+                SecureString supportKey = KeyDerivation.DeriveNewSecureString(localCredentials.Password, GlobalEnvironment.Encoding.GetBytes(localResult.Salt));
+                
                 Account = new LocalAccount {
                     Salt = localResult.Salt,
                     Application = application,
                     Username = localResult.Username,
-                    PublicKey = localResult.PublicKey!
+                    PublicKey = localResult.PublicKey!,
+                    SupportKey = supportKey
                 };
 
                 break;
             case MSAuthCredentials msCredentials:
                 MSAuthResult msResult = await msAuthService.AuthenticateAsync(msCredentials, cancellationToken);
+
+                string saltString = $"{msResult.Result!.Account.Username}.{msResult.Email}";
+                byte[] salt = GlobalEnvironment.Encoding.GetBytes(saltString);
+                string temp = $"{msResult.Result!.TenantId}.{msResult.Result.Account.HomeAccountId.Identifier}";
+                supportKey = KeyDerivation.DeriveNewSecureString(temp, salt);
 
                 Account = new MicrosoftAccount {
                     Application = application,
@@ -49,7 +59,8 @@ public class AccountService : IAccountService {
                     DisplayName = msResult.DisplayName,
                     Email = msResult.Email,
                     PublicKey = msResult.PublicKey,
-                    Salt = msResult.Result!.Account.HomeAccountId.Identifier
+                    Salt = saltString,
+                    SupportKey = supportKey
                 };
                 break;
             default:
@@ -70,24 +81,31 @@ public class AccountService : IAccountService {
         switch (credentials) {
             case LocalAuthCredentials localCredentials:
                 LocalAuthResult localResult = await localAuthService.AuthenticateNewAsync(localCredentials, cancellationToken);
+                SecureString supportKey = KeyDerivation.DeriveNewSecureString(localCredentials.Password, GlobalEnvironment.Encoding.GetBytes(localResult.Salt));
+
+
                 Account = new LocalAccount {
                     Salt = localResult.Salt,
                     Application = application,
                     Username = localResult.Username,
                     PublicKey = localResult.PublicKey,
+                    SupportKey = supportKey
                 };
 
                 break;
             case MSAuthCredentials msCredentials:
                 MSAuthResult msResult = await msAuthService.AuthenticateAsync(msCredentials, cancellationToken);
 
-                // TODO: Create secure way to get salt
-                // Idea -> Pass salt from outside i.e. application
-                string salt = $"{msResult.Result!.Account.Username}.{msResult.Email}";
+                string saltString = $"{msResult.Result!.Account.Username}.{msResult.Email}";
+                byte[] salt = GlobalEnvironment.Encoding.GetBytes(saltString);
+                string temp = $"{msResult.Result!.TenantId}.{msResult.Result.Account.HomeAccountId.Identifier}";
+                supportKey = KeyDerivation.DeriveNewSecureString(temp, salt);
+
 
                 Account = new MicrosoftAccount {
                     Application = application,
                     PublicKey = msResult.PublicKey,
+                    SupportKey = supportKey,
                     AccessToken = msResult.Result!.AccessToken,
                     Identifier = msResult.Result!.Account.HomeAccountId.Identifier,
                     TenantId = msResult.Result!.TenantId,
@@ -95,7 +113,7 @@ public class AccountService : IAccountService {
                     Username = msResult.Result!.Account.Username,
                     DisplayName = msResult.DisplayName,
                     Email = msResult.Email,
-                    Salt = salt
+                    Salt = saltString
                 };
                 break;
             default:

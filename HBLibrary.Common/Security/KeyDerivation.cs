@@ -20,4 +20,40 @@ public static class KeyDerivation {
         rng.GetBytes(salt);
         return salt;
     }
+
+    public static SecureString DeriveNewSecureString(SecureString password, byte[] salt) {
+        string plainPassword = SStringConverter.SecureStringToString(password)!;
+
+        using (Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, 10000, HashAlgorithmName.SHA256)) {
+            byte[] keyBytes = rfc2898DeriveBytes.GetBytes(32);
+
+            SecureString derivedSecureString = new SecureString();
+            foreach (char c in Convert.ToBase64String(keyBytes)) {
+                derivedSecureString.AppendChar(c);
+            }
+
+            derivedSecureString.MakeReadOnly();
+
+            plainPassword = null;
+
+            return derivedSecureString;
+        }
+    }
+    
+    public static SecureString DeriveNewSecureString(string plainPassword, byte[] salt) {
+        using (Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, 10000, HashAlgorithmName.SHA256)) {
+            byte[] keyBytes = rfc2898DeriveBytes.GetBytes(32);
+
+            SecureString derivedSecureString = new SecureString();
+            foreach (char c in Convert.ToBase64String(keyBytes)) {
+                derivedSecureString.AppendChar(c);
+            }
+
+            derivedSecureString.MakeReadOnly();
+
+            plainPassword = null;
+
+            return derivedSecureString;
+        }
+    }
 }

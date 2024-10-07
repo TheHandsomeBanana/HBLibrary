@@ -33,6 +33,11 @@ public class StorageContainerConfig {
         jsonFileService.WriteJson(FileSnapshot.Create(filename, true), this, new JsonSerializerOptions { WriteIndented = true });
     }
 
+    public Task SaveAsync() {
+        JsonFileService jsonFileService = new JsonFileService();
+        return jsonFileService.WriteJsonAsync(FileSnapshot.Create(filename, true), this, new JsonSerializerOptions { WriteIndented = true });
+    }
+
     public static StorageContainerConfig CreateNew(string basePath) {
         StorageContainerConfig config = new StorageContainerConfig(basePath);
         config.Save();

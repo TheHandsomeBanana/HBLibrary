@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.Logging.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Code.Analysis", "HBLibrary.Code.Analysis\HBLibrary.Code.Analysis.csproj", "{483E3A64-5401-4931-B1DA-25889A0D1E25}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.Security", "HBLibrary.Services.Security\HBLibrary.Services.Security.csproj", "{5019D774-3C23-46B1-AF0F-DAA721E81B16}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Wpf", "HBLibrary.Wpf\HBLibrary.Wpf.csproj", "{A78B5289-B34F-4D6D-8630-A87976375A5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.VisualStudio", "HBLibrary.VisualStudio\HBLibrary.VisualStudio.csproj", "{BF76BDB8-F08F-4884-B863-15A84A2645ED}"
@@ -37,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Wpf.Tests", "HBLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.IO.Messaging", "HBLibrary.Services.IO.Messaging\HBLibrary.Services.IO.Messaging.csproj", "{DFBF1785-EC3F-448D-8C63-F312070E9A4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Services.Logging.EFCoreTarget", "HBLibrary.Services.Logging.EFCoreTarget\HBLibrary.Services.Logging.EFCoreTarget.csproj", "{553E44F4-CB64-4F3F-99E2-E8820290F275}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Services.Logging.EFCoreTarget", "HBLibrary.Services.Logging.EFCoreTarget\HBLibrary.Services.Logging.EFCoreTarget.csproj", "{553E44F4-CB64-4F3F-99E2-E8820290F275}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,10 +67,6 @@ Global
 		{483E3A64-5401-4931-B1DA-25889A0D1E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{483E3A64-5401-4931-B1DA-25889A0D1E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{483E3A64-5401-4931-B1DA-25889A0D1E25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5019D774-3C23-46B1-AF0F-DAA721E81B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5019D774-3C23-46B1-AF0F-DAA721E81B16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5019D774-3C23-46B1-AF0F-DAA721E81B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5019D774-3C23-46B1-AF0F-DAA721E81B16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A78B5289-B34F-4D6D-8630-A87976375A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A78B5289-B34F-4D6D-8630-A87976375A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A78B5289-B34F-4D6D-8630-A87976375A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU

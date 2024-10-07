@@ -438,7 +438,8 @@
                             <StackPanel Orientation="Vertical"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center">
-                                <Path Height="{TemplateBinding IconHeight}"
+                                <Path x:Name="Path"
+                                      Height="{TemplateBinding IconHeight}"
                                       Width="{TemplateBinding IconWidth}"
                                       Stretch="{TemplateBinding IconStretch}"
                                       Fill="{TemplateBinding IconFill}"
@@ -446,7 +447,8 @@
                                       Stroke="{TemplateBinding IconStroke}"
                                       StrokeThickness="{TemplateBinding IconStrokeThickness}"
                                       Margin="0 0 0 5" />
-                                <TextBlock Text="{TemplateBinding Text}"
+                                <TextBlock x:Name="Text"
+                                           Text="{TemplateBinding Text}"
                                            Foreground="{TemplateBinding Foreground}"></TextBlock>
                             </StackPanel>
                         </Grid>
@@ -470,6 +472,21 @@
                             <Setter TargetName="Border"
                                     Property="BorderBrush"
                                     Value="{StaticResource VSAccentViolet}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+
+                            <Setter Property="Background"
+                                    Value="Transparent" />
+
+                            <Setter TargetName="Path"
+                                    Property="Fill"
+                                    Value="LightGray" />
+
+                            <Setter TargetName="Text"
+                                    Property="Foreground"
+                                    Value="LightGray" />
+
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -648,23 +665,23 @@
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
-                            
+
                             <Setter Property="Background"
                                     Value="{StaticResource HBDark_IconButton_Disabled_Background}" />
-                            
+
                             <Setter Property="BorderBrush"
                                     Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}" />
-                            
+
                             <Setter Property="Foreground"
                                     Value="{StaticResource HBDark_IconButton_Disabled_Foreground}" />
                             <Setter TargetName="iconPath"
                                     Property="Fill"
                                     Value="{StaticResource HBDark_IconButton_Disabled_Foreground}" />
-                            
+
                             <Setter TargetName="iconPath"
                                     Property="Stroke"
                                     Value="{StaticResource HBDark_IconButton_Disabled_BorderBrush}" />
-                
+
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -672,6 +689,6 @@
         </Setter>
     </Style>
 
-   
+
 
 </ResourceDictionary>

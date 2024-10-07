@@ -189,7 +189,7 @@ public readonly struct Result<TValue, TError> : IEquatable<Result<TValue, TError
     }
 }
 
-[DebuggerDisplay("State = {resultState}, Value = {value}, Error = {error}")]
+[DebuggerDisplay("State = {resultState}, Value = {Value}, Error = {Error}")]
 public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<TValue> {
     private readonly ResultState resultState;
     public TValue? Value { get; }
@@ -363,7 +363,7 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
     }
 }
 
-[DebuggerDisplay("State = {ResultState}")]
+[DebuggerDisplay("State = {resultState}")]
 public readonly struct Result : IEquatable<Result> {
     private readonly ResultState resultState;
     public bool IsSuccess => resultState == ResultState.Success;

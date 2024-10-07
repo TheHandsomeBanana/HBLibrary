@@ -1,7 +1,7 @@
-﻿using HBLibrary.Services.Security.Cryptography.Settings;
+﻿using HBLibrary.Common.Security.Settings;
 using System.Text;
 
-namespace HBLibrary.Services.Security.Cryptography;
+namespace HBLibrary.Common.Security;
 public interface ICryptographer {
     byte[] Encrypt(byte[] data, CryptographySettings settings);
     byte[] Decrypt(byte[] data, CryptographySettings settings);

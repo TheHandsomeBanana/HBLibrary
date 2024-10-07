@@ -1,4 +1,6 @@
-﻿using Microsoft.Graph.Models;
+﻿using HBLibrary.Common.Security;
+using HBLibrary.Common.Security.Keys;
+using Microsoft.Graph.Models;
 using Unity;
 
 namespace HBLibrary.Common.Account;
@@ -9,7 +11,6 @@ public class AccountInfo : IEquatable<AccountInfo> {
     public DateTime CreatedOn { get; set; }
     public DateTime ModifiedOn { get; set; }
     public List<AccountApplicationInfo> Applications { get; set; } = [];
-    
 
     public bool Equals(AccountInfo? other) {
         return other is not null && AccountId == other.AccountId;

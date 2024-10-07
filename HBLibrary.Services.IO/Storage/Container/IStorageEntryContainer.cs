@@ -24,4 +24,6 @@ public interface IStorageEntryContainer {
     public void Delete(string filename);
 
     public void Save();
+
+    public Task SaveAsync();
 }

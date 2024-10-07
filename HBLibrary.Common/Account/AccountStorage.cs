@@ -24,17 +24,7 @@ public class AccountStorage : IAccountStorage {
     }
 
     public async Task<List<AccountInfo>> LoadAccountsAsync(CancellationToken cancellationToken = default) {
-        string base64Json;
-#if NET5_0_OR_GREATER
-        base64Json = await File.ReadAllTextAsync(accountStoragePath, cancellationToken);
-#elif NET472_OR_GREATER
-        using (FileStream fs = new FileStream(accountStoragePath, FileMode.Open, FileAccess.Read)) {
-            using (StreamReader sr = new StreamReader(fs)) {
-                base64Json = await sr.ReadToEndAsync();
-            }
-        }
-#endif
-
+        string base64Json = await UnifiedFile.ReadAllTextAsync(accountStoragePath, cancellationToken);
         string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
 
         if (string.IsNullOrWhiteSpace(json)) {
@@ -211,14 +201,6 @@ public class AccountStorage : IAccountStorage {
         string json = JsonSerializer.Serialize(accounts);
         string base64Json = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(json));
 
-#if NET5_0_OR_GREATER
-        return File.WriteAllTextAsync(accountStoragePath, base64Json, cancellationToken);
-#elif NET472_OR_GREATER
-        using (FileStream fs = new FileStream(accountStoragePath, FileMode.Open, FileAccess.Read)) {
-            using (StreamWriter sw = new StreamWriter(fs)) {
-                return sw.WriteAsync(base64Json);
-            }
-        }
-#endif
+        return UnifiedFile.WriteAllTextAsync(accountStoragePath, base64Json, cancellationToken);
     }
 }

@@ -2,6 +2,7 @@
 using HBLibrary.Common.Security.Keys;
 using Microsoft.Identity.Client;
 using System.Runtime.Versioning;
+using System.Security;
 
 namespace HBLibrary.Common.Account;
 public abstract class Account {
@@ -10,6 +11,7 @@ public abstract class Account {
     public required string Username { get; set; }
     public required RsaKey PublicKey { get; set; }
     public required string Salt { get; set; }
+    public required SecureString SupportKey { get; set; }
 
     public abstract string AccountId { get; }
 
@@ -28,7 +30,7 @@ public abstract class Account {
 
     public async Task<Result<RsaKey>> GetPrivateKeyAsync() {
         AccountKeyManager accountKeyManager = new AccountKeyManager();
-        Result<RsaKey> keyResult = await accountKeyManager.GetPrivateKeyAsync(AccountId, GlobalEnvironment.Encoding.GetBytes(Salt));
+        Result<RsaKey> keyResult = await accountKeyManager.GetPrivateKeyAsync(AccountId, SupportKey, GlobalEnvironment.Encoding.GetBytes(Salt));
         return keyResult;
     }
 }

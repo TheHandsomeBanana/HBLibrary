@@ -1,6 +1,6 @@
 ﻿using HBLibrary.Common.Extensions;
-using HBLibrary.Services.Security.Cryptography;
-using HBLibrary.Services.Security.Cryptography.Settings;
+using HBLibrary.Common.Security;
+using HBLibrary.Common.Security.Settings;
 using System.Text;
 
 namespace HBLibrary.Services.IO;

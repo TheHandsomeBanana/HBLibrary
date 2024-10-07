@@ -18,6 +18,13 @@ public static class KeyGenerator {
         return new AesKey(key, iv);
     }
 
+    public static AesKey GenerateAesKey(System.Security.SecureString password, byte[] salt) {
+        byte[] key = KeyDerivation.DeriveKey(password, salt, 20000, 32);
+        byte[] iv = KeyDerivation.DeriveKey(password, salt, 10000, 16);
+
+        return new AesKey(key, iv);
+    }
+
 
     public static RsaKeyPair GenerateRsaKeys(int keySizeInBits = 2048) {
         RSA rsa = RSA.Create(keySizeInBits);

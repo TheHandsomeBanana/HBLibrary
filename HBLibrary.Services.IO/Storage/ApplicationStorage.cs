@@ -19,9 +19,9 @@ public class ApplicationStorage : IApplicationStorage {
 
         IStorageEntryContainer defaultContainer = new StorageEntryContainerBuilder(basePath)
             .ConfigureFileServices(fs => {
-                fs.UseFileService(() => new FileService())
-                .UseJsonFileService(() => new JsonFileService())
-                .UseXmlFileService(() => new XmlFileService());
+                fs.UseFileService()
+                .UseJsonFileService()
+                .UseXmlFileService();
             })
             .Build();
 
@@ -81,6 +81,10 @@ public class ApplicationStorage : IApplicationStorage {
     public IStorageEntryContainer GetContainer(Guid containerId) {
         return Containers[containerId];
     }
+    
+    public IStorageEntryContainer GetContainer(Type containerType) {
+        return Containers[containerType.GUID];
+    }
 
     public void SaveAll() {
         foreach (IStorageEntryContainer container in Containers.Values) {
@@ -103,5 +107,19 @@ public class ApplicationStorage : IApplicationStorage {
 
     public void RemoveAllContainers() {
         Containers.Clear();
+    }
+
+    public async Task SaveAllAsync() {
+        foreach (IStorageEntryContainer container in Containers.Values) {
+            await container.SaveAsync();
+        }
+    }
+
+    public Task SaveStorageEntriesAsync(Guid containerId) {
+        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
+            throw new InvalidOperationException($"Container with id {containerId} not found");
+        }
+
+        return container.SaveAsync();
     }
 }

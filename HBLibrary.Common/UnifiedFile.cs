@@ -8,29 +8,29 @@ using HBLibrary.Common.Extensions;
 namespace HBLibrary.Common;
 
 public static class UnifiedFile {
-    public static Task<byte[]> ReadAllBytesAsync(string fullPath) {
+    public static Task<byte[]> ReadAllBytesAsync(string fullPath, CancellationToken cancellationToken = default) {
 #if NET5_0_OR_GREATER
-        return File.ReadAllBytesAsync(fullPath);
+        return File.ReadAllBytesAsync(fullPath, cancellationToken);
 #elif NET472_OR_GREATER
         using(FileStream fs = new FileStream(fullPath, FileMode.Open, FileAccess.Read)) {
-            return fs.ReadAsync();    
+            return fs.ReadAsync(cancellationToken);    
         }
 #endif
     }
 
-    public static Task WriteAllBytesAsync(string fullPath, byte[] content) {
+    public static Task WriteAllBytesAsync(string fullPath, byte[] content, CancellationToken cancellationToken = default) {
 #if NET5_0_OR_GREATER
-        return File.WriteAllBytesAsync(fullPath, content);
+        return File.WriteAllBytesAsync(fullPath, content, cancellationToken);
 #elif NET472_OR_GREATER
         using(FileStream fs = new FileStream(fullPath, FileMode.Open, FileAccess.Read)) {
-            return fs.WriteAsync(content);    
+            return fs.WriteAsync(content, cancellationToken);    
         }
 #endif
     }
 
-    public static Task<string> ReadAllTextAsync(string fullPath) {
+    public static Task<string> ReadAllTextAsync(string fullPath, CancellationToken cancellationToken = default) {
 #if NET5_0_OR_GREATER
-        return File.ReadAllTextAsync(fullPath);
+        return File.ReadAllTextAsync(fullPath, cancellationToken);
 #elif NET472_OR_GREATER
         using(StreamReader sw = new StreamReader(fullPath)) {
             return sw.ReadToEndAsync();    
@@ -38,9 +38,9 @@ public static class UnifiedFile {
 #endif
     }
 
-    public static Task WriteAllTextAsync(string fullPath, string content) {
+    public static Task WriteAllTextAsync(string fullPath, string content, CancellationToken cancellationToken = default) {
 #if NET5_0_OR_GREATER
-        return File.WriteAllTextAsync(fullPath, content);
+        return File.WriteAllTextAsync(fullPath, content, cancellationToken);
 #elif NET472_OR_GREATER
         using(StreamWriter sw = new StreamWriter(fullPath)) {
             return sw.WriteAsync(content);    

@@ -33,14 +33,8 @@ public class AccountKeyManager {
         }
 
         try {
-            byte[] keyBuffer;
-#if NET5_0_OR_GREATER
-            keyBuffer = await File.ReadAllBytesAsync(keyfile);
-#elif NET472_OR_GREATER
-            using(FileStream fs = new FileStream(keyfile, FileMode.Open, FileAccess.Read)) {
-                keyBuffer = await fs.ReadAsync();
-            }
-#endif
+            byte[] keyBuffer = await UnifiedFile.ReadAllBytesAsync(keyfile);
+
             JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
             jsonOptions.Converters.Add(new RsaKeyConverter());
 
@@ -57,20 +51,13 @@ public class AccountKeyManager {
         }
     }
 
-    public async Task<Result<RsaKey>> GetPrivateKeyAsync(string identifier, byte[] salt) {
+    public async Task<Result<RsaKey>> GetPrivateKeyAsync(string identifier, SecureString password, byte[] salt) {
         string keyfile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.privkey");
 
         try {
-            AesKey aesKey = KeyGenerator.GenerateAesKey(keyfile, salt);
+            AesKey aesKey = KeyGenerator.GenerateAesKey(password, salt);
 
-            byte[] protectedKeys;
-#if NET5_0_OR_GREATER
-            protectedKeys = await File.ReadAllBytesAsync(keyfile);
-#elif NET472_OR_GREATER
-            using(FileStream fs = new FileStream(keyfile, FileMode.Open, FileAccess.Read)) {
-                protectedKeys = await fs.ReadAsync();
-            }
-#endif
+            byte[] protectedKeys = await UnifiedFile.ReadAllBytesAsync(keyfile);
 
             byte[] privateKeyBuffer = await new AesCryptographer().DecryptAsync(protectedKeys, aesKey);
             if (privateKeyBuffer.Length == 0) {
@@ -92,7 +79,7 @@ public class AccountKeyManager {
         }
     }
 
-    public async Task<Result<RsaKeyPair>> CreateAccountKeysAsync(string identifier, byte[] salt) {
+    public async Task<Result<RsaKeyPair>> CreateAccountKeysAsync(string identifier, SecureString password, byte[] salt) {
         string publicKeyFile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.pubkey");
         string privateKeyFile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.privkey");
 
@@ -101,7 +88,7 @@ public class AccountKeyManager {
         }
 
         try {
-            AesKey aesKey = KeyGenerator.GenerateAesKey(identifier, salt);
+            AesKey aesKey = KeyGenerator.GenerateAesKey(password, salt);
 
             RsaKeyPair keyPair = KeyGenerator.GenerateRsaKeys();
 
