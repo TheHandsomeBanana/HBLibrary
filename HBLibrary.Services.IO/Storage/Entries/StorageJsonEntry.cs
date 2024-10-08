@@ -11,25 +11,29 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     }
 
     public object? Get(Type type) {
-        try {
-            if (Value is null) {
-                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                    return default;
+        lock (Lock) {
+
+            try {
+                if (Value is null) {
+                    if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                        return default;
+                    }
+
+                    if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
+                        Value = jsonService.ReadJson(type, file!);
+                    }
                 }
 
-                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
-                    Value = jsonService.ReadJson(type, file!);
-                }
+                return Value;
             }
-
-            return Value;
-        }
-        catch {
-            return default;
+            catch {
+                return default;
+            }
         }
     }
 
     public async Task<object?> GetAsync(Type type) {
+        await Semaphore.WaitAsync();
         try {
             if (Value is null) {
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
@@ -46,49 +50,57 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         catch {
             return default;
         }
+        finally {
+            Semaphore.Release();
+        }
     }
 
-
-
-    public void Save(Type type) {
-
-    }
 
     public void Save() {
-        if (Value is not null) {
-            jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
-
+        lock (Lock) {
+            if (Value is not null) {
+                jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+            }
         }
     }
 
-    public Task SaveAsync() {
-        if (Value is not null) {
-            return jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
-        }
+    public async Task SaveAsync() {
+        await Semaphore.WaitAsync();
+        try {
 
-        return Task.CompletedTask;
+            if (Value is not null) {
+                await jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+            }
+        }
+        finally {
+            Semaphore.Release();
+        }
     }
 
     public T? Get<T>() {
-        try {
-            if (Value is null) {
-                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                    return default;
+        lock (Lock) {
+            try {
+                if (Value is null) {
+                    if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                        return default;
+                    }
+
+                    if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
+                        Value = jsonService.ReadJson<T>(file!);
+                    }
                 }
 
-                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
-                    Value = jsonService.ReadJson<T>(file!);
-                }
+                return (T?)Value;
             }
-
-            return (T?)Value;
-        }
-        catch {
-            return default;
+            catch {
+                return default;
+            }
         }
     }
 
     public async Task<T?> GetAsync<T>() {
+        await Semaphore.WaitAsync();
+
         try {
             if (Value is null) {
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
@@ -105,30 +117,40 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         catch {
             return default;
         }
+        finally {
+            Semaphore.Release();
+        }
     }
 
     public void Save<T>() {
-        if (Value is not null) {
-            if (Value is T tValue) {
-                jsonService.WriteJson<T>(FileSnapshot.Create(Filename, true), tValue);
-            }
-            else {
-                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+        lock (Lock) {
+            if (Value is not null) {
+                if (Value is T tValue) {
+                    jsonService.WriteJson<T>(FileSnapshot.Create(Filename, true), tValue);
+                }
+                else {
+                    throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+                }
             }
         }
     }
 
-    public Task SaveAsync<T>() {
-        if (Value is not null) {
-            if (Value is T tValue) {
-                return jsonService.WriteJsonAsync<T>(FileSnapshot.Create(Filename, true), tValue);
-            }
-            else {
-                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+    public async Task SaveAsync<T>() {
+        await Semaphore.WaitAsync();
+        try {
+
+            if (Value is not null) {
+                if (Value is T tValue) {
+                    await jsonService.WriteJsonAsync<T>(FileSnapshot.Create(Filename, true), tValue);
+                }
+                else {
+                    throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+                }
             }
         }
-
-        return Task.CompletedTask;
+        finally {
+            Semaphore.Release();
+        }
     }
 
     protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {

@@ -24,6 +24,9 @@ public class ApplicationWorkspace {
     private string? name;
 
     [JsonIgnore]
+    public virtual string WorkspaceExtension { get; } = ".ws";
+
+    [JsonIgnore]
     public string? Name {
         get {
             name ??= Path.GetFileNameWithoutExtension(FullPath);

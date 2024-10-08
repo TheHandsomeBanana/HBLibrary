@@ -9,23 +9,27 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
     }
 
     public object? Get(Type type) {
-        try {
-            if (Value is null) {
-                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                    return null;
+        lock (Lock) {
+            try {
+                if (Value is null) {
+                    if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                        return null;
+                    }
+
+                    Value = xmlService.ReadXml(type, file!);
                 }
 
-                Value = xmlService.ReadXml(type, file!);
+                return Value;
             }
-
-            return Value;
-        }
-        catch {
-            return null;
+            catch {
+                return null;
+            }
         }
     }
-    
+
     public async Task<object?> GetAsync(Type type) {
+        await Semaphore.WaitAsync();
+
         try {
             if (Value is null) {
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
@@ -40,42 +44,57 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
         catch {
             return null;
         }
+        finally {
+            Semaphore.Release();
+        }
     }
 
     public void Save() {
-        if (Value is null) {
-            throw new InvalidOperationException(nameof(Value));
-        }
+        lock (Lock) {
+            if (Value is null) {
+                throw new InvalidOperationException(nameof(Value));
+            }
 
-        xmlService.WriteXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+            xmlService.WriteXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+        }
     }
-    
-    public Task SaveAsync() {
-        if (Value is null) {
-            throw new InvalidOperationException(nameof(Value));
-        }
 
-        return xmlService.WriteXmlAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+    public async Task SaveAsync() {
+        await Semaphore.WaitAsync();
+        try {
+            if (Value is null) {
+                throw new InvalidOperationException(nameof(Value));
+            }
+
+            await xmlService.WriteXmlAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+        }
+        finally {
+            Semaphore.Release();
+        }
     }
 
     public T? Get<T>() {
-        try {
-            if (Value is null) {
-                if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
-                    return default;
+        lock (Lock) {
+            try {
+                if (Value is null) {
+                    if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                        return default;
+                    }
+
+                    Value = xmlService.ReadXml<T>(file!);
                 }
 
-                Value = xmlService.ReadXml<T>(file!);
+                return (T?)Value;
             }
-
-            return (T?)Value;
-        }
-        catch {
-            return default;
+            catch {
+                return default;
+            }
         }
     }
-    
+
     public async Task<T?> GetAsync<T>() {
+        await Semaphore.WaitAsync();
+
         try {
             if (Value is null) {
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
@@ -90,21 +109,30 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
         catch {
             return default;
         }
+        finally {
+            Semaphore.Release();
+        }
     }
 
     public void Save<T>() {
-        if (Value is null) {
-            throw new InvalidOperationException(nameof(Value));
-        }
+        lock (Lock) {
+            if (Value is null) {
+                throw new InvalidOperationException(nameof(Value));
+            }
 
-        if (Value is not T tValue) {
-            throw new InvalidOperationException("Cannot save, entry does not equal given type.");
-        }
+            if (Value is not T tValue) {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+            }
 
-        xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
+            xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
+        }
     }
-    
-    public Task SaveAsync<T>() {
+
+    public async Task SaveAsync<T>() {
+        await Semaphore.WaitAsync();
+
+        try {
+
         if (Value is null) {
             throw new InvalidOperationException(nameof(Value));
         }
@@ -113,7 +141,11 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             throw new InvalidOperationException("Cannot save, entry does not equal given type.");
         }
 
-        return xmlService.WriteXmlAsync(FileSnapshot.Create(Filename, true), tValue);
+        await xmlService.WriteXmlAsync(FileSnapshot.Create(Filename, true), tValue);
+        }
+        finally {
+            Semaphore.Release();
+        }
     }
 
     protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {

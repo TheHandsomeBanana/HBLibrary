@@ -2,6 +2,9 @@
 
 namespace HBLibrary.Services.IO.Storage.Entries;
 public abstract class StorageEntry {
+    protected object Lock = new object();
+    protected SemaphoreSlim Semaphore = new SemaphoreSlim(1);
+
     protected object? Value { get; set; }
     public StorageEntrySettings Settings { get; set; }
     public string Filename { get; }
