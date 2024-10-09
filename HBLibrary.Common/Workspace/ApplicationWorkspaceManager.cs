@@ -17,6 +17,8 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
     private readonly IAccountStorage accountStorage;
     public string Application { get; }
     public ApplicationWorkspace? CurrentWorkspace { get; private set; }
+    public event Action? OnWorkspaceOpened;
+
     public ApplicationWorkspaceManager(string application, IAccountStorage accountStorage) {
         this.Application = application;
         this.accountStorage = accountStorage;
@@ -36,7 +38,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         }
     }
 
-    public async Task<Result<TApplicationWorkspace>> GetAsync<TApplicationWorkspace>(string fullPath) where TApplicationWorkspace : ApplicationWorkspace {
+    public async Task<Result<TApplicationWorkspace>> GetAsync<TApplicationWorkspace>(string fullPath, Account.Account executingAccount) where TApplicationWorkspace : ApplicationWorkspace {
         if (!File.Exists(fullPath)) {
             return ApplicationWorkspaceException.DoesNotExist();
         }
@@ -45,14 +47,24 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
         try {
             byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
             TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
-            
-            if(applicationWorkspace is null) {
+
+            if (applicationWorkspace is null) {
                 return ApplicationWorkspaceException.CannotGet("data is corrupted");
-            }   
-            
+            }
+
+            AccountInfo? accountInfo = await accountStorage.GetAccountAsync(executingAccount.AccountId);
+
+            if (accountInfo is null) {
+                return ApplicationWorkspaceException.CannotOpen("account information is corrupted");
+            }
+
+            if (applicationWorkspace.Owner != accountInfo && applicationWorkspace.SharedAccess.All(e => e != accountInfo)) {
+                return ApplicationWorkspaceException.AccessDenied(fullPath);
+            }
+
             return applicationWorkspace;
         }
-        catch(Exception ex) {
+        catch (Exception ex) {
             return ex;
         }
     }
@@ -81,6 +93,8 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
             }
 
             CurrentWorkspace = applicationWorkspace;
+            await CurrentWorkspace.OpenAsync(executingAccount);
+            OnWorkspaceOpened?.Invoke();
             return Result.Ok();
         }
         catch (Exception ex) {
@@ -104,6 +118,8 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
             FullPath = fullPath,
             UsesEncryption = false
         };
+
+        workspace.OnCreated();
 
         string serializedWorkspace = JsonSerializer.Serialize(workspace);
 
@@ -140,6 +156,8 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
                 FullPath = fullPath,
                 UsesEncryption = true
             };
+
+            workspace.OnCreated();
 
             await workspace.OpenAsync(executingAccount);
             byte[] serializedWorkspace = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(workspace));
@@ -224,6 +242,7 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
     private readonly IAccountStorage accountStorage;
     public string Application { get; }
     public TApplicationWorkspace? CurrentWorkspace { get; private set; }
+    public event Action? OnWorkspaceOpened;
     public ApplicationWorkspaceManager(string application, IAccountStorage accountStorage) {
         this.Application = application;
         this.accountStorage = accountStorage;
@@ -243,7 +262,7 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
         }
     }
 
-    public async Task<Result<TApplicationWorkspace>> GetAsync(string fullPath) {
+    public async Task<Result<TApplicationWorkspace>> GetAsync(string fullPath, Account.Account executingAccount) {
         if (!File.Exists(fullPath)) {
             return ApplicationWorkspaceException.DoesNotExist();
         }
@@ -252,14 +271,24 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
         try {
             byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
             TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
-            
-            if(applicationWorkspace is null) {
+
+            if (applicationWorkspace is null) {
                 return ApplicationWorkspaceException.CannotGet("data is corrupted");
-            }   
-            
+            }
+
+            AccountInfo? accountInfo = await accountStorage.GetAccountAsync(executingAccount.AccountId);
+
+            if (accountInfo is null) {
+                return ApplicationWorkspaceException.CannotOpen("account information is corrupted");
+            }
+
+            if (applicationWorkspace.Owner != accountInfo && applicationWorkspace.SharedAccess.All(e => e != accountInfo)) {
+                return ApplicationWorkspaceException.AccessDenied(fullPath);
+            }
+
             return applicationWorkspace;
         }
-        catch(Exception ex) {
+        catch (Exception ex) {
             return ex;
         }
     }
@@ -288,6 +317,8 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
             }
 
             CurrentWorkspace = applicationWorkspace;
+            await CurrentWorkspace.OpenAsync(executingAccount);
+            OnWorkspaceOpened?.Invoke();
             return Result.Ok();
         }
         catch (Exception ex) {
@@ -312,10 +343,7 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
             UsesEncryption = false
         };
 
-
-        await workspace.OpenAsync(executingAccount);
-
-        CurrentWorkspace = workspace;
+        workspace.OnCreated();
 
         string serializedWorkspace = JsonSerializer.Serialize(workspace);
 
@@ -352,6 +380,8 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
                 FullPath = fullPath,
                 UsesEncryption = true
             };
+
+            workspace.OnCreated();
 
             byte[] serializedWorkspace = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(workspace));
 

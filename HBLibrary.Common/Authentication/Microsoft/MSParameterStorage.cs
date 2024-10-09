@@ -16,7 +16,7 @@ public class MSParameterStorage {
         return existingIdentity is not null;
     }
 
-    public async Task<MicrosoftIdentity> RegisterIdentityAsync(string username, string identifier, string email, string displayName, string[] scopes, string tenantId, CancellationToken cancellationToken = default) {
+    public async Task<MicrosoftIdentity> RegisterIdentityAsync(string username, string identifier, string userId, string email, string displayName, string[] scopes, string tenantId, CancellationToken cancellationToken = default) {
         MicrosoftIdentity? existingIdentity = await GetIdentityAsync(username, cancellationToken);
         if (existingIdentity is not null) {
             return existingIdentity;
@@ -24,6 +24,7 @@ public class MSParameterStorage {
 
         MicrosoftIdentity msIdentity = new MicrosoftIdentity {
             Identifier = identifier,
+            UserId = userId,
             Username = username,
             Email = email,
             DisplayName = displayName,

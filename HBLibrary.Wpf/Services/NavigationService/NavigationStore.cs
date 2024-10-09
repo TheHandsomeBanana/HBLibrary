@@ -67,6 +67,24 @@ public class NavigationStore : INavigationStore {
             activeViewModels[parentTypename] = new ActiveViewModel(viewModel);
         }
     }
+
+    public void Clear() {
+        foreach (ActiveViewModel viewModel in activeViewModels.Values) {
+            if (viewModel.ViewModel is IDisposable disposableViewModel) {
+                disposableViewModel.Dispose();
+
+                viewModel.ViewModel = null;
+            }
+        }
+    }
+
+    public void Dispose() {
+        foreach (ActiveViewModel? viewModel in activeViewModels.Values) {
+            if (viewModel?.ViewModel is IDisposable disposableViewModel) {
+                disposableViewModel.Dispose();
+            }
+        }
+    }
 }
 
 

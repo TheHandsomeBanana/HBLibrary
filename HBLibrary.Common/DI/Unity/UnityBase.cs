@@ -1,4 +1,5 @@
 ﻿using Unity;
+using Unity.Lifetime;
 
 namespace HBLibrary.Common.DI.Unity {
     public static class UnityBase {
@@ -26,7 +27,7 @@ namespace HBLibrary.Common.DI.Unity {
                 return UnityContainer.Resolve<IUnityContainer>(name);
 
             IUnityContainer childContainer = UnityContainer.CreateChildContainer();
-            UnityContainer.RegisterInstance(name, childContainer, InstanceLifetime.Singleton);
+            UnityContainer.RegisterInstance(name, childContainer, new ContainerControlledLifetimeManager());
             return childContainer;
         }
     }

@@ -11,16 +11,16 @@ public class MSTokenStorage {
     private readonly string tokenStoragePath;
     private readonly IPublicClientApplication app;
 
-    private MSTokenStorage(string application, IPublicClientApplication app) {
-        this.tokenStoragePath = Path.Combine(GlobalEnvironment.IdentityPath, application + ".tokencache");
+    private MSTokenStorage(IPublicClientApplication app) {
+        this.tokenStoragePath = Path.Combine(GlobalEnvironment.IdentityPath, "tokencache");
         this.app = app;
 
         app.UserTokenCache.SetBeforeAccess(BeforeAccessNotification);
         app.UserTokenCache.SetAfterAccess(AfterAccessNotification);
     }
 
-    public static void Create(string application, IPublicClientApplication app) {
-        new MSTokenStorage(application, app);
+    public static void Create(IPublicClientApplication app) {
+        new MSTokenStorage(app);
     }
 
     private void BeforeAccessNotification(TokenCacheNotificationArgs args) {

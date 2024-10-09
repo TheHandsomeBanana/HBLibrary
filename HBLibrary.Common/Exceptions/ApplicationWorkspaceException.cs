@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Common.Exceptions;
 public class ApplicationWorkspaceException : Exception {
-    public ApplicationWorkspaceException(string? message) : base(message) {
+    public ApplicationWorkspaceExceptionType ExceptionType { get; set; }
+    public ApplicationWorkspaceException(string? message, ApplicationWorkspaceExceptionType type = ApplicationWorkspaceExceptionType.Common) : base(message) {
+        this.ExceptionType = type;
     }
 
     public static ApplicationWorkspaceException AccessDenied(string workspace) {
-        return new ApplicationWorkspaceException($"Access to workspace {workspace} denied");
+        return new ApplicationWorkspaceException($"Access to workspace {workspace} denied", ApplicationWorkspaceExceptionType.AccessDenied);
     }
 
     public static ApplicationWorkspaceException CannotOpen(string reason) {
@@ -27,4 +29,9 @@ public class ApplicationWorkspaceException : Exception {
     public static ApplicationWorkspaceException DoesNotExist() {
         return new ApplicationWorkspaceException("Workspace does not exist");
     }
+}
+
+public enum ApplicationWorkspaceExceptionType {
+    Common,
+    AccessDenied
 }

@@ -49,8 +49,7 @@ public class LoginViewModel : ViewModelBase<LoginModel> {
     public AsyncRelayCommand<UserControl> LoginCommand { get; set; }
     public AsyncRelayCommand<UserControl> LoginWithMicrosoftCommand { get; set; }
 
-    public LoginViewModel() {
-        Model = new LoginModel();
+    public LoginViewModel() : base(new LoginModel()) {
         LoginCommand = new AsyncRelayCommand<UserControl>(LoginAsync, w => IsLoginInputValid(), OnLoginException);
         LoginWithMicrosoftCommand = new AsyncRelayCommand<UserControl>(LoginWithMicrosoftAsync, w => true, OnLoginException);
     }

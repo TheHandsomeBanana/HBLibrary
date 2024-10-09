@@ -19,17 +19,13 @@ public class ApplicationWorkspace {
     public string? FullPath { get; set; }
     public bool UsesEncryption { get; set; }
 
-    
-    
+   
     private string? name;
-
-    [JsonIgnore]
-    public virtual string WorkspaceExtension { get; } = ".ws";
 
     [JsonIgnore]
     public string? Name {
         get {
-            name ??= Path.GetFileNameWithoutExtension(FullPath);
+            name ??= Path.GetFileName(FullPath);
 
             return name;
         }
@@ -40,9 +36,15 @@ public class ApplicationWorkspace {
     [JsonIgnore]
     public Account.Account? OpenedBy { get; set; }
 
+    public event Action? OnOpened;
+
     [JsonConstructor]
     public ApplicationWorkspace() { }
 
+    public virtual void OnCreated() { }
+    protected void NotifyOpened() {
+        OnOpened?.Invoke();
+    }
    
     public virtual Task OpenAsync(Account.Account openedBy) {
         if (IsOpen) {

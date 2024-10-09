@@ -35,7 +35,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         AuthenticationResult? result = null;
         string email = "";
         string displayName = "";
-
+        string id = "";
 
         try {
             switch (authCredentials.Type) {
@@ -53,7 +53,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
 
                         email = authCredentials.Email!;
                         displayName = authCredentials.DisplayName!;
-
+                        id = authCredentials.UserId!;
                     }
                     catch (MsalException) {
                         goto case MSAuthCredentials.CredentialType.Interactive;
@@ -67,6 +67,8 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                         silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
                         authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
                         result = await silentBuilder.ExecuteAsync(cancellationToken);
+
+                        (id, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     }
                     catch (MsalUiRequiredException) {
                         goto case MSAuthCredentials.CredentialType.Interactive;
@@ -80,7 +82,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                     result = await interactiveBuilder.ExecuteAsync(cancellationToken);
 
                     await RegisterStorageIdentity(result, cancellationToken);
-                    (_, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
+                    (id, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     break;
 
                 case MSAuthCredentials.CredentialType.UsernamePassword:
@@ -91,7 +93,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                     result = await usernamePasswordBuilder.ExecuteAsync(cancellationToken);
 
                     await RegisterStorageIdentity(result, cancellationToken);
-                    (_, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
+                    (id, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     break;
                 default:
                     throw new NotSupportedException(authCredentials.Type.ToString());
@@ -102,7 +104,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         }
 
         AccountKeyManager accountKeyManager = new AccountKeyManager();
-        Result<RsaKey> publicKeyResult = await accountKeyManager.GetPublicKeyAsync(result.Account.HomeAccountId.Identifier);
+        Result<RsaKey> publicKeyResult = await accountKeyManager.GetPublicKeyAsync(id);
 
         RsaKey publicKey = publicKeyResult.GetValueOrThrow();
 
@@ -168,6 +170,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
 
         return await parameterStorage.RegisterIdentityAsync(result.Account.Username,
                         result.Account.HomeAccountId.Identifier,
+                        id,
                         email,
                         displayName,
                         result.Scopes.ToArray(),

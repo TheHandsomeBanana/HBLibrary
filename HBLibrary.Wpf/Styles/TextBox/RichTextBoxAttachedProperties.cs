@@ -26,7 +26,12 @@ public static class RichTextBoxAttachedProperties {
 
     private static void OnBindableDocumentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is RichTextBox richTextBox && e.NewValue is FlowDocument newDocument) {
-            richTextBox.Document = newDocument;
+            try {
+                richTextBox.Document = newDocument;
+            }
+            catch {
+                // Swallow
+            }
         }
     }
 }

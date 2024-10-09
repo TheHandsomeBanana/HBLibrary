@@ -2,6 +2,7 @@
 public class MicrosoftIdentity : IEquatable<MicrosoftIdentity> {
     public required string Username { get; set; }
     public required string Identifier { get; set; }
+    public required string UserId { get; set; }
     public required string Email { get; set; }
     public required string DisplayName { get; set; }
     public required string TenantId { get; set; }

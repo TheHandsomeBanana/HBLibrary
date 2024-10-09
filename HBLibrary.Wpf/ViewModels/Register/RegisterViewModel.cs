@@ -54,8 +54,7 @@ public class RegisterViewModel : ViewModelBase<RegistrationModel> {
     public AsyncRelayCommand<UserControl> RegisterCommand { get; set; }
     public AsyncRelayCommand<UserControl> RegisterWithMicrosoftCommand { get; set; }
 
-    public RegisterViewModel(IAccountService accountService) {
-        Model = new RegistrationModel();
+    public RegisterViewModel(IAccountService accountService) : base(new RegistrationModel()) {
         RegisterCommand = new AsyncRelayCommand<UserControl>(RegisterAsync, w => IsRegisterInputValid(), OnRegisterException);
         RegisterWithMicrosoftCommand = new AsyncRelayCommand<UserControl>(RegisterWithMicrosoftAsync, w => true, OnRegisterException);
     }

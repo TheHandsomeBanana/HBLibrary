@@ -57,23 +57,25 @@ public class AccountStorage : IAccountStorage {
     public AccountInfo? GetLatestAccount(string application) {
         List<AccountInfo> accounts = LoadAccounts();
 
-        return accounts.OrderByDescending(e => {
-
-            return e.Applications.Where(f => f.Application == application)
-             .Select(e => e.LastLogin);
-
-        }).FirstOrDefault();
+        return accounts.OrderByDescending(e =>
+           e.Applications
+               .Where(f => f.Application == application)
+               .Select(f => f.LastLogin)
+               .DefaultIfEmpty(DateTime.MinValue)
+               .Max()
+        ).FirstOrDefault();
     }
 
     public async Task<AccountInfo?> GetLatestAccountAsync(string application, CancellationToken cancellationToken = default) {
         List<AccountInfo> accounts = await LoadAccountsAsync(cancellationToken);
 
-        return accounts.OrderByDescending(e => {
-
-            return e.Applications.Where(f => f.Application == application)
-             .Select(e => e.LastLogin);
-
-        }).FirstOrDefault();
+        return accounts.OrderByDescending(e =>
+           e.Applications
+               .Where(f => f.Application == application)
+               .Select(f => f.LastLogin)
+               .DefaultIfEmpty(DateTime.MinValue)
+               .Max()
+        ).FirstOrDefault();
     }
 
     public void AddOrUpdateAccount(AccountInfo accountInfo) {
@@ -102,11 +104,10 @@ public class AccountStorage : IAccountStorage {
         AccountInfo? existingAccount = accounts.FirstOrDefault(e => e == accountInfo);
 
         if (existingAccount is not null) {
-            existingAccount.ModifiedOn = DateTime.UtcNow;
+            accounts.Remove(existingAccount);
         }
-        else {
-            accounts.Add(accountInfo);
-        }
+
+        accounts.Add(accountInfo);
 
         await SaveAllAccountsAsync(accounts);
     }
@@ -114,7 +115,7 @@ public class AccountStorage : IAccountStorage {
     public void RemoveAccount(string identifier) {
         List<AccountInfo> accounts = LoadAccounts();
         AccountInfo? foundAccount = accounts.FirstOrDefault(e => e.AccountId == identifier);
-        if(foundAccount is null) {
+        if (foundAccount is null) {
             return;
         }
 

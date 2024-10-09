@@ -29,6 +29,7 @@ public sealed class MSAuthCredentials : IAuthCredentials {
     public Action<AcquireTokenByUsernamePasswordParameterBuilder>? UsernamePasswordParameterBuilder { get; init; }
     public IEnumerable<string> Scopes { get; init; } = [];
     internal string? Identifier { get; init; }
+    internal string? UserId { get; init; }
     internal string? Username { get; init; }
     internal SecureString? Password { get; init; }
     internal string? Email { get; init; }
@@ -55,6 +56,7 @@ public sealed class MSAuthCredentials : IAuthCredentials {
             Scopes = identity.Scopes,
             Identifier = identity.Identifier,
             Email = identity.Email,
+            UserId = identity.UserId,
             DisplayName = identity.DisplayName,
             Type = CredentialType.Cached,
             SilentParameterBuilder = builder
@@ -76,6 +78,7 @@ public sealed class MSAuthCredentials : IAuthCredentials {
         MSAuthCredentials credentials = new MSAuthCredentials {
             Scopes = identity.Scopes,
             Identifier = identity.Identifier,
+            UserId = identity.UserId,
             Email = identity.Email,
             DisplayName = identity.DisplayName,
             Type = CredentialType.Cached,
