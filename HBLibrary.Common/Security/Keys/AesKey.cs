@@ -7,6 +7,8 @@ public class AesKey : IKey {
     [JsonIgnore]
     [XmlIgnore]
     public byte[] Key { get; set; }
+    [JsonIgnore]
+    [XmlIgnore]
     public byte[] IV { get; set; }
 
     [XmlElement("Key")]

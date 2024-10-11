@@ -38,16 +38,24 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         }
 
         UserCredentials credentials = (await credentialStorage.GetUserCredentialsAsync(authCredentials.Username))!;
-        
-        AccountKeyManager accountKeyManager = new AccountKeyManager();
-        Result<RsaKey> publicKeyResult = await accountKeyManager.GetPublicKeyAsync(authCredentials.Username);
+        byte[] salt = GlobalEnvironment.Encoding.GetBytes(credentials.Salt);
 
+
+        SecureString supportKey = KeyDerivation.DeriveNewSecureString(authCredentials.Password, salt);
+
+        AccountKeyManager accountKeyManager = new AccountKeyManager();
+        if (!accountKeyManager.KeyPairExists(authCredentials.Username)) {
+            await accountKeyManager.CreateAccountKeysAsync(credentials.Username, supportKey, salt);
+        }
+
+        Result<RsaKey> publicKeyResult = await accountKeyManager.GetPublicKeyAsync(authCredentials.Username);
         RsaKey publicKey = publicKeyResult.GetValueOrThrow(); 
 
         return new LocalAuthResult {
             Salt = credentials.Salt,
             Username = authCredentials.Username,
-            PublicKey = publicKey
+            PublicKey = publicKey,
+            SupportKey = supportKey,
         };
     }
 
@@ -76,8 +84,11 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
             UserCredentials credentials = await credentialStorage.RegisterUserAsync(authCredentials.Username, authCredentials.Password, cancellationToken);
 
-            AccountKeyManager accountKeyManager = new AccountKeyManager();
             byte[] salt = GlobalEnvironment.Encoding.GetBytes(credentials.Salt);
+
+            SecureString supportKey = KeyDerivation.DeriveNewSecureString(authCredentials.Password, salt);
+
+            AccountKeyManager accountKeyManager = new AccountKeyManager();
             Result<RsaKeyPair> keyPair = await accountKeyManager.CreateAccountKeysAsync(credentials.Username, authCredentials.Password, salt);
 
             RsaKey publicKey = keyPair.GetValueOrThrow().PublicKey;
@@ -85,7 +96,8 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
             return new LocalAuthResult {
                 PublicKey = publicKey,
                 Username = credentials.Username,
-                Salt = credentials.Salt
+                Salt = credentials.Salt,
+                SupportKey = supportKey
             };
         }
 

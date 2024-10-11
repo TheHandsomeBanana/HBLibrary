@@ -19,14 +19,14 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public IJsonFileService? JsonFileService => FileServices?.JsonFileService;
     public IXmlFileService? XmlFileService => FileServices?.XmlFileService;
 
-    public StorageEntryContainer(string basePath, FileServiceContainer? fileServices = null) {
+    public StorageEntryContainer(string basePath, FileServiceContainer? fileServices = null, StorageContainerCryptography? cryptography = null) {
         this.BasePath = basePath;
         this.FileServices = fileServices;
 
         Directory.CreateDirectory(basePath);
 
         config = StorageContainerConfig.GetConfig(basePath) ?? StorageContainerConfig.CreateNew(basePath);
-        InitEntries();
+        InitEntries(cryptography);
     }
 
     public static IStorageEntryContainerBuilder CreateBuilder(string basePath) {
@@ -34,9 +34,13 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
 
-    private void InitEntries() {
+    private void InitEntries(StorageContainerCryptography? cryptography) {
         foreach (KeyValuePair<string, ContainerEntry> containerEntry in config.Entries) {
             string path = Path.Combine(this.BasePath, containerEntry.Key + EXTENSION);
+
+            if (containerEntry.Value.Settings.EncryptionEnabled && cryptography is not null) {
+                containerEntry.Value.Settings.ContainerCryptography = cryptography;
+            }
 
             Create(path, containerEntry.Value);
         }
@@ -125,7 +129,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
     public async Task SaveAsync() {
-        foreach(IStorageEntry entry in entries.Values) {
+        foreach (IStorageEntry entry in entries.Values) {
             await entry.SaveAsync();
         }
 

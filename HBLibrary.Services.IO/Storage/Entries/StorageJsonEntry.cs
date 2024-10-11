@@ -1,4 +1,7 @@
-﻿using HBLibrary.Services.IO.Json;
+﻿using HBLibrary.Common.Security;
+using HBLibrary.Common.Security.Keys;
+using HBLibrary.Services.IO.Exceptions;
+using HBLibrary.Services.IO.Json;
 using HBLibrary.Services.IO.Storage.Settings;
 
 namespace HBLibrary.Services.IO.Storage.Entries;
@@ -14,17 +17,31 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         lock (Lock) {
 
             try {
-                if (Value is null) {
+                if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
+                    // container.AddOrUpdate called and not saved yet
+                    // Then Value is set but file is not written yet
+                    if (Value is not null) {
+                        return Value;
+                    }
+
                     if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
                         return default;
                     }
 
-                    if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
-                        Value = jsonService.ReadJson(type, file!);
-                    }
+                    return GetInternal(type, file);
                 }
+                else {
+                    if (Value is null) {
 
-                return Value;
+                        if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                            return default;
+                        }
+
+                        Value = GetInternal(type, file);
+                    }
+
+                    return Value;
+                }
             }
             catch {
                 return default;
@@ -32,20 +49,47 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         }
     }
 
+    private object? GetInternal(Type type, FileSnapshot file) {
+        if (Settings.EncryptionEnabled) {
+            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+            return jsonService.DecryptJson(type, file, new Cryptographer(), new CryptographyInput {
+                Key = key,
+                Mode = Settings.ContainerCryptography.CryptographyMode
+            });
+        }
+        else {
+            return jsonService.ReadJson(type, file);
+        }
+    }
+
     public async Task<object?> GetAsync(Type type) {
         await Semaphore.WaitAsync();
         try {
-            if (Value is null) {
+            if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
+                // container.AddOrUpdate called and not saved yet
+                // Then Value is set but file is not written yet
+                if (Value is not null) {
+                    return Value;
+                }
+
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
                     return default;
                 }
 
-                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
-                    Value = await jsonService.ReadJsonAsync(type, file!);
-                }
+                return await GetAsyncInternal(type, file);
             }
+            else {
+                if (Value is null) {
+                    if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                        return default;
+                    }
 
-            return Value;
+                    Value = await GetAsyncInternal(type, file);
+                }
+
+                return Value;
+            }
         }
         catch {
             return default;
@@ -55,11 +99,32 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         }
     }
 
+    private async Task<object?> GetAsyncInternal(Type type, FileSnapshot file) {
+        if (Settings.EncryptionEnabled) {
+            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+            return jsonService.DecryptJson(type, file, new Cryptographer(), new CryptographyInput {
+                Key = key,
+                Mode = Settings.ContainerCryptography.CryptographyMode
+            });
+        }
+        else {
+            return await jsonService.ReadJsonAsync(type, file);
+        }
+    }
 
     public void Save() {
         lock (Lock) {
             if (Value is not null) {
-                jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                if (Settings.EncryptionEnabled) {
+                    jsonService.EncryptJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value, new Cryptographer(), new CryptographyInput {
+                        Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                        Mode = Settings.ContainerCryptography.CryptographyMode
+                    });
+                }
+                else {
+                    jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                }
             }
         }
     }
@@ -69,7 +134,15 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         try {
 
             if (Value is not null) {
-                await jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                if (Settings.EncryptionEnabled) {
+                    jsonService.EncryptJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value, new Cryptographer(), new CryptographyInput {
+                        Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                        Mode = Settings.ContainerCryptography.CryptographyMode
+                    });
+                }
+                else {
+                    await jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                }
             }
         }
         finally {
@@ -80,17 +153,30 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     public T? Get<T>() {
         lock (Lock) {
             try {
-                if (Value is null) {
+                if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
+                    // container.AddOrUpdate called and not saved yet
+                    // Then Value is set but file is not written yet
+                    if (Value is not null) {
+                        return (T?)Value;
+                    }
+
                     if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
                         return default;
                     }
 
-                    if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
-                        Value = jsonService.ReadJson<T>(file!);
-                    }
+                    return GetInternal<T>(file);
                 }
+                else {
+                    if (Value is null) {
+                        if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                            return default;
+                        }
 
-                return (T?)Value;
+                        Value = GetInternal<T>(file);
+                    }
+
+                    return (T?)Value;
+                }
             }
             catch {
                 return default;
@@ -98,17 +184,44 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         }
     }
 
+    private T? GetInternal<T>(FileSnapshot file) {
+        if (Settings.EncryptionEnabled) {
+            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+            return jsonService.DecryptJson<T>(file, new Cryptographer(), new CryptographyInput {
+                Key = key,
+                Mode = Settings.ContainerCryptography.CryptographyMode
+            });
+        }
+        else {
+            return jsonService.ReadJson<T>(file);
+        }
+    }
+
     public async Task<T?> GetAsync<T>() {
         await Semaphore.WaitAsync();
 
         try {
-            if (Value is null) {
+            if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
+                // container.AddOrUpdate called and not saved yet
+                // Then Value is set but file is not written yet
+                if (Value is not null) {
+                    return (T?)Value;
+                }
+
                 if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
                     return default;
                 }
 
-                if (Settings.LifeTime!.Type != EntryLifetimeType.NoLifetime) {
-                    Value = await jsonService.ReadJsonAsync<T>(file!);
+                return await GetAsyncInternal<T>(file);
+            }
+            else {
+                if (Value is null) {
+                    if (!FileSnapshot.TryCreate(Filename, out FileSnapshot? file)) {
+                        return default;
+                    }
+
+                    Value = await GetAsyncInternal<T>(file);
                 }
             }
 
@@ -122,11 +235,33 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
         }
     }
 
+    private async Task<T?> GetAsyncInternal<T>(FileSnapshot file) {
+        if (Settings.EncryptionEnabled) {
+            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+            return jsonService.DecryptJson<T>(file, new Cryptographer(), new CryptographyInput {
+                Key = key,
+                Mode = Settings.ContainerCryptography.CryptographyMode
+            });
+        }
+        else {
+            return await jsonService.ReadJsonAsync<T>(file);
+        }
+    }
+
     public void Save<T>() {
         lock (Lock) {
             if (Value is not null) {
                 if (Value is T tValue) {
-                    jsonService.WriteJson<T>(FileSnapshot.Create(Filename, true), tValue);
+                    if (Settings.EncryptionEnabled) {
+                        jsonService.EncryptJson<T>(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
+                            Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                            Mode = Settings.ContainerCryptography.CryptographyMode
+                        });
+                    }
+                    else {
+                        jsonService.WriteJson<T>(FileSnapshot.Create(Filename, true), tValue);
+                    }
                 }
                 else {
                     throw new InvalidOperationException("Cannot save, entry does not equal given type.");
@@ -141,7 +276,15 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
 
             if (Value is not null) {
                 if (Value is T tValue) {
-                    await jsonService.WriteJsonAsync<T>(FileSnapshot.Create(Filename, true), tValue);
+                    if (Settings.EncryptionEnabled) {
+                        jsonService.EncryptJson<T>(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
+                            Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                            Mode = Settings.ContainerCryptography.CryptographyMode
+                        });
+                    }
+                    else {
+                        await jsonService.WriteJsonAsync<T>(FileSnapshot.Create(Filename, true), tValue);
+                    }
                 }
                 else {
                     throw new InvalidOperationException("Cannot save, entry does not equal given type.");

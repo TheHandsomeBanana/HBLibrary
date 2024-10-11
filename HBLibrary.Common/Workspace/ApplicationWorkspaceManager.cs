@@ -142,9 +142,12 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
                 GlobalEnvironment.ApplicationDataBasePath,
                 Application,
                 "workspaces",
-                Path.GetFileNameWithoutExtension(fullPath),
-                executingAccount.AccountId
+                fullPath.ToGuidString(),
+                executingAccount.AccountId + ".id"
             );
+
+            Directory.CreateDirectory(Path.GetDirectoryName(workspaceKeyPath)!);
+
 
             byte[] workspaceKey = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(aesKey));
             byte[] encryptedWorkspaceKey = new RsaCryptographer().Encrypt(workspaceKey, accountPrivateKey);
@@ -366,12 +369,16 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
                 GlobalEnvironment.ApplicationDataBasePath,
                 Application,
                 "workspaces",
-                Path.GetFileNameWithoutExtension(fullPath),
-                executingAccount.AccountId
+                fullPath.ToGuidString(),
+                executingAccount.AccountId + ".id"
             );
 
+            Directory.CreateDirectory(Path.GetDirectoryName(workspaceKeyPath)!);
+
+            
+
             byte[] workspaceKey = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(aesKey));
-            byte[] encryptedWorkspaceKey = new RsaCryptographer().Encrypt(workspaceKey, accountPrivateKey);
+            byte[] encryptedWorkspaceKey = new RsaCryptographer().Encrypt(workspaceKey, executingAccount.PublicKey);
 
             await UnifiedFile.WriteAllBytesAsync(workspaceKeyPath, encryptedWorkspaceKey);
 

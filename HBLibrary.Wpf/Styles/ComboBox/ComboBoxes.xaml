@@ -2,16 +2,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ComboBox/ComboBoxItems.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ComboBox/ComboBoxItems.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+    <ControlTemplate x:Key="ComboBoxToggleButton"
+                     TargetType="ToggleButton">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
 
@@ -22,54 +23,75 @@
                     BorderThickness="{TemplateBinding BorderThickness}" />
 
             <Path x:Name="Arrow"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Data="M 0 0 L 4 4 L 8 0 Z"
-                    Fill="{StaticResource Foreground}" >
-                
+                  Grid.Column="1"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Center"
+                  Data="M 0 0 L 4 4 L 8 0 Z"
+                  Fill="{StaticResource Foreground}">
+
 
             </Path>
         </Grid>
         <ControlTemplate.Triggers>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}" />
-                <Setter TargetName="Arrow" Property="Data" Value="M 0 4 L 4 0 L 8 4 Z" />
+            <Trigger Property="IsChecked"
+                     Value="True">
+                <Setter TargetName="Border"
+                        Property="BorderBrush"
+                        Value="{StaticResource HBDark_Border_Selected}" />
+                <Setter TargetName="Arrow"
+                        Property="Data"
+                        Value="M 0 4 L 4 0 L 8 4 Z" />
             </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HBDark_Border_Selected}" />
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter TargetName="Border"
+                        Property="BorderBrush"
+                        Value="{StaticResource HBDark_Border_Selected}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
 
-    <Style x:Key="HBDark_ComboBox" TargetType="ComboBox">
-        <Setter Property="Background" Value="{StaticResource HBDark_TextBox_Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ControlBorder}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Padding" Value="2"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Width" Value="50"/>
-        <Setter Property="Height" Value="25"/>
-        <Setter Property="ItemContainerStyle" Value="{StaticResource HBDark_ComboBoxItem}"/>
+    <Style x:Key="HBDark_ComboBox"
+           TargetType="ComboBox">
+        <Setter Property="Background"
+                Value="{StaticResource HBDark_TextBox_Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource ControlBorder}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Padding"
+                Value="2" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Width"
+                Value="50" />
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="ItemContainerStyle"
+                Value="{StaticResource HBDark_ComboBoxItem}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
-                    <Border Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
+                        <Grid IsHitTestVisible="True"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
                             <ToggleButton Name="ToggleButton"
                                           Template="{StaticResource ComboBoxToggleButton}"
                                           Grid.Column="2"
                                           Focusable="false"
                                           IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ClickMode="Press" 
+                                          ClickMode="Press"
                                           Background="{TemplateBinding Background}"
                                           BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="1"/>
+                                          BorderThickness="1" />
 
                             <ContentPresenter x:Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"
@@ -77,18 +99,19 @@
                                               ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                               Margin="5,3,23,3"
                                               VerticalAlignment="Center"
-                                              HorizontalAlignment="Left"/>
+                                              HorizontalAlignment="Left" 
+                                              IsHitTestVisible="False"/>
 
                             <TextBox x:Name="PART_EditableTextBox"
-                                 Style="{StaticResource HBDark_TextBox}"
-                                 HorizontalAlignment="Center"
-                                 VerticalAlignment="Center"
-                                 HorizontalContentAlignment="Stretch"
-                                 VerticalContentAlignment="Center"
-                                 Margin="3,3,3,3"
-                                 Background="{TemplateBinding Background}"
-                                 Visibility="Hidden"
-                                 IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                                     Style="{StaticResource HBDark_TextBox}"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Stretch"
+                                     VerticalContentAlignment="Center"
+                                     Margin="3,3,3,3"
+                                     Background="{TemplateBinding Background}"
+                                     Visibility="Hidden"
+                                     IsReadOnly="{TemplateBinding IsReadOnly}" />
                             <Popup x:Name="Popup"
                                    Placement="Bottom"
                                    IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -102,16 +125,16 @@
                                     <Border x:Name="DropDownBorder"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="1"
-                                            Background="{TemplateBinding Background}"/>
+                                            Background="{TemplateBinding Background}" />
 
                                     <ScrollViewer x:Name="DropDownScrollViewer"
                                                   Style="{StaticResource HBDark_VSScrollViewer}"
                                                   VerticalScrollBarVisibility="Auto"
-                                            SnapsToDevicePixels="True">
+                                                  SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True"
-                                                KeyboardNavigation.DirectionalNavigation="Contained"
-                                                VerticalAlignment="Top"
-                                                HorizontalAlignment="Stretch"/>
+                                                    KeyboardNavigation.DirectionalNavigation="Contained"
+                                                    VerticalAlignment="Top"
+                                                    HorizontalAlignment="Stretch" />
                                     </ScrollViewer>
                                 </Grid>
                             </Popup>
@@ -120,7 +143,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
+
     </Style>
 
 

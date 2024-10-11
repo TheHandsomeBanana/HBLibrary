@@ -1,10 +1,7 @@
-﻿
-using HBLibrary.Common.Security;
-using HBLibrary.Common.Security.Aes;
+﻿using HBLibrary.Common.Security.Aes;
 using HBLibrary.Common.Security.Exceptions;
 using HBLibrary.Common.Security.Keys;
 using HBLibrary.Common.Security.Rsa;
-using HBLibrary.Common.Security.Settings;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -13,76 +10,49 @@ public class Cryptographer : ICryptographer {
     private readonly static AesCryptographer aesCryptographer = new AesCryptographer();
     private readonly static RsaCryptographer rsaCryptographer = new RsaCryptographer();
 
-
-    public byte[] Decrypt(byte[] data, CryptographySettings settings) {
-        switch (settings.Mode) {
-#if WINDOWS
-            case CryptographyMode.DPApiUser:
-                if (settings.Key.Name != nameof(DPEntropy))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
-
-                return ProtectedData.Unprotect(data, settings.Key.Key, DataProtectionScope.CurrentUser);
-
-            case CryptographyMode.DPApiMachine:
-                if (settings.Key.Name != nameof(DPEntropy))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
-
-                return ProtectedData.Unprotect(data, settings.Key.Key, DataProtectionScope.LocalMachine);
-#endif
+    public byte[] Decrypt(byte[] data, CryptographyInput input) {
+        switch (input.Mode) {
             case CryptographyMode.AES:
-                if (settings.Key.Name != nameof(AesKey))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
+                if (input.Key.Name != nameof(AesKey))
+                    CryptographerException.ThrowIncorrectKey(input.Key.Name);
 
-                return aesCryptographer.Decrypt(data, (AesKey)settings.Key);
+                return aesCryptographer.Decrypt(data, (AesKey)input.Key);
             case CryptographyMode.RSA:
-                if (settings.Key.Name != nameof(RsaKey))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
+                if (input.Key.Name != nameof(RsaKey))
+                    CryptographerException.ThrowIncorrectKey(input.Key.Name);
 
-                return rsaCryptographer.Decrypt(data, (RsaKey)settings.Key);
+                return rsaCryptographer.Decrypt(data, (RsaKey)input.Key);
             default:
-                throw new NotSupportedException(settings.Mode.ToString());
+                throw new NotSupportedException(input.Mode.ToString());
         }
     }
 
-    public string DecryptString(string data, CryptographySettings settings, Encoding encoding) {
+    public string DecryptString(string data, CryptographyInput input, Encoding encoding) {
         byte[] dataBytes = encoding.GetBytes(data);
-        byte[] decrypted = Decrypt(dataBytes, settings);
+        byte[] decrypted = Decrypt(dataBytes, input);
         return encoding.GetString(decrypted);
     }
 
-    public byte[] Encrypt(byte[] data, CryptographySettings settings) {
-        switch (settings.Mode) {
-#if WINDOWS
-            case CryptographyMode.DPApiUser:
-                if (settings.Key.Name != nameof(DPEntropy))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
-
-                return ProtectedData.Protect(data, settings.Key.Key, DataProtectionScope.CurrentUser);
-
-            case CryptographyMode.DPApiMachine:
-                if (settings.Key.Name != nameof(DPEntropy))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
-
-                return ProtectedData.Protect(data, settings.Key.Key, DataProtectionScope.LocalMachine);
-#endif
+    public byte[] Encrypt(byte[] data, CryptographyInput input) {
+        switch (input.Mode) {
             case CryptographyMode.AES:
-                if (settings.Key.Name != nameof(AesKey))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
+                if (input.Key.Name != nameof(AesKey))
+                    CryptographerException.ThrowIncorrectKey(input.Key.Name);
 
-                return aesCryptographer.Encrypt(data, (AesKey)settings.Key);
+                return aesCryptographer.Encrypt(data, (AesKey)input.Key);
             case CryptographyMode.RSA:
-                if (settings.Key.Name != nameof(RsaKey))
-                    CryptographerException.ThrowIncorrectKey(settings.Key.Name);
+                if (input.Key.Name != nameof(RsaKey))
+                    CryptographerException.ThrowIncorrectKey(input.Key.Name);
 
-                return rsaCryptographer.Encrypt(data, (RsaKey)settings.Key);
+                return rsaCryptographer.Encrypt(data, (RsaKey)input.Key);
             default:
-                throw new NotSupportedException(settings.Mode.ToString());
+                throw new NotSupportedException(input.Mode.ToString());
         }
     }
 
-    public string EncryptString(string data, CryptographySettings settings, Encoding encoding) {
+    public string EncryptString(string data, CryptographyInput input, Encoding encoding) {
         byte[] dataBytes = encoding.GetBytes(data);
-        byte[] encrypted = Encrypt(dataBytes, settings);
+        byte[] encrypted = Encrypt(dataBytes, input);
         return encoding.GetString(encrypted);
     }
 }

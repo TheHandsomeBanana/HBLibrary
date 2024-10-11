@@ -30,25 +30,18 @@ public class AccountService : IAccountService {
             case LocalAuthCredentials localCredentials:
                 LocalAuthResult localResult = await localAuthService.AuthenticateAsync(localCredentials, cancellationToken);
 
-                SecureString supportKey = KeyDerivation.DeriveNewSecureString(localCredentials.Password, GlobalEnvironment.Encoding.GetBytes(localResult.Salt));
-                
                 Account = new LocalAccount {
                     Salt = localResult.Salt,
                     Application = application,
                     Username = localResult.Username,
                     PublicKey = localResult.PublicKey!,
-                    SupportKey = supportKey
+                    SupportKey = localResult.SupportKey
                 };
 
                 break;
             case MSAuthCredentials msCredentials:
                 MSAuthResult msResult = await msAuthService.AuthenticateAsync(msCredentials, cancellationToken);
-
-                string saltString = $"{msResult.Result!.Account.Username}.{msResult.Email}";
-                byte[] salt = GlobalEnvironment.Encoding.GetBytes(saltString);
-                string temp = $"{msResult.Result!.TenantId}.{msResult.Result.Account.HomeAccountId.Identifier}";
-                supportKey = KeyDerivation.DeriveNewSecureString(temp, salt);
-
+               
                 Account = new MicrosoftAccount {
                     Application = application,
                     AccessToken = msResult.Result!.AccessToken,
@@ -59,8 +52,8 @@ public class AccountService : IAccountService {
                     DisplayName = msResult.DisplayName,
                     Email = msResult.Email,
                     PublicKey = msResult.PublicKey,
-                    Salt = saltString,
-                    SupportKey = supportKey
+                    Salt = msResult.Salt,
+                    SupportKey = msResult.SupportKey
                 };
                 break;
             default:

@@ -63,7 +63,11 @@
         }
 
         public static async Task WriteAsync(this Stream s, byte[] buffer, CancellationToken cancellationToken = default) {
+#if NET472_OR_GREATER
+            await s.WriteAsync(buffer, 0, buffer.Length);
+#elif NET5_0_OR_GREATER
             await s.WriteAsync(buffer, cancellationToken);
+#endif
         }
 
         public static void ResetPosition(this Stream s) {

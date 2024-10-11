@@ -1,10 +1,6 @@
-﻿
-
-using HBLibrary.Common.Extensions;
-using HBLibrary.Common.Security.Keys;
-
-
+﻿using HBLibrary.Common.Security.Keys;
 using System.Security.Cryptography;
+using HBLibrary.Common.Extensions;
 
 namespace HBLibrary.Common.Security.Aes;
 
@@ -14,16 +10,16 @@ public class AesCryptographer : IAesCryptographer {
 
         using (MemoryStream ms = new MemoryStream(cipher)) {
             using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read)) {
-                byte[] cipherBuffer = cs.Read(cipher.Length);
+                using (MemoryStream decryptedStream = new MemoryStream()) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    // Read the full content by looping until no more data is available
+                    while ((bytesRead = cs.Read(buffer, 0, buffer.Length)) > 0) {
+                        decryptedStream.Write(buffer, 0, bytesRead);
+                    }
 
-                // Remove trailing null chars
-                int i = cipherBuffer.Length - 1;
-                while (i >= 0 && cipherBuffer[i] == '\0')
-                    i--;
-
-                byte[] targetBuffer = new byte[i + 1];
-                Array.Copy(cipherBuffer, targetBuffer, i + 1);
-                return targetBuffer;
+                    return decryptedStream.ToArray();
+                }
             }
         }
     }
@@ -34,37 +30,6 @@ public class AesCryptographer : IAesCryptographer {
         using (MemoryStream ms = new MemoryStream()) {
             using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write)) {
                 cs.Write(data);
-                cs.FlushFinalBlock();
-            }
-
-            return ms.ToArray();
-        }
-    }
-
-    public async Task<byte[]> DecryptAsync(byte[] cipher, AesKey key) {
-        ICryptoTransform decryptor = System.Security.Cryptography.Aes.Create().CreateDecryptor(key.Key, key.IV);
-
-        using (MemoryStream ms = new MemoryStream(cipher)) {
-            using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read)) {
-                byte[] cipherBuffer = await cs.ReadAsync(cipher.Length);
-
-                int i = cipherBuffer.Length - 1;
-                while (i >= 0 && cipherBuffer[i] == '\0')
-                    i--;
-
-                byte[] targetBuffer = new byte[i + 1];
-                Array.Copy(cipherBuffer, targetBuffer, i + 1);
-                return targetBuffer;
-            }
-        }
-    }
-
-    public async Task<byte[]> EncryptAsync(byte[] data, AesKey key) {
-        ICryptoTransform encryptor = System.Security.Cryptography.Aes.Create().CreateEncryptor(key.Key, key.IV);
-
-        using (MemoryStream ms = new MemoryStream()) {
-            using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write)) {
-                await cs.WriteAsync(data);
             }
 
             return ms.ToArray();

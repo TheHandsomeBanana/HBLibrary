@@ -1,11 +1,11 @@
 ﻿using HBLibrary.Common;
+using HBLibrary.Common.Security;
 using System.Text.Json;
 
 namespace HBLibrary.Services.IO.Json;
 public class JsonFileService : IJsonFileService {
     private JsonSerializerOptions? options = null;
     private readonly FileService fileService = new FileService();
-
 
     public JsonFileService() { }
 
@@ -113,5 +113,55 @@ public class JsonFileService : IJsonFileService {
         }
 
         return fileService.WriteAsync(file, content, append, share);
+    }
+
+    public object? DecryptJson(Type type, FileSnapshot file, ICryptographer cryptographer, CryptographyInput input, JsonSerializerOptions? serializerOptions = null, FileShare share = FileShare.None) {
+        string content = fileService.Decrypt(file, cryptographer, input, GlobalEnvironment.Encoding, share);
+
+        if (UseBase64) {
+            content = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(content));
+        }
+
+        try {
+            return JsonSerializer.Deserialize(content, type, serializerOptions ?? options);
+        }
+        catch (JsonException) {
+            return default;
+        }
+    }
+
+    public void EncryptJson(Type type, FileSnapshot file, object jsonObject, ICryptographer cryptographer, CryptographyInput input, JsonSerializerOptions? serializerOptions = null, FileShare share = FileShare.None) {
+        string content = JsonSerializer.Serialize(jsonObject, type, serializerOptions ?? options);
+
+        if (UseBase64) {
+            content = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(content));
+        }
+
+        fileService.Encrypt(file, content, cryptographer, input, GlobalEnvironment.Encoding, share);
+    }
+    
+    public TJson? DecryptJson<TJson>(FileSnapshot file, ICryptographer cryptographer, CryptographyInput input, JsonSerializerOptions? serializerOptions = null, FileShare share = FileShare.None) {
+        string content = fileService.Decrypt(file, cryptographer, input, GlobalEnvironment.Encoding, share);
+
+        if (UseBase64) {
+            content = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(content));
+        }
+
+        try {
+            return JsonSerializer.Deserialize<TJson?>(content, serializerOptions ?? options);
+        }
+        catch (JsonException) {
+            return default;
+        }
+    }
+
+    public void EncryptJson<TJson>(FileSnapshot file, TJson jsonObject, ICryptographer cryptographer, CryptographyInput input, JsonSerializerOptions? serializerOptions = null, FileShare share = FileShare.None) {
+        string content = JsonSerializer.Serialize(jsonObject, serializerOptions ?? options);
+
+        if (UseBase64) {
+            content = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(content));
+        }
+
+        fileService.Encrypt(file, content, cryptographer, input, GlobalEnvironment.Encoding, share);
     }
 }

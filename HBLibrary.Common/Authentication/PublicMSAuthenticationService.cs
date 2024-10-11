@@ -37,6 +37,10 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         string displayName = "";
         string id = "";
 
+        byte[] salt;
+        string supportKeyInput;
+        SecureString supportKey;
+
         try {
             switch (authCredentials.Type) {
                 case MSAuthCredentials.CredentialType.Cached:
@@ -50,6 +54,10 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                         silentBuilder = app.AcquireTokenSilent(authCredentials.Scopes, account);
                         authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
                         result = await silentBuilder.ExecuteAsync(cancellationToken);
+
+                        salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
+                        supportKeyInput = $"{result.TenantId}.{result.Account.HomeAccountId.Identifier}";
+                        supportKey = KeyDerivation.DeriveNewSecureString(supportKeyInput, salt);
 
                         email = authCredentials.Email!;
                         displayName = authCredentials.DisplayName!;
@@ -68,6 +76,10 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                         authCredentials.SilentParameterBuilder?.Invoke(silentBuilder);
                         result = await silentBuilder.ExecuteAsync(cancellationToken);
 
+                        salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
+                        supportKeyInput = $"{result.TenantId}.{result.Account.HomeAccountId.Identifier}";
+                        supportKey = KeyDerivation.DeriveNewSecureString(supportKeyInput, salt);
+
                         (id, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     }
                     catch (MsalUiRequiredException) {
@@ -81,7 +93,11 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
 
                     result = await interactiveBuilder.ExecuteAsync(cancellationToken);
 
-                    await RegisterStorageIdentity(result, cancellationToken);
+                    salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
+                    supportKeyInput = $"{result.TenantId}.{result.Account.HomeAccountId.Identifier}";
+                    supportKey = KeyDerivation.DeriveNewSecureString(supportKeyInput, salt);
+
+                    await RegisterStorageIdentity(result, supportKey, salt, cancellationToken);
                     (id, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     break;
 
@@ -92,7 +108,11 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
                     authCredentials.UsernamePasswordParameterBuilder?.Invoke(usernamePasswordBuilder);
                     result = await usernamePasswordBuilder.ExecuteAsync(cancellationToken);
 
-                    await RegisterStorageIdentity(result, cancellationToken);
+                    salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
+                    supportKeyInput = $"{result.TenantId}.{result.Account.HomeAccountId.Identifier}";
+                    supportKey = KeyDerivation.DeriveNewSecureString(supportKeyInput, salt);
+
+                    await RegisterStorageIdentity(result, supportKey, salt, cancellationToken);
                     (id, email, displayName) = await GetUserDetailsAsync(result.AccessToken);
                     break;
                 default:
@@ -112,7 +132,9 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
             PublicKey = publicKey,
             Result = result,
             Email = email,
-            DisplayName = displayName
+            DisplayName = displayName,
+            Salt = GlobalEnvironment.Encoding.GetString(salt),
+            SupportKey = supportKey
         };
     }
 
@@ -156,16 +178,13 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         }
     }
 
-    private async Task<MicrosoftIdentity> RegisterStorageIdentity(AuthenticationResult result, CancellationToken cancellationToken = default) {
+    private async Task<MicrosoftIdentity> RegisterStorageIdentity(AuthenticationResult result, SecureString supportKey, byte[] salt, CancellationToken cancellationToken = default) {
         (string id, string email, string displayName) = await GetUserDetailsAsync(result.AccessToken);
 
-        byte[] salt = GlobalEnvironment.Encoding.GetBytes($"{result!.Account.Username}.{email}");
-        string temp = $"{result.TenantId}.{result.Account.HomeAccountId.Identifier}";
-        SecureString password = KeyDerivation.DeriveNewSecureString(temp, salt);
-
         AccountKeyManager accountKeyManager = new AccountKeyManager();
-        // Try to create keys, they might already exist -> swallow exception
-        await accountKeyManager.CreateAccountKeysAsync(id, password, salt);
+        if (!accountKeyManager.KeyPairExists(id)) {
+            await accountKeyManager.CreateAccountKeysAsync(id, supportKey, salt);
+        }
 
 
         return await parameterStorage.RegisterIdentityAsync(result.Account.Username,

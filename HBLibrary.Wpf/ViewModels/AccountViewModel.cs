@@ -12,8 +12,8 @@ public class AccountViewModel : ViewModelBase {
     private readonly IAccountService accountService;
     private readonly CommonAppSettings appSettings;
     private readonly Window owner;
-    private readonly Action<bool>? userSwitchCallback;
-    private readonly Action? preventShutdownCallback;
+    private readonly Action<bool>? onAccountSwitched;
+    private readonly Action? onAccountSwitching;
 
     public RelayCommand<Window> SwitchUserCommand { get; set; }
 
@@ -37,13 +37,13 @@ public class AccountViewModel : ViewModelBase {
 
 
     public AccountViewModel(Window owner, IAccountService accountService, CommonAppSettings appSettings,
-        Action<bool>? userSwitchCallback = null, Action? preventShutdownCallback = null) {
+        Action<bool>? onAccountSwitched = null, Action? onAccountSwitching = null) {
 
         this.accountService = accountService;
         this.appSettings = appSettings;
         this.owner = owner;
-        this.userSwitchCallback = userSwitchCallback;
-        this.preventShutdownCallback = preventShutdownCallback;
+        this.onAccountSwitched = onAccountSwitched;
+        this.onAccountSwitching = onAccountSwitching;
 
         SwitchUserCommand = new RelayCommand<Window>(SwitchUser, true);
 
@@ -51,7 +51,7 @@ public class AccountViewModel : ViewModelBase {
             case LocalAccount localAccount:
                 AccountDetailViewModel = new LocalAccountViewModel(accountService, owner, new LocalAccountModel {
                     Username = localAccount.Username,
-                }, appSettings, userSwitchCallback, preventShutdownCallback);
+                }, appSettings, onAccountSwitched, onAccountSwitching);
 
 
                 AccountTypeName = "Local Account";
@@ -60,7 +60,7 @@ public class AccountViewModel : ViewModelBase {
                 AccountDetailViewModel = new MicrosoftAccountViewModel(accountService, owner, new MicrosoftAccountModel {
                     Username = microsoftAccount.Username,
                     DisplayName = microsoftAccount.DisplayName,
-                }, appSettings, userSwitchCallback, preventShutdownCallback);
+                }, appSettings, onAccountSwitched, onAccountSwitching);
 
                 AccountTypeName = "Microsoft Account";
                 break;
@@ -68,7 +68,7 @@ public class AccountViewModel : ViewModelBase {
     }
 
     private void SwitchUser(Window obj) {
-        preventShutdownCallback?.Invoke();
+        onAccountSwitching?.Invoke();
 
         obj.Close();
         this.owner.Close();
@@ -84,7 +84,7 @@ public class AccountViewModel : ViewModelBase {
         StartupLoginWindow loginWindow = new StartupLoginWindow();
         loginWindow.DataContext = dataContext;
 
-        dataContext.StartupCompleted += userSwitchCallback;
+        dataContext.StartupCompleted += onAccountSwitched;
         loginWindow.Show();
     }
 }

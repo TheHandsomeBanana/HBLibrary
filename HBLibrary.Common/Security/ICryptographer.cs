@@ -1,11 +1,10 @@
-﻿using HBLibrary.Common.Security.Settings;
-using System.Text;
+﻿using System.Text;
 
 namespace HBLibrary.Common.Security;
 public interface ICryptographer {
-    byte[] Encrypt(byte[] data, CryptographySettings settings);
-    byte[] Decrypt(byte[] data, CryptographySettings settings);
+    byte[] Encrypt(byte[] data, CryptographyInput input);
+    byte[] Decrypt(byte[] data, CryptographyInput input);
 
-    string EncryptString(string data, CryptographySettings settings, Encoding encoding);
-    string DecryptString(string data, CryptographySettings settings, Encoding encoding);
+    string EncryptString(string data, CryptographyInput input, Encoding encoding);
+    string DecryptString(string data, CryptographyInput input, Encoding encoding);
 }

@@ -1,6 +1,5 @@
 ﻿using HBLibrary.Common.Extensions;
 using HBLibrary.Common.Security;
-using HBLibrary.Common.Security.Settings;
 using System.Text;
 
 namespace HBLibrary.Services.IO;
@@ -53,43 +52,23 @@ public class FileService : IFileService {
         await fs.WriteAsync(content);
     }
 
-    public string Decrypt(FileSnapshot file, ICryptographer cryptographer, CryptographySettings settings, Encoding encoding, FileShare share = FileShare.None) {
+    public string Decrypt(FileSnapshot file, ICryptographer cryptographer, CryptographyInput input, Encoding encoding, FileShare share = FileShare.None) {
         string encrypted = Read(file, share);
-        return cryptographer.DecryptString(encrypted, settings, encoding);
+        return cryptographer.DecryptString(encrypted, input, encoding);
     }
 
-    public async Task<string> DecryptAsync(FileSnapshot file, ICryptographer cryptographer, CryptographySettings settings, Encoding encoding, FileShare share = FileShare.None) {
-        string encrypted = await ReadAsync(file, share);
-        return cryptographer.DecryptString(encrypted, settings, encoding);
-    }
-
-    public byte[] DecryptBytes(FileSnapshot file, ICryptographer cryptographer, CryptographySettings settings, FileShare share = FileShare.None) {
+    public byte[] DecryptBytes(FileSnapshot file, ICryptographer cryptographer, CryptographyInput input, FileShare share = FileShare.None) {
         byte[] bytes = ReadBytes(file, share);
-        return cryptographer.Decrypt(bytes, settings);
+        return cryptographer.Decrypt(bytes, input);
     }
 
-    public async Task<byte[]> DecryptBytesAsync(FileSnapshot file, ICryptographer cryptographer, CryptographySettings settings, FileShare share = FileShare.None) {
-        byte[] bytes = await ReadBytesAsync(file, share);
-        return cryptographer.Decrypt(bytes, settings);
-    }
-
-    public void Encrypt(FileSnapshot file, string content, ICryptographer cryptographer, CryptographySettings settings, Encoding encoding, FileShare share = FileShare.None) {
-        string encrypted = cryptographer.EncryptString(content, settings, encoding);
+    public void Encrypt(FileSnapshot file, string content, ICryptographer cryptographer, CryptographyInput input, Encoding encoding, FileShare share = FileShare.None) {
+        string encrypted = cryptographer.EncryptString(content, input, encoding);
         Write(file, encrypted, false, share);
     }
 
-    public Task EncryptAsync(FileSnapshot file, string content, ICryptographer cryptographer, CryptographySettings settings, Encoding encoding, FileShare share = FileShare.None) {
-        string encrypted = cryptographer.EncryptString(content, settings, encoding);
-        return WriteAsync(file, encrypted, false, share);
-    }
-
-    public void EncryptBytes(FileSnapshot file, byte[] content, ICryptographer cryptographer, CryptographySettings settings, FileShare share = FileShare.None) {
-        byte[] encrypted = cryptographer.Encrypt(content, settings);
+    public void EncryptBytes(FileSnapshot file, byte[] content, ICryptographer cryptographer, CryptographyInput input, FileShare share = FileShare.None) {
+        byte[] encrypted = cryptographer.Encrypt(content, input);
         WriteBytes(file, encrypted, false, share);
-    }
-
-    public Task EncryptBytesAsync(FileSnapshot file, byte[] content, ICryptographer cryptographer, CryptographySettings settings, FileShare share = FileShare.None) {
-        byte[] encrypted = cryptographer.Encrypt(content, settings);
-        return WriteBytesAsync(file, encrypted, false, share);
     }
 }

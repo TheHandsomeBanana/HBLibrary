@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Common.Account;
 using HBLibrary.Common.Exceptions;
+using HBLibrary.Common.Extensions;
 using HBLibrary.Common.Security.Keys;
 using HBLibrary.Common.Security.Rsa;
 using System;
@@ -75,8 +76,8 @@ public class ApplicationWorkspace {
                 GlobalEnvironment.ApplicationDataBasePath,
                 OpenedBy!.Application,
                 "workspaces",
-                Path.GetFileNameWithoutExtension(FullPath)!,
-                OpenedBy.AccountId
+                FullPath!.ToGuidString(),
+                OpenedBy.AccountId + ".id"
             );
 
         if (!File.Exists(workspaceKeyPath)) {

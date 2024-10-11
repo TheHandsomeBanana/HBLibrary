@@ -57,9 +57,9 @@ public class AccountKeyManager {
         try {
             AesKey aesKey = KeyGenerator.GenerateAesKey(password, salt);
 
-            byte[] protectedKeys = await UnifiedFile.ReadAllBytesAsync(keyfile);
+            byte[] protectedPrivateKey = await UnifiedFile.ReadAllBytesAsync(keyfile);
 
-            byte[] privateKeyBuffer = await new AesCryptographer().DecryptAsync(protectedKeys, aesKey);
+            byte[] privateKeyBuffer = new AesCryptographer().Decrypt(protectedPrivateKey, aesKey);
             if (privateKeyBuffer.Length == 0) {
                 return new InvalidOperationException($"Keyfile {keyfile} is empty.");
             }
@@ -67,7 +67,9 @@ public class AccountKeyManager {
             JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
             jsonOptions.Converters.Add(new RsaKeyConverter());
 
-            RsaKey? privateKey = JsonSerializer.Deserialize<RsaKey>(privateKeyBuffer, jsonOptions);
+            string keyString = GlobalEnvironment.Encoding.GetString(privateKeyBuffer);
+
+            RsaKey? privateKey = JsonSerializer.Deserialize<RsaKey>(keyString, jsonOptions);
             if (privateKey is not null) {
                 return privateKey;
             }
@@ -83,10 +85,6 @@ public class AccountKeyManager {
         string publicKeyFile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.pubkey");
         string privateKeyFile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.privkey");
 
-        if (File.Exists(publicKeyFile) && File.Exists(privateKeyFile)) {
-            return new InvalidOperationException($"{identifier} keys are already defined");
-        }
-
         try {
             AesKey aesKey = KeyGenerator.GenerateAesKey(password, salt);
 
@@ -96,10 +94,10 @@ public class AccountKeyManager {
             jsonOptions.Converters.Add(new RsaKeyConverter());
 
             byte[] serializedPrivateKey = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(keyPair.PrivateKey, jsonOptions));
-            byte[] protectedKey = await new AesCryptographer().EncryptAsync(serializedPrivateKey, aesKey);
+            byte[] protectedKey = new AesCryptographer().Encrypt(serializedPrivateKey, aesKey);
 
             using (FileStream fs = File.Create(privateKeyFile)) {
-                await fs.WriteAsync(protectedKey);
+                fs.Write(protectedKey);
             }
 
             string serializedPublicKey = JsonSerializer.Serialize(keyPair.PublicKey, jsonOptions);

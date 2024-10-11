@@ -1,4 +1,6 @@
-﻿namespace HBLibrary.Services.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace HBLibrary.Services.IO;
 public class FileSnapshot {
     public string Path { get; init; }
     public string FullPath { get; init; }
@@ -39,7 +41,7 @@ public class FileSnapshot {
     /// <param name="file"></param>
     /// <param name="createNew"></param>
     /// <returns></returns>
-    public static bool TryCreate(string path, out FileSnapshot? file, bool createNew = false) {
+    public static bool TryCreate(string path, [NotNullWhen(true)] out FileSnapshot? file, bool createNew = false) {
         file = null;
 
         if (!PathValidator.ValidatePath(path))
