@@ -12,6 +12,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
 
     private readonly Dictionary<string, IStorageEntry> entries = [];
     private readonly StorageContainerConfig config;
+    public StorageContainerCryptography? Cryptography { get; }
     internal FileServiceContainer? FileServices { get; set; }
 
     public string BasePath { get; }
@@ -22,11 +23,12 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public StorageEntryContainer(string basePath, FileServiceContainer? fileServices = null, StorageContainerCryptography? cryptography = null) {
         this.BasePath = basePath;
         this.FileServices = fileServices;
+        this.Cryptography = cryptography;
 
         Directory.CreateDirectory(basePath);
 
         config = StorageContainerConfig.GetConfig(basePath) ?? StorageContainerConfig.CreateNew(basePath);
-        InitEntries(cryptography);
+        InitEntries();
     }
 
     public static IStorageEntryContainerBuilder CreateBuilder(string basePath) {
@@ -34,12 +36,12 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
 
-    private void InitEntries(StorageContainerCryptography? cryptography) {
+    private void InitEntries() {
         foreach (KeyValuePair<string, ContainerEntry> containerEntry in config.Entries) {
             string path = Path.Combine(this.BasePath, containerEntry.Key + EXTENSION);
 
-            if (containerEntry.Value.Settings.EncryptionEnabled && cryptography is not null) {
-                containerEntry.Value.Settings.ContainerCryptography = cryptography;
+            if (containerEntry.Value.Settings.EncryptionEnabled && Cryptography is not null) {
+                containerEntry.Value.Settings.ContainerCryptography = Cryptography;
             }
 
             Create(path, containerEntry.Value);
@@ -56,8 +58,6 @@ public class StorageEntryContainer : IStorageEntryContainer {
             entries[filename] = value;
         }
     }
-
-
 
     public IStorageEntry? Get(string filename) {
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
@@ -94,6 +94,12 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
     public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType, StorageEntrySettings? settings = null) {
+        if(Cryptography is not null) {
+            settings ??= StorageEntrySettings.CreateDefault();
+            settings.EncryptionEnabled = true;
+            settings.ContainerCryptography = Cryptography;
+        }
+        
         string path = Path.Combine(this.BasePath, filename + EXTENSION);
 
         // Update

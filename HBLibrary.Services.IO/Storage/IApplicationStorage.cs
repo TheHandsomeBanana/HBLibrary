@@ -7,10 +7,6 @@ public interface IApplicationStorage {
     public string BasePath { get; }
     public Guid DefaultContainerId { get; }
     public IStorageEntryContainer DefaultContainer { get; }
-    public IStorageEntry? GetStorageEntry(Guid containerId, string filename);
-    public IStorageEntry? CreateStorageEntry(Guid containerId, string filename, StorageEntryContentType contentType);
-    public void AddOrUpdateStorageEntry(Guid containerId, string filename, object entry, StorageEntryContentType contentType);
-    public bool ContainsEntry(Guid containerId, string filename);
 
     public IEnumerable<IStorageEntry> GetStorageEntries(Guid containerId);
     public void SaveStorageEntries(Guid containerId);

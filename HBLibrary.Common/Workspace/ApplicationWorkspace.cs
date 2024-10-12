@@ -43,6 +43,11 @@ public class ApplicationWorkspace {
     public ApplicationWorkspace() { }
 
     public virtual void OnCreated() { }
+    public virtual void Save() { }
+    public virtual Task SaveAsync() {
+        return Task.CompletedTask;
+    }
+
     protected void NotifyOpened() {
         OnOpened?.Invoke();
     }
@@ -57,10 +62,53 @@ public class ApplicationWorkspace {
         return Task.CompletedTask;
     }
 
+    public virtual void Close() {
+        IsOpen = false;
+        OpenedBy = null;
+    }
+
     public virtual Task CloseAsync() {
         IsOpen = false;
         OpenedBy = null;
         return Task.CompletedTask;
+    }
+
+    protected Result<AesKey> GetKey() {
+        if (!IsOpen) {
+            return ApplicationWorkspaceException.NotOpened(Name!);
+        }
+
+        if (!UsesEncryption) {
+            return new ApplicationWorkspaceException("Workspaces does not use encryption");
+        }
+
+        string workspaceKeyPath = Path.Combine(
+                GlobalEnvironment.ApplicationDataBasePath,
+                OpenedBy!.Application,
+                "workspaces",
+                FullPath!.ToGuidString(),
+                OpenedBy.AccountId + ".id"
+            );
+
+        if (!File.Exists(workspaceKeyPath)) {
+            return new ApplicationWorkspaceException("Key does not exist");
+        }
+
+        byte[] encryptedWorkspaceKey = File.ReadAllBytes(workspaceKeyPath);
+
+        Result<RsaKey> privateKeyResult = OpenedBy.GetPrivateKey();
+        if (privateKeyResult.IsFaulted) {
+            return privateKeyResult.Error!;
+        }
+
+        byte[] workspaceKey = new RsaCryptographer().Decrypt(encryptedWorkspaceKey, privateKeyResult.Value!);
+
+        AesKey? workspaceAesKey = JsonSerializer.Deserialize<AesKey>(workspaceKey);
+        if (workspaceAesKey is null) {
+            return new ApplicationWorkspaceException("Key data is corrupted");
+        }
+
+        return workspaceAesKey;
     }
 
     protected async Task<Result<AesKey>> GetKeyAsync() {

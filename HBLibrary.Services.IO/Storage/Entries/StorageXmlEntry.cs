@@ -1,4 +1,5 @@
-﻿using HBLibrary.Common.Security;
+﻿using HBLibrary.Common;
+using HBLibrary.Common.Security;
 using HBLibrary.Common.Security.Keys;
 using HBLibrary.Services.IO.Storage.Settings;
 using HBLibrary.Services.IO.Xml;
@@ -48,7 +49,9 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
     private object? GetInternal(Type type, FileSnapshot file) {
         if (Settings.EncryptionEnabled) {
-            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+            IKey key = keyResult.GetValueOrThrow();
 
             return xmlService.DecryptXml(type, file, new Cryptographer(), new CryptographyInput {
                 Key = key,
@@ -98,7 +101,9 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
     private async Task<object?> GetAsyncInternal(Type type, FileSnapshot file) {
         if (Settings.EncryptionEnabled) {
-            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
+
+            IKey key = keyResult.GetValueOrThrow();
 
             return xmlService.DecryptXml(type, file, new Cryptographer(), new CryptographyInput {
                 Key = key,
@@ -114,8 +119,12 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
         lock (Lock) {
             if (Value is not null) {
                 if (Settings.EncryptionEnabled) {
+                    Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+                    IKey key = keyResult.GetValueOrThrow();
+
                     xmlService.EncryptXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value, new Cryptographer(), new CryptographyInput {
-                        Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                        Key = key,
                         Mode = Settings.ContainerCryptography.CryptographyMode
                     });
                 }
@@ -132,8 +141,12 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
             if (Value is not null) {
                 if (Settings.EncryptionEnabled) {
+                    Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
+
+                    IKey key = keyResult.GetValueOrThrow();
+
                     xmlService.EncryptXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value, new Cryptographer(), new CryptographyInput {
-                        Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                        Key = key,
                         Mode = Settings.ContainerCryptography.CryptographyMode
                     });
                 }
@@ -183,7 +196,8 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
     private T? GetInternal<T>(FileSnapshot file) {
         if (Settings.EncryptionEnabled) {
-            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            IKey key = keyResult.GetValueOrThrow();
 
             return xmlService.DecryptXml<T>(file, new Cryptographer(), new CryptographyInput {
                 Key = key,
@@ -234,7 +248,9 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
     private async Task<T?> GetAsyncInternal<T>(FileSnapshot file) {
         if (Settings.EncryptionEnabled) {
-            IKey key = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
+
+            IKey key = keyResult.GetValueOrThrow();
 
             return xmlService.DecryptXml<T>(file, new Cryptographer(), new CryptographyInput {
                 Key = key,
@@ -251,8 +267,12 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             if (Value is not null) {
                 if (Value is T tValue) {
                     if (Settings.EncryptionEnabled) {
+                        Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+
+                        IKey key = keyResult.GetValueOrThrow();
+
                         xmlService.EncryptXml<T>(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
-                            Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                            Key = key,
                             Mode = Settings.ContainerCryptography.CryptographyMode
                         });
                     }
@@ -274,8 +294,12 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             if (Value is not null) {
                 if (Value is T tValue) {
                     if (Settings.EncryptionEnabled) {
+                        Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
+
+                        IKey key = keyResult.GetValueOrThrow();
+
                         xmlService.EncryptXml<T>(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
-                            Key = Settings.ContainerCryptography!.GetEntryKey.Invoke(),
+                            Key = key,
                             Mode = Settings.ContainerCryptography.CryptographyMode
                         });
                     }

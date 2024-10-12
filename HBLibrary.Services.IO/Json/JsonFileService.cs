@@ -116,14 +116,18 @@ public class JsonFileService : IJsonFileService {
     }
 
     public object? DecryptJson(Type type, FileSnapshot file, ICryptographer cryptographer, CryptographyInput input, JsonSerializerOptions? serializerOptions = null, FileShare share = FileShare.None) {
-        string content = fileService.Decrypt(file, cryptographer, input, GlobalEnvironment.Encoding, share);
+        byte[] encryptedBytes = fileService.ReadBytes(file, share);
+
+        byte[] decryptedBytes = cryptographer.Decrypt(encryptedBytes, input);
+
+        string decryptedContent = GlobalEnvironment.Encoding.GetString(decryptedBytes);
 
         if (UseBase64) {
-            content = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(content));
+            decryptedContent = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(decryptedContent));
         }
 
         try {
-            return JsonSerializer.Deserialize(content, type, serializerOptions ?? options);
+            return JsonSerializer.Deserialize(decryptedContent, type, serializerOptions ?? options);
         }
         catch (JsonException) {
             return default;
@@ -137,18 +141,23 @@ public class JsonFileService : IJsonFileService {
             content = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(content));
         }
 
-        fileService.Encrypt(file, content, cryptographer, input, GlobalEnvironment.Encoding, share);
+        byte[] contentBytes = GlobalEnvironment.Encoding.GetBytes(content);
+        byte[] encryptedBytes = cryptographer.Encrypt(contentBytes, input);
+
+        fileService.WriteBytes(file, encryptedBytes, false, share);
     }
-    
+
     public TJson? DecryptJson<TJson>(FileSnapshot file, ICryptographer cryptographer, CryptographyInput input, JsonSerializerOptions? serializerOptions = null, FileShare share = FileShare.None) {
-        string content = fileService.Decrypt(file, cryptographer, input, GlobalEnvironment.Encoding, share);
+        byte[] encryptedBytes = fileService.ReadBytes(file, share);
+        byte[] decryptedBytes = cryptographer.Decrypt(encryptedBytes, input);
+        string decryptedContent = GlobalEnvironment.Encoding.GetString(decryptedBytes);
 
         if (UseBase64) {
-            content = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(content));
+            decryptedContent = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(decryptedContent));
         }
 
         try {
-            return JsonSerializer.Deserialize<TJson?>(content, serializerOptions ?? options);
+            return JsonSerializer.Deserialize<TJson?>(decryptedContent, serializerOptions ?? options);
         }
         catch (JsonException) {
             return default;
@@ -162,6 +171,9 @@ public class JsonFileService : IJsonFileService {
             content = Convert.ToBase64String(GlobalEnvironment.Encoding.GetBytes(content));
         }
 
-        fileService.Encrypt(file, content, cryptographer, input, GlobalEnvironment.Encoding, share);
+        byte[] contentBytes = GlobalEnvironment.Encoding.GetBytes(content);
+        byte[] encryptedBytes = cryptographer.Encrypt(contentBytes, input);
+
+        fileService.WriteBytes(file, encryptedBytes, false, share);
     }
 }

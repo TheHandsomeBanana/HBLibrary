@@ -29,8 +29,13 @@ public class AesKey : IKey {
     [XmlIgnore]
     public string Name => nameof(AesKey);
 
-    public AesKey(byte[] key, byte[] iV) {
+    public AesKey(byte[] key, byte[] iv) {
         Key = key;
-        IV = iV;
+        IV = iv;
+    }
+
+    public AesKey() {
+        Key = [];
+        IV = [];
     }
 }

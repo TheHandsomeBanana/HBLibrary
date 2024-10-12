@@ -80,6 +80,36 @@ public class AccountKeyManager {
             return ex;
         }
     }
+    
+    public Result<RsaKey> GetPrivateKey(string identifier, SecureString password, byte[] salt) {
+        string keyfile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.privkey");
+
+        try {
+            AesKey aesKey = KeyGenerator.GenerateAesKey(password, salt);
+
+            byte[] protectedPrivateKey = File.ReadAllBytes(keyfile);
+
+            byte[] privateKeyBuffer = new AesCryptographer().Decrypt(protectedPrivateKey, aesKey);
+            if (privateKeyBuffer.Length == 0) {
+                return new InvalidOperationException($"Keyfile {keyfile} is empty.");
+            }
+
+            JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+            jsonOptions.Converters.Add(new RsaKeyConverter());
+
+            string keyString = GlobalEnvironment.Encoding.GetString(privateKeyBuffer);
+
+            RsaKey? privateKey = JsonSerializer.Deserialize<RsaKey>(keyString, jsonOptions);
+            if (privateKey is not null) {
+                return privateKey;
+            }
+
+            return new InvalidOperationException($"Keyfile {keyfile} is corrupted.");
+        }
+        catch (Exception ex) {
+            return ex;
+        }
+    }
 
     public async Task<Result<RsaKeyPair>> CreateAccountKeysAsync(string identifier, SecureString password, byte[] salt) {
         string publicKeyFile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.pubkey");

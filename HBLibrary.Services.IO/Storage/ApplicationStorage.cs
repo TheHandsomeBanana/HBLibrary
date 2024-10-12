@@ -32,38 +32,6 @@ public class ApplicationStorage : IApplicationStorage {
         return new ApplicationStorageBuilder(basePath);
     }
 
-    public IStorageEntry? GetStorageEntry(Guid containerId, string filename) {
-        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
-            return null;
-        }
-
-        return container.Get(filename);
-    }
-
-    public IStorageEntry? CreateStorageEntry(Guid containerId, string filename, StorageEntryContentType contentType) {
-        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
-            return null;
-        }
-
-        return container.Create(filename, contentType);
-    }
-
-    public void AddOrUpdateStorageEntry(Guid containerId, string filename, object entry, StorageEntryContentType contentType) {
-        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
-            throw new InvalidOperationException($"Container with id {containerId} not found");
-        }
-
-        container.AddOrUpdate(filename, entry, contentType);
-    }
-
-    public bool ContainsEntry(Guid containerId, string filename) {
-        if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
-            return false;
-        }
-
-        return container.Contains(filename);
-    }
-
     public IEnumerable<IStorageEntry> GetStorageEntries(Guid containerId) {
         if (!Containers.TryGetValue(containerId, out IStorageEntryContainer? container)) {
             return [];

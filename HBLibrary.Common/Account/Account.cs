@@ -33,6 +33,12 @@ public abstract class Account {
         Result<RsaKey> keyResult = await accountKeyManager.GetPrivateKeyAsync(AccountId, SupportKey, GlobalEnvironment.Encoding.GetBytes(Salt));
         return keyResult;
     }
+
+    public Result<RsaKey> GetPrivateKey() {
+        AccountKeyManager accountKeyManager = new AccountKeyManager();
+        Result<RsaKey> keyResult = accountKeyManager.GetPrivateKey(AccountId, SupportKey, GlobalEnvironment.Encoding.GetBytes(Salt));
+        return keyResult;
+    }
 }
 
 

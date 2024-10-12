@@ -10,6 +10,7 @@ public interface IStorageEntryContainer {
     public IFileService? FileService { get; }
     public IJsonFileService? JsonFileService { get; }
     public IXmlFileService? XmlFileService { get; }
+    public StorageContainerCryptography? Cryptography { get; }
 
     public IStorageEntry? this[string filename] { get; set; }
     public IStorageEntry? Get(string filename);
