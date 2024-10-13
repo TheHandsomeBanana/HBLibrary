@@ -82,33 +82,7 @@ public class ApplicationWorkspace {
             return new ApplicationWorkspaceException("Workspaces does not use encryption");
         }
 
-        string workspaceKeyPath = Path.Combine(
-                GlobalEnvironment.ApplicationDataBasePath,
-                OpenedBy!.Application,
-                "workspaces",
-                FullPath!.ToGuidString(),
-                OpenedBy.AccountId + ".id"
-            );
-
-        if (!File.Exists(workspaceKeyPath)) {
-            return new ApplicationWorkspaceException("Key does not exist");
-        }
-
-        byte[] encryptedWorkspaceKey = File.ReadAllBytes(workspaceKeyPath);
-
-        Result<RsaKey> privateKeyResult = OpenedBy.GetPrivateKey();
-        if (privateKeyResult.IsFaulted) {
-            return privateKeyResult.Error!;
-        }
-
-        byte[] workspaceKey = new RsaCryptographer().Decrypt(encryptedWorkspaceKey, privateKeyResult.Value!);
-
-        AesKey? workspaceAesKey = JsonSerializer.Deserialize<AesKey>(workspaceKey);
-        if (workspaceAesKey is null) {
-            return new ApplicationWorkspaceException("Key data is corrupted");
-        }
-
-        return workspaceAesKey;
+        return WorkspaceHelper.GetWorkspaceKey(OpenedBy!, FullPath!);
     }
 
     protected async Task<Result<AesKey>> GetKeyAsync() {
@@ -120,13 +94,7 @@ public class ApplicationWorkspace {
             return new ApplicationWorkspaceException("Workspaces does not use encryption");
         }
 
-        string workspaceKeyPath = Path.Combine(
-                GlobalEnvironment.ApplicationDataBasePath,
-                OpenedBy!.Application,
-                "workspaces",
-                FullPath!.ToGuidString(),
-                OpenedBy.AccountId + ".id"
-            );
+        string workspaceKeyPath = WorkspaceHelper.GetWorkspaceKeyPath(OpenedBy!.Application, FullPath!, OpenedBy!.AccountId);
 
         if (!File.Exists(workspaceKeyPath)) {
             return new ApplicationWorkspaceException("Key does not exist");

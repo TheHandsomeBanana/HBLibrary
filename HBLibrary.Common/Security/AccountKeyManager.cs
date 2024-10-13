@@ -50,6 +50,32 @@ public class AccountKeyManager {
             return ex;
         }
     }
+    
+    public Result<RsaKey> GetPublicKey(string identifier) {
+        string keyfile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.pubkey");
+
+        if (!File.Exists(keyfile)) {
+            return new InvalidOperationException($"Key files for identifier {identifier} do not exist.");
+        }
+
+        try {
+            byte[] keyBuffer = File.ReadAllBytes(keyfile);
+
+            JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+            jsonOptions.Converters.Add(new RsaKeyConverter());
+
+            RsaKey? key = JsonSerializer.Deserialize<RsaKey>(keyBuffer, jsonOptions);
+
+            if (key is null) {
+                return new InvalidOperationException($"Public key for {identifier} is corrupted.");
+            }
+
+            return key;
+        }
+        catch (Exception ex) {
+            return ex;
+        }
+    }
 
     public async Task<Result<RsaKey>> GetPrivateKeyAsync(string identifier, SecureString password, byte[] salt) {
         string keyfile = Path.Combine(GlobalEnvironment.IdentityPath, $"{identifier}.privkey");

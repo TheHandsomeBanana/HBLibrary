@@ -131,6 +131,7 @@ public sealed class PublicMSAuthenticationService : IPublicMSAuthenticationServi
         return new MSAuthResult {
             PublicKey = publicKey,
             Result = result,
+            UserId = id,
             Email = email,
             DisplayName = displayName,
             Salt = GlobalEnvironment.Encoding.GetString(salt),

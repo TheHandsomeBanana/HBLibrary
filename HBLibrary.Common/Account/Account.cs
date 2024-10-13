@@ -52,11 +52,12 @@ public class MicrosoftAccount : Account {
     public override AccountType AccountType => AccountType.Microsoft;
     public IAccount? Account { get; set; }
     public required string Identifier { get; set; }
+    public required string UserId { get; set; }
     public required string Email { get; set; }
     public required string DisplayName { get; set; }
     public required string TenantId { get; set; }
     public required string AccessToken { get; set; }
-    public override string AccountId => Identifier;
+    public override string AccountId => UserId;
 
     public async Task SetAccountAsync(IPublicClientApplication app) {
         Account = await app.GetAccountAsync(Identifier);
