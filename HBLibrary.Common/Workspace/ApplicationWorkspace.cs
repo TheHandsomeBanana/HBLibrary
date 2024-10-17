@@ -43,9 +43,14 @@ public class ApplicationWorkspace {
     public ApplicationWorkspace() { }
 
     public virtual void OnCreated() { }
-    public virtual void Save() { }
+    public virtual void Save() {
+        string serializedWorkspace = JsonSerializer.Serialize(this);
+        File.WriteAllText(FullPath!, serializedWorkspace);
+    }
+
     public virtual Task SaveAsync() {
-        return Task.CompletedTask;
+        string serializedWorkspace = JsonSerializer.Serialize(this);
+        return UnifiedFile.WriteAllTextAsync(FullPath!, serializedWorkspace);
     }
 
     protected void NotifyOpened() {

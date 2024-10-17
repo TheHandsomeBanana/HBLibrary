@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HBLibrary.Common.Account;
 public interface IAccountStorage {
     public List<AccountInfo> LoadAccounts();
-    public Task<List<AccountInfo>> LoadAccountsAsync(CancellationToken cancellationToken = default);
+    public Task<AccountInfo[]> LoadAccountsAsync(CancellationToken cancellationToken = default);
     public bool AccountExists(string identifier);
     public Task<bool> AccountExistsAsync(string identifier, CancellationToken cancellationToken = default);
     public AccountInfo? GetAccount(string identifier);

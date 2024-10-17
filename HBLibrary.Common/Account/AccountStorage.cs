@@ -23,7 +23,11 @@ public class AccountStorage : IAccountStorage {
         return JsonSerializer.Deserialize<List<AccountInfo>>(json) ?? [];
     }
 
-    public async Task<List<AccountInfo>> LoadAccountsAsync(CancellationToken cancellationToken = default) {
+    public async Task<AccountInfo[]> LoadAccountsAsync(CancellationToken cancellationToken = default) {
+        return [.. (await LoadAccountsAsyncInternal(cancellationToken))];
+    }
+    
+    public async Task<List<AccountInfo>> LoadAccountsAsyncInternal(CancellationToken cancellationToken = default) {
         string base64Json = await UnifiedFile.ReadAllTextAsync(accountStoragePath, cancellationToken);
         string json = GlobalEnvironment.Encoding.GetString(Convert.FromBase64String(base64Json));
 
@@ -40,7 +44,7 @@ public class AccountStorage : IAccountStorage {
     }
 
     public async Task<bool> AccountExistsAsync(string identifier, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAccountsAsync(cancellationToken);
+        List<AccountInfo> accounts = await LoadAccountsAsyncInternal(cancellationToken);
         return accounts.Any(e => e.AccountId == identifier);
     }
 
@@ -50,7 +54,7 @@ public class AccountStorage : IAccountStorage {
     }
 
     public async Task<AccountInfo?> GetAccountAsync(string identifier, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAccountsAsync(cancellationToken);
+        List<AccountInfo> accounts = await LoadAccountsAsyncInternal(cancellationToken);
         return accounts.FirstOrDefault(e => e.AccountId == identifier);
     }
 
@@ -67,7 +71,7 @@ public class AccountStorage : IAccountStorage {
     }
 
     public async Task<AccountInfo?> GetLatestAccountAsync(string application, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAccountsAsync(cancellationToken);
+        List<AccountInfo> accounts = await LoadAccountsAsyncInternal(cancellationToken);
 
         return accounts.OrderByDescending(e =>
            e.Applications
@@ -95,7 +99,7 @@ public class AccountStorage : IAccountStorage {
     }
 
     public async Task AddOrUpdateAccountAsync(AccountInfo accountInfo, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAccountsAsync(cancellationToken);
+        List<AccountInfo> accounts = await LoadAccountsAsyncInternal(cancellationToken);
 
         if (cancellationToken.IsCancellationRequested) {
             return;
@@ -124,7 +128,7 @@ public class AccountStorage : IAccountStorage {
     }
 
     public async Task RemoveAccountAsync(string identifier, CancellationToken cancellationToken = default) {
-        List<AccountInfo> accounts = await LoadAccountsAsync(cancellationToken);
+        List<AccountInfo> accounts = await LoadAccountsAsyncInternal(cancellationToken);
         AccountInfo? foundAccount = accounts.FirstOrDefault(e => e.AccountId == identifier);
         if (foundAccount is null) {
             return;

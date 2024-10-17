@@ -22,7 +22,7 @@ public static class KeyDerivation {
     }
 
     public static SecureString DeriveNewSecureString(SecureString password, byte[] salt) {
-        string plainPassword = SStringConverter.SecureStringToString(password)!;
+        string? plainPassword = SStringConverter.SecureStringToString(password)!;
 
         using (Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, 10000, HashAlgorithmName.SHA256)) {
             byte[] keyBytes = rfc2898DeriveBytes.GetBytes(32);
@@ -51,7 +51,9 @@ public static class KeyDerivation {
 
             derivedSecureString.MakeReadOnly();
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             plainPassword = null;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             return derivedSecureString;
         }

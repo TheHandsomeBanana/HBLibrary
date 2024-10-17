@@ -231,7 +231,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
 
         AccountInfo[] distinctRevokableAccounts = accounts.Where(e =>
             workspace.Owner.AccountId != e.AccountId &&
-            workspace.SharedAccess.All(f => f.AccountId != e.AccountId)
+            workspace.SharedAccess.Any(f => f.AccountId == e.AccountId)
         ).ToArray();
 
         workspace.SharedAccess = [.. workspace.SharedAccess.Except(distinctRevokableAccounts)];
