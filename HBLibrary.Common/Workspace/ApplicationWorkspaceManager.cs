@@ -250,6 +250,11 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
 
         return Result.Ok();
     }
+
+    public bool IsOwner(ApplicationWorkspace workspace, Account.Account executingAccount) {
+        AccountInfo? accountInfo = accountStorage.GetAccount(executingAccount.AccountId);
+        return workspace.Owner == accountInfo;
+    }
 }
 
 public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWorkspaceManager<TApplicationWorkspace> where TApplicationWorkspace : ApplicationWorkspace, new() {
@@ -289,5 +294,9 @@ public class ApplicationWorkspaceManager<TApplicationWorkspace> : IApplicationWo
 
     public Result RevokeAccess(TApplicationWorkspace workspace, params AccountInfo[] accounts) {
         return internalWorkspaceManager.RevokeAccess(workspace, accounts);
+    }
+
+    public bool IsOwner(TApplicationWorkspace workspace, Account.Account executingAccount) {
+        return internalWorkspaceManager.IsOwner(workspace, executingAccount);
     }
 }

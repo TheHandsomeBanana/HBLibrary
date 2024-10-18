@@ -16,6 +16,7 @@ public interface IApplicationWorkspaceManager {
     public Task<Result<TApplicationWorkspace>> CreateAsync<TApplicationWorkspace>(string fullPath, Account.Account executingAccount) where TApplicationWorkspace : ApplicationWorkspace, new();
     public Task<Result<TApplicationWorkspace>> CreateEncryptedAsync<TApplicationWorkspace>(string fullPath, Account.Account executingAccount) where TApplicationWorkspace : ApplicationWorkspace, new();
 
+    public bool IsOwner(ApplicationWorkspace workspace, Account.Account executingAccount);
     public Result ShareAccess(ApplicationWorkspace workspace, params AccountInfo[] accounts);
     public Result RevokeAccess(ApplicationWorkspace workspace, params AccountInfo[] accounts);
 }
@@ -31,6 +32,7 @@ public interface IApplicationWorkspaceManager<TApplicationWorkspace> where TAppl
     public Task<Result<TApplicationWorkspace>> CreateAsync(string fullPath, Account.Account executingAccount);
     public Task<Result<TApplicationWorkspace>> CreateEncryptedAsync(string fullPath, Account.Account executingAccount);
 
+    public bool IsOwner(TApplicationWorkspace workspace, Account.Account executingAccount);
     public Result ShareAccess(TApplicationWorkspace workspace, params AccountInfo[] accounts);
     public Result RevokeAccess(TApplicationWorkspace workspace, params AccountInfo[] accounts);
 }
