@@ -6,6 +6,7 @@ using HBLibrary.Interface.Workspace;
 using HBLibrary.Security;
 using HBLibrary.Security.Account;
 using HBLibrary.Security.Rsa;
+using HBLibrary.Workspace.Converters;
 using HBLibrary.Workspace.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,10 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Workspace;
 public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
+    private readonly static JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
+        Converters = { new AccountInfoConverter() }
+    };
+
     private readonly IAccountStorage accountStorage;
     public string Application { get; }
     public IApplicationWorkspace? CurrentWorkspace { get; private set; }
@@ -79,7 +84,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
     private static async Task<Result<TApplicationWorkspace>> Deserialize<TApplicationWorkspace>(string fullPath) where TApplicationWorkspace : IApplicationWorkspace {
         try {
             byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
-            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
+            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace, serializerOptions);
 
             if (applicationWorkspace is null) {
                 return ApplicationWorkspaceException.CannotGet("data is corrupted");
@@ -95,7 +100,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
     private async Task<Result<TApplicationWorkspace>> DeserializeAndCheckAccount<TApplicationWorkspace>(string fullPath, IAccount executingAccount) where TApplicationWorkspace : IApplicationWorkspace {
         try {
             byte[] workspace = await UnifiedFile.ReadAllBytesAsync(fullPath);
-            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace);
+            TApplicationWorkspace? applicationWorkspace = JsonSerializer.Deserialize<TApplicationWorkspace>(workspace, serializerOptions);
 
             if (applicationWorkspace is null) {
                 return ApplicationWorkspaceException.CannotGet("data is corrupted");
@@ -137,7 +142,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
 
         workspace.OnCreated();
 
-        string serializedWorkspace = JsonSerializer.Serialize(workspace);
+        string serializedWorkspace = JsonSerializer.Serialize(workspace, serializerOptions);
 
         await UnifiedFile.WriteAllTextAsync(fullPath, serializedWorkspace);
         return workspace;
@@ -169,7 +174,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
 
             workspace.OnCreated();
 
-            byte[] serializedWorkspace = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(workspace));
+            byte[] serializedWorkspace = GlobalEnvironment.Encoding.GetBytes(JsonSerializer.Serialize(workspace, serializerOptions));
 
             await UnifiedFile.WriteAllBytesAsync(fullPath, serializedWorkspace);
             return workspace;
