@@ -1,5 +1,5 @@
-﻿using HBLibrary.Common.Account;
-using HBLibrary.Common.Security;
+﻿using HBLibrary.Interface.Security.Account;
+using HBLibrary.Security;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
 using System.Security;
@@ -54,7 +54,7 @@ public class RegisterViewModel : ViewModelBase<RegistrationModel> {
     public AsyncRelayCommand<UserControl> RegisterCommand { get; set; }
     public AsyncRelayCommand<UserControl> RegisterWithMicrosoftCommand { get; set; }
 
-    public RegisterViewModel(IAccountService accountService) : base(new RegistrationModel()) {
+    public RegisterViewModel() : base(new RegistrationModel()) {
         RegisterCommand = new AsyncRelayCommand<UserControl>(RegisterAsync, w => IsRegisterInputValid(), OnRegisterException);
         RegisterWithMicrosoftCommand = new AsyncRelayCommand<UserControl>(RegisterWithMicrosoftAsync, w => true, OnRegisterException);
     }

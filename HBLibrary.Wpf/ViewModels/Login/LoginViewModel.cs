@@ -1,4 +1,4 @@
-﻿using HBLibrary.Common.Security;
+﻿using HBLibrary.Security;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
 using System.Security;

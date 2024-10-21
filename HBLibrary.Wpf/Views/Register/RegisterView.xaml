@@ -13,7 +13,7 @@
             xmlns:loginViewModels="clr-namespace:HBLibrary.Wpf.ViewModels.Login"
             xmlns:loginViews="clr-namespace:HBLibrary.Wpf.Views.Login"
             xmlns:converters="clr-namespace:HBLibrary.Wpf.Converters"
-            xmlns:accountType="clr-namespace:HBLibrary.Common.Account;assembly=HBLibrary.Common"
+            xmlns:accountType="clr-namespace:HBLibrary.Security.Account;assembly=HBLibrary.Security"
             Background="Transparent" Width="400">
 
 

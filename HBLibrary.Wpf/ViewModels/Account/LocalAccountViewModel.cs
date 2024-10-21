@@ -1,5 +1,5 @@
-﻿using HBLibrary.Common;
-using HBLibrary.Common.Account;
+﻿using HBLibrary.Core;
+using HBLibrary.Interface.Security.Account;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
 using HBLibrary.Wpf.Views;

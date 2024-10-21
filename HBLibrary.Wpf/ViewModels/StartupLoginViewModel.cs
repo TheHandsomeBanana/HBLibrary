@@ -1,7 +1,7 @@
-﻿using HBLibrary.Common;
-using HBLibrary.Common.Account;
-using HBLibrary.Common.Authentication;
-using HBLibrary.Common.Authentication.Microsoft;
+﻿using HBLibrary.Core;
+using HBLibrary.Interface.Security.Account;
+using HBLibrary.Security.Authentication;
+using HBLibrary.Security.Authentication.Microsoft;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.ViewModels.Login;
 using HBLibrary.Wpf.ViewModels.Register;
@@ -50,7 +50,7 @@ public class StartupLoginViewModel : ViewModelBase {
         }
 
         LoginViewModel loginViewModel = new LoginViewModel();
-        AccountInfo? lastAccount = accountService.AccountStorage.GetLatestAccount(appSettings.ApplicationName!);
+        IAccountInfo? lastAccount = accountService.AccountStorage.GetLatestAccount(appSettings.ApplicationName!);
 
         if (lastAccount is not null && lastAccount.AccountType == AccountType.Local) {
             loginViewModel.Username = lastAccount.Username;
@@ -66,7 +66,7 @@ public class StartupLoginViewModel : ViewModelBase {
             loginViewModel.LoginTriggered -= LoginViewModel_LoginCompleted;
         }
 
-        RegisterViewModel registerViewModel = new RegisterViewModel(accountService);
+        RegisterViewModel registerViewModel = new RegisterViewModel();
         registerViewModel.RegistrationTriggered += RegisterViewModel_RegistrationCompleted;
         AppLoginContent = registerViewModel;
     }

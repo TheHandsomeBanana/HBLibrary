@@ -1,4 +1,4 @@
-﻿using HBLibrary.Common.Account;
+﻿using HBLibrary.Interface.Security.Account;
 using System.Security;
 
 namespace HBLibrary.Wpf.Models;

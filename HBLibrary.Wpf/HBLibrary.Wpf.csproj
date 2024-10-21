@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.Common\HBLibrary.Common.csproj" />
+    <ProjectReference Include="..\HBLibrary.Core\HBLibrary.Core.csproj" />
+    <ProjectReference Include="..\HBLibrary.Security\HBLibrary.Security.csproj" />
   </ItemGroup>
 
   <ItemGroup>

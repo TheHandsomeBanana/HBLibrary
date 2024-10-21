@@ -1,5 +1,6 @@
-﻿using HBLibrary.Common;
-using HBLibrary.Common.Account;
+﻿using HBLibrary.Core;
+using HBLibrary.Interface.Security.Account;
+using HBLibrary.Security.Account;
 using HBLibrary.Wpf.Commands;
 using HBLibrary.Wpf.Models;
 using HBLibrary.Wpf.ViewModels.Account;
@@ -75,7 +76,7 @@ public class AccountViewModel : ViewModelBase {
 
         StartupLoginViewModel dataContext = new StartupLoginViewModel(accountService, appSettings);
 
-        AccountInfo? lastAccount = accountService.AccountStorage.GetLatestAccount(accountService.Account!.Application);
+        IAccountInfo? lastAccount = accountService.AccountStorage.GetLatestAccount(accountService.Account!.Application);
 
         if (lastAccount?.AccountType == AccountType.Local && dataContext.AppLoginContent is LoginViewModel loginViewModel) {
             loginViewModel.Username = lastAccount.Username;

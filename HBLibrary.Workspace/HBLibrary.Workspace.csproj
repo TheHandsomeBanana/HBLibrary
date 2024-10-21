@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net472</TargetFrameworks>
+	  <LangVersion>12.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HBLibrary.Core\HBLibrary.Core.csproj" />
+    <ProjectReference Include="..\HBLibrary.Interface.Workspace\HBLibrary.Interface.Workspace.csproj" />
+    <ProjectReference Include="..\HBLibrary.Security\HBLibrary.Security.csproj" />
+  </ItemGroup>
+
+</Project>
