@@ -106,13 +106,13 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
                 return ApplicationWorkspaceException.CannotGet("data is corrupted");
             }
 
-            IAccountInfo? accountInfo = await accountStorage.GetAccountAsync(executingAccount.AccountId);
+            AccountInfo? accountInfo = await accountStorage.GetAccountAsync(executingAccount.AccountId) as AccountInfo;
 
             if (accountInfo is null) {
                 return ApplicationWorkspaceException.CannotOpen("account information is corrupted");
             }
 
-            if (applicationWorkspace.Owner != accountInfo && applicationWorkspace.SharedAccess.All(e => e != accountInfo)) {
+            if ((applicationWorkspace.Owner as AccountInfo) != accountInfo && applicationWorkspace.SharedAccess.Cast<AccountInfo>().All(e => e != accountInfo)) {
                 return ApplicationWorkspaceException.AccessDenied(fullPath);
             }
 
@@ -261,7 +261,7 @@ public class ApplicationWorkspaceManager : IApplicationWorkspaceManager {
 
     public bool IsOwner(IApplicationWorkspace workspace, IAccount executingAccount) {
         IAccountInfo? accountInfo = accountStorage.GetAccount(executingAccount.AccountId);
-        return workspace.Owner == accountInfo;
+        return workspace.Owner?.AccountId == accountInfo?.AccountId;
     }
 }
 
