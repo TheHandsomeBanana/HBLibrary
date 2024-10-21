@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Immutable;
 using System.IO;
-namespace HBLibrary.Common.Plugins;
+namespace HBLibrary.Interface.Plugins;
 
 public interface IAssemblyContext : IDisposable {
     public Assembly GetFirst();

@@ -1,6 +1,4 @@
-﻿using HBLibrary.Common.Plugins;
-using HBLibrary.Interface.Plugins;
-using HBLibrary.Interface.Plugins.Provider.Cache;
+﻿using HBLibrary.Interface.Plugins.Provider.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;

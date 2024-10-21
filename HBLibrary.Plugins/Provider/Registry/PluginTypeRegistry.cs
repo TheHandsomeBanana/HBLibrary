@@ -1,4 +1,4 @@
-﻿using HBLibrary.Common.Plugins;
+﻿using HBLibrary.Interface.Plugins;
 using HBLibrary.Interface.Plugins.Provider.Registry;
 using System;
 using System.Collections.Generic;

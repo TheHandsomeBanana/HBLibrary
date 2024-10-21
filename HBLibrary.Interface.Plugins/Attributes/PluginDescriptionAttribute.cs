@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Plugins.Attributes;
+namespace HBLibrary.Interface.Plugins.Attributes;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public class PluginDescriptionAttribute : Attribute {
     public string Description { get; set; }

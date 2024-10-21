@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Plugins.Attributes;
+namespace HBLibrary.Interface.Plugins.Attributes;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public class PluginAttribute : Attribute {
     public Type BaseType { get; set; }

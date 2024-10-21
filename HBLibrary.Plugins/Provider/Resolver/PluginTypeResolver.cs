@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Common.Plugins;
+using HBLibrary.Interface.Plugins;
 using HBLibrary.Interface.Plugins.Provider.Resolver;
 using System;
 using System.Collections.Generic;

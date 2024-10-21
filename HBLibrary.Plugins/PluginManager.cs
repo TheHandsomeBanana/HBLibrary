@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Common.Plugins;
 using HBLibrary.DataStructures;
 using HBLibrary.Interface.Plugins;
+using HBLibrary.Interface.Plugins.Attributes;
 using HBLibrary.Interface.Plugins.Builder;
 using HBLibrary.Interface.Plugins.Configuration;
 using HBLibrary.Interface.Plugins.Configuration.Builder;
@@ -8,7 +9,6 @@ using HBLibrary.Interface.Plugins.Loader;
 using HBLibrary.Interface.Plugins.Provider;
 using HBLibrary.Interface.Plugins.Provider.Registry;
 using HBLibrary.Interface.Plugins.Provider.Resolver;
-using HBLibrary.Plugins.Attributes;
 using HBLibrary.Plugins.Builder;
 using HBLibrary.Plugins.Configuration;
 using HBLibrary.Plugins.Configuration.Builder;

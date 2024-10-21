@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Common.Plugins;
 using HBLibrary.DataStructures;
+using HBLibrary.Interface.Plugins;
 using HBLibrary.Interface.Plugins.Loader;
 using System;
 using System.Collections.Generic;

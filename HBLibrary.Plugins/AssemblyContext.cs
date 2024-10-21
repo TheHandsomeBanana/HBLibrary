@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 using System.Collections.Immutable;
 using System.IO;
 
+/* Unmerged change from project 'HBLibrary.Plugins (net8.0)'
+Added:
+using HBLibrary.Interface.Plugins;
+*/
+using HBLibrary.Interface.Plugins;
+
 
 #if NET5_0_OR_GREATER
 using System.Runtime.Loader;
