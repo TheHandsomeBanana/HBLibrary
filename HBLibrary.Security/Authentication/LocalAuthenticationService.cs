@@ -1,4 +1,10 @@
-﻿using System.Runtime.Versioning;
+﻿using HBLibrary.Core;
+using HBLibrary.DataStructures;
+using HBLibrary.Interface.Security.Authentication;
+using HBLibrary.Interface.Security.Keys;
+using HBLibrary.Security.Credentials;
+using HBLibrary.Security.Exceptions;
+using System.Runtime.Versioning;
 using System.Security;
 
 namespace HBLibrary.Security.Authentication;
@@ -25,7 +31,7 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
     /// <param name="cancellationToken"></param>
     /// <exception cref="AuthenticationException"></exception>
     /// <returns></returns>
-    public async Task<LocalAuthResult> AuthenticateAsync(LocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
+    public async Task<ILocalAuthResult> AuthenticateAsync(ILocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
         if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
             AuthenticationException.ThrowUserNotFound();
         }
@@ -76,7 +82,7 @@ public sealed class LocalAuthenticationService : ILocalAuthenticationService {
         return hashedPassword.SequenceEqual(storedHashedPassword);
     }
 
-    public async Task<LocalAuthResult> AuthenticateNewAsync(LocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
+    public async Task<ILocalAuthResult> AuthenticateNewAsync(ILocalAuthCredentials authCredentials, CancellationToken cancellationToken = default) {
         if (await IsNewUserAsync(authCredentials.Username, cancellationToken)) {
             UserCredentials credentials = await credentialStorage.RegisterUserAsync(authCredentials.Username, authCredentials.Password, cancellationToken);
 
