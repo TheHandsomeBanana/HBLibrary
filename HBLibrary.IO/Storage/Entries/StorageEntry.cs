@@ -1,10 +1,13 @@
-﻿using HBLibrary.Interface.IO.Storage.Entries;
+﻿using HBLibrary.Interface.Core.ChangeTracker;
+using HBLibrary.Interface.IO.Storage.Entries;
 using HBLibrary.Interface.IO.Storage.Settings;
 
 namespace HBLibrary.IO.Storage.Entries;
-public abstract class StorageEntry {
+public abstract class StorageEntry : INotifyTrackableChanged {
     protected object Lock = new object();
     protected SemaphoreSlim Semaphore = new SemaphoreSlim(1);
+
+    public event TrackableChanged? TrackableChanged;
 
     protected object? Value { get; set; }
     public StorageEntrySettings Settings { get; set; }
@@ -32,6 +35,11 @@ public abstract class StorageEntry {
         }
 
         Value = value;
+
+        NotifyTrackableChanged(new TrackedChanges {
+            Name = Filename,
+            Value = Value
+        });
     }
 
     public virtual void Set<T>(T value) {
@@ -46,5 +54,14 @@ public abstract class StorageEntry {
         }
 
         Value = value;
+
+        NotifyTrackableChanged(new TrackedChanges {
+            Name = Filename,
+            Value = Value
+        });
+    }
+
+    protected void NotifyTrackableChanged(TrackedChanges changes) {
+        TrackableChanged?.Invoke(this, changes);
     }
 }

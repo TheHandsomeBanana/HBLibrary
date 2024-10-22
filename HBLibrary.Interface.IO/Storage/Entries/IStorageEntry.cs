@@ -1,7 +1,8 @@
-﻿using HBLibrary.Interface.IO.Storage.Settings;
+﻿using HBLibrary.Interface.Core.ChangeTracker;
+using HBLibrary.Interface.IO.Storage.Settings;
 
 namespace HBLibrary.Interface.IO.Storage.Entries;
-public interface IStorageEntry {
+public interface IStorageEntry : INotifyTrackableChanged {
     public string Filename { get; }
     public StorageEntryContentType ContentType { get; }
     public StorageEntrySettings Settings { get; set; }

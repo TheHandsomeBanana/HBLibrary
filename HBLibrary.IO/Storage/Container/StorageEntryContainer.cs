@@ -1,4 +1,5 @@
-﻿using HBLibrary.Interface.IO;
+﻿using HBLibrary.Interface.Core.ChangeTracker;
+using HBLibrary.Interface.IO;
 using HBLibrary.Interface.IO.Json;
 using HBLibrary.Interface.IO.Storage.Builder;
 using HBLibrary.Interface.IO.Storage.Container;
@@ -16,23 +17,19 @@ public class StorageEntryContainer : IStorageEntryContainer {
 
     private readonly Dictionary<string, IStorageEntry> entries = [];
     private readonly StorageContainerConfig config;
-    public StorageContainerCryptography? Cryptography { get; }
-    internal IFileServiceContainer? FileServices { get; set; }
+    public StorageContainerCryptography? Cryptography { get; init; }
+    internal IFileServiceContainer? FileServices { get; init; }
 
     public string BasePath { get; }
     public IFileService? FileService => FileServices?.FileService;
     public IJsonFileService? JsonFileService => FileServices?.JsonFileService;
     public IXmlFileService? XmlFileService => FileServices?.XmlFileService;
+    public IChangeTracker? ChangeTracker { get; init; }
 
-    public StorageEntryContainer(string basePath, IFileServiceContainer? fileServices = null, StorageContainerCryptography? cryptography = null) {
+    public StorageEntryContainer(string basePath) {
         BasePath = basePath;
-        FileServices = fileServices;
-        Cryptography = cryptography;
-
         Directory.CreateDirectory(basePath);
-
         config = StorageContainerConfig.GetConfig(basePath) ?? StorageContainerConfig.CreateNew(basePath);
-        InitEntries();
     }
 
     public static IStorageEntryContainerBuilder CreateBuilder(string basePath) {
@@ -40,7 +37,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
 
-    private void InitEntries() {
+    public void InitEntries() {
         foreach (KeyValuePair<string, ContainerEntry> containerEntry in config.Entries) {
             string path = Path.Combine(BasePath, containerEntry.Key + EXTENSION);
 
@@ -133,6 +130,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public void Save() {
         foreach (IStorageEntry entry in entries.Values) {
             entry.Save();
+            ChangeTracker?.SaveChanges(entry);
         }
 
         config.Save();
@@ -141,6 +139,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public async Task SaveAsync() {
         foreach (IStorageEntry entry in entries.Values) {
             await entry.SaveAsync();
+            ChangeTracker?.SaveChanges(entry);
         }
 
         await config.SaveAsync();
@@ -154,6 +153,8 @@ public class StorageEntryContainer : IStorageEntryContainer {
                 }
 
                 StorageJsonEntry jsonEntry = new StorageJsonEntry(JsonFileService, filename, containerEntry.Settings);
+                ChangeTracker?.Track(jsonEntry);
+
                 entries[filename] = jsonEntry;
                 return jsonEntry;
 
@@ -163,11 +164,15 @@ public class StorageEntryContainer : IStorageEntryContainer {
                 }
 
                 StorageXmlEntry xmlEntry = new StorageXmlEntry(XmlFileService, filename, containerEntry.Settings);
+                ChangeTracker?.Track(xmlEntry);
+
                 entries[filename] = xmlEntry;
                 return xmlEntry;
 
             case StorageEntryContentType.Csv:
                 StorageCsvEntry csvEntry = new StorageCsvEntry(filename, containerEntry.Settings);
+                ChangeTracker?.Track(csvEntry);
+
                 entries[filename] = csvEntry;
                 return csvEntry;
             default:
@@ -178,12 +183,19 @@ public class StorageEntryContainer : IStorageEntryContainer {
     public void Delete(string filename) {
         string path = Path.Combine(BasePath, filename + EXTENSION);
 
-        if (!entries.ContainsKey(path)) {
+        if (!entries.TryGetValue(path, out IStorageEntry? value)) {
             throw new InvalidOperationException($"Container does not contain entry with {path}.");
         }
+
+        ChangeTracker?.Untrack(value);
 
         entries.Remove(path);
         config.Entries.Remove(filename);
         File.Delete(path);
+    }
+
+    public void Dispose() {
+        ChangeTracker?.Dispose();
+        entries.Clear();
     }
 }

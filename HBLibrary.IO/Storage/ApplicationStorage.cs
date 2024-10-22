@@ -12,7 +12,7 @@ public class ApplicationStorage : IApplicationStorage {
     public string BasePath { get; }
     public Guid DefaultContainerId { get; }
     public IStorageEntryContainer DefaultContainer => Containers[DefaultContainerId];
-
+    
     public ApplicationStorage(string basePath) {
         BasePath = basePath;
         DefaultContainerId = basePath.ToGuid();
@@ -90,5 +90,23 @@ public class ApplicationStorage : IApplicationStorage {
         }
 
         return container.SaveAsync();
+    }
+
+    public bool? HasUnsavedChanges() {
+        foreach (IStorageEntryContainer container in Containers.Values) {
+            if (container.ChangeTracker?.HasActiveChanges ?? false) {
+                return true;
+            }
+        }
+
+        return null;
+    }
+
+    public void Dispose() {
+        foreach(IStorageEntryContainer container in Containers.Values) {
+            container.Dispose();
+        }
+
+        Containers.Clear();
     }
 }

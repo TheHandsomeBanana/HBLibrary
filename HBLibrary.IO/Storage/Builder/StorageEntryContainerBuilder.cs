@@ -1,4 +1,5 @@
-﻿using HBLibrary.Interface.IO.Storage.Builder;
+﻿using HBLibrary.Interface.Core.ChangeTracker;
+using HBLibrary.Interface.IO.Storage.Builder;
 using HBLibrary.Interface.IO.Storage.Container;
 using HBLibrary.Interface.IO.Storage.Settings;
 using HBLibrary.IO.Storage.Container;
@@ -8,13 +9,20 @@ internal class StorageEntryContainerBuilder : IStorageEntryContainerBuilder {
     private string basePath;
     private readonly IFileServiceContainer fileServices = new FileServiceContainer();
     private StorageContainerCryptography? storageContainerCryptography;
+    private IChangeTracker? changeTracker;
 
     public StorageEntryContainerBuilder(string basePath) {
         this.basePath = basePath;
     }
 
     public IStorageEntryContainer Build() {
-        StorageEntryContainer container = new StorageEntryContainer(basePath, fileServices, storageContainerCryptography);
+        StorageEntryContainer container = new StorageEntryContainer(basePath) {
+            FileServices = fileServices,
+            Cryptography = storageContainerCryptography,
+            ChangeTracker = changeTracker
+        };
+
+        container.InitEntries();
         return container;
     }
 
@@ -35,6 +43,11 @@ internal class StorageEntryContainerBuilder : IStorageEntryContainerBuilder {
 
     public IStorageEntryContainerBuilder EnableCryptography(StorageContainerCryptography cryptography) {
         storageContainerCryptography = cryptography;
+        return this;
+    }
+
+    public IStorageEntryContainerBuilder EnableChangeTracker(IChangeTracker changeTracker) {
+        this.changeTracker = changeTracker;
         return this;
     }
 }

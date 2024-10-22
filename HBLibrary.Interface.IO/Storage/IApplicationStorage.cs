@@ -3,10 +3,11 @@ using HBLibrary.Interface.IO.Storage.Container;
 using HBLibrary.Interface.IO.Storage.Entries;
 
 namespace HBLibrary.Interface.IO.Storage;
-public interface IApplicationStorage {
+public interface IApplicationStorage : IDisposable {
     public string BasePath { get; }
     public Guid DefaultContainerId { get; }
     public IStorageEntryContainer DefaultContainer { get; }
+    public bool? HasUnsavedChanges();
 
     public IEnumerable<IStorageEntry> GetStorageEntries(Guid containerId);
     public void SaveStorageEntries(Guid containerId);

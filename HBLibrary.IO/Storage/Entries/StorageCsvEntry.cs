@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using HBLibrary.Interface.Core.ChangeTracker;
 using HBLibrary.Interface.IO;
 using HBLibrary.Interface.IO.Storage.Entries;
 using HBLibrary.Interface.IO.Storage.Settings;
@@ -7,6 +8,7 @@ using System.Globalization;
 
 namespace HBLibrary.IO.Storage.Entries;
 internal class StorageCsvEntry : StorageEntry, IStorageEntry {
+    // TODO: Implement cryptography
     internal StorageCsvEntry(string filename, StorageEntrySettings settings) : base(filename, StorageEntryContentType.Csv, settings) {
     }
 
@@ -80,6 +82,11 @@ internal class StorageCsvEntry : StorageEntry, IStorageEntry {
         }
 
         Value = value;
+
+        NotifyTrackableChanged(new TrackedChanges {
+            Name = Filename,
+            Value = Value
+        });
     }
 
     public void Save() {

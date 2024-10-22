@@ -1,15 +1,17 @@
-﻿using HBLibrary.Interface.IO.Json;
+﻿using HBLibrary.Interface.Core.ChangeTracker;
+using HBLibrary.Interface.IO.Json;
 using HBLibrary.Interface.IO.Storage.Entries;
 using HBLibrary.Interface.IO.Storage.Settings;
 using HBLibrary.Interface.IO.Xml;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HBLibrary.Interface.IO.Storage.Container;
-public interface IStorageEntryContainer {
+public interface IStorageEntryContainer : IDisposable {
     string BasePath { get; }
     public IFileService? FileService { get; }
     public IJsonFileService? JsonFileService { get; }
     public IXmlFileService? XmlFileService { get; }
+    public IChangeTracker? ChangeTracker { get; }
     public StorageContainerCryptography? Cryptography { get; }
 
     public IStorageEntry? this[string filename] { get; set; }
