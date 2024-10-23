@@ -13,9 +13,9 @@ public sealed class TrackedItem : ITrackedItem {
     public DateTime LastChangedAt { get; private set; }
     public bool HasChanges { get; private set; }
 
-    public bool TrackedItemStateChangedIsNull => TrackedItemStateChanged is null;
+    public bool TrackedItemUpdatedIsNull => TrackedItemUpdated is null;
 
-    public event Action<bool>? TrackedItemStateChanged;
+    public event Action<bool>? TrackedItemUpdated;
 
     public TrackedItem(INotifyTrackableChanged trackedItem) {
         Item = trackedItem;
@@ -30,10 +30,10 @@ public sealed class TrackedItem : ITrackedItem {
 
         if (updated) {
             LastChangedAt = changedAt;
+            HasChanges = true;
+            TrackedItemUpdated?.Invoke(true);
         }
 
-        HasChanges = updated;
-        TrackedItemStateChanged?.Invoke(updated);
     }
 
     public void Dispose() {
@@ -41,9 +41,7 @@ public sealed class TrackedItem : ITrackedItem {
     }
 
     public void SaveChanges() {
-        if (HasChanges) {
-            HasChanges = false;
-            TrackedItemStateChanged?.Invoke(false);
-        }
+        HasChanges = false;
+        TrackedItemUpdated?.Invoke(false);
     }
 }

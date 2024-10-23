@@ -10,7 +10,7 @@ public abstract class InitializerViewModelBase : ViewModelBase, IInitializer {
     private bool isInitialized;
     public bool IsInitialized {
         get => isInitialized;
-        private set {
+        protected set {
             isInitialized = value;
             NotifyPropertyChanged();
         }
@@ -54,7 +54,7 @@ public abstract class InitializerViewModelBase<TModel> : ViewModelBase<TModel>, 
     private bool isInitialized;
     public bool IsInitialized {
         get => isInitialized;
-        private set {
+        protected set {
             isInitialized = value;
             NotifyPropertyChanged();
         }

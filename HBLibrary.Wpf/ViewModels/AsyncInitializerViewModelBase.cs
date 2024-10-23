@@ -10,7 +10,7 @@ public abstract class AsyncInitializerViewModelBase : ViewModelBase, IAsyncIniti
     private bool isInitialized;
     public bool IsInitialized {
         get => isInitialized;
-        private set {
+        protected set {
             isInitialized = value;
             NotifyPropertyChanged();
         }
@@ -58,7 +58,7 @@ public abstract class AsyncInitializerViewModelBase<TModel> : ViewModelBase<TMod
     private bool isInitialized;
     public bool IsInitialized {
         get => isInitialized;
-        private set {
+        protected set {
             isInitialized = value;
             NotifyPropertyChanged();
         }

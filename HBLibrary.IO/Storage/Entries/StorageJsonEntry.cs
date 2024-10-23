@@ -72,7 +72,6 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -132,7 +131,6 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -244,7 +242,6 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -305,7 +302,6 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;

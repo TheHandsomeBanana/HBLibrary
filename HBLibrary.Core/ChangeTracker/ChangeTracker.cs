@@ -14,7 +14,7 @@ public sealed class ChangeTracker : IChangeTracker {
 
     public IReadOnlyList<ITrackedItem> TrackedItems => trackedItems;
 
-    public bool HasActiveChanges => TrackedItems.Any(e => e.HasChanges);
+    public bool HasActiveChanges { get; private set; } = false;
 
     public ITrackedItem? Get(INotifyTrackableChanged entity) {
         return TrackedItems.FirstOrDefault(e => ReferenceEquals(e.Item, entity));
@@ -30,6 +30,8 @@ public sealed class ChangeTracker : IChangeTracker {
         }
 
         TrackedItem trackedItem = new TrackedItem(entity);
+        trackedItem.TrackedItemUpdated += TrackedItemStateChanged;
+
         trackedItems.Add(trackedItem);
     }
 
@@ -39,7 +41,7 @@ public sealed class ChangeTracker : IChangeTracker {
         }
 
         ITrackedItem trackedItem = trackedItems.First(e => ReferenceEquals(entity, e.Item));
-        trackedItem.TrackedItemStateChanged -= ChangeTrackerStateChanged;
+        trackedItem.TrackedItemUpdated -= TrackedItemStateChanged;
         trackedItem.Dispose();
         trackedItems.Remove(trackedItem);
     }
@@ -57,7 +59,7 @@ public sealed class ChangeTracker : IChangeTracker {
 
     public void UntrackAll() {
         foreach (ITrackedItem trackedItem in trackedItems) {
-            trackedItem.TrackedItemStateChanged -= ChangeTrackerStateChanged;
+            trackedItem.TrackedItemUpdated -= TrackedItemStateChanged;
             trackedItem.Dispose();
         }
 
@@ -70,8 +72,8 @@ public sealed class ChangeTracker : IChangeTracker {
 
     public void HookStateChanged() {
         foreach (ITrackedItem trackedItem in trackedItems) {
-            if (trackedItem.TrackedItemStateChangedIsNull) {
-                trackedItem.TrackedItemStateChanged += ChangeTrackerStateChanged;
+            if (trackedItem.TrackedItemUpdatedIsNull) {
+                trackedItem.TrackedItemUpdated += TrackedItemStateChanged;
             }
         }
     }
@@ -79,8 +81,18 @@ public sealed class ChangeTracker : IChangeTracker {
     public void HookStateChanged(INotifyTrackableChanged notifyTrackableChanged) {
         ITrackedItem? trackedItem = Get(notifyTrackableChanged);
 
-        if (trackedItem?.TrackedItemStateChangedIsNull ?? false) {
-            trackedItem.TrackedItemStateChanged += ChangeTrackerStateChanged;
+        if (trackedItem?.TrackedItemUpdatedIsNull ?? false) {
+            trackedItem.TrackedItemUpdated += TrackedItemStateChanged;
         }
+    }
+
+    private void TrackedItemStateChanged(bool state) {
+        if (HasActiveChanges == state) {
+            return;
+        }
+
+        HasActiveChanges = trackedItems.Any(e => e.HasChanges);
+
+        ChangeTrackerStateChanged?.Invoke(HasActiveChanges);
     }
 }

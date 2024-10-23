@@ -71,7 +71,6 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -132,7 +131,6 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -243,7 +241,6 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -305,7 +302,6 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
         if (value is INotifyTrackableChanged notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
-            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
         }
 
         return value;
@@ -330,7 +326,6 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
                 if (Value is INotifyTrackableChanged notifyTrackableChanged) {
                     ChangeTracker?.Track(notifyTrackableChanged);
-                    ChangeTracker?.HookStateChanged(notifyTrackableChanged);
                 }
             }
             else {
@@ -360,7 +355,6 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
 
                 if (Value is INotifyTrackableChanged notifyTrackableChanged) {
                     ChangeTracker?.Track(notifyTrackableChanged);
-                    ChangeTracker?.HookStateChanged(notifyTrackableChanged);
                 }
             }
             else {

@@ -153,7 +153,6 @@ public class StorageEntryContainer : IStorageEntryContainer {
                 }
 
                 StorageJsonEntry jsonEntry = new StorageJsonEntry(JsonFileService, filename, containerEntry.Settings, ChangeTracker);
-                ChangeTracker?.HookStateChanged(jsonEntry);
                 ChangeTracker?.Track(jsonEntry);
 
                 entries[filename] = jsonEntry;
@@ -165,7 +164,6 @@ public class StorageEntryContainer : IStorageEntryContainer {
                 }
 
                 StorageXmlEntry xmlEntry = new StorageXmlEntry(XmlFileService, filename, containerEntry.Settings, ChangeTracker);
-                ChangeTracker?.HookStateChanged(xmlEntry);
                 ChangeTracker?.Track(xmlEntry);
 
                 entries[filename] = xmlEntry;
@@ -173,7 +171,6 @@ public class StorageEntryContainer : IStorageEntryContainer {
 
             case StorageEntryContentType.Csv:
                 StorageCsvEntry csvEntry = new StorageCsvEntry(filename, containerEntry.Settings, ChangeTracker);
-                ChangeTracker?.HookStateChanged(csvEntry);
                 ChangeTracker?.Track(csvEntry);
 
                 entries[filename] = csvEntry;
@@ -191,6 +188,12 @@ public class StorageEntryContainer : IStorageEntryContainer {
         }
 
         ChangeTracker?.Untrack(value);
+        if (value.CurrentEntryType is not null) {
+            object? internalValue = value.Get(value.CurrentEntryType);
+            if (internalValue is INotifyTrackableChanged notifyTrackableChanged) {
+                ChangeTracker?.Untrack(notifyTrackableChanged);
+            }
+        }
 
         entries.Remove(path);
         config.Entries.Remove(filename);

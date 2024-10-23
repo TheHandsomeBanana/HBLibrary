@@ -37,6 +37,10 @@ public abstract class StorageEntry : INotifyTrackableChanged {
             return;
         }
 
+        if(Value is null && value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+        }
+
         Value = value;
 
         NotifyTrackableChanged(new TrackedChanges {
@@ -48,12 +52,6 @@ public abstract class StorageEntry : INotifyTrackableChanged {
     public virtual void Set<T>(T value) {
         if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
             return;
-        }
-
-        if (Value is not null) {
-            if (Value is not T) {
-                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
-            }
         }
 
         Value = value;
