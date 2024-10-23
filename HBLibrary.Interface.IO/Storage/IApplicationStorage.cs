@@ -16,6 +16,7 @@ public interface IApplicationStorage : IDisposable {
 
     public IStorageEntryContainer GetContainer(Guid containerId);
     public IStorageEntryContainer GetContainer(Type containerType);
+    public IStorageEntryContainer[] GetContainers();
     public void CreateContainer(Guid containerId, Func<IStorageEntryContainerBuilder, IStorageEntryContainer> builder);
     public bool RemoveContainer(Guid containerId);
     public void RemoveAllContainers();

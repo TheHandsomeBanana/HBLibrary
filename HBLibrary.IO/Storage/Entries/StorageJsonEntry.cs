@@ -1,4 +1,5 @@
 ﻿using HBLibrary.DataStructures;
+using HBLibrary.Interface.Core.ChangeTracker;
 using HBLibrary.Interface.IO;
 using HBLibrary.Interface.IO.Json;
 using HBLibrary.Interface.IO.Storage.Entries;
@@ -11,8 +12,8 @@ namespace HBLibrary.IO.Storage.Entries;
 internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     private readonly IJsonFileService jsonService;
 
-    internal StorageJsonEntry(IJsonFileService jsonService, string filename, StorageEntrySettings settings)
-        : base(filename, StorageEntryContentType.Json, settings) {
+    internal StorageJsonEntry(IJsonFileService jsonService, string filename, StorageEntrySettings settings, IChangeTracker? changeTracker)
+        : base(filename, StorageEntryContentType.Json, settings, changeTracker) {
         this.jsonService = jsonService;
     }
 
@@ -53,19 +54,28 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     }
 
     private object? GetInternal(Type type, FileSnapshot file) {
+        object? value;
+
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
 
-            return jsonService.DecryptJson(type, file, new Cryptographer(), new CryptographyInput {
+            value = jsonService.DecryptJson(type, file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return jsonService.ReadJson(type, file);
+            value = jsonService.ReadJson(type, file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public async Task<object?> GetAsync(Type type) {
@@ -105,19 +115,27 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     }
 
     private async Task<object?> GetAsyncInternal(Type type, FileSnapshot file) {
+        object? value;
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
 
-            return jsonService.DecryptJson(type, file, new Cryptographer(), new CryptographyInput {
+            value = jsonService.DecryptJson(type, file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return await jsonService.ReadJsonAsync(type, file);
+            value = await jsonService.ReadJsonAsync(type, file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public void Save() {
@@ -135,6 +153,10 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                 }
                 else {
                     jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
         }
@@ -157,6 +179,10 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                 }
                 else {
                     await jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
         }
@@ -200,19 +226,28 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     }
 
     private T? GetInternal<T>(FileSnapshot file) {
+        T? value;
+
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
 
-            return jsonService.DecryptJson<T>(file, new Cryptographer(), new CryptographyInput {
+            value = jsonService.DecryptJson<T>(file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return jsonService.ReadJson<T>(file);
+            value = jsonService.ReadJson<T>(file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public async Task<T?> GetAsync<T>() {
@@ -253,41 +288,52 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     }
 
     private async Task<T?> GetAsyncInternal<T>(FileSnapshot file) {
+        T? value;
+
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
-            return jsonService.DecryptJson<T>(file, new Cryptographer(), new CryptographyInput {
+            value = jsonService.DecryptJson<T>(file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return await jsonService.ReadJsonAsync<T>(file);
+            value = await jsonService.ReadJsonAsync<T>(file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public void Save<T>() {
         lock (Lock) {
-            if (Value is not null) {
-                if (Value is T tValue) {
-                    if (Settings.EncryptionEnabled) {
-                        Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            if (Value is T tValue) {
+                if (Settings.EncryptionEnabled) {
+                    Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
 
-                        IKey key = keyResult.GetValueOrThrow();
+                    IKey key = keyResult.GetValueOrThrow();
 
-                        jsonService.EncryptJson(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
-                            Key = key,
-                            Mode = Settings.ContainerCryptography.CryptographyMode
-                        });
-                    }
-                    else {
-                        jsonService.WriteJson(FileSnapshot.Create(Filename, true), tValue);
-                    }
+                    jsonService.EncryptJson(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
+                        Key = key,
+                        Mode = Settings.ContainerCryptography.CryptographyMode
+                    });
                 }
                 else {
-                    throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+                    jsonService.WriteJson(FileSnapshot.Create(Filename, true), tValue);
                 }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.SaveChanges(notifyTrackableChanged);
+                }
+            }
+            else {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
             }
         }
     }
@@ -295,26 +341,27 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     public async Task SaveAsync<T>() {
         await Semaphore.WaitAsync();
         try {
+            if (Value is T tValue) {
+                if (Settings.EncryptionEnabled) {
+                    Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
 
-            if (Value is not null) {
-                if (Value is T tValue) {
-                    if (Settings.EncryptionEnabled) {
-                        Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
+                    IKey key = keyResult.GetValueOrThrow();
 
-                        IKey key = keyResult.GetValueOrThrow();
-
-                        jsonService.EncryptJson(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
-                            Key = key,
-                            Mode = Settings.ContainerCryptography.CryptographyMode
-                        });
-                    }
-                    else {
-                        await jsonService.WriteJsonAsync(FileSnapshot.Create(Filename, true), tValue);
-                    }
+                    jsonService.EncryptJson(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
+                        Key = key,
+                        Mode = Settings.ContainerCryptography.CryptographyMode
+                    });
                 }
                 else {
-                    throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+                    await jsonService.WriteJsonAsync(FileSnapshot.Create(Filename, true), tValue);
                 }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.SaveChanges(notifyTrackableChanged);
+                }
+            }
+            else {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
             }
         }
         finally {
@@ -324,6 +371,10 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
 
     protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {
         Save();
+
+        if(Value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Untrack(notifyTrackableChanged);
+        }
 
         if (Value is IDisposable disposable) {
             disposable.Dispose();

@@ -13,17 +13,27 @@ public sealed class TrackedItem : ITrackedItem {
     public DateTime LastChangedAt { get; private set; }
     public bool HasChanges { get; private set; }
 
+    public bool TrackedItemStateChangedIsNull => TrackedItemStateChanged is null;
+
+    public event Action<bool>? TrackedItemStateChanged;
 
     public TrackedItem(INotifyTrackableChanged trackedItem) {
         Item = trackedItem;
         Item.TrackableChanged += TrackedItem_TrackableChanged;
     }
 
+
     private void TrackedItem_TrackableChanged(object? sender, TrackedChanges trackedChanges) {
         DateTime changedAt = DateTime.UtcNow;
-        HasChanges = true;
-        LastChangedAt = changedAt;
-        History.AddOrUpdate(trackedChanges.Name, trackedChanges.Value);
+
+        bool updated = History.TryAddOrUpdate(trackedChanges.Name, trackedChanges.Value);
+
+        if (updated) {
+            LastChangedAt = changedAt;
+        }
+
+        HasChanges = updated;
+        TrackedItemStateChanged?.Invoke(updated);
     }
 
     public void Dispose() {
@@ -31,6 +41,9 @@ public sealed class TrackedItem : ITrackedItem {
     }
 
     public void SaveChanges() {
-        HasChanges = false;
+        if (HasChanges) {
+            HasChanges = false;
+            TrackedItemStateChanged?.Invoke(false);
+        }
     }
 }

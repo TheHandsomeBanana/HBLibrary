@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Core.ChangeTracker;
 public sealed class ChangeTracker : IChangeTracker {
-    private readonly List<ITrackedItem> changeSets = [];
-    public IReadOnlyList<ITrackedItem> TrackedItems => changeSets;
+    private readonly List<ITrackedItem> trackedItems = [];
+
+    public event Action<bool>? ChangeTrackerStateChanged;
+
+    public IReadOnlyList<ITrackedItem> TrackedItems => trackedItems;
 
     public bool HasActiveChanges => TrackedItems.Any(e => e.HasChanges);
 
@@ -26,7 +29,8 @@ public sealed class ChangeTracker : IChangeTracker {
             return;
         }
 
-        changeSets.Add(new TrackedItem(entity));
+        TrackedItem trackedItem = new TrackedItem(entity);
+        trackedItems.Add(trackedItem);
     }
 
     public void Untrack(INotifyTrackableChanged entity) {
@@ -34,33 +38,49 @@ public sealed class ChangeTracker : IChangeTracker {
             return;
         }
 
-        ITrackedItem foundChangeSet = changeSets.First(e => ReferenceEquals(entity, e.Item));
-        foundChangeSet.Dispose();
-        changeSets.Remove(foundChangeSet);
+        ITrackedItem trackedItem = trackedItems.First(e => ReferenceEquals(entity, e.Item));
+        trackedItem.TrackedItemStateChanged -= ChangeTrackerStateChanged;
+        trackedItem.Dispose();
+        trackedItems.Remove(trackedItem);
     }
 
     public void SaveChanges(INotifyTrackableChanged entity) {
-        ITrackedItem? changeSet = Get(entity);
-        changeSet?.SaveChanges();
+        ITrackedItem? trackedItem = Get(entity);
+        trackedItem?.SaveChanges();
     }
 
     public void SaveAllChanges() {
-        foreach (ITrackedItem changeSet in changeSets) {
-            changeSet.SaveChanges();
+        foreach (ITrackedItem trackedItem in trackedItems) {
+            trackedItem.SaveChanges();
         }
     }
 
     public void UntrackAll() {
-        foreach (ITrackedItem changeSet in changeSets) {
-            changeSet.Dispose();
+        foreach (ITrackedItem trackedItem in trackedItems) {
+            trackedItem.TrackedItemStateChanged -= ChangeTrackerStateChanged;
+            trackedItem.Dispose();
         }
 
-        changeSets.Clear();
+        trackedItems.Clear();
     }
 
     public void Dispose() {
         UntrackAll();
     }
 
-  
+    public void HookStateChanged() {
+        foreach (ITrackedItem trackedItem in trackedItems) {
+            if (trackedItem.TrackedItemStateChangedIsNull) {
+                trackedItem.TrackedItemStateChanged += ChangeTrackerStateChanged;
+            }
+        }
+    }
+
+    public void HookStateChanged(INotifyTrackableChanged notifyTrackableChanged) {
+        ITrackedItem? trackedItem = Get(notifyTrackableChanged);
+
+        if (trackedItem?.TrackedItemStateChangedIsNull ?? false) {
+            trackedItem.TrackedItemStateChanged += ChangeTrackerStateChanged;
+        }
+    }
 }

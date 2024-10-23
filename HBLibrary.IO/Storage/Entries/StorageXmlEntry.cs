@@ -1,4 +1,5 @@
 ﻿using HBLibrary.DataStructures;
+using HBLibrary.Interface.Core.ChangeTracker;
 using HBLibrary.Interface.IO;
 using HBLibrary.Interface.IO.Storage.Entries;
 using HBLibrary.Interface.IO.Storage.Settings;
@@ -10,7 +11,9 @@ using HBLibrary.Security;
 namespace HBLibrary.IO.Storage.Entries;
 public class StorageXmlEntry : StorageEntry, IStorageEntry {
     private readonly IXmlFileService xmlService;
-    internal StorageXmlEntry(IXmlFileService xmlService, string filename, StorageEntrySettings settings) : base(filename, StorageEntryContentType.Xml, settings) {
+    internal StorageXmlEntry(IXmlFileService xmlService, string filename, StorageEntrySettings settings, IChangeTracker? changeTracker)
+        : base(filename, StorageEntryContentType.Xml, settings, changeTracker) {
+
         this.xmlService = xmlService;
     }
 
@@ -51,19 +54,27 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
     }
 
     private object? GetInternal(Type type, FileSnapshot file) {
+        object? value;
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
 
-            return xmlService.DecryptXml(type, file, new Cryptographer(), new CryptographyInput {
+            value = xmlService.DecryptXml(type, file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return xmlService.ReadXml(type, file);
+            value = xmlService.ReadXml(type, file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public async Task<object?> GetAsync(Type type) {
@@ -103,19 +114,28 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
     }
 
     private async Task<object?> GetAsyncInternal(Type type, FileSnapshot file) {
+        object? value;
+
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
 
-            return xmlService.DecryptXml(type, file, new Cryptographer(), new CryptographyInput {
+            value = xmlService.DecryptXml(type, file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return await xmlService.ReadXmlAsync(type, file);
+            value = await xmlService.ReadXmlAsync(type, file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public void Save() {
@@ -133,6 +153,10 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                 }
                 else {
                     xmlService.WriteXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
         }
@@ -155,6 +179,10 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                 }
                 else {
                     await xmlService.WriteXmlAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
+                }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
         }
@@ -198,18 +226,27 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
     }
 
     private T? GetInternal<T>(FileSnapshot file) {
+        T? value;
+
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
             IKey key = keyResult.GetValueOrThrow();
 
-            return xmlService.DecryptXml<T>(file, new Cryptographer(), new CryptographyInput {
+            value = xmlService.DecryptXml<T>(file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return xmlService.ReadXml<T>(file);
+            value = xmlService.ReadXml<T>(file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public async Task<T?> GetAsync<T>() {
@@ -250,42 +287,54 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
     }
 
     private async Task<T?> GetAsyncInternal<T>(FileSnapshot file) {
+        T? value;
+
         if (Settings.EncryptionEnabled) {
             Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
 
             IKey key = keyResult.GetValueOrThrow();
 
-            return xmlService.DecryptXml<T>(file, new Cryptographer(), new CryptographyInput {
+            value = xmlService.DecryptXml<T>(file, new Cryptographer(), new CryptographyInput {
                 Key = key,
                 Mode = Settings.ContainerCryptography.CryptographyMode
             });
         }
         else {
-            return await xmlService.ReadXmlAsync<T>(file);
+            value = await xmlService.ReadXmlAsync<T>(file);
         }
+
+        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
+            ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+        }
+
+        return value;
     }
 
     public void Save<T>() {
         lock (Lock) {
-            if (Value is not null) {
-                if (Value is T tValue) {
-                    if (Settings.EncryptionEnabled) {
-                        Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
+            if (Value is T tValue) {
+                if (Settings.EncryptionEnabled) {
+                    Result<IKey> keyResult = Settings.ContainerCryptography!.GetEntryKey.Invoke();
 
-                        IKey key = keyResult.GetValueOrThrow();
+                    IKey key = keyResult.GetValueOrThrow();
 
-                        xmlService.EncryptXml(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
-                            Key = key,
-                            Mode = Settings.ContainerCryptography.CryptographyMode
-                        });
-                    }
-                    else {
-                        xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
-                    }
+                    xmlService.EncryptXml(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
+                        Key = key,
+                        Mode = Settings.ContainerCryptography.CryptographyMode
+                    });
                 }
                 else {
-                    throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+                    xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
                 }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.Track(notifyTrackableChanged);
+                    ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+                }
+            }
+            else {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
             }
         }
     }
@@ -294,25 +343,28 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
         await Semaphore.WaitAsync();
         try {
 
-            if (Value is not null) {
-                if (Value is T tValue) {
-                    if (Settings.EncryptionEnabled) {
-                        Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
+            if (Value is T tValue) {
+                if (Settings.EncryptionEnabled) {
+                    Result<IKey> keyResult = await Settings.ContainerCryptography!.GetEntryKeyAsync.Invoke();
 
-                        IKey key = keyResult.GetValueOrThrow();
+                    IKey key = keyResult.GetValueOrThrow();
 
-                        xmlService.EncryptXml(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
-                            Key = key,
-                            Mode = Settings.ContainerCryptography.CryptographyMode
-                        });
-                    }
-                    else {
-                        await xmlService.WriteXmlAsync(FileSnapshot.Create(Filename, true), tValue);
-                    }
+                    xmlService.EncryptXml(FileSnapshot.Create(Filename, true), tValue, new Cryptographer(), new CryptographyInput {
+                        Key = key,
+                        Mode = Settings.ContainerCryptography.CryptographyMode
+                    });
                 }
                 else {
-                    throw new InvalidOperationException("Cannot save, entry does not equal given type.");
+                    await xmlService.WriteXmlAsync(FileSnapshot.Create(Filename, true), tValue);
                 }
+
+                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                    ChangeTracker?.Track(notifyTrackableChanged);
+                    ChangeTracker?.HookStateChanged(notifyTrackableChanged);
+                }
+            }
+            else {
+                throw new InvalidOperationException("Cannot save, entry does not equal given type.");
             }
         }
         finally {

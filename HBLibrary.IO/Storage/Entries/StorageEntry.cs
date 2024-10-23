@@ -10,6 +10,7 @@ public abstract class StorageEntry : INotifyTrackableChanged {
     public event TrackableChanged? TrackableChanged;
 
     protected object? Value { get; set; }
+    protected IChangeTracker? ChangeTracker { get; }
     public StorageEntrySettings Settings { get; set; }
     public string Filename { get; }
 
@@ -17,7 +18,7 @@ public abstract class StorageEntry : INotifyTrackableChanged {
     public StorageEntryContentType ContentType { get; }
 
 
-    public StorageEntry(string filename, StorageEntryContentType contentType, StorageEntrySettings settings) {
+    public StorageEntry(string filename, StorageEntryContentType contentType, StorageEntrySettings settings, IChangeTracker? changeTracker) {
         Filename = filename;
         ContentType = contentType;
         Settings = settings;
@@ -25,6 +26,8 @@ public abstract class StorageEntry : INotifyTrackableChanged {
         if (settings.LifeTime!.Countdown is not null) {
             settings.LifeTime.Countdown.CountdownCompleted += OnLifetimeOver;
         }
+
+        ChangeTracker = changeTracker;
     }
 
     protected abstract void OnLifetimeOver(object sender, TimeSpan fullTime);

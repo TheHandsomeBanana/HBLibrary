@@ -55,6 +55,10 @@ public class ApplicationStorage : IApplicationStorage {
         return Containers[containerType.GUID];
     }
 
+    public IStorageEntryContainer[] GetContainers() {
+        return [.. Containers.Values];
+    }
+
     public void SaveAll() {
         foreach (IStorageEntryContainer container in Containers.Values) {
             container.Save();

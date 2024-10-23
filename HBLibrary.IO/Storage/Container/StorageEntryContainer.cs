@@ -152,7 +152,8 @@ public class StorageEntryContainer : IStorageEntryContainer {
                     throw new InvalidOperationException($"{nameof(JsonFileService)} is null.");
                 }
 
-                StorageJsonEntry jsonEntry = new StorageJsonEntry(JsonFileService, filename, containerEntry.Settings);
+                StorageJsonEntry jsonEntry = new StorageJsonEntry(JsonFileService, filename, containerEntry.Settings, ChangeTracker);
+                ChangeTracker?.HookStateChanged(jsonEntry);
                 ChangeTracker?.Track(jsonEntry);
 
                 entries[filename] = jsonEntry;
@@ -163,14 +164,16 @@ public class StorageEntryContainer : IStorageEntryContainer {
                     throw new InvalidOperationException($"{nameof(XmlFileService)} is null.");
                 }
 
-                StorageXmlEntry xmlEntry = new StorageXmlEntry(XmlFileService, filename, containerEntry.Settings);
+                StorageXmlEntry xmlEntry = new StorageXmlEntry(XmlFileService, filename, containerEntry.Settings, ChangeTracker);
+                ChangeTracker?.HookStateChanged(xmlEntry);
                 ChangeTracker?.Track(xmlEntry);
 
                 entries[filename] = xmlEntry;
                 return xmlEntry;
 
             case StorageEntryContentType.Csv:
-                StorageCsvEntry csvEntry = new StorageCsvEntry(filename, containerEntry.Settings);
+                StorageCsvEntry csvEntry = new StorageCsvEntry(filename, containerEntry.Settings, ChangeTracker);
+                ChangeTracker?.HookStateChanged(csvEntry);
                 ChangeTracker?.Track(csvEntry);
 
                 entries[filename] = csvEntry;
