@@ -33,31 +33,40 @@ public abstract class TrackableModel : INotifyTrackableChanged {
             Value = propertyValue
         });
     }
-
-    protected void TrackCollectionItem(INotifyTrackableChanged notifyTrackableChanged) {
-        notifyTrackableChanged.TrackableChanged += Item_TrackableChanged;
+    
+    protected void NotifyNestedTrackableChanged(object? sender, object? propertyValue, string containingClass, string propertyName) {
+        TrackableChanged?.Invoke(sender, new TrackedChanges {
+            Name = $"{containingClass}.{propertyName}",
+            Value = propertyValue
+        });
     }
 
-    protected void UntrackCollectionItem(INotifyTrackableChanged notifyTrackableChanged) {
-        notifyTrackableChanged.TrackableChanged -= Item_TrackableChanged;
+    #region Protected methods for custom collections
+    protected void TrackCollectionItem(string typeName, INotifyTrackableChanged notifyTrackableChanged) {
+        notifyTrackableChanged.TrackableChanged += (sender, e) => Item_TrackableChanged(sender, typeName, e);
     }
 
-    private void Item_TrackableChanged(object? sender, TrackedChanges trackedChanges) {
-        TrackableChanged?.Invoke(sender, trackedChanges);
+    protected void UntrackCollectionItem(string typeName, INotifyTrackableChanged notifyTrackableChanged) {
+        notifyTrackableChanged.TrackableChanged -= (sender, e) => Item_TrackableChanged(sender, typeName, e);
+    }
+
+    private void Item_TrackableChanged(object? sender, string typeName, TrackedChanges trackedChanges) {
+        NotifyNestedTrackableChanged(sender, trackedChanges.Value, typeName, trackedChanges.Name);
     }
 
     protected void CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
         if (e.NewItems is not null) {
             foreach (INotifyTrackableChanged newItem in e.NewItems) {
-                TrackCollectionItem(newItem);
+                TrackCollectionItem(e.NewItems[0]!.GetType().Name, newItem);
             }
         }
 
         if (e.OldItems is not null) {
             foreach (INotifyTrackableChanged oldItem in e.OldItems) {
-                UntrackCollectionItem(oldItem);
+                UntrackCollectionItem(e.OldItems[0]!.GetType().Name, oldItem);
             }
         }
     }
+    #endregion
 }
 
