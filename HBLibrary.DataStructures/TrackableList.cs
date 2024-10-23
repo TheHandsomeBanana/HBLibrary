@@ -87,6 +87,20 @@ public class TrackableList<T> : IList<T> where T : INotifyTrackableChanged {
         items[indexB] = temp;
     }
 
+    public void Move(int oldIndex, int newIndex) {
+        if (oldIndex < 0 || newIndex < 0 || oldIndex >= items.Count || newIndex >= items.Count) {
+            throw new ArgumentOutOfRangeException("Index out of range");
+        }
+
+        if (oldIndex == newIndex) {
+            return;
+        }
+
+        T item = items[oldIndex];
+        items.RemoveAt(oldIndex);
+        items.Insert(newIndex, item);
+    }
+
     // Subscribe to TrackableChanged event for an item
     private void SubscribeToTrackableChanged(T item) {
         item.TrackableChanged += Item_TrackableChanged;
