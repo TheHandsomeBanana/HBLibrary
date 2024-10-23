@@ -73,6 +73,20 @@ public class TrackableList<T> : IList<T> where T : INotifyTrackableChanged {
     public bool Contains(T item) => items.Contains(item);
     public void CopyTo(T[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 
+    public void SwapItems(int indexA, int indexB) {
+        if (indexA < 0 || indexB < 0 || indexA >= items.Count || indexB >= items.Count) {
+            throw new ArgumentOutOfRangeException("Index out of range");
+        }
+
+        if (indexA == indexB) {
+            return;
+        }
+
+        T temp = items[indexA];
+        items[indexA] = items[indexB];
+        items[indexB] = temp;
+    }
+
     // Subscribe to TrackableChanged event for an item
     private void SubscribeToTrackableChanged(T item) {
         item.TrackableChanged += Item_TrackableChanged;

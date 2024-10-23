@@ -26,6 +26,13 @@ public abstract class TrackableModel : INotifyTrackableChanged {
             Value = propertyValue
         });
     }
+    
+    protected void NotifyTrackableChanged(object? sender, object? propertyValue, [CallerMemberName] string propertyName = "") {
+        TrackableChanged?.Invoke(sender, new TrackedChanges {
+            Name = propertyName,
+            Value = propertyValue
+        });
+    }
 
     protected void TrackCollectionItem(INotifyTrackableChanged notifyTrackableChanged) {
         notifyTrackableChanged.TrackableChanged += Item_TrackableChanged;
