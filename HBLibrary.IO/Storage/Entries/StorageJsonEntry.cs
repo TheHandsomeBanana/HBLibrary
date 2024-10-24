@@ -70,7 +70,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
             value = jsonService.ReadJson(type, file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -129,7 +129,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
             value = await jsonService.ReadJsonAsync(type, file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -153,7 +153,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                     jsonService.WriteJson(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
@@ -179,7 +179,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                     await jsonService.WriteJsonAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
@@ -240,7 +240,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
             value = jsonService.ReadJson<T>(file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -300,7 +300,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
             value = await jsonService.ReadJsonAsync<T>(file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -324,7 +324,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                     jsonService.WriteJson(FileSnapshot.Create(Filename, true), tValue);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
@@ -352,7 +352,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
                     await jsonService.WriteJsonAsync(FileSnapshot.Create(Filename, true), tValue);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
@@ -368,7 +368,7 @@ internal class StorageJsonEntry : StorageEntry, IStorageEntry {
     protected override void OnLifetimeOver(object sender, TimeSpan fullTime) {
         Save();
 
-        if(Value is INotifyTrackableChanged notifyTrackableChanged) {
+        if(Value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Untrack(notifyTrackableChanged);
         }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.DataStructures;
 
-public class TrackableList<T> : IList<T> where T : INotifyTrackableChanged {
+public class TrackableList<T> : IList<T> where T : ITrackable {
     private readonly List<T> items = [];
 
     public event EventHandler<TrackedChanges>? TrackableChanged;

@@ -8,6 +8,7 @@ using System.Globalization;
 
 namespace HBLibrary.IO.Storage.Entries;
 internal class StorageCsvEntry : StorageEntry, IStorageEntry {
+
     // TODO: Implement cryptography
     internal StorageCsvEntry(string filename, StorageEntrySettings settings, IChangeTracker? changeTracker) 
         : base(filename, StorageEntryContentType.Csv, settings, changeTracker) {

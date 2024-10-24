@@ -69,7 +69,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             value = xmlService.ReadXml(type, file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -129,7 +129,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             value = await xmlService.ReadXmlAsync(type, file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -153,7 +153,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                     xmlService.WriteXml(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
@@ -179,7 +179,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                     await xmlService.WriteXmlAsync(Value.GetType(), FileSnapshot.Create(Filename, true), Value);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.SaveChanges(notifyTrackableChanged);
                 }
             }
@@ -239,7 +239,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             value = xmlService.ReadXml<T>(file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -300,7 +300,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
             value = await xmlService.ReadXmlAsync<T>(file);
         }
 
-        if (value is INotifyTrackableChanged notifyTrackableChanged) {
+        if (value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -324,7 +324,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                     xmlService.WriteXml(FileSnapshot.Create(Filename, true), tValue);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.Track(notifyTrackableChanged);
                 }
             }
@@ -353,7 +353,7 @@ public class StorageXmlEntry : StorageEntry, IStorageEntry {
                     await xmlService.WriteXmlAsync(FileSnapshot.Create(Filename, true), tValue);
                 }
 
-                if (Value is INotifyTrackableChanged notifyTrackableChanged) {
+                if (Value is ITrackable notifyTrackableChanged) {
                     ChangeTracker?.Track(notifyTrackableChanged);
                 }
             }

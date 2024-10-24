@@ -16,15 +16,15 @@ public sealed class ChangeTracker : IChangeTracker {
 
     public bool HasActiveChanges { get; private set; } = false;
 
-    public ITrackedItem? Get(INotifyTrackableChanged entity) {
+    public ITrackedItem? Get(ITrackable entity) {
         return TrackedItems.FirstOrDefault(e => ReferenceEquals(e.Item, entity));
     }
 
-    public bool IsTracked(INotifyTrackableChanged entity) {
+    public bool IsTracked(ITrackable entity) {
         return TrackedItems.Any(e => ReferenceEquals(e.Item, entity));
     }
 
-    public void Track(INotifyTrackableChanged entity) {
+    public void Track(ITrackable entity) {
         if (IsTracked(entity)) {
             return;
         }
@@ -35,7 +35,7 @@ public sealed class ChangeTracker : IChangeTracker {
         trackedItems.Add(trackedItem);
     }
 
-    public void Untrack(INotifyTrackableChanged entity) {
+    public void Untrack(ITrackable entity) {
         if (!IsTracked(entity)) {
             return;
         }
@@ -46,7 +46,7 @@ public sealed class ChangeTracker : IChangeTracker {
         trackedItems.Remove(trackedItem);
     }
 
-    public void SaveChanges(INotifyTrackableChanged entity) {
+    public void SaveChanges(ITrackable entity) {
         ITrackedItem? trackedItem = Get(entity);
         trackedItem?.SaveChanges();
     }
@@ -78,7 +78,7 @@ public sealed class ChangeTracker : IChangeTracker {
         }
     }
 
-    public void HookStateChanged(INotifyTrackableChanged notifyTrackableChanged) {
+    public void HookStateChanged(ITrackable notifyTrackableChanged) {
         ITrackedItem? trackedItem = Get(notifyTrackableChanged);
 
         if (trackedItem?.TrackedItemUpdatedIsNull ?? false) {

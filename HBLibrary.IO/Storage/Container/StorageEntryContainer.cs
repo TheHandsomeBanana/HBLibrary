@@ -190,7 +190,7 @@ public class StorageEntryContainer : IStorageEntryContainer {
         ChangeTracker?.Untrack(value);
         if (value.CurrentEntryType is not null) {
             object? internalValue = value.Get(value.CurrentEntryType);
-            if (internalValue is INotifyTrackableChanged notifyTrackableChanged) {
+            if (internalValue is ITrackable notifyTrackableChanged) {
                 ChangeTracker?.Untrack(notifyTrackableChanged);
             }
         }

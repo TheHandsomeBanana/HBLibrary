@@ -2,7 +2,7 @@
 using HBLibrary.Interface.IO.Storage.Settings;
 
 namespace HBLibrary.Interface.IO.Storage.Entries;
-public interface IStorageEntry : INotifyTrackableChanged {
+public interface IStorageEntry : ITrackable {
     public string Filename { get; }
     public StorageEntryContentType ContentType { get; }
     public StorageEntrySettings Settings { get; set; }

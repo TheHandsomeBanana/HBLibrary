@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Core.ChangeTracker;
 public sealed class TrackedItem : ITrackedItem {
-    public IChangeSetHistory History { get; } = new ChangeSetHistory();
-    public INotifyTrackableChanged Item { get; }
+    private readonly LatestTracks capturedTracks = new LatestTracks();
+    public IChangeSetHistory? History { get; } 
+    public ITrackable Item { get; }
     public DateTime LastChangedAt { get; private set; }
     public bool HasChanges { get; private set; }
 
@@ -17,7 +18,11 @@ public sealed class TrackedItem : ITrackedItem {
 
     public event Action<bool>? TrackedItemUpdated;
 
-    public TrackedItem(INotifyTrackableChanged trackedItem) {
+    public TrackedItem(ITrackable trackedItem) {
+        if(trackedItem.UseTrackingHistory) {
+            History = new ChangeSetHistory();
+        }
+
         Item = trackedItem;
         Item.TrackableChanged += TrackedItem_TrackableChanged;
     }
@@ -26,9 +31,13 @@ public sealed class TrackedItem : ITrackedItem {
     private void TrackedItem_TrackableChanged(object? sender, TrackedChanges trackedChanges) {
         DateTime changedAt = DateTime.UtcNow;
 
-        bool updated = History.TryAddOrUpdate(trackedChanges.Name, trackedChanges.Value);
+
+
+        bool updated = capturedTracks.AddOrUpdateIfNotEquals(trackedChanges.Name, trackedChanges.Value);
 
         if (updated) {
+            History?.AddOrUpdate(trackedChanges.Name, trackedChanges.Value);
+
             LastChangedAt = changedAt;
             HasChanges = true;
             TrackedItemUpdated?.Invoke(true);

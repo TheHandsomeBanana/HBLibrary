@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Models;
-public abstract class TrackableModel : INotifyTrackableChanged {
+public abstract class TrackableModel : ITrackable {
+    public abstract bool UseTrackingHistory { get; }
+
     public event TrackableChanged? TrackableChanged;
 
     protected void NotifyTrackableChanged([CallerMemberName] string propertyName = "") {
@@ -42,11 +44,11 @@ public abstract class TrackableModel : INotifyTrackableChanged {
     }
 
     #region Protected methods for custom collections
-    protected void TrackCollectionItem(string typeName, INotifyTrackableChanged notifyTrackableChanged) {
+    protected void TrackCollectionItem(string typeName, ITrackable notifyTrackableChanged) {
         notifyTrackableChanged.TrackableChanged += (sender, e) => Item_TrackableChanged(sender, typeName, e);
     }
 
-    protected void UntrackCollectionItem(string typeName, INotifyTrackableChanged notifyTrackableChanged) {
+    protected void UntrackCollectionItem(string typeName, ITrackable notifyTrackableChanged) {
         notifyTrackableChanged.TrackableChanged -= (sender, e) => Item_TrackableChanged(sender, typeName, e);
     }
 
@@ -56,13 +58,13 @@ public abstract class TrackableModel : INotifyTrackableChanged {
 
     protected void CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
         if (e.NewItems is not null) {
-            foreach (INotifyTrackableChanged newItem in e.NewItems) {
+            foreach (ITrackable newItem in e.NewItems) {
                 TrackCollectionItem(e.NewItems[0]!.GetType().Name, newItem);
             }
         }
 
         if (e.OldItems is not null) {
-            foreach (INotifyTrackableChanged oldItem in e.OldItems) {
+            foreach (ITrackable oldItem in e.OldItems) {
                 UntrackCollectionItem(e.OldItems[0]!.GetType().Name, oldItem);
             }
         }

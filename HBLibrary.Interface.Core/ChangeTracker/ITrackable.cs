@@ -9,6 +9,7 @@ public delegate void TrackableChanged(object? sender, TrackedChanges trackedChan
 /// <summary>
 /// Nested Properties must be named different
 /// </summary>
-public interface INotifyTrackableChanged {
+public interface ITrackable {
     public event TrackableChanged? TrackableChanged;
+    public bool UseTrackingHistory { get; }
 }

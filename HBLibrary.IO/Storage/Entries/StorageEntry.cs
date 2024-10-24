@@ -3,7 +3,7 @@ using HBLibrary.Interface.IO.Storage.Entries;
 using HBLibrary.Interface.IO.Storage.Settings;
 
 namespace HBLibrary.IO.Storage.Entries;
-public abstract class StorageEntry : INotifyTrackableChanged {
+public abstract class StorageEntry : ITrackable {
     protected object Lock = new object();
     protected SemaphoreSlim Semaphore = new SemaphoreSlim(1);
 
@@ -16,6 +16,7 @@ public abstract class StorageEntry : INotifyTrackableChanged {
 
     public Type? CurrentEntryType => Value?.GetType();
     public StorageEntryContentType ContentType { get; }
+    public bool UseTrackingHistory => Settings.UseTrackingHistory;
 
 
     public StorageEntry(string filename, StorageEntryContentType contentType, StorageEntrySettings settings, IChangeTracker? changeTracker) {
@@ -37,7 +38,7 @@ public abstract class StorageEntry : INotifyTrackableChanged {
             return;
         }
 
-        if(Value is null && value is INotifyTrackableChanged notifyTrackableChanged) {
+        if(Value is null && value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
