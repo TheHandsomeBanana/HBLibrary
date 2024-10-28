@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Models;
 public abstract class TrackableModel : ITrackable {
-    public abstract bool UseTrackingHistory { get; }
+    public virtual bool UseTrackingHistory { get; } = false;
 
     public event TrackableChanged? TrackableChanged;
 
@@ -34,6 +34,14 @@ public abstract class TrackableModel : ITrackable {
             Name = propertyName,
             Value = propertyValue
         });
+    }
+    
+    protected void NotifyTrackableChanged(TrackedChanges trackedChanges, [CallerMemberName] string propertyName = "") {
+        TrackableChanged?.Invoke(this, trackedChanges);
+    }
+
+    protected void NotifyTrackableChanged(object? sender, TrackedChanges trackedChanges, [CallerMemberName] string propertyName = "") {
+        TrackableChanged?.Invoke(sender, trackedChanges);
     }
     
     protected void NotifyNestedTrackableChanged(object? sender, object? propertyValue, string containingClass, string propertyName) {
