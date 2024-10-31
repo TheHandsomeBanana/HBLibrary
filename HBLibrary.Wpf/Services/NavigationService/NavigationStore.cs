@@ -2,7 +2,7 @@
 using HBLibrary.Wpf.ViewModels;
 
 namespace HBLibrary.Wpf.Services.NavigationService;
-public class NavigationStore : INavigationStore {
+public sealed class NavigationStore : INavigationStore {
 
     private readonly Dictionary<string, ActiveViewModel> activeViewModels = [];
 
@@ -70,11 +70,25 @@ public class NavigationStore : INavigationStore {
 
     public void Dispose() {
         foreach (ActiveViewModel? viewModel in activeViewModels.Values) {
-            if (viewModel?.ViewModel is IDisposable disposableViewModel) {
-                disposableViewModel.Dispose();
-
-                viewModel.ViewModel = null;
+            if(viewModel is null) {
+                continue;
             }
+
+            if (viewModel.ViewModel is IDisposable disposableViewModel) {
+                disposableViewModel.Dispose();
+            }
+
+            viewModel.ViewModel = null;
+        }
+    }
+
+    public void DisposeByParentTypename(string parentTypename) {
+        if (activeViewModels.TryGetValue(parentTypename, out ActiveViewModel? activeViewModel)) {
+            if (activeViewModel.ViewModel is IDisposable disposable) {
+                disposable.Dispose();
+            }
+
+            activeViewModel.ViewModel = null;
         }
     }
 }

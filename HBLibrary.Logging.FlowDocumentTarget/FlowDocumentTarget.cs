@@ -13,8 +13,16 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     public LogLevel? LevelThreshold { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
-    public FlowDocument Document { get; } = new FlowDocument();
+    public FlowDocument? Document { get; private set; } 
     public Thickness ParagraphMargin { get; set; } = new Thickness(0);
+
+
+    public FlowDocumentTarget() {
+        // Make sure the Document is part of the UI Thread
+        Application.Current.Dispatcher.Invoke(() => {
+            Document = new FlowDocument();
+        });
+    }
 
     public Brush InfoBrush { get; set; } = Brushes.White;
     public Brush WarningBrush { get; set; } = Brushes.Yellow;
@@ -32,7 +40,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
 
         Application.Current.Dispatcher.Invoke(() => {
 
-            Document.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
+            Document!.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
                 TextIndent = 10,
                 Margin = ParagraphMargin,
                 Foreground = brush
@@ -47,7 +55,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
 
         Application.Current.Dispatcher.Invoke(() => {
 
-            Document.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
+            Document!.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
                 TextIndent = 10,
                 Margin = ParagraphMargin,
                 Foreground = brush
