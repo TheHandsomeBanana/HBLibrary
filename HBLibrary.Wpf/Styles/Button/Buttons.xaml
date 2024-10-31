@@ -299,7 +299,7 @@
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSGreen}" />
                             <Setter Property="BorderThickness"
-                                    Value="1" />
+                                    Value="2" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                                  Value="True">
@@ -308,7 +308,7 @@
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSGreen}" />
                             <Setter Property="BorderThickness"
-                                    Value="1" />
+                                    Value="2" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
@@ -348,7 +348,7 @@
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSBlue}" />
                             <Setter Property="BorderThickness"
-                                    Value="1" />
+                                    Value="2" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                                  Value="True">
@@ -357,7 +357,7 @@
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSBlue}" />
                             <Setter Property="BorderThickness"
-                                    Value="1" />
+                                    Value="2" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
@@ -397,7 +397,7 @@
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSRed}" />
                             <Setter Property="BorderThickness"
-                                    Value="1" />
+                                    Value="2" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                                  Value="True">
@@ -406,7 +406,7 @@
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSRed}" />
                             <Setter Property="BorderThickness"
-                                    Value="1" />
+                                    Value="2" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">

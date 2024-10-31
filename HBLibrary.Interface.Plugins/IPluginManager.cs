@@ -35,6 +35,8 @@ public interface IPluginManager {
     public IAssemblyContext? GetLoadedAssembly(string assemblyFileName);
     public IAssemblyContext? GetLoadedAssembly(AssemblyName assemblyName);
 
+    public PluginMetadata GetStaticPluginMetadata(Type stepType);
+
 
     /// <summary>
     /// Allows the plugin manager to switch to a different plugin directory

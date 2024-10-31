@@ -38,13 +38,6 @@ namespace HBLibrary.Wpf {
             return paragraph;
         }
 
-        public void AddRun(Paragraph paragraph, Run run) {
-            Application.Current.Dispatcher.Invoke(() => {
-                paragraph.Inlines.Add(run);
-                NotifyDocumentChanged();
-            });
-        }
-
         public Paragraph AddSuccessParagraph(string message) {
             return AddParagraph(message, SuccessBrush);
         }

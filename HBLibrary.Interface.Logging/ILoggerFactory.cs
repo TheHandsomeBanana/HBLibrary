@@ -1,4 +1,6 @@
 ﻿
+using HBLibrary.Interface.Logging.Configuration;
+
 namespace HBLibrary.Interface.Logging;
 /// <summary>
 /// Provides thread safe and asynchronous logging.<br/>
@@ -14,7 +16,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="Logger"/> instance</returns>
-    ILogger CreateLogger(string name);
+    ILogger CreateLogger(string name, LogConfigurationDelegate configuration);
     /// <summary>
     /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
     /// If not, creates new <see cref="Logger"/> and adds it to the <see cref="Registry"/>.<br/>
@@ -27,7 +29,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="Logger{T}"/> instance</returns>
-    ILogger<T> CreateLogger<T>() where T : class;
+    ILogger<T> CreateLogger<T>(LogConfigurationDelegate configuration) where T : class;
     /// <summary>
     /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
     /// If not, creates new <see cref="Logger{T}"/> and adds it to the <see cref="Registry"/>.<br/>
@@ -41,7 +43,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="AsyncLogger"/> instance</returns>
-    IAsyncLogger CreateAsyncLogger(string name);
+    IAsyncLogger CreateAsyncLogger(string name, LogConfigurationDelegate configuration);
     /// <summary>
     /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
     /// If not, creates new <see cref="AsyncLogger"/> and adds it to the <see cref="Registry"/>.<br/>
@@ -56,7 +58,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="AsyncLogger{T}"/> instance</returns>
-    IAsyncLogger<T> CreateAsyncLogger<T>() where T : class;
+    IAsyncLogger<T> CreateAsyncLogger<T>(LogConfigurationDelegate configuration) where T : class;
     /// <summary>
     /// If exists, retrieves <see cref="ILogger"/> from <see cref="Registry"/>.<br/>
     /// If not, creates new <see cref="AsyncLogger{T}"/> and adds it to the <see cref="Registry"/>.<br/>

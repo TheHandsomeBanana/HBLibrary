@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Interface.Core.ChangeTracker;
 
-public interface IComplexNotifyTrackableChanged : ITrackable {
+public interface IComplexTrackable : ITrackable {
     public IChangeTracker? ChangeTracker { get; set; }
 }

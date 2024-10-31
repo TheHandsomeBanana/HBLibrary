@@ -55,6 +55,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.Interpreter", "HB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBLibrary.CodeAnalysis", "HBLibrary.CodeAnalysis\HBLibrary.CodeAnalysis.csproj", "{75592416-26A0-46F0-9BA4-DADC29EFC999}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBLibrary.Logging.FlowDocumentTarget", "HBLibrary.Logging.FlowDocumentTarget\HBLibrary.Logging.FlowDocumentTarget.csproj", "{A88DBF28-CBB1-4FF8-B641-BC44F4592CCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{75592416-26A0-46F0-9BA4-DADC29EFC999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75592416-26A0-46F0-9BA4-DADC29EFC999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75592416-26A0-46F0-9BA4-DADC29EFC999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A88DBF28-CBB1-4FF8-B641-BC44F4592CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A88DBF28-CBB1-4FF8-B641-BC44F4592CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A88DBF28-CBB1-4FF8-B641-BC44F4592CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A88DBF28-CBB1-4FF8-B641-BC44F4592CCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +184,7 @@ Global
 		{26655BDB-87DB-4F40-9655-5786A6DF034B} = {3AEC0CA9-4522-4A3D-923F-C390F42A5837}
 		{DDEA0F8A-9FA2-4D79-815C-880C2E400063} = {3AEC0CA9-4522-4A3D-923F-C390F42A5837}
 		{75592416-26A0-46F0-9BA4-DADC29EFC999} = {3AEC0CA9-4522-4A3D-923F-C390F42A5837}
+		{A88DBF28-CBB1-4FF8-B641-BC44F4592CCC} = {3AEC0CA9-4522-4A3D-923F-C390F42A5837}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {200860FD-AB8D-4D1B-9865-33C1F2AFA4E2}

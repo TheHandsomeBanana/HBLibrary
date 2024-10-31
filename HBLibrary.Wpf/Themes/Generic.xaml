@@ -10,5 +10,6 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/NumberBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/IconToggleButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/AnimatedPath.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/LoadingSpinner.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

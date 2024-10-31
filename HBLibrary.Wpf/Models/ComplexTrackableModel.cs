@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Models;
-public abstract class ComplexTrackableModel : TrackableModel, IComplexNotifyTrackableChanged {
+public abstract class ComplexTrackableModel : TrackableModel, IComplexTrackable {
     public IChangeTracker? ChangeTracker { get; set; }
 
 }

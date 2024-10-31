@@ -211,6 +211,11 @@ public class PluginManager : IPluginManager {
     }
 
 
+    public PluginMetadata GetStaticPluginMetadata(Type stepType) {
+        return GetPluginMetadata(stepType);
+    }
+
+
     #region Static
     private static readonly Dictionary<Type, PluginMetadata> knownPluginMetadata = [];
     public static PluginMetadata GetPluginMetadata(Type stepType) {

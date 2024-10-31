@@ -1,13 +1,44 @@
 ﻿using HBLibrary.Interface.Logging;
+using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Logging.Configuration;
 using HBLibrary.Logging.Loggers;
+using System.Xml.Linq;
 
 namespace HBLibrary.Logging;
 public sealed class LoggerFactory : ILoggerFactory {
     public ILoggerRegistry Registry { get; }
-    public ILogger CreateLogger(string name) => new Logger(name);
-    public ILogger<T> CreateLogger<T>() where T : class => new Logger<T>();
-    public IAsyncLogger CreateAsyncLogger(string name) => new AsyncLogger(name);
-    public IAsyncLogger<T> CreateAsyncLogger<T>() where T : class => new AsyncLogger<T>();
+    public ILogger CreateLogger(string name, LogConfigurationDelegate configuration) {
+        Logger logger = new Logger(name) {
+            Configuration = configuration.Invoke(new LogConfigurationBuilder())
+        };
+
+        return logger;
+    }
+
+    public ILogger<T> CreateLogger<T>(LogConfigurationDelegate configuration) where T : class {
+        Logger<T> logger = new Logger<T> {
+            Configuration = configuration.Invoke(new LogConfigurationBuilder())
+        };
+
+        return logger;
+    }
+
+
+    public IAsyncLogger CreateAsyncLogger(string name, LogConfigurationDelegate configuration) { 
+        AsyncLogger logger = new AsyncLogger(name) {
+            Configuration = configuration.Invoke(new LogConfigurationBuilder())
+        };
+
+        return logger;
+    }
+
+    public IAsyncLogger<T> CreateAsyncLogger<T>(LogConfigurationDelegate configuration) where T : class {
+        AsyncLogger<T> logger = new AsyncLogger<T> {
+            Configuration = configuration.Invoke(new LogConfigurationBuilder())
+        };
+
+        return logger;
+    }
 
     public LoggerFactory(ILoggerRegistry registry) {
         Registry = registry;
