@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Core.Json;
 using HBLibrary.Interface.Logging.Configuration;
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
@@ -33,6 +34,7 @@ public struct LogStatement {
     public readonly string ToFullString()
         => $"Name: {Name}\nCreated On: {CreatedOn:yyyy-MM-dd hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
     public readonly string ToMinimalString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
+    public readonly string ToLevelMessage() => $"[{Level}]: {Message}";
     public readonly string ToJson() => JsonSerializer.Serialize(this);
     public readonly string ToXml() {
         using (TextWriter stringwriter = new StringWriter()) {

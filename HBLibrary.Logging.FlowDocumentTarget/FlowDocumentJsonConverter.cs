@@ -8,47 +8,38 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows;
+using HBLibrary.Interface.Logging.Statements;
+using HBLibrary.Interface.Logging;
 
 namespace HBLibrary.Logging.FlowDocumentTarget;
-public class FlowDocumentJsonConverter : JsonConverter<FlowDocument> {
-    public override void Write(Utf8JsonWriter writer, FlowDocument value, JsonSerializerOptions options) {
-        if (value == null) {
-            writer.WriteNullValue();
-            return;
+public class FlowDocumentJsonConverter : JsonConverter<FlowDocumentTarget> {
+    public override FlowDocumentTarget? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+        FlowDocumentTarget target = new FlowDocumentTarget();
+
+        if (reader.TokenType != JsonTokenType.StartArray)
+            throw new JsonException("Expected an array of log messages.");
+
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndArray) {
+            LogWithMetadata? logStatement = JsonSerializer.Deserialize<LogWithMetadata>(ref reader, options);
+
+            if (logStatement is not null) {
+                if (logStatement.IsSuccess) {
+                    target.WriteSuccessLog(logStatement.Log);
+                }
+                else {
+                    target.WriteLog(logStatement.Log);
+                }
+            }
         }
 
-        string xaml = SerializeFlowDocumentToXaml(value);
-        writer.WriteStringValue(xaml);
+        return target;
     }
 
-    public override FlowDocument? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-        if (reader.TokenType == JsonTokenType.Null) {
-            return null;
+    public override void Write(Utf8JsonWriter writer, FlowDocumentTarget value, JsonSerializerOptions options) {
+        writer.WriteStartArray();
+        foreach (LogWithMetadata logStatement in value.Statements) {
+            JsonSerializer.Serialize(writer, logStatement, options);
         }
-
-        string? xaml = reader.GetString();
-        return DeserializeFlowDocumentFromXaml(xaml);
-    }
-
-    private string SerializeFlowDocumentToXaml(FlowDocument document) {
-        using (MemoryStream memoryStream = new MemoryStream()) {
-            var textRange = new TextRange(document.ContentStart, document.ContentEnd);
-            textRange.Save(memoryStream, DataFormats.Xaml); // Save as XAML
-            return Encoding.UTF8.GetString(memoryStream.ToArray());
-        }
-    }
-
-    private FlowDocument DeserializeFlowDocumentFromXaml(string? xamlString) {
-        var document = new FlowDocument();
-        if (string.IsNullOrWhiteSpace(xamlString)) { 
-            return document; 
-        }
-
-        using (MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(xamlString))) {
-            var textRange = new TextRange(document.ContentStart, document.ContentEnd);
-            textRange.Load(memoryStream, DataFormats.Xaml); // Load from XAML
-        }
-
-        return document;
+        writer.WriteEndArray();
     }
 }

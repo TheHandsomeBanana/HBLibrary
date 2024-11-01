@@ -31,6 +31,7 @@ public interface ILogConfiguration : IDisposable {
 
 public enum LogDisplayFormat {
     MessageOnly,
+    LevelMessage,
     Minimal,
     Full
 }

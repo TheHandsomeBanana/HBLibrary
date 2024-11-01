@@ -25,6 +25,8 @@
                      Color="#4da5e9" />
     <SolidColorBrush x:Key="VSViolet"
                      Color="#403582" />
+    <SolidColorBrush x:Key="VSYellow"
+                     Color="#f1c23c"/>
     <SolidColorBrush x:Key="VSAccentViolet"
                      Color="#7464ec" />
     <SolidColorBrush x:Key="InfoBlue"

@@ -10,6 +10,10 @@ using System.Windows.Media;
 namespace HBLibrary.Logging.FlowDocumentTarget;
 
 public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
+    // Required to keep track of the statements for serialization / deserialization
+    private readonly List<LogWithMetadata> statements = [];
+    public IReadOnlyList<LogWithMetadata> Statements => statements;
+
     public LogLevel? LevelThreshold { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -29,7 +33,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     public Brush ErrorBrush { get; set; } = Brushes.IndianRed;
     public Brush CriticalBrush { get; set; } = Brushes.Red;
 
-    public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
+    public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.MessageOnly) {
         Brush brush = log.Level switch {
             LogLevel.Debug or LogLevel.Info => InfoBrush,
             LogLevel.Warning => WarningBrush,
@@ -48,9 +52,14 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
 
             NotifyDocumentChanged();
         });
+
+        statements.Add(new LogWithMetadata {
+            Log = log,
+            IsSuccess = false
+        });
     }
 
-    public void WriteSuccessLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
+    public void WriteSuccessLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.MessageOnly) {
         Brush brush = Brushes.MediumSeaGreen;
 
         Application.Current.Dispatcher.Invoke(() => {
@@ -62,6 +71,11 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
             });
 
             NotifyDocumentChanged();
+        });
+
+        statements.Add(new LogWithMetadata {
+            Log = log,
+            IsSuccess = true
         });
     }
 
