@@ -30,7 +30,7 @@ public struct LogStatement {
         CreatedOn = createdOn;
     }
 
-    public override readonly string ToString() => $"[{Level}]: {Message}";
+    public override readonly string ToString() => Message;
     public readonly string ToFullString()
         => $"Name: {Name}\nCreated On: {CreatedOn:yyyy-MM-dd hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
     public readonly string ToMinimalString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";

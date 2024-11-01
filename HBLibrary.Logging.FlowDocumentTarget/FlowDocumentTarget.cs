@@ -45,7 +45,9 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
         Application.Current.Dispatcher.Invoke(() => {
 
             Document!.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
-                TextIndent = 10,
+                TextIndent = 5,
+                FontFamily = new FontFamily("Consolas"),
+                FontSize = 14,
                 Margin = ParagraphMargin,
                 Foreground = brush
             });
@@ -60,12 +62,20 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     }
 
     public void WriteSuccessLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.MessageOnly) {
-        Brush brush = Brushes.MediumSeaGreen;
+        Brush brush = log.Level switch {
+            LogLevel.Debug or LogLevel.Info => Brushes.MediumSeaGreen,
+            LogLevel.Warning => WarningBrush,
+            LogLevel.Error => ErrorBrush,
+            LogLevel.Fatal => CriticalBrush,
+            _ => InfoBrush,
+        };
 
         Application.Current.Dispatcher.Invoke(() => {
 
             Document!.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
-                TextIndent = 10,
+                TextIndent = 5,
+                FontFamily = new FontFamily("Consolas"),
+                FontSize = 14,
                 Margin = ParagraphMargin,
                 Foreground = brush
             });
