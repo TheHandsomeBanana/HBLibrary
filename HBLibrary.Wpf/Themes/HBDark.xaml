@@ -1,4 +1,28 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Border.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_CheckBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ComboBoxItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ContextMenu.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Expander.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_GroupBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ListBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ListBoxItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ListView.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ListViewItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_MenuItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_PasswordBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_RichTextBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ScrollViewer.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_TextBlock.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_TextBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ToggleButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_TreeView.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_TreeViewItem.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
