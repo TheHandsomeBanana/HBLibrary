@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 
-namespace HBLibrary.Wpf.Styles.Button;
-public static class ButtonAttachedProperties {
+namespace HBLibrary.Wpf.AttachedProperties;
+public static class ButtonAttachedProperties
+{
     public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.RegisterAttached(
         "CornerRadius",
         typeof(CornerRadius),
@@ -9,11 +10,13 @@ public static class ButtonAttachedProperties {
         new FrameworkPropertyMetadata(new CornerRadius(), FrameworkPropertyMetadataOptions.Inherits)
     );
 
-    public static void SetCornerRadius(UIElement element, CornerRadius value) {
+    public static void SetCornerRadius(UIElement element, CornerRadius value)
+    {
         element.SetValue(CornerRadiusProperty, value);
     }
 
-    public static CornerRadius GetCornerRadius(UIElement element) {
+    public static CornerRadius GetCornerRadius(UIElement element)
+    {
         return (CornerRadius)element.GetValue(CornerRadiusProperty);
     }
 }

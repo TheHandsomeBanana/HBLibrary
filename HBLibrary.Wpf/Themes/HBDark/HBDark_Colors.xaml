@@ -1,4 +1,60 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="VSGreen">#8ae28a</Color>
+    <Color x:Key="VSRed">#e25964</Color>
+    <Color x:Key="VSBlue">#4da5e9</Color>
+    <Color x:Key="VSYellow">#f1c23c</Color>
+    <Color x:Key="VSViolet">#403582</Color>
+    <Color x:Key="VSVioletAccent">#7464ec</Color>
+    <Color x:Key="InfoBlue">#1a79ca</Color>
+
+    <Color x:Key="Background">#1f1f1f</Color>
+    <Color x:Key="Accent">#3d3d3d</Color>
+
+    <Color x:Key="BackgroundDisabled">#242424</Color>
+    <Color x:Key="AccentDisabled">#4E4E4E</Color>
+
+
+    <SolidColorBrush x:Key="VSGreenBrush"
+                     Color="{StaticResource VSGreen}" />
+
+    <SolidColorBrush x:Key="VSRedBrush"
+                     Color="{StaticResource VSRed}" />
+
+    <SolidColorBrush x:Key="VSBlueBrush"
+                     Color="{StaticResource VSBlue}" />
+
+    <SolidColorBrush x:Key="VSYellowBrush"
+                     Color="{StaticResource VSYellow}" />
+
+    <SolidColorBrush x:Key="VSVioletBrush"
+                     Color="{StaticResource VSViolet}" />
+
+    <SolidColorBrush x:Key="VSAccentVioletBrush"
+                     Color="{StaticResource VSVioletAccent}" />
+
+    <SolidColorBrush x:Key="InfoBlueBrush"
+                     Color="{StaticResource InfoBlue}" />
+
+
+    <SolidColorBrush x:Key="BackgroundBrush"
+                     Color="{StaticResource Background}"/>
+
+    <SolidColorBrush x:Key="AccentBrush"
+                     Color="{StaticResource Accent}" />
+
+    <SolidColorBrush x:Key="PrimaryBrush"
+                     Color="{StaticResource VSViolet}" />
+
+    <SolidColorBrush x:Key="SecondaryBrush"
+                     Color="{StaticResource Accent}" />
+
+    <SolidColorBrush x:Key="BackgroundDisabledBrush"
+                     Color="{StaticResource BackgroundDisabled}" />
+
+    <SolidColorBrush x:Key="AccentDisabledBrush"
+                     Color="{StaticResource AccentDisabled}" />
     
+
 </ResourceDictionary>

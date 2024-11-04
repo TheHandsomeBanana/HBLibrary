@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HBLibrary.Wpf.Views"
         mc:Ignorable="d"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:buttons="clr-namespace:HBLibrary.Wpf.Styles.Button"
+        xmlns:buttons="clr-namespace:HBLibrary.Wpf.AttachedProperties"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
         Background="Transparent"

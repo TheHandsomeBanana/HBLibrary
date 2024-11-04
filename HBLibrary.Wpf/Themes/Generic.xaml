@@ -11,5 +11,8 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/IconToggleButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/AnimatedPath.xaml" />
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/LoadingSpinner.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/ListBoxButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/ListBoxButtonV2.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Controls/IconButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

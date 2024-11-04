@@ -3,14 +3,17 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace HBLibrary.Wpf.Styles.Button;
-public class ListBoxButtonV2 : ListBoxItem {
+namespace HBLibrary.Wpf.Controls;
+public class ListBoxButtonV2 : ListBoxItem
+{
 
-    static ListBoxButtonV2() {
+    static ListBoxButtonV2()
+    {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(ListBoxButtonV2), new FrameworkPropertyMetadata(typeof(ListBoxButtonV2)));
     }
 
-    public ICommand Command {
+    public ICommand Command
+    {
         get { return (ICommand)GetValue(CommandProperty); }
         set { SetValue(CommandProperty, value); }
     }
@@ -19,7 +22,8 @@ public class ListBoxButtonV2 : ListBoxItem {
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register("Command", typeof(ICommand), typeof(ListBoxButtonV2), new PropertyMetadata(null));
 
-    public object CommandParameter {
+    public object CommandParameter
+    {
         get { return GetValue(CommandParameterProperty); }
         set { SetValue(CommandParameterProperty, value); }
     }
@@ -28,16 +32,19 @@ public class ListBoxButtonV2 : ListBoxItem {
         DependencyProperty.Register("CommandParameter", typeof(object), typeof(ListBoxButtonV2), new PropertyMetadata(null));
 
 
-    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
+    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+    {
         base.OnMouseLeftButtonUp(e);
 
-        if (Command != null && Command.CanExecute(CommandParameter)) {
+        if (Command != null && Command.CanExecute(CommandParameter))
+        {
             Command.Execute(CommandParameter);
         }
     }
 
 
-    public double ImageHeight {
+    public double ImageHeight
+    {
         get { return (double)GetValue(ImageHeightProperty); }
         set { SetValue(ImageHeightProperty, value); }
     }
@@ -47,7 +54,8 @@ public class ListBoxButtonV2 : ListBoxItem {
         DependencyProperty.Register("ImageHeight", typeof(double), typeof(ListBoxButtonV2), new PropertyMetadata(0.0));
 
 
-    public double ImageWidth {
+    public double ImageWidth
+    {
         get { return (double)GetValue(ImageWidthProperty); }
         set { SetValue(ImageWidthProperty, value); }
     }
@@ -56,7 +64,8 @@ public class ListBoxButtonV2 : ListBoxItem {
     public static readonly DependencyProperty ImageWidthProperty =
         DependencyProperty.Register("ImageWidth", typeof(double), typeof(ListBoxButtonV2), new PropertyMetadata(0.0));
 
-    public Stretch ImageStretch {
+    public Stretch ImageStretch
+    {
         get { return (Stretch)GetValue(ImageStretchProperty); }
         set { SetValue(ImageStretchProperty, value); }
     }
@@ -66,7 +75,8 @@ public class ListBoxButtonV2 : ListBoxItem {
         DependencyProperty.Register("ImageStretch", typeof(Stretch), typeof(ListBoxButtonV2), new PropertyMetadata(Stretch.Uniform));
 
 
-    public ImageSource ImageSource {
+    public ImageSource ImageSource
+    {
         get { return (ImageSource)GetValue(ImageSourceProperty); }
         set { SetValue(ImageSourceProperty, value); }
     }
@@ -75,7 +85,8 @@ public class ListBoxButtonV2 : ListBoxItem {
         DependencyProperty.Register("ImageSource", typeof(ImageSource), typeof(ListBoxButtonV2), new PropertyMetadata(null));
 
 
-    public string Text {
+    public string Text
+    {
         get { return (string)GetValue(TextProperty); }
         set { SetValue(TextProperty, value); }
     }

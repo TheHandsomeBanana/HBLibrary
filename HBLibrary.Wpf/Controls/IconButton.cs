@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace HBLibrary.Wpf.Styles.Button;
+namespace HBLibrary.Wpf.Controls;
 public class IconButton : System.Windows.Controls.Button {
     static IconButton() {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));

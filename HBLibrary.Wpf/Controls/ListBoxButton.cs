@@ -3,15 +3,18 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace HBLibrary.Wpf.Styles.Button;
-public class ListBoxButton : ListBoxItem {
-    static ListBoxButton() {
+namespace HBLibrary.Wpf.Controls;
+public class ListBoxButton : ListBoxItem
+{
+    static ListBoxButton()
+    {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(ListBoxButton), new FrameworkPropertyMetadata(typeof(ListBoxButton)));
     }
 
 
 
-    public ICommand Command {
+    public ICommand Command
+    {
         get { return (ICommand)GetValue(CommandProperty); }
         set { SetValue(CommandProperty, value); }
     }
@@ -20,7 +23,8 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register("Command", typeof(ICommand), typeof(ListBoxButton), new PropertyMetadata(null));
 
-    public object CommandParameter {
+    public object CommandParameter
+    {
         get { return GetValue(CommandParameterProperty); }
         set { SetValue(CommandParameterProperty, value); }
     }
@@ -29,16 +33,19 @@ public class ListBoxButton : ListBoxItem {
         DependencyProperty.Register("CommandParameter", typeof(object), typeof(ListBoxButton), new PropertyMetadata(null));
 
 
-    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
+    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+    {
         base.OnMouseLeftButtonUp(e);
 
-        if (Command != null && Command.CanExecute(CommandParameter)) {
+        if (Command != null && Command.CanExecute(CommandParameter))
+        {
             Command.Execute(CommandParameter);
         }
     }
 
 
-    public double IconHeight {
+    public double IconHeight
+    {
         get { return (double)GetValue(IconHeightProperty); }
         set { SetValue(IconHeightProperty, value); }
     }
@@ -48,7 +55,8 @@ public class ListBoxButton : ListBoxItem {
         DependencyProperty.Register("IconHeight", typeof(double), typeof(ListBoxButton), new PropertyMetadata(0.0));
 
 
-    public double IconWidth {
+    public double IconWidth
+    {
         get { return (double)GetValue(IconWidthProperty); }
         set { SetValue(IconWidthProperty, value); }
     }
@@ -59,7 +67,8 @@ public class ListBoxButton : ListBoxItem {
 
 
 
-    public SolidColorBrush IconFill {
+    public SolidColorBrush IconFill
+    {
         get { return (SolidColorBrush)GetValue(IconFillProperty); }
         set { SetValue(IconFillProperty, value); }
     }
@@ -68,7 +77,8 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty IconFillProperty =
         DependencyProperty.Register("IconFill", typeof(SolidColorBrush), typeof(ListBoxButton), new PropertyMetadata(Brushes.White));
 
-    public SolidColorBrush IconStroke {
+    public SolidColorBrush IconStroke
+    {
         get { return (SolidColorBrush)GetValue(IconStrokeProperty); }
         set { SetValue(IconStrokeProperty, value); }
     }
@@ -77,7 +87,8 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty IconStrokeProperty =
         DependencyProperty.Register("IconStroke", typeof(SolidColorBrush), typeof(ListBoxButton), new PropertyMetadata(null));
 
-    public Thickness IconStrokeThickness {
+    public Thickness IconStrokeThickness
+    {
         get { return (Thickness)GetValue(IconStrokeThicknessProperty); }
         set { SetValue(IconStrokeThicknessProperty, value); }
     }
@@ -86,7 +97,8 @@ public class ListBoxButton : ListBoxItem {
     public static readonly DependencyProperty IconStrokeThicknessProperty =
         DependencyProperty.Register("IconStrokeThickness", typeof(Thickness), typeof(ListBoxButton), new PropertyMetadata(new Thickness(0)));
 
-    public Stretch IconStretch {
+    public Stretch IconStretch
+    {
         get { return (Stretch)GetValue(IconStretchProperty); }
         set { SetValue(IconStretchProperty, value); }
     }
@@ -98,7 +110,8 @@ public class ListBoxButton : ListBoxItem {
 
 
 
-    public Geometry Icon {
+    public Geometry Icon
+    {
         get { return (Geometry)GetValue(IconProperty); }
         set { SetValue(IconProperty, value); }
     }
@@ -108,7 +121,8 @@ public class ListBoxButton : ListBoxItem {
         DependencyProperty.Register("Icon", typeof(Geometry), typeof(ListBoxButton), new PropertyMetadata(null));
 
 
-    public string Text {
+    public string Text
+    {
         get { return (string)GetValue(TextProperty); }
         set { SetValue(TextProperty, value); }
     }
