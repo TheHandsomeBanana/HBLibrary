@@ -6,7 +6,7 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="Normal"
+    <Style x:Key="NormalTextBlock"
            TargetType="TextBlock">
         <Setter Property="Foreground"
                 Value="{StaticResource ForegroundBrush}" />
