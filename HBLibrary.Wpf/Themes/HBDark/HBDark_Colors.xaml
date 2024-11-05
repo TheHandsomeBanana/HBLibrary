@@ -9,12 +9,13 @@
     <Color x:Key="VSVioletAccent">#7464ec</Color>
     <Color x:Key="InfoBlue">#1a79ca</Color>
 
+    <Color x:Key="Foreground">#e6e6e6</Color>
     <Color x:Key="Background">#1f1f1f</Color>
     <Color x:Key="Accent">#3d3d3d</Color>
 
-    <Color x:Key="BackgroundDisabled">#242424</Color>
+    <Color x:Key="BackgroundDisabled">#3d3d3d</Color>
     <Color x:Key="AccentDisabled">#4E4E4E</Color>
-
+    <Color x:Key="ForegroundDisabled">#4E4E4E</Color>
 
     <SolidColorBrush x:Key="VSGreenBrush"
                      Color="{StaticResource VSGreen}" />
@@ -37,9 +38,11 @@
     <SolidColorBrush x:Key="InfoBlueBrush"
                      Color="{StaticResource InfoBlue}" />
 
+    <SolidColorBrush x:Key="ForegroundBrush"
+                     Color="{StaticResource Foreground}" />
 
     <SolidColorBrush x:Key="BackgroundBrush"
-                     Color="{StaticResource Background}"/>
+                     Color="{StaticResource Background}" />
 
     <SolidColorBrush x:Key="AccentBrush"
                      Color="{StaticResource Accent}" />
@@ -56,5 +59,7 @@
     <SolidColorBrush x:Key="AccentDisabledBrush"
                      Color="{StaticResource AccentDisabled}" />
     
+    <SolidColorBrush x:Key="ForegroundDisabledBrush"
+                     Color="{StaticResource ForegroundDisabled}" />
 
 </ResourceDictionary>

@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:scrollViewers="clr-namespace:HBLibrary.Wpf.Styles.ScrollViewer">
+                    xmlns:attachedProperties="clr-namespace:HBLibrary.Wpf.AttachedProperties">
+    
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ScrollViewer/ScrollViewers.xaml"/>
@@ -23,7 +24,7 @@
                         <ScrollViewer Style="{StaticResource HBDark_VSScrollViewer}"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Auto"
-                                      scrollViewers:ScrollViewerAttachedProperties.ScrollOnMouseOver="True">
+                                      attachedProperties:ScrollViewerAttachedProperties.ScrollOnMouseOver="True">
                             <ItemsPresenter HorizontalAlignment="Stretch"/>
                         </ScrollViewer>
                     </Border>

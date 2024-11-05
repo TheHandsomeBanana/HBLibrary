@@ -1,4 +1,321 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_Colors.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Primary TextBox -->
+    <Color x:Key="TextBoxBackground">#242424</Color>
+    <SolidColorBrush x:Key="TextBoxBackgroundBrush"
+                     Color="{StaticResource TextBoxBackground}"/>
+
+    <SolidColorBrush x:Key="TextBoxBorderBrush"
+                     Color="{StaticResource Accent}" />
+
+    <SolidColorBrush x:Key="TextBoxBorderMouseOverBrush"
+                     Color="{StaticResource VSVioletAccent}"/>
     
+    <SolidColorBrush x:Key="TextBoxBorderIsKeyboardFocusWithinBrush"
+                     Color="{StaticResource VSVioletAccent}"/>
+
+
+    <!-- Accent TextBox -->
+    <Color x:Key="AccentTextBoxBackground">#383838</Color>
+    <Color x:Key="AccentTextBoxBackgroundMouseOver">#3d3d3d</Color>
+    <Color x:Key="AccentTextBoxBackgroundIsKeyboardFocusWithin">#1f1f1f</Color>
+    
+    <SolidColorBrush x:Key="AccentTextBoxBackgroundBrush"
+                     Color="{StaticResource AccentTextBoxBackground}" />
+
+    <SolidColorBrush x:Key="AccentTextBoxBorderBrush"
+                     Color="{StaticResource Accent}"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="AccentTextBoxBackgroundMouseOverBrush"
+                     Color="{StaticResource AccentTextBoxBackgroundMouseOver}" />
+
+    <SolidColorBrush x:Key="AccentTextBoxBorderMouseOverBrush"
+                     Color="{StaticResource Accent}"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="AccentTextBoxBackgroundIsKeyboardFocusWithinBrush"
+                     Color="{StaticResource AccentTextBoxBackgroundIsKeyboardFocusWithin}" />
+
+
+    <Style x:Key="PrimaryTextBox"
+           TargetType="TextBox">
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="MinWidth"
+                Value="100" />
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Padding"
+                Value="2" />
+        <Setter Property="Background"
+                Value="{StaticResource TextBoxBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource TextBoxBorderBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="0" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource }" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin"
+                                 Value="True">
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource TextBoxBorderIsKeyboardFocusWithinBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource BackgroundDisabledBrush}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource AccentDisabledBrush}" />
+                        </Trigger>
+                        <Trigger Property="Validation.HasError"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource VSRedBrush}" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource VSRedBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="AccentTextBox"
+           TargetType="TextBox">
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="MinWidth"
+                Value="100" />
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Background"
+                Value="{StaticResource AccentTextBoxBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource AccentTextBoxBorderBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="0" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource AccentTextBoxBackgroundMouseOverBrush}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource AccentTextBoxBorderMouseOverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource TextBoxBorderIsKeyboardFocusWithinBrush}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource AccentTextBoxBackgroundMouseOverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource BackgroundDisabledBrush}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource AccentDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WatermarkTextBox"
+           TargetType="TextBox"
+           BasedOn="{StaticResource PrimaryTextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="0" />
+                        </Border>
+                        <TextBlock Foreground="{StaticResource ForegroundBrush}"
+                                   Text="{TemplateBinding Tag}"
+                                   Margin="5 0 0 0"
+                                   IsHitTestVisible="False"
+                                   Visibility="Collapsed"
+                                   x:Name="WatermarkTextBlock" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource TextBoxBorderMouseOverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin"
+                                 Value="True">
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource TextBoxBorderIsKeyboardFocusWithinBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource BackgroundDisabledBrush}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource AccentDisabledBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver"
+                                           Value="True" />
+                                <Condition Property="IsKeyboardFocusWithin"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background"
+                                    Value="{StaticResource TextBoxBackgroundBrush}" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text"
+                                           Value="{x:Static sys:String.Empty}" />
+                                <Condition Property="IsKeyboardFocusWithin"
+                                           Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="WatermarkTextBlock"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text"
+                                           Value="{x:Static sys:String.Empty}" />
+                                <Condition Property="IsKeyboardFocusWithin"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="WatermarkTextBlock"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FilterTextBox"
+           TargetType="TextBox"
+           BasedOn="{StaticResource AccentTextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="0" />
+                        </Border>
+                        <TextBlock Foreground="{StaticResource ForegroundBrush}"
+                                   Text="{TemplateBinding Tag}"
+                                   Margin="5 0 5 0"
+                                   IsHitTestVisible="False"
+                                   Visibility="Collapsed"
+                                   x:Name="WatermarkTextBlock" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource AccentTextBoxBackgroundMouseOverBrush}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource AccentTextBoxBorderMouseOverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin"
+                                 Value="True">
+                            <Setter  Property="Background"
+                                     Value="{StaticResource AccentTextBoxBackgroundIsKeyboardFocusWithinBrush}" />
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource AccentTextBoxBackgroundMouseOverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{StaticResource BackgroundDisabledBrush}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource AccentDisabledBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver"
+                                           Value="True" />
+                                <Condition Property="IsKeyboardFocusWithin"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background"
+                                    Value="{StaticResource AccentTextBoxBackgroundMouseOverBrush}" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text"
+                                           Value="{x:Static sys:String.Empty}" />
+                                <Condition Property="IsKeyboardFocusWithin"
+                                           Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="WatermarkTextBlock"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text"
+                                           Value="{x:Static sys:String.Empty}" />
+                                <Condition Property="IsKeyboardFocusWithin"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="WatermarkTextBlock"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

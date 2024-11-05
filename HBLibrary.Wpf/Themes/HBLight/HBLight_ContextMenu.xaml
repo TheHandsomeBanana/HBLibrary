@@ -1,4 +1,56 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_MenuItem.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    
+    <Color x:Key="ContextMenuBackground">#2F2F2F</Color>
+    
+    <SolidColorBrush x:Key="ContextMenuBackgroundBrush"
+                     Color="{StaticResource ContextMenuBackground}" />
+    
+    <SolidColorBrush x:Key="ContextMenuBorderBrush"
+                     Color="{StaticResource Accent}" />
+    
+
+    <Style x:Key="PrimaryContextMenu"
+           TargetType="ContextMenu">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource ContextMenuBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="{StaticResource ContextMenuBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="ItemContainerStyle"
+                Value="{StaticResource PrimaryMenuItem}" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContextMenu">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                        <StackPanel IsItemsHost="True"
+                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     
 </ResourceDictionary>

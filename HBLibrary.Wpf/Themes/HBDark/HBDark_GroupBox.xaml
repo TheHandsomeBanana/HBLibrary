@@ -1,4 +1,66 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+    <SolidColorBrush x:Key="GroupBoxBorderBrush"
+                     Color="{StaticResource Accent}" />
+    
+    <SolidColorBrush x:Key="GroupBoxBorderSelectedBrush"
+                     Color="{StaticResource VSVioletAccent}" />
+
+    <Style x:Key="PrimaryGroupBox"
+           TargetType="GroupBox">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource GroupBoxBorderBrush}" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Padding"
+                Value="10" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GroupBox">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="1"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </Border>
+
+                        <ContentPresenter Grid.Row="0"
+                                          ContentSource="Header"
+                                          Margin="10,0,0,-11"
+                                          VerticalAlignment="Top"
+                                          HorizontalAlignment="Left"
+                                          Panel.ZIndex="1"
+                                          RecognizesAccessKey="True" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{StaticResource GroupBoxBorderSelectedBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     
 </ResourceDictionary>

@@ -1,4 +1,4 @@
-﻿using HBLibrary.Wpf.Styles.TextBox;
+﻿using HBLibrary.Wpf.AttachedProperties;
 using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Controls;

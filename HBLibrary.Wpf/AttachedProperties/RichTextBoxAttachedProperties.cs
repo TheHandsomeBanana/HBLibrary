@@ -7,8 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
 
-namespace HBLibrary.Wpf.Styles.TextBox;
-public static class RichTextBoxAttachedProperties {
+namespace HBLibrary.Wpf.AttachedProperties;
+public static class RichTextBoxAttachedProperties
+{
     public static readonly DependencyProperty BindableDocumentProperty =
         DependencyProperty.RegisterAttached(
             "BindableDocument",
@@ -16,20 +17,26 @@ public static class RichTextBoxAttachedProperties {
             typeof(RichTextBoxAttachedProperties),
             new PropertyMetadata(null, OnBindableDocumentChanged));
 
-    public static FlowDocument GetBindableDocument(DependencyObject obj) {
+    public static FlowDocument GetBindableDocument(DependencyObject obj)
+    {
         return (FlowDocument)obj.GetValue(BindableDocumentProperty);
     }
 
-    public static void SetBindableDocument(DependencyObject obj, FlowDocument value) {
+    public static void SetBindableDocument(DependencyObject obj, FlowDocument value)
+    {
         obj.SetValue(BindableDocumentProperty, value);
     }
 
-    private static void OnBindableDocumentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (d is RichTextBox richTextBox && e.NewValue is FlowDocument newDocument) {
-            try {
+    private static void OnBindableDocumentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is RichTextBox richTextBox && e.NewValue is FlowDocument newDocument)
+        {
+            try
+            {
                 richTextBox.Document = newDocument;
             }
-            catch {
+            catch
+            {
                 // Swallow
             }
         }

@@ -157,7 +157,7 @@
                                  Value="True">
                             <Setter TargetName="LayoutRoot"
                                     Property="Background"
-                                    Value="#ED4245" />
+                                    Value="#e25964" />
                             <Setter TargetName="txt"
                                     Property="Foreground"
                                     Value="White" />
