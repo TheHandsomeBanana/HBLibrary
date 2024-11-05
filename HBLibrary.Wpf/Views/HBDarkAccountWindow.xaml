@@ -19,36 +19,33 @@
         ResizeMode="NoResize">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="30" GlassFrameThickness="0" ResizeBorderThickness="5" CornerRadius="6" NonClientFrameEdges="None"/>
+        <WindowChrome CaptionHeight="30"
+                      GlassFrameThickness="0"
+                      ResizeBorderThickness="5"
+                      CornerRadius="6"
+                      NonClientFrameEdges="None" />
     </WindowChrome.WindowChrome>
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="CommandBinding_Executed_Close" />
     </Window.CommandBindings>
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/PasswordBoxes.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Views/Templates/AccountTemplates.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <selectors:AccountTemplateSelector x:Key="AccountTemplateSelector"
                                                LocalTemplate="{StaticResource LocalTemplate}"
                                                MicrosoftTemplate="{StaticResource MicrosoftTemplate}"
-                                               EmptyAccountTemplate="{StaticResource EmptyAccountTemplate}"/>
+                                               EmptyAccountTemplate="{StaticResource EmptyAccountTemplate}" />
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border Style="{StaticResource VSCopy}"
-         BorderThickness="1"
-         CornerRadius="5"
-         Margin="0"
-         Background="{StaticResource HBDark_Background}">
+    <Border Style="{StaticResource ApplicationBorder}"
+            BorderThickness="1"
+            CornerRadius="5"
+            Margin="0"
+            Background="{StaticResource BackgroundBrush}">
 
         <Grid>
 
@@ -59,41 +56,48 @@
                 <RowDefinition Height="35"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="{StaticResource HBDark_Border}"
+            <Border BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="0 0 0 1"
                     CornerRadius="5 5 0 0"
-                    Background="{StaticResource HBDark_Background}"
+                    Background="{StaticResource BackgroundBrush}"
                     Grid.ColumnSpan="2">
             </Border>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10 0 0 0">
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Left"
+                        Margin="10 0 0 0">
 
-                
+
 
                 <TextBlock Text="{Binding AccountTypeName}"
-                            VerticalAlignment="Center"
-                            FontFamily="Bahnschrift SemiBold"
-                            Foreground="White" FontSize="16" />
+                           VerticalAlignment="Center"
+                           FontFamily="Bahnschrift SemiBold"
+                           Foreground="White"
+                           FontSize="16" />
 
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1"
-                         HorizontalAlignment="Right" 
-                         VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center">
 
                 <Button x:Name="CloseButton"
-                         buttons:ButtonAttachedProperties.CornerRadius="0 5 0 0"
-                         Style="{StaticResource CloseButtonRed}" 
-                         WindowChrome.IsHitTestVisibleInChrome="True" 
-                         ToolTip="Close"
-                            Height="30"
-                        Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                        buttons:ButtonAttachedProperties.CornerRadius="0 5 0 0"
+                        Style="{StaticResource CloseButtonRed}"
+                        WindowChrome.IsHitTestVisibleInChrome="True"
+                        ToolTip="Close"
+                        Height="30"
+                        Command="{x:Static SystemCommands.CloseWindowCommand}" />
             </StackPanel>
 
             <ContentControl Grid.Row="1"
-                       HorizontalContentAlignment="Left"
-                       Content="{Binding AccountDetailViewModel}"
-                       ContentTemplateSelector="{StaticResource AccountTemplateSelector}"
-                       Margin="10 10 10 5">
+                            HorizontalContentAlignment="Left"
+                            Content="{Binding AccountDetailViewModel}"
+                            ContentTemplateSelector="{StaticResource AccountTemplateSelector}"
+                            Margin="10 10 10 5">
 
             </ContentControl>
 
@@ -102,21 +106,23 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
 
-                <Button Style="{StaticResource HBDark_VSButton2}" 
-                    Width="120"
-                    Margin="0 0 10 0"
-                    HorizontalAlignment="Left"
-                    Command="{Binding SwitchUserCommand}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                <Button Style="{StaticResource AccentButton}"
+                        HorizontalContentAlignment="Center"
+                        Width="120"
+                        Margin="0 0 10 0"
+                        HorizontalAlignment="Left"
+                        Command="{Binding SwitchUserCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
                     <Button.Content>
-                        <StackPanel Orientation="Horizontal" Margin="5 0 5 0">
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="5 0 5 0">
 
-                            <TextBlock Style="{StaticResource HBDark_TextBlock}"
-                                    Text="Switch Account"
-                                    Margin="0 0 5 0"/>
+                            <TextBlock Style="{StaticResource NormalTextBlock}"
+                                       Text="Switch Account"
+                                       Margin="0 0 5 0" />
                             <Path Data="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z"
-                                Fill="{StaticResource VSGreen}"
-                                Stretch="Uniform"/>
+                                  Fill="{StaticResource VSGreenBrush}"
+                                  Stretch="Uniform" />
                         </StackPanel>
 
                     </Button.Content>

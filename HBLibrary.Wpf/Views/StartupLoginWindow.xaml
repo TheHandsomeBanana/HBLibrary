@@ -28,26 +28,17 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/PasswordBoxes.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Views/Templates/AccountTemplates.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <selectors:AccountTemplateSelector x:Key="AccountTemplateSelector"
                                            LocalTemplate="{StaticResource LocalTemplate}"
                                            MicrosoftTemplate="{StaticResource MicrosoftTemplate}"/>
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border Style="{StaticResource VSCopy}"
+    <Border Style="{StaticResource ApplicationBorder}"
               BorderThickness="1"
               CornerRadius="5"
               Margin="0"
-              Background="{StaticResource HBDark_Background}">
+              Background="{StaticResource BackgroundBrush}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
@@ -60,10 +51,10 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="{StaticResource HBDark_Border}"
+            <Border BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="0 0 0 1"
                     CornerRadius="5 5 0 0"
-                    Background="{StaticResource HBDark_Background}"
+                    Background="{StaticResource BackgroundBrush}"
                     Grid.ColumnSpan="2">
             </Border>
 
@@ -92,22 +83,22 @@
                 </Grid.ColumnDefinitions>
 
                 <ToggleButton x:Name="tbLogin"
-                              Style="{StaticResource HBDark_NavigationBarButton}"
+                              Style="{StaticResource NavigationBarButton}"
                               Grid.Column="0"
                               Command="{Binding LoginToggleCommand}"
                               Checked="LoginButton_Checked"
                               IsChecked="True">
                     <ToggleButton.Content>
-                        <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Login"/>
+                        <TextBlock Style="{StaticResource BigTextBlock}" Text="Login"/>
                     </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton x:Name="tbRegister"
-                              Style="{StaticResource HBDark_NavigationBarButton}"
+                              Style="{StaticResource NavigationBarButton}"
                               Grid.Column="1"
                               Command="{Binding RegisterToggleCommand}"
                               Checked="RegisterButton_Checked">
                     <ToggleButton.Content>
-                        <TextBlock Style="{StaticResource HBDark_BigTextBlock}" Text="Register"/>
+                        <TextBlock Style="{StaticResource BigTextBlock}" Text="Register"/>
                     </ToggleButton.Content>
                 </ToggleButton>
             </Grid>

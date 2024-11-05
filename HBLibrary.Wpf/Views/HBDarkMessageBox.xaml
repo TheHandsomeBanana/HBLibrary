@@ -30,17 +30,6 @@
                         Executed="CommandBinding_Executed_Close" />
     </Window.CommandBindings>
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBlock/TextBlocks.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-
     <Window.InputBindings>
         <KeyBinding Key="Enter"
                     Command="{x:Static SystemCommands.CloseWindowCommand}" />
@@ -48,11 +37,11 @@
                     Command="{x:Static SystemCommands.CloseWindowCommand}" />
     </Window.InputBindings>
 
-    <Border Style="{StaticResource VSCopy}"
+    <Border Style="{StaticResource ApplicationBorder}"
             BorderThickness="1"
             CornerRadius="5"
             Margin="0"
-            Background="{StaticResource HBDark_Background}">
+            Background="{StaticResource BackgroundBrush}">
 
         <Grid>
             <Grid.ColumnDefinitions>
@@ -65,10 +54,10 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="{StaticResource HBDark_Border}"
+            <Border BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="0 0 0 1"
                     CornerRadius="5 5 0 0"
-                    Background="{StaticResource HBDark_Background}"
+                    Background="{StaticResource BackgroundBrush}"
                     Grid.ColumnSpan="2">
             </Border>
 
@@ -151,7 +140,7 @@
                       Visibility="Hidden" />
 
                 <TextBlock x:Name="txbMessage"
-                           Style="{StaticResource HBDark_TextBlock}"
+                           Style="{StaticResource NormalTextBlock}"
                            TextWrapping="Wrap"
                            Grid.Column="1"
                            Grid.ColumnSpan="2"
@@ -170,7 +159,7 @@
                             HorizontalAlignment="Right">
 
                     <Button x:Name="btnOk"
-                            Style="{StaticResource HBDark_VSButton1}"
+                            Style="{StaticResource PrimaryButton}"
                             Grid.Row="1"
                             Content="Ok"
                             Click="ButtonOk_Click"
@@ -178,7 +167,7 @@
                             Visibility="Collapsed" />
 
                     <Button x:Name="btnYes"
-                            Style="{StaticResource HBDark_VSButton1}"
+                            Style="{StaticResource PrimaryButton}"
                             Grid.Row="1"
                             Grid.Column="3"
                             VerticalAlignment="Top"
@@ -189,7 +178,7 @@
                     </Button>
 
                     <Button x:Name="btnNo"
-                            Style="{StaticResource HBDark_VSButton2}"
+                            Style="{StaticResource AccentButton}"
                             Grid.Row="1"
                             Grid.Column="3"
                             Content="No"
@@ -199,7 +188,7 @@
                     </Button>
 
                     <Button x:Name="btnCancel"
-                            Style="{StaticResource HBDark_VSButton2}"
+                            Style="{StaticResource AccentButton}"
                             Grid.Row="1"
                             Grid.Column="3"
                             Content="Cancel"

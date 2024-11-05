@@ -21,21 +21,13 @@
         <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
     </Window.CommandBindings>
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Button/Buttons.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/Border/Borders.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
 
-    <Border Style="{StaticResource VSCopy}"
+    <Border Style="{StaticResource ControlBorder}"
              BorderThickness="1"
              CornerRadius="5"
              Margin="0"
-             Background="{StaticResource HBDark_Background}">
+             Background="{StaticResource BackgroundBrush}">
 
         <Grid>
             <Grid.ColumnDefinitions>
@@ -48,10 +40,10 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="{StaticResource HBDark_Border}"
+            <Border BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="0 0 0 1"
                     CornerRadius="5 5 0 0"
-                    Background="{StaticResource HBDark_Background}"
+                    Background="{StaticResource BackgroundBrush}"
                     Grid.ColumnSpan="2">
             </Border>
 
