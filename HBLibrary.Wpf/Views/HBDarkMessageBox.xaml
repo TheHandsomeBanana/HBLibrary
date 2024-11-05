@@ -160,6 +160,7 @@
 
                     <Button x:Name="btnOk"
                             Style="{StaticResource PrimaryButton}"
+                            HorizontalContentAlignment="Center"
                             Grid.Row="1"
                             Content="Ok"
                             Click="ButtonOk_Click"
@@ -168,6 +169,7 @@
 
                     <Button x:Name="btnYes"
                             Style="{StaticResource PrimaryButton}"
+                            HorizontalContentAlignment="Center"
                             Grid.Row="1"
                             Grid.Column="3"
                             VerticalAlignment="Top"
@@ -179,6 +181,7 @@
 
                     <Button x:Name="btnNo"
                             Style="{StaticResource AccentButton}"
+                            HorizontalContentAlignment="Center"
                             Grid.Row="1"
                             Grid.Column="3"
                             Content="No"
@@ -189,6 +192,7 @@
 
                     <Button x:Name="btnCancel"
                             Style="{StaticResource AccentButton}"
+                            HorizontalContentAlignment="Center"
                             Grid.Row="1"
                             Grid.Column="3"
                             Content="Cancel"

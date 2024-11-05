@@ -34,6 +34,10 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Views/Templates/AccountTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
             <selectors:AccountTemplateSelector x:Key="AccountTemplateSelector"
                                                LocalTemplate="{StaticResource LocalTemplate}"
                                                MicrosoftTemplate="{StaticResource MicrosoftTemplate}"
