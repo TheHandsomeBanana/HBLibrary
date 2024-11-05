@@ -8,6 +8,7 @@
 
     <!-- Primary TextBox -->
     <Color x:Key="TextBoxBackground">#242424</Color>
+    
     <SolidColorBrush x:Key="TextBoxBackgroundBrush"
                      Color="{StaticResource TextBoxBackground}"/>
 
@@ -36,7 +37,7 @@
                      Color="{StaticResource AccentTextBoxBackgroundMouseOver}" />
 
     <SolidColorBrush x:Key="AccentTextBoxBorderMouseOverBrush"
-                     Color="{StaticResource Accent}"></SolidColorBrush>
+                     Color="{StaticResource Accent}" />
 
     <SolidColorBrush x:Key="AccentTextBoxBackgroundIsKeyboardFocusWithinBrush"
                      Color="{StaticResource AccentTextBoxBackgroundIsKeyboardFocusWithin}" />
@@ -76,7 +77,7 @@
                         <Trigger Property="IsMouseOver"
                                  Value="True">
                             <Setter  Property="BorderBrush"
-                                     Value="{StaticResource }" />
+                                     Value="{StaticResource TextBoxBorderMouseOverBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin"
                                  Value="True">
@@ -144,7 +145,7 @@
                         <Trigger Property="IsKeyboardFocusWithin"
                                  Value="True">
                             <Setter  Property="Background"
-                                     Value="{StaticResource TextBoxBorderIsKeyboardFocusWithinBrush}" />
+                                     Value="{StaticResource AccentTextBoxBackgroundIsKeyboardFocusWithinBrush}" />
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource AccentTextBoxBackgroundMouseOverBrush}" />
                         </Trigger>
@@ -253,6 +254,7 @@
                         </Border>
                         <TextBlock Foreground="{StaticResource ForegroundBrush}"
                                    Text="{TemplateBinding Tag}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                    Margin="5 0 5 0"
                                    IsHitTestVisible="False"
                                    Visibility="Collapsed"

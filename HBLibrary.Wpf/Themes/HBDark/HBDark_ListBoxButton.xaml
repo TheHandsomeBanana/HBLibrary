@@ -3,9 +3,9 @@
                     xmlns:local="clr-namespace:HBLibrary.Wpf.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
     <Style TargetType="{x:Type local:ListBoxButton}">
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
@@ -39,7 +39,7 @@
                                       Margin="0 0 0 5" />
                                 <TextBlock x:Name="Text"
                                            Text="{TemplateBinding Text}"
-                                           Foreground="{TemplateBinding Foreground}"></TextBlock>
+                                           Foreground="{TemplateBinding Foreground}" />
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -49,19 +49,19 @@
                                  Value="True">
                             <Setter TargetName="Border"
                                     Property="Background"
-                                    Value="{StaticResource SelectionViolet}" />
+                                    Value="{StaticResource SelectionVioletBrush}" />
                             <Setter TargetName="Border"
                                     Property="BorderBrush"
-                                    Value="{StaticResource VSAccentViolet}" />
+                                    Value="{StaticResource VSAccentVioletBrush}" />
                         </Trigger>
                         <Trigger Property="IsSelected"
                                  Value="True">
                             <Setter TargetName="Border"
                                     Property="Background"
-                                    Value="{StaticResource SelectionViolet}" />
+                                    Value="{StaticResource SelectionVioletBrush}" />
                             <Setter TargetName="Border"
                                     Property="BorderBrush"
-                                    Value="{StaticResource VSAccentViolet}" />
+                                    Value="{StaticResource VSAccentVioletBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
@@ -84,7 +84,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="HBDark_HorizontalListBoxButton"
+    <Style x:Key="HorizontalListBoxButton"
            TargetType="{x:Type local:ListBoxButton}">
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
@@ -129,16 +129,16 @@
                                  Value="True">
                             <Setter TargetName="Border"
                                     Property="Background"
-                                    Value="{StaticResource SelectionViolet}" />
+                                    Value="{StaticResource SelectionVioletBrush}" />
                             <Setter TargetName="Border"
                                     Property="BorderBrush"
-                                    Value="{StaticResource VSAccentViolet}" />
+                                    Value="{StaticResource VSAccentVioletBrush}" />
                         </Trigger>
                         <Trigger Property="IsSelected"
                                  Value="True">
                             <Setter TargetName="Border"
                                     Property="Background"
-                                    Value="{StaticResource SelectionViolet}" />
+                                    Value="{StaticResource SelectionVioletBrush}" />
 
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -146,4 +146,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
 </ResourceDictionary>

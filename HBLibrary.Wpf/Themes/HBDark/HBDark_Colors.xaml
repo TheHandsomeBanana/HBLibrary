@@ -7,6 +7,7 @@
     <Color x:Key="VSYellow">#f1c23c</Color>
     <Color x:Key="VSViolet">#403582</Color>
     <Color x:Key="VSVioletAccent">#7464ec</Color>
+    <Color x:Key="SelectionViolet">#343042</Color>
     <Color x:Key="InfoBlue">#1a79ca</Color>
 
     <Color x:Key="Foreground">#e6e6e6</Color>
@@ -34,6 +35,9 @@
 
     <SolidColorBrush x:Key="VSAccentVioletBrush"
                      Color="{StaticResource VSVioletAccent}" />
+    
+    <SolidColorBrush x:Key="SelectionVioletBrush"
+                     Color="{StaticResource SelectionViolet}" />
 
     <SolidColorBrush x:Key="InfoBlueBrush"
                      Color="{StaticResource InfoBlue}" />

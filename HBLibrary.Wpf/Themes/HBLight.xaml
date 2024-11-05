@@ -2,27 +2,28 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_Border.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_Button.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_CheckBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_Colors.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ComboBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ComboBoxItem.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ContextMenu.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_Expander.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_GroupBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ListBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ListBoxItem.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ListView.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ListViewItem.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_MenuItem.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_PasswordBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_RichTextBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ScrollViewer.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_TextBlock.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_TextBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_ToggleButton.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_TreeView.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBLight/HBLight_TreeViewItem.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_Border.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_Button.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_CheckBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_Colors.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ComboBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ComboBoxItem.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ContextMenu.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_Expander.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_Fonts.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_GroupBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ListBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ListBoxItem.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ListView.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ListViewItem.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_MenuItem.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_PasswordBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_RichTextBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ScrollViewer.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_TextBlock.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_TextBox.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_ToggleButton.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_TreeView.xaml" />
+        <ResourceDictionary Source="HBLight/HBLight_TreeViewItem.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

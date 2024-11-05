@@ -15,7 +15,7 @@
                      Color="{StaticResource GridViewColumnHeaderBackground}" />
     
     <SolidColorBrush x:Key="GridViewColumnHeaderBackgroundMouseOverBrush"
-                     Color="{StaticResource VSViolet}" />
+                     Color="{StaticResource SelectionViolet}" />
     
     <SolidColorBrush x:Key="GridViewColumnHeaderBorderBrush"
                      Color="{StaticResource Accent}" />

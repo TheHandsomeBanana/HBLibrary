@@ -257,7 +257,7 @@
 
     <Style x:Key="AccentButtonBlue"
            TargetType="Button"
-           BasedOn="{StaticResource HBDark_VSButton2}">
+           BasedOn="{StaticResource AccentButton}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -274,7 +274,7 @@
                         <Trigger Property="IsMouseOver"
                                  Value="True">
                             <Setter  Property="Background"
-                                     Value="{StaticResource HBDark_VS2Button_MouseOver_Background}" />
+                                     Value="{StaticResource AccentButtonBackgroundMouseOverBrush}" />
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSBlueBrush}" />
                             <Setter Property="BorderThickness"
@@ -283,7 +283,7 @@
                         <Trigger Property="IsPressed"
                                  Value="True">
                             <Setter  Property="Background"
-                                     Value="{StaticResource HBDark_VS2Button_Pressed_Background}" />
+                                     Value="{StaticResource AccentButtonBackgroundPressedBrush}" />
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSBlueBrush}" />
                             <Setter Property="BorderThickness"
@@ -306,7 +306,7 @@
 
     <Style x:Key="AccentButtonRed"
            TargetType="Button"
-           BasedOn="{StaticResource HBDark_VSButton2}">
+           BasedOn="{StaticResource AccentButton}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -323,7 +323,7 @@
                         <Trigger Property="IsMouseOver"
                                  Value="True">
                             <Setter  Property="Background"
-                                     Value="{StaticResource HBDark_VS2Button_MouseOver_Background}" />
+                                     Value="{StaticResource AccentButtonBackgroundMouseOverBrush}" />
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSRedBrush}" />
                             <Setter Property="BorderThickness"
@@ -332,7 +332,7 @@
                         <Trigger Property="IsPressed"
                                  Value="True">
                             <Setter  Property="Background"
-                                     Value="{StaticResource HBDark_VS2Button_Pressed_Background}" />
+                                     Value="{StaticResource AccentButtonBackgroundPressedBrush}" />
                             <Setter  Property="BorderBrush"
                                      Value="{StaticResource VSRedBrush}" />
                             <Setter Property="BorderThickness"
@@ -543,7 +543,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource NavigationbarButtonBorderBrush}" />
         <Setter Property="Foreground"
-                Value="{StaticResource Foreground}" />
+                Value="{StaticResource ForegroundBrush}" />
         <Setter Property="Padding"
                 Value="2" />
         <Setter Property="BorderThickness"

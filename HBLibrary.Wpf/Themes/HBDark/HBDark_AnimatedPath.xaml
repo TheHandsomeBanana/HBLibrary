@@ -1,0 +1,58 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HBLibrary.Wpf.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="{x:Type local:AnimatedPath}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:AnimatedPath}">
+                    <Path x:Name="Icon"
+                          Data="{TemplateBinding Data}"
+                          Fill="{TemplateBinding Fill}"
+                          Stretch="{TemplateBinding Stretch}"
+                          Stroke="{TemplateBinding Stroke}"
+                          StrokeThickness="{TemplateBinding StrokeThickness}"
+                          Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}"
+                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                          Effect="{TemplateBinding ShadowEffect}">
+                    </Path>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+
+                            <Setter Property="Fill"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter Property="FromFill"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter Property="FromStroke"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter Property="ToFill"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter Property="ToStroke"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter Property="FromShadowEffect"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter Property="ToShadowEffect"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

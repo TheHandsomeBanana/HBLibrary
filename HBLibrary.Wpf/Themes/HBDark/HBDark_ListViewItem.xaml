@@ -11,13 +11,13 @@
                      Color="{StaticResource ListViewItemBackground}" />
     
     <SolidColorBrush x:Key="ListViewItemBackgroundMouseOverBrush"
-                     Color="{StaticResource VSViolet}" />
+                     Color="{StaticResource SelectionViolet}" />
 
     <SolidColorBrush x:Key="ListViewItemBorderMouseOverBrush"
                      Color="{StaticResource VSVioletAccent}" />
 
     <SolidColorBrush x:Key="ListViewItemBackgroundSelectedBrush"
-                     Color="{StaticResource VSViolet}" />
+                     Color="{StaticResource SelectionViolet}" />
 
     <Style x:Key="PrimaryListViewItem"
            TargetType="ListViewItem">

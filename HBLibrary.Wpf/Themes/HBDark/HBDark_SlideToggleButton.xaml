@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:HBLibrary.Wpf.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="local:SlideToggleButton">
@@ -59,16 +59,16 @@
                                  Value="False">
 
                             <Setter Property="SliderFill"
-                                    Value="{StaticResource HBDark_DefaultDisabledBorder}" />
+                                    Value="{StaticResource AccentDisabledBrush}" />
 
                             <Setter Property="Background"
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                                    Value="{StaticResource BackgroundDisabledBrush}" />
 
                             <Setter Property="SliderStroke"
-                                    Value="{StaticResource HBDark_DefaultDisabledBorder}" />
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
 
                             <Setter Property="BorderBrush"
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

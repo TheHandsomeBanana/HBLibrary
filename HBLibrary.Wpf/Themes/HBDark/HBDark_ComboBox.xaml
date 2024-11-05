@@ -7,7 +7,7 @@
         <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ComboBoxItem.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Color x:Key="ComboBoxBackground">#131313</Color>
+    <Color x:Key="ComboBoxBackground">#242424</Color>
 
     <SolidColorBrush x:Key="ComboBoxBackgroundBrush"
                      Color="{StaticResource ComboBoxBackground}" />
@@ -43,8 +43,6 @@
                   HorizontalAlignment="Center"
                   Data="M 0 0 L 4 4 L 8 0 Z"
                   Fill="{StaticResource ForegroundBrush}">
-
-
             </Path>
         </Grid>
         <ControlTemplate.Triggers>
@@ -118,7 +116,7 @@
                                               IsHitTestVisible="False" />
 
                             <TextBox x:Name="PART_EditableTextBox"
-                                     Foreground="{StaticResource ForegroundBrush}"
+                                     Foreground="{TemplateBinding Foreground}"
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Center"
                                      HorizontalContentAlignment="Stretch"

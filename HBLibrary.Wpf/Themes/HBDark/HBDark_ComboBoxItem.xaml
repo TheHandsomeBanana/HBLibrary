@@ -7,13 +7,13 @@
 
 
     <SolidColorBrush x:Key="ComboBoxItemBackgroundHighlightedBrush"
-                     Color="{StaticResource VSViolet}" />
+                     Color="{StaticResource SelectionViolet}" />
 
     <SolidColorBrush x:Key="ComboBoxItemBorderHighlightedBrush"
                      Color="{StaticResource VSVioletAccent}" />
 
     <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedBrush"
-                     Color="{StaticResource VSViolet}" />
+                     Color="{StaticResource SelectionViolet}" />
 
     <SolidColorBrush x:Key="ComboBoxItemBorderSelectedBrush"
                      Color="{StaticResource VSVioletAccent}" />
@@ -21,7 +21,7 @@
     <Style x:Key="PrimaryComboBoxItem"
            TargetType="ComboBoxItem">
         <Setter Property="Foreground"
-                Value="{StaticResource Foreground}" />
+                Value="{StaticResource ForegroundBrush}" />
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="HorizontalContentAlignment"

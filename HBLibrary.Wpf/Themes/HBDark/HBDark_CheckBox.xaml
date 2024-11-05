@@ -39,8 +39,8 @@
                                 Padding="1">
                             <Path x:Name="checkMark"
                                   Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
-                                  Fill="{StaticResource Foreground}"
-                                  Stroke="{StaticResource Foreground}"
+                                  Fill="{StaticResource ForegroundBrush}"
+                                  Stroke="{StaticResource ForegroundBrush}"
                                   Stretch="Uniform"
                                   StrokeThickness="1"
                                   Visibility="Collapsed" />
@@ -57,7 +57,7 @@
                                     Property="Visibility"
                                     Value="Visible" />
                             <Setter Property="Background"
-                                    Value="{StaticResource CheckBoxBackgroundBrush}" />
+                                    Value="{StaticResource CheckBoxMarkBackgroundIsCheckedBrush}" />
                         </Trigger>
 
                         <Trigger Property="IsMouseOver"

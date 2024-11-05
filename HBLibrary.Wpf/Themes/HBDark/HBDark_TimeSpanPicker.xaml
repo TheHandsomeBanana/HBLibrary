@@ -6,8 +6,8 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/TextBox/TextBoxes.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/ComboBox/ComboBoxes.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_TextBox.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_ComboBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <ObjectDataProvider x:Key="TimeUnitValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -27,14 +27,14 @@
 
                         <StackPanel Orientation="Horizontal">
                             <TextBox x:Name="PART_TextBox"
-                                     Style="{StaticResource HBDark_TextBox}" 
+                                     Style="{StaticResource PrimaryTextBox}" 
                                      MinWidth="20"
                                      Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0 0 5 0"
                                      Width="50">
                             </TextBox>
 
-                            <ComboBox Style="{StaticResource HBDark_ComboBox}"
+                            <ComboBox Style="{StaticResource PrimaryComboBox}"
                                       ItemsSource="{Binding Source={StaticResource TimeUnitValues}}"
                                       SelectedItem="{Binding TimeUnit, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
                                       Width="75">

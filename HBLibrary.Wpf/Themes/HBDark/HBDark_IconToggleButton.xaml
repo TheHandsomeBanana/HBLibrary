@@ -3,14 +3,22 @@
                     xmlns:local="clr-namespace:HBLibrary.Wpf.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Styles/DefaultDark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/HBLibrary.Wpf;component/Themes/HBDark/HBDark_Colors.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
+    <Color x:Key="IconToggleButtonBorderMouseOver">#cfd1c8</Color>
+    <SolidColorBrush x:Key="IconToggleButtonBorderMouseOverBrush"
+                     Color="{StaticResource IconToggleButtonBorderMouseOver}" />
+
     <Style TargetType="{x:Type local:IconToggleButton}">
-        <Setter Property="Width" Value="50"/>
-        <Setter Property="Height" Value="50"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width"
+                Value="50" />
+        <Setter Property="Height"
+                Value="50" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderThickness"
+                Value="0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconToggleButton}">
@@ -33,41 +41,44 @@
                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                   Effect="{TemplateBinding ShadowEffect}">
-                                
+
                             </Path>
                         </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
                             <Setter  TargetName="Icon"
                                      Property="Stroke"
-                                     Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}" />
+                                     Value="{StaticResource IconToggleButtonBorderMouseOverBrush}" />
                             <Setter TargetName="Icon"
                                     Property="StrokeThickness"
-                                    Value="1"/>
+                                    Value="1" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
+                        <Trigger Property="IsPressed"
+                                 Value="True">
                             <Setter  TargetName="Icon"
                                      Property="Stroke"
-                                     Value="{StaticResource HBDark_IconButton_MouseOver_BorderBrush}" />
-                            
+                                     Value="{StaticResource IconToggleButtonBorderMouseOverBrush}" />
+
                             <Setter TargetName="Icon"
                                     Property="StrokeThickness"
-                                    Value="1.2"/>
+                                    Value="1.2" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
 
                             <Setter Property="Foreground"
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
-                            
-                            <Setter TargetName="Icon" Property="Fill"
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter TargetName="Icon"
+                                    Property="Fill"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
 
                             <Setter TargetName="Icon"
                                     Property="Stroke"
-                                    Value="{StaticResource HBDark_DefaultDisabled}" />
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
 
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -75,4 +86,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 </ResourceDictionary>

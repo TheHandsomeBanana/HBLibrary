@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Common_LoadingSpinner.xaml" />
+        <ResourceDictionary Source="Common_NumberBox.xaml" />
+        <ResourceDictionary Source="Common_SimpleToggleButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

@@ -10,10 +10,6 @@
 
   <ItemGroup>
     <None Remove="Resources\Images\microsoft-icon.png" />
-    <None Remove="Styles\Button\CloseButton.png" />
-    <None Remove="Styles\Button\CloseFullscreenButton.png" />
-    <None Remove="Styles\Button\FullscreenButton.png" />
-    <None Remove="Styles\Button\MinimizeButton.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,18 +25,10 @@
     <Resource Include="Resources\Images\microsoft-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Styles\Button\CloseButton.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Styles\Button\CloseFullscreenButton.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Styles\Button\FullscreenButton.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Styles\Button\MinimizeButton.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Themes\HBDarkBlue\" />
   </ItemGroup>
 
 </Project>

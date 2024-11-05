@@ -209,7 +209,7 @@
     <Style x:Key="ScrollBarThumbStyle"
            TargetType="Thumb">
         <Setter Property="BorderBrush"
-                Value="{StaticResource ScrollBarBorderBrush}" />
+                Value="{StaticResource ScrollBarBackgroundBrush}" />
         <Setter Property="Background"
                 Value="{StaticResource ThumbBackgroundBrush}" />
         <Setter Property="BorderThickness"
