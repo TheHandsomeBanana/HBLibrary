@@ -14,9 +14,9 @@
     <Color x:Key="Background">#1f1f1f</Color>
     <Color x:Key="Accent">#3d3d3d</Color>
 
-    <Color x:Key="BackgroundDisabled">#3d3d3d</Color>
-    <Color x:Key="AccentDisabled">#4E4E4E</Color>
-    <Color x:Key="ForegroundDisabled">#4E4E4E</Color>
+    <Color x:Key="BackgroundDisabled">#2c2c2c</Color>
+    <Color x:Key="AccentDisabled">#313131</Color>
+    <Color x:Key="ForegroundDisabled">#313131</Color>
 
     <SolidColorBrush x:Key="VSGreenBrush"
                      Color="{StaticResource VSGreen}" />

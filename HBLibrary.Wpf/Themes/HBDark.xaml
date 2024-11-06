@@ -14,6 +14,8 @@
         <ResourceDictionary Source="HBDark/HBDark_Button.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_IconButton.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_IconToggleButton.xaml" />
+        <ResourceDictionary Source="HBDark/HBDark_SlideToggleButton.xaml" />
+        <ResourceDictionary Source="HBDark/HBDark_AnimatedPath.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_RichTextBox.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_CheckBox.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_ComboBoxItem.xaml" />

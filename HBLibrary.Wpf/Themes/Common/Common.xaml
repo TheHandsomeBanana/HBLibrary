@@ -4,5 +4,6 @@
         <ResourceDictionary Source="Common_LoadingSpinner.xaml" />
         <ResourceDictionary Source="Common_NumberBox.xaml" />
         <ResourceDictionary Source="Common_SimpleToggleButton.xaml" />
+        <ResourceDictionary Source="Common_TimePicker.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

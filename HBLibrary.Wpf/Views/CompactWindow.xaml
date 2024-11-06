@@ -23,7 +23,7 @@
 
     
 
-    <Border Style="{StaticResource ControlBorder}"
+    <Border Style="{StaticResource ApplicationBorder}"
              BorderThickness="1"
              CornerRadius="5"
              Margin="0"

@@ -27,7 +27,7 @@
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="BorderThickness"
-                Value="0" />
+                Value="1" />
         <Setter Property="BorderBrush"
                 Value="Transparent" />
         <Setter Property="Template">
@@ -50,8 +50,7 @@
                                     Value="{StaticResource ListBoxItemBackgroundMouseOverBrush}" />
                             <Setter Property="BorderBrush"
                                     Value="{StaticResource ListBoxItemBorderMouseOverBrush}" />
-                            <Setter Property="BorderThickness"
-                                    Value="1" />
+                
 
                         </Trigger>
 

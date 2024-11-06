@@ -25,6 +25,10 @@
                 Value="{StaticResource ForegroundBrush}" />
         <Setter Property="Background"
                 Value="{StaticResource ListViewItemBackgroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
+        <Setter Property="BorderThickness"
+                Value="1" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Stretch" />
         <Setter Property="VerticalContentAlignment"
@@ -55,9 +59,7 @@
                             <Setter Property="BorderBrush"
                                     Value="{StaticResource ListViewItemBorderMouseOverBrush}" />
 
-                            <Setter Property="BorderThickness"
-                                    Value="1" />
-
+                            
                         </Trigger>
 
                         <Trigger Property="IsSelected"

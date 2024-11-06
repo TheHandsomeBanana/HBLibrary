@@ -26,14 +26,6 @@
         <WindowChrome CaptionHeight="30" GlassFrameThickness="0" ResizeBorderThickness="5" CornerRadius="6" NonClientFrameEdges="None"/>
     </WindowChrome.WindowChrome>
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <selectors:AccountTemplateSelector x:Key="AccountTemplateSelector"
-                                           LocalTemplate="{StaticResource LocalTemplate}"
-                                           MicrosoftTemplate="{StaticResource MicrosoftTemplate}"/>
-        </ResourceDictionary>
-    </Window.Resources>
-
     <Border Style="{StaticResource ApplicationBorder}"
               BorderThickness="1"
               CornerRadius="5"

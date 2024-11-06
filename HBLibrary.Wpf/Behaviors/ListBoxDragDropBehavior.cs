@@ -75,7 +75,7 @@ public class ListBoxDragDropBehavior : Behavior<ListBox> {
                        Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)) {
 
             ListBox listView = (ListBox)sender;
-            ListBoxItem? listViewItem = FindAncestor<ListViewItem>((DependencyObject)e.OriginalSource);
+            ListBoxItem? listViewItem = FindAncestor<ListBoxItem>((DependencyObject)e.OriginalSource);
 
             if (listViewItem is null) {
                 return;
