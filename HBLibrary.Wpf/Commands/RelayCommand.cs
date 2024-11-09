@@ -8,7 +8,7 @@ public class RelayCommand : CommandBase {
         this.canExecute = canExecute;
     }
 
-    public RelayCommand(Action<object?> callback, bool canExecute) : this(callback, o => canExecute) { }
+    public RelayCommand(Action<object?> callback) : this(callback, _ => true) { }
 
     public override bool CanExecute(object? parameter) {
         return canExecute != null ? canExecute(parameter) && base.CanExecute(parameter) : base.CanExecute(parameter);
@@ -28,7 +28,7 @@ public class RelayCommand<TParameter> : CommandBase {
         this.canExecute = canExecute;
     }
 
-    public RelayCommand(Action<TParameter> callback, bool canExecute) : this(callback, o => canExecute) { }
+    public RelayCommand(Action<TParameter> callback) : this(callback, _ => true) { }
 
     public override bool CanExecute(object? parameter) {
 

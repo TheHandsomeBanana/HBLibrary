@@ -193,6 +193,7 @@ public class IconToggleButton : ToggleButton {
         SolidColorBrush? brush = e.NewValue as SolidColorBrush;
 
         if (control.ShadowEffect is not null && brush is not null) {
+            control.ShadowEffect = CreateNewShadow(control.ShadowEffect);
             control.ShadowEffect.Color = brush.Color;
         }
     }
@@ -212,6 +213,8 @@ public class IconToggleButton : ToggleButton {
         
         this.Checked += (_, _) => AnimateIcon(icon, true);
         this.Unchecked += (_, _) => AnimateIcon(icon, false);
+
+        UpdateVisualState(icon, IsChecked.GetValueOrDefault());
     }
 
     private void IconToggleButton_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e) {
@@ -272,10 +275,23 @@ public class IconToggleButton : ToggleButton {
         }
 
         if (FromShadowEffect is not null && ToShadowEffect is not null) {
+            ShadowEffect = CreateNewShadow(ShadowEffect);
+
             ShadowEffect.Color = state
                 ? FromShadowEffect.Color
                 : ToShadowEffect.Color;
         }
 
+    }
+
+    private static DropShadowEffect CreateNewShadow(DropShadowEffect effect) {
+        DropShadowEffect temp = effect;
+        return new DropShadowEffect {
+            BlurRadius = temp.BlurRadius,
+            Color = temp.Color,
+            Direction = temp.Direction,
+            Opacity = temp.Opacity,
+            ShadowDepth = temp.ShadowDepth
+        };
     }
 }

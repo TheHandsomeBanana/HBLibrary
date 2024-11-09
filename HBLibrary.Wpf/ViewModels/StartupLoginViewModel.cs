@@ -33,9 +33,9 @@ public class StartupLoginViewModel : ViewModelBase {
         this.accountService = accountService;
         this.appSettings = appSettings;
 
-        CloseWindowCommand = new RelayCommand<Window>(CloseWindow, true);
-        LoginToggleCommand = new RelayCommand(LoginToggle, true);
-        RegisterToggleCommand = new RelayCommand(RegisterToggle, true);
+        CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
+        LoginToggleCommand = new RelayCommand(LoginToggle);
+        RegisterToggleCommand = new RelayCommand(RegisterToggle);
 
         LoginToggle(null);
     }

@@ -46,7 +46,7 @@ public class AccountViewModel : ViewModelBase {
         this.onAccountSwitched = onAccountSwitched;
         this.onAccountSwitching = onAccountSwitching;
 
-        SwitchUserCommand = new RelayCommand<Window>(SwitchUser, true);
+        SwitchUserCommand = new RelayCommand<Window>(SwitchUser);
 
         switch (accountService.Account) {
             case LocalAccount localAccount:
