@@ -1,8 +1,10 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
+using HBLibrary.Logging.Formatter;
 
 namespace HBLibrary.Logging.Targets;
 public sealed class ConsoleTarget : TargetWithHeader, ILogTarget {
@@ -30,26 +32,10 @@ public sealed class ConsoleTarget : TargetWithHeader, ILogTarget {
         LevelThreshold = threshold;
     }
 
-    public void WriteLog(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) {
-        switch (log.Level) {
-            case LogLevel.Debug:
-                Console.ForegroundColor = ConsoleColor.White;
-                break;
-            case LogLevel.Info:
-                Console.ForegroundColor = ConsoleColor.Green;
-                break;
-            case LogLevel.Warning:
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                break;
-            case LogLevel.Error:
-                Console.ForegroundColor = ConsoleColor.Red;
-                break;
-            case LogLevel.Fatal:
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                break;
-        }
+    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+        formatter ??= LogFormatters.DefaultConsole;
 
-        Console.WriteLine(log.Format(format) + "\n");
+        Console.WriteLine((string)formatter.Format(log) + "\n");
         Console.ForegroundColor = ConsoleColor.White;
     }
 

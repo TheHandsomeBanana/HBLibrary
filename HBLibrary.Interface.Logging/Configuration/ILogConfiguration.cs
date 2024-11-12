@@ -1,4 +1,5 @@
-﻿using HBLibrary.Interface.Logging.Targets;
+﻿using HBLibrary.Interface.Logging.Formatting;
+using HBLibrary.Interface.Logging.Targets;
 
 namespace HBLibrary.Interface.Logging.Configuration;
 /// <summary>
@@ -22,16 +23,9 @@ public interface ILogConfiguration : IDisposable {
     /// <summary>
     /// Display format for the log to write.
     /// </summary>
-    LogDisplayFormat DisplayFormat { get; }
+    ILogFormatter? Formatter { get; }
     /// <summary>
     /// Logging level threshold on the logger or global layer.<br/>
     /// </summary>
     LogLevel? LevelThreshold { get; }
-}
-
-public enum LogDisplayFormat {
-    MessageOnly,
-    LevelMessage,
-    Minimal,
-    Full
 }

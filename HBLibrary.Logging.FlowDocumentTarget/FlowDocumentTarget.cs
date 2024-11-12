@@ -1,7 +1,9 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
+using HBLibrary.Logging.FlowDocumentTarget.Formatter;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
@@ -33,7 +35,9 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     public Brush ErrorBrush { get; set; } = Brushes.IndianRed;
     public Brush CriticalBrush { get; set; } = Brushes.Red;
 
-    public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.MessageOnly) {
+    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+        formatter ??= new MessageOnlyFormatter();
+
         Brush brush = log.Level switch {
             LogLevel.Debug or LogLevel.Info => InfoBrush,
             LogLevel.Warning => WarningBrush,
@@ -44,7 +48,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
 
         Application.Current.Dispatcher.Invoke(() => {
 
-            Document!.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
+            Document!.Blocks.Add(new Paragraph(new Run((string)formatter.Format(log))) {
                 TextIndent = 5,
                 FontFamily = new FontFamily("Consolas"),
                 FontSize = 14,
@@ -61,7 +65,9 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
         });
     }
 
-    public void WriteSuccessLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.MessageOnly) {
+    public void WriteSuccessLog(LogStatement log, ILogFormatter? formatter = null) {
+        formatter ??= new MessageOnlyFormatter();
+
         Brush brush = log.Level switch {
             LogLevel.Debug or LogLevel.Info => Brushes.MediumSeaGreen,
             LogLevel.Warning => WarningBrush,
@@ -72,7 +78,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
 
         Application.Current.Dispatcher.Invoke(() => {
 
-            Document!.Blocks.Add(new Paragraph(new Run(log.Format(displayFormat))) {
+            Document!.Blocks.Add(new Paragraph(new Run((string)formatter.Format(log))) {
                 TextIndent = 5,
                 FontFamily = new FontFamily("Consolas"),
                 FontSize = 14,

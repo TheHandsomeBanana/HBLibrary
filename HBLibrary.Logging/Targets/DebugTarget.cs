@@ -1,8 +1,10 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
+using HBLibrary.Logging.Formatter;
 using System.Diagnostics;
 
 namespace HBLibrary.Logging.Targets;
@@ -31,8 +33,9 @@ public sealed class DebugTarget : TargetWithHeader, ILogTarget {
         LevelThreshold = threshold;
     }
 
-    public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
-        Debug.WriteLine(log.Format(displayFormat));
+    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+        formatter ??= LogFormatters.DefaultDebug;
+        Debug.WriteLine(formatter.Format(log));
     }
     public void Dispose() { }
 }

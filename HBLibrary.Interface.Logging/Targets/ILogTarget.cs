@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 
 namespace HBLibrary.Interface.Logging.Targets;
@@ -12,6 +13,6 @@ public interface ILogTarget : IDisposable {
     /// </summary>
     /// <param name="log"></param>
     /// <param name="displayFormat"></param>
-    void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full);
+    void WriteLog(LogStatement log, ILogFormatter? formatter = null);
 }
 

@@ -1,4 +1,6 @@
-﻿using HBLibrary.Wpf.Commands;
+﻿using HBLibrary.Interface.Logging.Targets;
+using HBLibrary.Wpf.Commands;
+using HBLibrary.Wpf.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,12 +18,12 @@ public class LogListBox : ListBox {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(LogListBox), new FrameworkPropertyMetadata(typeof(LogListBox)));
     }
 
+    // Properties to toggle timestamp and explicit level display
     public bool ShowTimestamp {
         get { return (bool)GetValue(ShowTimestampProperty); }
         set { SetValue(ShowTimestampProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for ShowTimestamp.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowTimestampProperty =
         DependencyProperty.Register("ShowTimestamp", typeof(bool), typeof(LogListBox), new PropertyMetadata(false));
 
@@ -30,22 +32,18 @@ public class LogListBox : ListBox {
         set { SetValue(ShowExplicitLevelProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for ShowExplicitLevel.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowExplicitLevelProperty =
         DependencyProperty.Register("ShowExplicitLevel", typeof(bool), typeof(LogListBox), new PropertyMetadata(false));
 
-
-    public RelayCommand ClearLogsCommand { get; set; }
-    public RelayCommand ShowTimestampCommand { get; set; }
-    public RelayCommand ShowExplicitLevelCommand { get; set; }
-
+    // Commands for the UI actions
+    public ICommand ClearLogsCommand { get; }
+    public ICommand ShowTimestampCommand { get; }
+    public ICommand ShowExplicitLevelCommand { get; }
 
     public LogListBox() {
         ClearLogsCommand = new RelayCommand(ClearLogs);
         ShowTimestampCommand = new RelayCommand(ToggleTimestamp);
         ShowExplicitLevelCommand = new RelayCommand(ToggleExplicitLevel);
-        
-        
     }
 
     private void ToggleExplicitLevel(object? obj) {
@@ -59,11 +57,6 @@ public class LogListBox : ListBox {
     private void ClearLogs(object? obj) {
         Items.Clear();
     }
-
-    protected override DependencyObject GetContainerForItemOverride() => new LogListBoxItem();
-    protected override bool IsItemItsOwnContainerOverride(object item) => item is LogListBoxItem;
-
-
 
     private INotifyCollectionChanged? _observableItemsSource;
 
@@ -82,14 +75,13 @@ public class LogListBox : ListBox {
             _observableItemsSource = null;
         }
 
-        // Initial assignment of line numbers
+        // Initial line number assignment
         UpdateLineNumbers();
     }
 
     private void OnItemsSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         switch (e.Action) {
             case NotifyCollectionChangedAction.Add:
-                // Assign line numbers for new items and shift items below them
                 UpdateLineNumbersFromIndex(e.NewStartingIndex);
                 break;
         }
@@ -97,16 +89,16 @@ public class LogListBox : ListBox {
 
     private void UpdateLineNumbers() {
         for (int i = 0; i < Items.Count; i++) {
-            if (Items[i] is LogListBoxItem item) {
-                item.LineNumber = i + 1;
+            if (Items[i] is ListBoxLog log) {
+                log.LineNumber = i + 1;
             }
         }
     }
 
     private void UpdateLineNumbersFromIndex(int startIndex) {
         for (int i = startIndex; i < Items.Count; i++) {
-            if (Items[i] is LogListBoxItem item) {
-                item.LineNumber = i + 1;
+            if (Items[i] is ListBoxLog log) {
+                log.LineNumber = i + 1;
             }
         }
     }

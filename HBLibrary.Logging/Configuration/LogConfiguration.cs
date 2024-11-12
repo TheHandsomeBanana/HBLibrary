@@ -1,21 +1,23 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Targets;
+using HBLibrary.Logging.Formatter;
 using HBLibrary.Logging.Targets;
 
 namespace HBLibrary.Logging.Configuration;
 internal class LogConfiguration : ILogConfiguration {
     public IReadOnlyList<ILogTarget> Targets { get; set; } = [];
     public IReadOnlyList<IAsyncLogTarget> AsyncTargets { get; set; } = [];
-    public LogDisplayFormat DisplayFormat { get; } = LogDisplayFormat.Full;
+    public ILogFormatter? Formatter { get; }
     public LogLevel? LevelThreshold { get; set; } = null;
     public static LogConfiguration Default => new();
 
     private LogConfiguration() { }
-    public LogConfiguration(List<ILogTarget> targets, List<IAsyncLogTarget> asyncTargets, LogDisplayFormat displayFormat, LogLevel? levelThreshold = null) {
+    public LogConfiguration(List<ILogTarget> targets, List<IAsyncLogTarget> asyncTargets, ILogFormatter? formatter, LogLevel? levelThreshold = null) {
         Targets = targets.ToList();
         AsyncTargets = asyncTargets.ToList();
-        DisplayFormat = displayFormat;
+        Formatter = formatter;
         LevelThreshold = levelThreshold;
     }
 
@@ -28,7 +30,7 @@ internal class LogConfiguration : ILogConfiguration {
 
         Targets = configuration.Targets;
         AsyncTargets = configuration.AsyncTargets;
-        DisplayFormat = configuration.DisplayFormat;
+        Formatter = configuration.Formatter;
         LevelThreshold = configuration.LevelThreshold;
     }
 

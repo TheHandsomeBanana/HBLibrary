@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
@@ -14,8 +15,8 @@ public sealed class AsyncMethodTarget : IAsyncLogTarget, IEquatable<AsyncMethodT
         LevelThreshold = minLevel;
     }
 
-    public Task WriteLogAsync(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full)
-        => Method?.Invoke(log, format)
+    public Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null)
+        => Method?.Invoke(log, formatter)
         ?? Task.CompletedTask;
 
     public void Dispose() {

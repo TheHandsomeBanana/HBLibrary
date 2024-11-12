@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
@@ -14,7 +15,7 @@ public sealed class MethodTarget : ILogTarget, IEquatable<MethodTarget> {
         Method = method;
     }
 
-    public void WriteLog(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) => Method?.Invoke(log, format);
+    public void WriteLog(LogStatement log, ILogFormatter? formatter) => Method?.Invoke(log, formatter);
 
     public void Dispose() {
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.

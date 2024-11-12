@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
@@ -36,7 +37,7 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
         command.ExecuteNonQuery();
     }
 
-    public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
+    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
         using DbConnection connection = dbProviderFactory.CreateConnection()
             ?? throw new InvalidOperationException("DbProvider not registered.");
 
@@ -48,7 +49,7 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
         command.ExecuteNonQuery();
     }
 
-    public async Task WriteLogAsync(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
+    public async Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null) {
         using DbConnection connection = dbProviderFactory.CreateConnection()
                     ?? throw new InvalidOperationException("DbProvider not registered.");
 

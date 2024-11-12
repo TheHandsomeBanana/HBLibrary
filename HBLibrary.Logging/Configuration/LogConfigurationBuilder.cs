@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
 using HBLibrary.Interface.Logging.Exceptions;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Targets;
 
@@ -8,7 +9,7 @@ namespace HBLibrary.Logging.Configuration;
 internal class LogConfigurationBuilder : ILogConfigurationBuilder {
     private readonly List<ILogTarget> targets = [];
     private readonly List<IAsyncLogTarget> asyncTargets = [];
-    private LogDisplayFormat displayFormat = LogDisplayFormat.Full;
+    private ILogFormatter? formatter;
     private LogLevel? levelThreshold = null;
     private bool overrideConfig = false;
     public ILogConfigurationBuilder AddTarget(ILogTarget target) {
@@ -64,8 +65,8 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         return this;
     }
 
-    public ILogConfigurationBuilder WithDisplayFormat(LogDisplayFormat format) {
-        displayFormat = format;
+    public ILogConfigurationBuilder WithFormatter(ILogFormatter format) {
+        formatter = format;
         return this;
     }
 
@@ -83,7 +84,7 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
             return new LogConfiguration(logConfiguration!);
         }
 
-        LogConfiguration result = new LogConfiguration(targets, asyncTargets, displayFormat, levelThreshold);
+        LogConfiguration result = new LogConfiguration(targets, asyncTargets, formatter, levelThreshold);
         Reset();
         return result;
     }
@@ -91,7 +92,7 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
     private void Reset() {
         targets.Clear();
         asyncTargets.Clear();
-        displayFormat = LogDisplayFormat.Full;
+        formatter = null;
         levelThreshold = LogLevel.Debug;
     }
 

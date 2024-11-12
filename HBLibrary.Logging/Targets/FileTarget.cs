@@ -1,20 +1,23 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
+using HBLibrary.Logging.Formatter;
 
 namespace HBLibrary.Logging.Targets;
 public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, IEquatable<FileTarget> {
     public const string TargetName =
-         @"                                                                            |" + "\n" +
-         @"    _______ __        ______                      __                        |" + "\n" +
-         @"   / ____(_) /__     /_  __/___ __________ ____  / /_                       |" + "\n" +
-         @"  / /_  / / / _ \     / / / __ `/ ___/ __ `/ _ \/ __/                       |" + "\n" +
-         @" / __/ / / /  __/    / / / /_/ / /  / /_/ /  __/ /_                         |" + "\n" +
-         @"/_/   /_/_/\___/    /_/  \__,_/_/   \__, /\___/\__/                         |" + "\n" +
-         @"                                   /____/                                   |" + "\n" +
-         @"____________________________________________________________________________|" + "\n";
+        @"                                                                            |" + "\n" +
+        @"    _______ __        ______                      __                        |" + "\n" +
+        @"   / ____(_) /__     /_  __/___ __________ ____  / /_                       |" + "\n" +
+        @"  / /_  / / / _ \     / / / __ `/ ___/ __ `/ _ \/ __/                       |" + "\n" +
+        @" / __/ / / /  __/    / / / /_/ / /  / /_/ /  __/ /_                         |" + "\n" +
+        @"/_/   /_/_/\___/    /_/  \__,_/_/   \__, /\___/\__/                         |" + "\n" +
+        @"                                   /____/                                   |" + "\n" +
+        @"____________________________________________________________________________|" + "\n";
+
 
     private FileStream? fileStream;
     private StreamWriter? fileStreamWriter;
@@ -59,25 +62,32 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
         }
     }
 
-    public void WriteLog(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) {
+    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+        formatter ??= LogFormatters.DefaultFile;
+
         if (keepFileHandle) {
-            fileStreamWriter!.WriteLine(log.Format(format) + "\n");
+            fileStreamWriter!.WriteLine(formatter.Format(log));
             return;
         }
 
         using (FileStream fs = InitStream(FileName, false)) {
             using (StreamWriter sw = new StreamWriter(fs))
-                sw.WriteLine(log.Format(format) + "\n");
+                sw.WriteLine(formatter.Format(log));
         }
     }
 
-    public Task WriteLogAsync(LogStatement log, LogDisplayFormat format = LogDisplayFormat.Full) {
-        if (keepFileHandle)
-            return fileStreamWriter!.WriteLineAsync(log.Format(format) + "\n");
+    public Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null) {
+        formatter ??= LogFormatters.DefaultFile;
+
+
+        if (keepFileHandle) {
+            return fileStreamWriter!.WriteLineAsync((string)formatter.Format(log));
+        }
 
         using (FileStream fs = new FileStream(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite, 4096, true)) {
-            using (StreamWriter sw = new StreamWriter(fs))
-                return sw.WriteLineAsync(log.Format(format) + "\n");
+            using (StreamWriter sw = new StreamWriter(fs)) {
+                return sw.WriteLineAsync((string)formatter.Format(log));
+            }
         }
     }
 

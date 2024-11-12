@@ -33,27 +33,14 @@ public struct LogStatement {
     public override readonly string ToString() => Message;
     public readonly string ToFullString()
         => $"Name: {Name}\nCreated On: {CreatedOn:yyyy-MM-dd hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
-    public readonly string ToMinimalString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
+    public readonly string ToDefaultString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
     public readonly string ToLevelMessage() => $"[{Level}]: {Message}";
     public readonly string ToJson() => JsonSerializer.Serialize(this);
     public readonly string ToXml() {
         using (TextWriter stringwriter = new StringWriter()) {
-            var serializer = new XmlSerializer(GetType());
+            XmlSerializer serializer = new XmlSerializer(GetType());
             serializer.Serialize(stringwriter, this);
             return stringwriter.ToString()!;
-        }
-    }
-
-    public readonly string Format(LogDisplayFormat format) {
-        switch (format) {
-            case LogDisplayFormat.MessageOnly:
-                return ToString();
-            case LogDisplayFormat.Minimal:
-                return ToMinimalString();
-            case LogDisplayFormat.Full:
-                return ToFullString();
-            default:
-                return ToString();
         }
     }
 }

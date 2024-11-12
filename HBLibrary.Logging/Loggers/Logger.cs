@@ -65,7 +65,7 @@ public class Logger : ILogger {
                     continue;
 
                 LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                target.WriteLog(log, Configuration.DisplayFormat);
+                target.WriteLog(log, Configuration.Formatter);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,5 @@ public interface IAsyncLogTarget : IDisposable {
     /// </summary>
     /// <param name="log"></param>
     /// <param name="displayFormat"></param>
-    Task WriteLogAsync(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full);
+    Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null);
 }

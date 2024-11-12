@@ -29,7 +29,7 @@ public class AsyncLogger : Logger, IAsyncLogger {
                     continue;
 
                 LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                target.WriteLog(log, Configuration.DisplayFormat);
+                target.WriteLog(log, Configuration.Formatter);
             }
 
             foreach (IAsyncLogTarget target in Configuration.AsyncTargets) {
@@ -37,7 +37,7 @@ public class AsyncLogger : Logger, IAsyncLogger {
                     continue;
 
                 LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                await target.WriteLogAsync(log, Configuration.DisplayFormat);
+                await target.WriteLogAsync(log, Configuration.Formatter);
             }
         }
         finally {
