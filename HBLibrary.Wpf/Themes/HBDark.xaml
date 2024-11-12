@@ -30,5 +30,6 @@
         <ResourceDictionary Source="HBDark/HBDark_ListBox.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_ListViewItem.xaml" />
         <ResourceDictionary Source="HBDark/HBDark_ListView.xaml" />
+        <ResourceDictionary Source="HBDark/HBDark_LogListBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

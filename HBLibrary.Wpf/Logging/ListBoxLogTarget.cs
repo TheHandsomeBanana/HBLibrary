@@ -27,6 +27,12 @@ public class ListBoxLogTarget : ILogTarget {
         Logs.Add(formatted);
     }
 
+    public void WriteSuccessLog(LogStatement logStatement) {
+        ListBoxLogFormatter formatter = new ListBoxLogFormatter();
+        ListBoxLog log = formatter.FormatSuccess(logStatement);
+        Logs.Add(log);
+    }
+
 
     public void Dispose() {
 
