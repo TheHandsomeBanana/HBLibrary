@@ -124,7 +124,9 @@ public class StorageEntryContainer : IStorageEntryContainer {
     }
 
     public bool Contains(string filename) {
-        return entries.ContainsKey(filename);
+        string path = Path.Combine(BasePath, filename + EXTENSION);
+
+        return entries.ContainsKey(path);
     }
 
     public void Save() {

@@ -38,7 +38,7 @@ public abstract class StorageEntry : ITrackable {
             return;
         }
 
-        if(Value is null && value is ITrackable notifyTrackableChanged) {
+        if(value is ITrackable notifyTrackableChanged) {
             ChangeTracker?.Track(notifyTrackableChanged);
         }
 
@@ -53,6 +53,10 @@ public abstract class StorageEntry : ITrackable {
     public virtual void Set<T>(T value) {
         if (Settings.LifeTime!.Type == EntryLifetimeType.NoLifetime) {
             return;
+        }
+
+        if (value is ITrackable notifyTrackableChanged) {
+            ChangeTracker?.Track(notifyTrackableChanged);
         }
 
         Value = value;
