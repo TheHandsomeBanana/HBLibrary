@@ -39,16 +39,42 @@
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <TextBox Text="{Binding}"
-                                 Foreground="{TemplateBinding Foreground}"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 IsReadOnly="True"
-                                 IsReadOnlyCaretVisible="False"
-                                 HorizontalAlignment="Left"
-                                 VerticalAlignment="Center"
-                                 Margin="5" />
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Margin="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding Timestamp}"
+                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:LogListBox}}, 
+                                                        Path=ShowTimestamp, 
+                                                        Converter={StaticResource BooleanToVisibilityConverter}}"
+                                       Grid.Column="0">
+
+                            </TextBlock>
+
+                            <TextBlock  Text="{Binding Timestamp, StringFormat='dd.MM.yyyy HH:mm:ss'}"
+                                        Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:LogListBox}}, 
+                                                        Path=ShowExplicitLevel, 
+                                                        Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Grid.Column="1">
+
+                            </TextBlock>
+
+                            <TextBox Text="{Binding Message}"
+                                     Foreground="{TemplateBinding Foreground}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     IsReadOnly="True"
+                                     IsReadOnlyCaretVisible="False"
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Center"
+                                     Margin="5"
+                                     Grid.Column="2" />
+                        </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
@@ -89,6 +115,8 @@
                 Value="False" />
         <Setter Property="ItemContainerStyle"
                 Value="{StaticResource LogListBoxItem}" />
+        <Setter Property="attachedProperties:ListBoxAttachedProperties.EnableAutoScroll"
+                Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBox">
@@ -96,12 +124,32 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}">
-                        <ScrollViewer Style="{StaticResource PrimaryScrollViewer}"
-                                      VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Auto"
-                                      attachedProperties:ScrollViewerAttachedProperties.ScrollOnMouseOver="True">
-                            <ItemsPresenter HorizontalAlignment="Stretch" />
-                        </ScrollViewer>
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Top"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Margin="0 0 0 5">
+                                
+                                <Button Content="Clear Logs"
+                                        Command="{Binding ClearLogsCommand, RelativeSource={RelativeSource AncestorType=local:LogListBox}}"
+                                        Margin="0,0,5,0" />
+
+                                <Button Content="Toggle Timestamp"
+                                        Command="{Binding ShowTimestampCommand, RelativeSource={RelativeSource AncestorType=local:LogListBox}}"
+                                        Margin="0 0 5 0" />
+
+                                <Button Content="Toggle Log Level"
+                                        Command="{Binding ShowExplicitLevelCommand, RelativeSource={RelativeSource AncestorType=local:LogListBox}}" />
+
+                            </StackPanel>
+                            
+                            <ScrollViewer Style="{StaticResource PrimaryScrollViewer}"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          attachedProperties:ScrollViewerAttachedProperties.ScrollOnMouseOver="True">
+                                <ItemsPresenter HorizontalAlignment="Stretch" />
+                            </ScrollViewer>
+                        </DockPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
