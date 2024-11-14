@@ -1,10 +1,14 @@
-﻿using System.Windows;
+﻿using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace HBLibrary.Wpf.AttachedProperties;
 public static class ScrollViewerAttachedProperties
 {
+    #region Scroll on mouse over
     public static bool GetScrollOnMouseOver(DependencyObject obj)
     {
         return (bool)obj.GetValue(ScrollOnMouseOverProperty);
@@ -52,9 +56,10 @@ public static class ScrollViewerAttachedProperties
             e.Handled = true;
         }
     }
+    #endregion
 
 
-
+    #region Margin
     public static readonly DependencyProperty VerticalScrollBarMarginProperty =
              DependencyProperty.RegisterAttached(
                  "VerticalScrollBarMargin",
@@ -117,4 +122,5 @@ public static class ScrollViewerAttachedProperties
             }
         }
     }
+    #endregion
 }

@@ -4,6 +4,7 @@ using HBLibrary.Wpf.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -35,27 +36,32 @@ public class LogListBox : ListBox {
     public static readonly DependencyProperty ShowExplicitLevelProperty =
         DependencyProperty.Register("ShowExplicitLevel", typeof(bool), typeof(LogListBox), new PropertyMetadata(false));
 
-    // Commands for the UI actions
+
+
+
+    public bool CanClearLogs {
+        get { return (bool)GetValue(CanClearLogsProperty); }
+        set { SetValue(CanClearLogsProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for CanClearLogs.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty CanClearLogsProperty =
+        DependencyProperty.Register("CanClearLogs", typeof(bool), typeof(LogListBox), new PropertyMetadata(false, OnCanClearLogsChanged));
+
+    private static void OnCanClearLogsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if(d is LogListBox) {
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
+
     public ICommand ClearLogsCommand { get; }
-    public ICommand ShowTimestampCommand { get; }
-    public ICommand ShowExplicitLevelCommand { get; }
 
     public LogListBox() {
-        ClearLogsCommand = new RelayCommand(ClearLogs);
-        ShowTimestampCommand = new RelayCommand(ToggleTimestamp);
-        ShowExplicitLevelCommand = new RelayCommand(ToggleExplicitLevel);
-    }
-
-    private void ToggleExplicitLevel(object? obj) {
-        ShowExplicitLevel = !ShowExplicitLevel;
-    }
-
-    private void ToggleTimestamp(object? obj) {
-        ShowTimestamp = !ShowTimestamp;
+        ClearLogsCommand = new RelayCommand(ClearLogs, o => CanClearLogs);
     }
 
     private void ClearLogs(object? obj) {
-        Items.Clear();
+        (ItemsSource as ObservableCollection<ListBoxLog>)?.Clear();
     }
 
     private INotifyCollectionChanged? _observableItemsSource;

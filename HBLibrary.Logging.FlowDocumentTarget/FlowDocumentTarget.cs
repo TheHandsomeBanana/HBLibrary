@@ -16,7 +16,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     private readonly List<LogWithMetadata> statements = [];
     public IReadOnlyList<LogWithMetadata> Statements => statements;
 
-    public LogLevel? LevelThreshold { get; set; }
+    public LogLevel? LevelThreshold { get; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public FlowDocument? Document { get; private set; } 

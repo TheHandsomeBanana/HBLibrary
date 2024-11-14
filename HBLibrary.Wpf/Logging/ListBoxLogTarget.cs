@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HBLibrary.Wpf.Logging;
 public class ListBoxLogTarget : ILogTarget {
@@ -30,11 +31,12 @@ public class ListBoxLogTarget : ILogTarget {
     public void WriteSuccessLog(LogStatement logStatement) {
         ListBoxLogFormatter formatter = new ListBoxLogFormatter();
         ListBoxLog log = formatter.FormatSuccess(logStatement);
-        Logs.Add(log);
+
+        Application.Current.Dispatcher.Invoke(() => {
+            Logs.Add(log);
+        });
     }
 
-
     public void Dispose() {
-
     }
 }

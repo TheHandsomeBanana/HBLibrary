@@ -30,6 +30,22 @@ public struct LogStatement {
         CreatedOn = createdOn;
     }
 
+    public static LogStatement CreateInfo(string message, string name = "") {
+        return new LogStatement(message, name, LogLevel.Info, DateTime.UtcNow);
+    }
+    
+    public static LogStatement CreateWarning(string message, string name = "") {
+        return new LogStatement(message, name, LogLevel.Warning, DateTime.UtcNow);
+    }
+    
+    public static LogStatement CreateError(string message, string name = "") {
+        return new LogStatement(message, name, LogLevel.Error, DateTime.UtcNow);
+    }
+    
+    public static LogStatement CreateFatal(string message, string name = "") {
+        return new LogStatement(message, name, LogLevel.Fatal, DateTime.UtcNow);
+    }
+
     public override readonly string ToString() => Message;
     public readonly string ToFullString()
         => $"Name: {Name}\nCreated On: {CreatedOn:yyyy-MM-dd hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";

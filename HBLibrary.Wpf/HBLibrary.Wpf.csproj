@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Themes\HBDarkBlue\" />
+    <Folder Include="Themes\HBLight\" />
   </ItemGroup>
 
 </Project>

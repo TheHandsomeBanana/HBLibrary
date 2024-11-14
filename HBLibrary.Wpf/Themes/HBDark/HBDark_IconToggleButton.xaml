@@ -86,5 +86,91 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style x:Key="IconToggleButtonWithBorder" TargetType="{x:Type local:IconToggleButton}">
+        <Setter Property="Width"
+                Value="50" />
+        <Setter Property="Height"
+                Value="50" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IconToggleButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}">
+
+                        <Grid>
+                            <Path x:Name="Icon"
+                                  Data="{TemplateBinding Data}"
+                                  Fill="{TemplateBinding Fill}"
+                                  Stretch="{TemplateBinding Stretch}"
+                                  Stroke="{TemplateBinding Stroke}"
+                                  StrokeThickness="{TemplateBinding StrokeThickness}"
+                                  Height="{TemplateBinding IconHeight}"
+                                  Width="{TemplateBinding IconWidth}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Effect="{TemplateBinding ShadowEffect}">
+
+                            </Path>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter  TargetName="Icon"
+                                     Property="Stroke"
+                                     Value="{StaticResource IconToggleButtonBorderMouseOverBrush}" />
+                            <Setter TargetName="Icon"
+                                    Property="StrokeThickness"
+                                    Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter  TargetName="Icon"
+                                     Property="Stroke"
+                                     Value="{StaticResource IconToggleButtonBorderMouseOverBrush}" />
+
+                            <Setter TargetName="Icon"
+                                    Property="StrokeThickness"
+                                    Value="1.2" />
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter  Property="BorderBrush"
+                                     Value="{StaticResource IconToggleButtonBorderMouseOverBrush}" />
+                            
+                            <Setter  Property="BorderThickness"
+                                     Value="1" />
+                        </Trigger>
+                        
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter TargetName="Icon"
+                                    Property="Fill"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                            <Setter TargetName="Icon"
+                                    Property="Stroke"
+                                    Value="{StaticResource ForegroundDisabledBrush}" />
+
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

@@ -16,9 +16,11 @@ public class ListBoxLog {
 
     public string ForegroundColorHex { get; set; } = "#000000";
 
-    private SolidColorBrush? foregroundColor;
     [JsonIgnore]
-    public required SolidColorBrush ForegroundColor {
+    private SolidColorBrush? foregroundColor;
+
+    [JsonIgnore]
+    public SolidColorBrush ForegroundColor {
         get {
             return foregroundColor ??= BrushHelper.GetColorFromHex(ForegroundColorHex);
         }
