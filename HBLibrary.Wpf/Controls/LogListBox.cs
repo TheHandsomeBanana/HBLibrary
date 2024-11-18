@@ -38,6 +38,17 @@ public class LogListBox : ListBox {
 
 
 
+    public bool ShowCategory {
+        get { return (bool)GetValue(ShowCategoryProperty); }
+        set { SetValue(ShowCategoryProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowCategory.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowCategoryProperty =
+        DependencyProperty.Register("ShowCategory", typeof(bool), typeof(LogListBox), new PropertyMetadata(false));
+
+
+
 
     public bool CanClearLogs {
         get { return (bool)GetValue(CanClearLogsProperty); }

@@ -15,8 +15,8 @@ using System.Windows;
 
 namespace HBLibrary.Wpf.Logging;
 public class ListBoxLogTarget : ILogTarget {
-    public LogLevel? LevelThreshold { get; }
-    public ObservableCollection<ListBoxLog> Logs { get; } = [];
+    public LogLevel? LevelThreshold { get; set; }
+    public ObservableCollection<ListBoxLog> Logs { get; set; } = [];
 
     public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
         formatter ??= new ListBoxLogFormatter();
@@ -25,7 +25,9 @@ public class ListBoxLogTarget : ILogTarget {
             throw new LoggingException($"The formatter does not return the requested type {nameof(ListBoxLog)}");
         }
 
-        Logs.Add(formatted);
+        Application.Current.Dispatcher.Invoke(() => {
+            Logs.Add(formatted);
+        });
     }
 
     public void WriteSuccessLog(LogStatement logStatement) {
@@ -36,6 +38,7 @@ public class ListBoxLogTarget : ILogTarget {
             Logs.Add(log);
         });
     }
+
 
     public void Dispose() {
     }

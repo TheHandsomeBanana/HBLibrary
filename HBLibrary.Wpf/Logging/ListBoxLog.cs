@@ -13,6 +13,7 @@ public class ListBoxLog {
     public required string Message { get; set; }
     public required DateTime Timestamp { get; set; }
     public required string LogLevel { get; set; }
+    public required string OwnerCategory { get; set; }
 
     public string ForegroundColorHex { get; set; } = "#000000";
 

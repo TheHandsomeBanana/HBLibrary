@@ -30,7 +30,8 @@ public class ListBoxLogFormatter : ILogFormatter {
             ForegroundColor = brush,
             LogLevel = logStatement.Level.ToString(),
             Message = logStatement.Message,
-            Timestamp = logStatement.CreatedOn
+            Timestamp = logStatement.CreatedOn,
+            OwnerCategory = logStatement.Name,
         };
     }
     
@@ -48,7 +49,8 @@ public class ListBoxLogFormatter : ILogFormatter {
             ForegroundColor = brush,
             LogLevel = logStatement.Level.ToString(),
             Message = logStatement.Message,
-            Timestamp = logStatement.CreatedOn
+            Timestamp = logStatement.CreatedOn,
+            OwnerCategory = logStatement.Name,
         };
     }
 }
