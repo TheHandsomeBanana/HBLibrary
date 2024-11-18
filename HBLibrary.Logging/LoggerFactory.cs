@@ -87,4 +87,8 @@ public sealed class LoggerFactory : ILoggerFactory {
         Registry.RegisterLogger(logger);
         return logger;
     }
+
+    public ILogConfiguration CreateConfiguration(LogConfigurationDelegate configuration) {
+        return configuration(new LogConfigurationBuilder());
+    }
 }

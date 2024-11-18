@@ -68,4 +68,6 @@ public interface ILoggerFactory {
     /// <returns><see cref="AsyncLogger{T}"/> instance</returns>
     IAsyncLogger<T> GetOrCreateAsyncLogger<T>() where T : class;
 
+    ILogConfiguration CreateConfiguration(LogConfigurationDelegate configuration);
+
 }
