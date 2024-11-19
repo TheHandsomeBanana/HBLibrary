@@ -9,13 +9,15 @@ namespace HBLibrary.Logging.Targets;
 public sealed class MethodTarget : ILogTarget, IEquatable<MethodTarget> {
     public LogLevel? LevelThreshold { get; }
     public LogStatementDelegate Method { get; private set; }
+    public ILogFormatter? Formatter { get; }
 
-    public MethodTarget(LogStatementDelegate method, LogLevel? minLevel = null) {
+    public MethodTarget(LogStatementDelegate method, LogLevel? minLevel = null, ILogFormatter? formatter = null) {
         LevelThreshold = minLevel;
         Method = method;
+        Formatter = formatter;
     }
 
-    public void WriteLog(LogStatement log, ILogFormatter? formatter) => Method?.Invoke(log, formatter);
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter) => Method?.Invoke(log, formatter);
 
     public void Dispose() {
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.

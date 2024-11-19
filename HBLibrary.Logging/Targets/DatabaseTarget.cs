@@ -16,12 +16,15 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
 
     public LogLevel? LevelThreshold { get; }
 
-    public DatabaseTarget(string providerName, string connectionString, LogLevel? minLevel = null, string tableName = "Logs") {
+    public ILogFormatter? Formatter { get; }
+
+    public DatabaseTarget(string providerName, string connectionString, LogLevel? minLevel = null, ILogFormatter? formatter = null, string tableName = "Logs") {
         this.providerName = providerName;
         dbProviderFactory = DbProviderFactories.GetFactory(providerName);
         this.connectionString = connectionString;
         TableName = tableName;
         LevelThreshold = minLevel;
+        Formatter = formatter;
 
         InitDatabase();
     }
@@ -37,7 +40,7 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
         command.ExecuteNonQuery();
     }
 
-    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         using DbConnection connection = dbProviderFactory.CreateConnection()
             ?? throw new InvalidOperationException("DbProvider not registered.");
 
@@ -49,7 +52,7 @@ internal class DatabaseTarget : ILogTarget, IAsyncLogTarget {
         command.ExecuteNonQuery();
     }
 
-    public async Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null) {
+    public async Task WriteLogAsync(ILogStatement log, ILogFormatter? formatter = null) {
         using DbConnection connection = dbProviderFactory.CreateConnection()
                     ?? throw new InvalidOperationException("DbProvider not registered.");
 

@@ -21,7 +21,7 @@ public interface ILogConfiguration : IDisposable {
     /// </summary>
     IReadOnlyList<IAsyncLogTarget> AsyncTargets { get; }
     /// <summary>
-    /// Display format for the log to write.
+    /// The main formatter used for all targets for this logger. This will be overriden by target specific formatters.
     /// </summary>
     ILogFormatter? Formatter { get; }
     /// <summary>

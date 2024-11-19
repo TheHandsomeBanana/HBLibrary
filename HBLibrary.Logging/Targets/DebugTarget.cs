@@ -6,6 +6,7 @@ using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
 using HBLibrary.Logging.Formatter;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace HBLibrary.Logging.Targets;
 public sealed class DebugTarget : TargetWithHeader, ILogTarget {
@@ -19,9 +20,13 @@ public sealed class DebugTarget : TargetWithHeader, ILogTarget {
           @"                       /____/                    /____/                     |" + "\n" +
           @"____________________________________________________________________________|" + "\n";
 
-    public LogLevel? LevelThreshold { get; } = null;
+    public LogLevel? LevelThreshold { get; }
+    public ILogFormatter? Formatter { get; }
     public bool Enabled { get; }
-    public DebugTarget() {
+
+
+    public DebugTarget(ILogFormatter? formatter) {
+        Formatter = formatter;
         Enabled = Debugger.IsAttached && Debugger.IsLogging();
         if (Enabled) {
             Debug.Write(Logo);
@@ -29,11 +34,11 @@ public sealed class DebugTarget : TargetWithHeader, ILogTarget {
         }
     }
 
-    public DebugTarget(LogLevel threshold) : this() {
+    public DebugTarget(LogLevel threshold, ILogFormatter? formatter) : this(formatter) {
         LevelThreshold = threshold;
     }
 
-    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= LogFormatters.DefaultDebug;
         Debug.WriteLine(formatter.Format(log));
     }

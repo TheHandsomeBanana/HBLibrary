@@ -41,12 +41,14 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
         }
     }
     public LogLevel? LevelThreshold { get; }
+    public ILogFormatter? Formatter { get; }
 
-    public FileTarget(string fileName, LogLevel? minLevel = null, bool useAsync = false, bool keepFileHandle = true) {
+    public FileTarget(string fileName, LogLevel? minLevel = null, bool useAsync = false, ILogFormatter? logFormatter = null, bool keepFileHandle = true) {
         FileName = fileName;
         LevelThreshold = minLevel;
         UseAsync = useAsync;
         KeepFileHandle = keepFileHandle;
+        Formatter = logFormatter;
 
         if (keepFileHandle) {
             fileStreamWriter!.Write(Logo);
@@ -62,7 +64,7 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
         }
     }
 
-    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= LogFormatters.DefaultFile;
 
         if (keepFileHandle) {
@@ -76,7 +78,7 @@ public sealed class FileTarget : TargetWithHeader, ILogTarget, IAsyncLogTarget, 
         }
     }
 
-    public Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null) {
+    public Task WriteLogAsync(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= LogFormatters.DefaultFile;
 
 

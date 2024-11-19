@@ -12,22 +12,25 @@ public class ListBoxLog {
     public int LineNumber { get; set; }
     public required string Message { get; set; }
     public required DateTime Timestamp { get; set; }
-    public required string LogLevel { get; set; }
-    public required string OwnerCategory { get; set; }
-
-    public string ForegroundColorHex { get; set; } = "#000000";
+    public string? LogLevel { get; set; }
+    public string? OwnerCategory { get; set; }
+    public string? ForegroundColorHex { get; set; }
 
     [JsonIgnore]
     private SolidColorBrush? foregroundColor;
 
     [JsonIgnore]
-    public SolidColorBrush ForegroundColor {
+    public SolidColorBrush? ForegroundColor {
         get {
+            if(ForegroundColorHex is null) {
+                return null;
+            }
+
             return foregroundColor ??= BrushHelper.GetColorFromHex(ForegroundColorHex);
         }
         set {
             foregroundColor = value;
-            ForegroundColorHex = value.Color.ToString();
+            ForegroundColorHex = value?.Color.ToString();
         }
     }
 }

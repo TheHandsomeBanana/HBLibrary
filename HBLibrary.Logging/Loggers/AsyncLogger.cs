@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
+using HBLibrary.Logging.Statements;
 using HBLibrary.Logging.Targets;
 
 namespace HBLibrary.Logging.Loggers;

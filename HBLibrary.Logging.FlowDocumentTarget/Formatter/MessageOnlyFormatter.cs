@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Logging.FlowDocumentTarget.Formatter;
 internal class MessageOnlyFormatter : ILogFormatter {
-    public object Format(LogStatement logStatement) {
+    public object Format(ILogStatement logStatement) {
         return logStatement.Message;
     }
 }

@@ -1,8 +1,10 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
+using HBLibrary.Logging.Statements;
 using HBLibrary.Logging.Targets;
 
 namespace HBLibrary.Logging.Loggers;
@@ -64,8 +66,9 @@ public class Logger : ILogger {
                     || target.LevelThreshold.HasValue && target.LevelThreshold > level)
                     continue;
 
-                LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
-                target.WriteLog(log, Configuration.Formatter);
+                ILogStatement log = new LogStatement(message, Name, level, DateTime.Now);
+                ILogFormatter? formatter = target.Formatter ?? Configuration.Formatter;
+                target.WriteLog(log, formatter);
             }
         }
     }

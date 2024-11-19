@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Logging.FlowDocumentTarget;
 public class LogWithMetadata {
-    public LogStatement Log { get; set; }
+    public required ILogStatement Log { get; set; }
     public bool IsSuccess { get; set; }
 }

@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HBLibrary.Core\HBLibrary.Core.csproj" />
     <ProjectReference Include="..\HBLibrary.Interface.Logging\HBLibrary.Interface.Logging.csproj" />
+    <ProjectReference Include="..\HBLibrary.Logging\HBLibrary.Logging.csproj" />
     <ProjectReference Include="..\HBLibrary.Security\HBLibrary.Security.csproj" />
   </ItemGroup>
 

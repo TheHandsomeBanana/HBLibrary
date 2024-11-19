@@ -5,6 +5,7 @@ using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
 using HBLibrary.Logging.Formatter;
+using System.Runtime.Serialization;
 
 namespace HBLibrary.Logging.Targets;
 public sealed class ConsoleTarget : TargetWithHeader, ILogTarget {
@@ -18,9 +19,10 @@ public sealed class ConsoleTarget : TargetWithHeader, ILogTarget {
           @"                                                       /____/               |" + "\n" +
           @"____________________________________________________________________________|" + "\n\n";
 
-    public LogLevel? LevelThreshold { get; } = null;
+    public LogLevel? LevelThreshold { get; }
+    public ILogFormatter? Formatter { get; }
 
-    public ConsoleTarget() {
+    public ConsoleTarget(ILogFormatter? formatter = null) {
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.Write(Logo);
         Console.ForegroundColor = ConsoleColor.Magenta;
@@ -28,11 +30,11 @@ public sealed class ConsoleTarget : TargetWithHeader, ILogTarget {
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    public ConsoleTarget(LogLevel threshold) : this() {
+    public ConsoleTarget(LogLevel threshold, ILogFormatter? formatter = null) : this(formatter) {
         LevelThreshold = threshold;
     }
 
-    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= LogFormatters.DefaultConsole;
 
         Console.WriteLine((string)formatter.Format(log) + "\n");

@@ -9,10 +9,15 @@ public interface ILogTarget : IDisposable {
     /// </summary>
     LogLevel? LevelThreshold { get; }
     /// <summary>
-    /// Writes the provided <paramref name="log"/> to this target
+    /// Target specific formatter that overrides the logger specific formatter
+    /// </summary>
+    ILogFormatter? Formatter { get; }
+    /// <summary>
+    /// Writes the provided <paramref name="log"/> to this target, formatted using <paramref name="formatter"/>.
+    /// If no specific formatter is passed, the default formatter is used.
     /// </summary>
     /// <param name="log"></param>
-    /// <param name="displayFormat"></param>
-    void WriteLog(LogStatement log, ILogFormatter? formatter = null);
+    /// <param name="formatter"></param>
+    void WriteLog(ILogStatement log, ILogFormatter? formatter = null);
 }
 

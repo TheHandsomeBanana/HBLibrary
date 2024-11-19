@@ -8,6 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Logging;
-public interface IWpfLogger : ILogger {
+public interface IExtendedLogger : ILogger {
     public void AddBlock(string block);
 }

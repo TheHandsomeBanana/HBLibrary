@@ -3,6 +3,9 @@ using HBLibrary.Interface.Logging.Configuration;
 using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
+using HBLibrary.Logging.Statements;
+using HBLibrary.Wpf.Logging.Statements;
+using Microsoft.Graph.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -11,17 +14,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Logging;
-public class WpfLogger : IWpfLogger {
-
-
-
-
+public class ExtendedLogger : IExtendedLogger {
     public ILoggerRegistry? Registry { get; set; }
     public bool IsEnabled => Registry?.IsEnabled ?? true;
     public string Name { get; protected set; }
     public ILogConfiguration Configuration { get; set; }
 
-    internal WpfLogger(string name, ILogConfiguration configuration) {
+    public ExtendedLogger(string name, ILogConfiguration configuration) {
         Name = name;
         Configuration = configuration;
     }
@@ -51,7 +50,22 @@ public class WpfLogger : IWpfLogger {
     }
 
     public void AddBlock(string block) {
-        throw new NotImplementedException();
+        if (!IsEnabled) {
+            return;
+        }
+
+        lock (lockObj) {
+            // Concat global targets if registry contains logger
+            IEnumerable<ILogTarget> allTargets = Registry != null
+                ? Configuration.Targets.Concat(Registry.GlobalConfiguration.Targets)
+                : Configuration.Targets;
+
+            ILogStatement log = new LogBlockStatement(block);
+
+            foreach (ILogTarget target in allTargets) {
+                target.WriteLog(log, Configuration.Formatter);
+            }
+        }
     }
 
     private static readonly object lockObj = new();
@@ -68,13 +82,14 @@ public class WpfLogger : IWpfLogger {
                 ? Configuration.Targets.Concat(Registry.GlobalConfiguration.Targets)
                 : Configuration.Targets;
 
+            ILogStatement log = new LogStatement(message, Name, level, DateTime.Now);
+
             foreach (ILogTarget target in allTargets) {
                 // Check for threshold global or per target, no threshold = always log
                 if (levelThreshold.HasValue && levelThreshold > level
                     || target.LevelThreshold.HasValue && target.LevelThreshold > level)
                     continue;
 
-                LogStatement log = new LogStatement(message, Name, level, DateTime.Now);
                 target.WriteLog(log, Configuration.Formatter);
             }
         }

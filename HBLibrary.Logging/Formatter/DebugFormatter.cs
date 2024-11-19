@@ -8,13 +8,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Logging.Formatter;
 public class DebugFormatter : ILogFormatter {
-
-
-    public string FormatString(LogStatement logStatement) {
+    public object Format(ILogStatement logStatement) {
         return logStatement.ToDefaultString();
-    }
-
-    public object Format(LogStatement logStatement) {
-        return FormatString(logStatement);
     }
 }

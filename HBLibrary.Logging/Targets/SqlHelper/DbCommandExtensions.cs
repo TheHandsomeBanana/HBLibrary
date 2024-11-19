@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace HBLibrary.Logging.Targets.SqlHelper;
 public static class DbCommandExtensions {
-    public static void AddLogParameters(this DbCommand command, string providerName, LogStatement logStatement) {
+    public static void AddLogParameters(this DbCommand command, string providerName, ILogStatement logStatement) {
         char prefix = GetParameterPrefix(providerName);
 
         DbParameter dateParameter = command.CreateParameter();

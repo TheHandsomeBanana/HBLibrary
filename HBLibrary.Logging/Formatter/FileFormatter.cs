@@ -8,11 +8,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Logging.Formatter;
 public class FileFormatter : ILogFormatter {
-    public object Format(LogStatement logStatement) {
-        return FormatString(logStatement);
-    }
-
-    public string FormatString(LogStatement logStatement) {
+    public object Format(ILogStatement logStatement) {
         return logStatement.ToFullString() + "\n";
     }
 }

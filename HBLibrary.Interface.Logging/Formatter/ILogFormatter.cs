@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Interface.Logging.Formatting;
 public interface ILogFormatter {
-    public object Format(LogStatement logStatement);
+    public object Format(ILogStatement logStatement);
 }

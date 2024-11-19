@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Logging;
 public static class LoggerFactoryExtensions {
-    public static IWpfLogger CreateWpfLogger(this ILoggerFactory factory, string name, LogConfigurationDelegate logConfigurationDelegate) {
-        return new WpfLogger(name, factory.CreateConfiguration(logConfigurationDelegate));
+    public static IExtendedLogger CreateExtendedLogger(this ILoggerFactory factory, string name, LogConfigurationDelegate logConfigurationDelegate) {
+        return new ExtendedLogger(name, factory.CreateConfiguration(logConfigurationDelegate));
     }
 }

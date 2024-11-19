@@ -1,6 +1,7 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
+using HBLibrary.Wpf.Logging.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ public class ListBoxLogFormatter : ILogFormatter {
     public SolidColorBrush ErrorBrush { get; set; } = Brushes.IndianRed;
     public SolidColorBrush CriticalBrush { get; set; } = Brushes.Red;
 
-    public object Format(LogStatement logStatement) {
+    public object Format(ILogStatement logStatement) {
         SolidColorBrush brush = logStatement.Level switch {
             LogLevel.Debug or LogLevel.Info => InfoBrush,
             LogLevel.Warning => WarningBrush,
@@ -28,14 +29,14 @@ public class ListBoxLogFormatter : ILogFormatter {
 
         return new ListBoxLog {
             ForegroundColor = brush,
-            LogLevel = logStatement.Level.ToString(),
+            LogLevel = logStatement.Level?.ToString(),
             Message = logStatement.Message,
             Timestamp = logStatement.CreatedOn,
             OwnerCategory = logStatement.Name,
         };
     }
     
-    public ListBoxLog FormatSuccess(LogStatement logStatement) {
+    public ListBoxLog FormatSuccess(ILogStatement logStatement) {
         SolidColorBrush brush = logStatement.Level switch {
             LogLevel.Debug or LogLevel.Info => SuccessBrush,
             LogLevel.Warning => WarningBrush,
@@ -47,10 +48,19 @@ public class ListBoxLogFormatter : ILogFormatter {
 
         return new ListBoxLog {
             ForegroundColor = brush,
-            LogLevel = logStatement.Level.ToString(),
+            LogLevel = logStatement.Level?.ToString(),
             Message = logStatement.Message,
             Timestamp = logStatement.CreatedOn,
             OwnerCategory = logStatement.Name,
+        };
+    }
+
+    public ListBoxLog FormatBlock(LogBlockStatement blockStatement) {
+        // No Level, no Category, no color, simply a block
+        return new ListBoxLog {
+            Message = blockStatement.Message,
+            Timestamp = blockStatement.CreatedOn,
+            ForegroundColor = InfoBrush
         };
     }
 }

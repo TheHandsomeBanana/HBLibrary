@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Logging.Formatter;
 public class ConsoleFormatter : ILogFormatter {
-    public string FormatString(LogStatement logStatement) {
+    public object Format(ILogStatement logStatement) {
         switch (logStatement.Level) {
             case LogLevel.Debug:
                 Console.ForegroundColor = ConsoleColor.White;
@@ -29,9 +29,5 @@ public class ConsoleFormatter : ILogFormatter {
         }
 
         return logStatement.ToDefaultString();
-    }
-
-    public object Format(LogStatement logStatement) {
-        return Format(logStatement);
     }
 }

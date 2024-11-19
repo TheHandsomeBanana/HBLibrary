@@ -1,17 +1,19 @@
 ﻿using HBLibrary.Core.Json;
+using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Statements;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
-namespace HBLibrary.Interface.Logging.Statements;
+namespace HBLibrary.Logging.Statements;
 [Serializable]
-public struct LogStatement {
+public class LogStatement : ILogStatement {
     public string Message { get; set; }
-    public string Name { get; set; }
-    public LogLevel Level { get; set; }
+    public string? Name { get; set; }
+    public LogLevel? Level { get; set; }
     [XmlIgnore]
     [JsonDateTimeFormat("yyyy-MM-dd hh:mm:ss")]
     public DateTime CreatedOn { get; set; }
@@ -23,7 +25,7 @@ public struct LogStatement {
     }
 
     [JsonConstructor]
-    public LogStatement(string message, string name, LogLevel level, DateTime createdOn) {
+    public LogStatement(string message, string? name, LogLevel? level, DateTime createdOn) {
         Message = message;
         Name = name;
         Level = level;
@@ -33,26 +35,26 @@ public struct LogStatement {
     public static LogStatement CreateInfo(string message, string name = "") {
         return new LogStatement(message, name, LogLevel.Info, DateTime.UtcNow);
     }
-    
+
     public static LogStatement CreateWarning(string message, string name = "") {
         return new LogStatement(message, name, LogLevel.Warning, DateTime.UtcNow);
     }
-    
+
     public static LogStatement CreateError(string message, string name = "") {
         return new LogStatement(message, name, LogLevel.Error, DateTime.UtcNow);
     }
-    
+
     public static LogStatement CreateFatal(string message, string name = "") {
         return new LogStatement(message, name, LogLevel.Fatal, DateTime.UtcNow);
     }
 
-    public override readonly string ToString() => Message;
-    public readonly string ToFullString()
+    public override string ToString() => Message;
+    public string ToFullString()
         => $"Name: {Name}\nCreated On: {CreatedOn:yyyy-MM-dd hh:MM:ss}\nLog Level: {Level}\nMessage: {Message}";
-    public readonly string ToDefaultString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
-    public readonly string ToLevelMessage() => $"[{Level}]: {Message}";
-    public readonly string ToJson() => JsonSerializer.Serialize(this);
-    public readonly string ToXml() {
+    public string ToDefaultString() => $"[{CreatedOn:hh:MM:ss}] [{Level}]: {Message}";
+    public string ToLevelMessage() => $"[{Level}]: {Message}";
+    public string ToJson() => JsonSerializer.Serialize(this);
+    public string ToXml() {
         using (TextWriter stringwriter = new StringWriter()) {
             XmlSerializer serializer = new XmlSerializer(GetType());
             serializer.Serialize(stringwriter, this);

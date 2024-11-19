@@ -17,17 +17,21 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     public IReadOnlyList<LogWithMetadata> Statements => statements;
 
     public LogLevel? LevelThreshold { get; }
+    public ILogFormatter? Formatter { get; }
+
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public FlowDocument? Document { get; private set; } 
     public Thickness ParagraphMargin { get; set; } = new Thickness(0);
 
 
-    public FlowDocumentTarget() {
+    public FlowDocumentTarget(ILogFormatter? formatter = null) {
         // Make sure the Document is part of the UI Thread
         Application.Current.Dispatcher.Invoke(() => {
             Document = new FlowDocument();
         });
+
+        Formatter = formatter;
     }
 
     public Brush InfoBrush { get; set; } = Brushes.White;
@@ -35,7 +39,8 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
     public Brush ErrorBrush { get; set; } = Brushes.IndianRed;
     public Brush CriticalBrush { get; set; } = Brushes.Red;
 
-    public void WriteLog(LogStatement log, ILogFormatter? formatter = null) {
+
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= new MessageOnlyFormatter();
 
         Brush brush = log.Level switch {
@@ -65,7 +70,7 @@ public class FlowDocumentTarget : ILogTarget, INotifyPropertyChanged {
         });
     }
 
-    public void WriteSuccessLog(LogStatement log, ILogFormatter? formatter = null) {
+    public void WriteSuccessLog(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= new MessageOnlyFormatter();
 
         Brush brush = log.Level switch {

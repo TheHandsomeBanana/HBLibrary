@@ -9,14 +9,15 @@ namespace HBLibrary.Logging.Targets;
 public sealed class AsyncMethodTarget : IAsyncLogTarget, IEquatable<AsyncMethodTarget> {
     public AsyncLogStatementDelegate? Method { get; private set; }
     public LogLevel? LevelThreshold { get; set; }
+    public ILogFormatter? Formatter { get; }
 
-    public AsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? minLevel = null) {
+    public AsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? minLevel = null, ILogFormatter? formatter = null) {
         Method = method;
         LevelThreshold = minLevel;
     }
 
-    public Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null)
-        => Method?.Invoke(log, formatter)
+    public Task WriteLogAsync(ILogStatement log, ILogFormatter? formatter = null)
+        => Method?.Invoke(log, formatter ?? Formatter)
         ?? Task.CompletedTask;
 
     public void Dispose() {

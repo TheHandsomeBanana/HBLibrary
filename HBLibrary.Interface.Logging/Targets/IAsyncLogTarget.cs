@@ -14,9 +14,9 @@ public interface IAsyncLogTarget : IDisposable {
     /// </summary>
     LogLevel? LevelThreshold { get; }
     /// <summary>
-    /// Writes the provided <paramref name="log"/> to this target
+    /// Writes the provided <paramref name="log"/> to this target, formatted using <paramref name="formatter"/>
     /// </summary>
     /// <param name="log"></param>
-    /// <param name="displayFormat"></param>
-    Task WriteLogAsync(LogStatement log, ILogFormatter? formatter = null);
+    /// <param name="formatter"></param>
+    Task WriteLogAsync(ILogStatement log, ILogFormatter? formatter = null);
 }

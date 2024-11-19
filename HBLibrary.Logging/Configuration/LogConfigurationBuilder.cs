@@ -28,31 +28,31 @@ internal class LogConfigurationBuilder : ILogConfigurationBuilder {
         return this;
     }
 
-    public ILogConfigurationBuilder AddFileTarget(string fileName, bool useAsync, LogLevel? levelThreshold = null) {
+    public ILogConfigurationBuilder AddFileTarget(string fileName, bool useAsync, LogLevel? levelThreshold = null, ILogFormatter? formatter = null) {
         if (useAsync)
-            asyncTargets.Add(new FileTarget(fileName, levelThreshold, useAsync));
+            asyncTargets.Add(new FileTarget(fileName, levelThreshold, useAsync, formatter));
         else
-            targets.Add(new FileTarget(fileName, levelThreshold, useAsync));
+            targets.Add(new FileTarget(fileName, levelThreshold, useAsync, formatter));
 
         return this;
     }
 
-    public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel? levelThreshold = null) {
-        targets.Add(new MethodTarget(method, levelThreshold));
+    public ILogConfigurationBuilder AddMethodTarget(LogStatementDelegate method, LogLevel? levelThreshold = null, ILogFormatter? formatter = null) {
+        targets.Add(new MethodTarget(method, levelThreshold, formatter));
         return this;
     }
 
-    public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? levelThreshold = null) {
-        asyncTargets.Add(new AsyncMethodTarget(method, levelThreshold));
+    public ILogConfigurationBuilder AddAsyncMethodTarget(AsyncLogStatementDelegate method, LogLevel? levelThreshold = null, ILogFormatter? formatter = null) {
+        asyncTargets.Add(new AsyncMethodTarget(method, levelThreshold, formatter));
         return this;
     }
 
-    public ILogConfigurationBuilder AddDatabaseTarget(string providerName, string connectionString, bool useAsync, LogLevel? levelThreshold = null, string tableName = "Logs") {
+    public ILogConfigurationBuilder AddDatabaseTarget(string providerName, string connectionString, bool useAsync, LogLevel? levelThreshold = null, ILogFormatter? formatter = null, string tableName = "Logs") {
         if (useAsync) {
-            asyncTargets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, tableName));
+            asyncTargets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, formatter, tableName));
         }
         else {
-            targets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, tableName));
+            targets.Add(new DatabaseTarget(providerName, connectionString, levelThreshold, formatter, tableName));
         }
 
         return this;
