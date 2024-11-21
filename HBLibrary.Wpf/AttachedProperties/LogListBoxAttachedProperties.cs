@@ -9,6 +9,7 @@ using System.Windows;
 using HBLibrary.Wpf.Controls;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using System.Windows.Media;
 
 namespace HBLibrary.Wpf.AttachedProperties;
 
@@ -23,6 +24,8 @@ public static class LogListBoxAttachedProperties {
 
     public static bool GetEnableAutoScroll(DependencyObject obj) => (bool)obj.GetValue(EnableAutoScrollProperty);
     public static void SetEnableAutoScroll(DependencyObject obj, bool value) => obj.SetValue(EnableAutoScrollProperty, value);
+    private static bool GetIsAutoScrollAttached(DependencyObject obj) =>
+       (bool)obj.GetValue(IsAutoScrollAttachedPropertyKey.DependencyProperty);
 
     private static void OnEnableAutoScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is LogListBox listBox) {
@@ -43,6 +46,11 @@ public static class LogListBoxAttachedProperties {
 
     private static void ListBox_Loaded(object sender, RoutedEventArgs e) {
         if (sender is LogListBox listBox) {
+            // Attach ScrollViewer handlers
+            if (FindScrollViewer(listBox) is ScrollViewer scrollViewer) {
+                scrollViewer.ScrollChanged += (s, args) => OnScrollChanged(listBox, scrollViewer);
+            }
+
             AttachCollectionChangedHandler(listBox);
         }
     }
@@ -50,19 +58,32 @@ public static class LogListBoxAttachedProperties {
     private static void ListBox_Unloaded(object sender, RoutedEventArgs e) {
         if (sender is LogListBox listBox) {
             DetachCollectionChangedHandler(listBox);
+
+            // Detach ScrollViewer handlers
+            if (FindScrollViewer(listBox) is ScrollViewer scrollViewer) {
+                scrollViewer.ScrollChanged -= (s, args) => OnScrollChanged(listBox, scrollViewer);
+            }
         }
     }
 
     private static void AttachCollectionChangedHandler(LogListBox listBox) {
         if (listBox.ItemsSource is INotifyCollectionChanged collection && !GetIsAutoScrollAttached(listBox)) {
-            collection.CollectionChanged += (s, args) => ScrollToEnd(listBox);
+            NotifyCollectionChangedEventHandler handler = (s, args) => {
+                if (GetEnableAutoScroll(listBox)) {
+                    ScrollToEnd(listBox);
+                }
+            };
+
             listBox.SetValue(IsAutoScrollAttachedPropertyKey, true);
+            listBox.Tag = handler; // Abuse tag as handler storage
+            collection.CollectionChanged += handler;
         }
     }
 
     private static void DetachCollectionChangedHandler(LogListBox listBox) {
-        if (listBox.ItemsSource is INotifyCollectionChanged collection) {
-            collection.CollectionChanged -= (s, args) => ScrollToEnd(listBox);
+        if (listBox.ItemsSource is INotifyCollectionChanged collection && listBox.Tag is NotifyCollectionChangedEventHandler handler) {
+            collection.CollectionChanged -= handler;
+            listBox.Tag = null; // Clear the stored handler
             listBox.ClearValue(IsAutoScrollAttachedPropertyKey);
         }
     }
@@ -70,11 +91,39 @@ public static class LogListBoxAttachedProperties {
     private static void ScrollToEnd(LogListBox listBox) {
         if (listBox.Items.Count > 0) {
             listBox.Dispatcher.InvokeAsync(() => {
-                listBox.ScrollIntoView(listBox.Items[^1]);
+                // Async check -> items could have already been cleared
+                if (listBox.Items.Count > 0) {
+                    listBox.ScrollIntoView(listBox.Items[^1]);
+                }
             }, DispatcherPriority.Background);
         }
     }
 
-    private static bool GetIsAutoScrollAttached(DependencyObject obj) =>
-        (bool)obj.GetValue(IsAutoScrollAttachedPropertyKey.DependencyProperty);
+
+    private static ScrollViewer? FindScrollViewer(DependencyObject obj) {
+        if (obj is not DependencyObject current) {
+            return null;
+        }
+
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(current); i++) {
+            var child = VisualTreeHelper.GetChild(current, i);
+            if (child is ScrollViewer sv) {
+                return sv;
+            }
+
+            ScrollViewer? result = FindScrollViewer(child);
+            if (result is not null) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    private static void OnScrollChanged(LogListBox listBox, ScrollViewer scrollViewer) {
+        // Check if the user scrolled away from the bottom
+        bool isAtBottom = Math.Abs(scrollViewer.VerticalOffset - scrollViewer.ScrollableHeight) < 1.0;
+
+        SetEnableAutoScroll(listBox, isAtBottom);
+    }
 }

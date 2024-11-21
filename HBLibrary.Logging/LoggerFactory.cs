@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace HBLibrary.Logging;
 public sealed class LoggerFactory : ILoggerFactory {
-    public ILoggerRegistry Registry { get; }
+    public ILoggerRegistry? Registry { get; }
     public ILogger CreateLogger(string name, LogConfigurationDelegate configuration) {
         Logger logger = new Logger(name) {
             Configuration = configuration.Invoke(new LogConfigurationBuilder())
@@ -40,11 +40,15 @@ public sealed class LoggerFactory : ILoggerFactory {
         return logger;
     }
 
-    public LoggerFactory(ILoggerRegistry registry) {
+    public LoggerFactory(ILoggerRegistry? registry = null) {
         Registry = registry;
     }
 
-    public ILogger GetOrCreateLogger(string name) {
+    public ILogger? GetOrCreateLogger(string name) {
+        if(Registry is null) {
+            return null;
+        }
+
         if (Registry.ContainsLogger(name))
             return Registry.GetLogger(name);
 
@@ -55,7 +59,11 @@ public sealed class LoggerFactory : ILoggerFactory {
         return logger;
     }
 
-    public ILogger<T> GetOrCreateLogger<T>() where T : class {
+    public ILogger<T>? GetOrCreateLogger<T>() where T : class {
+        if (Registry is null) {
+            return null;
+        }
+
         if (Registry.ContainsLogger<T>())
             return Registry.GetLogger<T>();
 
@@ -66,7 +74,11 @@ public sealed class LoggerFactory : ILoggerFactory {
         return logger;
     }
 
-    public IAsyncLogger GetOrCreateAsyncLogger(string name) {
+    public IAsyncLogger? GetOrCreateAsyncLogger(string name) {
+        if (Registry is null) {
+            return null;
+        }
+
         if (Registry.ContainsLogger(name))
             return Registry.GetAsyncLogger(name);
 
@@ -77,7 +89,11 @@ public sealed class LoggerFactory : ILoggerFactory {
         return logger;
     }
 
-    public IAsyncLogger<T> GetOrCreateAsyncLogger<T>() where T : class {
+    public IAsyncLogger<T>? GetOrCreateAsyncLogger<T>() where T : class {
+        if (Registry is null) {
+            return null;
+        }
+
         if (Registry.ContainsLogger<T>())
             return Registry.GetAsyncLogger<T>();
 

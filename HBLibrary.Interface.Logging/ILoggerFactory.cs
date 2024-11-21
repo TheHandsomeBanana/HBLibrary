@@ -10,7 +10,7 @@ public interface ILoggerFactory {
     /// <summary>
     /// Contains instances of <see cref="ILogger"/> and configurations.
     /// </summary>
-    ILoggerRegistry Registry { get; }
+    ILoggerRegistry? Registry { get; }
     /// <summary>
     /// Creates a <see cref="Logger"/>.<br/>
     /// </summary>
@@ -23,7 +23,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="Logger"/ instance></returns>
-    ILogger GetOrCreateLogger(string name);
+    ILogger? GetOrCreateLogger(string name);
     /// <summary>
     /// Creates a <see cref="Logger{T}"/>.<br/>
     /// </summary>
@@ -36,7 +36,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="Logger{T}"/> instance</returns>
-    ILogger<T> GetOrCreateLogger<T>() where T : class;
+    ILogger<T>? GetOrCreateLogger<T>() where T : class;
     /// <summary>
     /// Creates an <see cref="AsyncLogger"/>.<br/>
     /// Provides synchronous and asynchronous logging and is thread safe.
@@ -51,7 +51,7 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="AsyncLogger"/> instance</returns>
-    IAsyncLogger GetOrCreateAsyncLogger(string name);
+    IAsyncLogger? GetOrCreateAsyncLogger(string name);
     /// <summary>
     /// Creates an <see cref="AsyncLogger{T}"/>.<br/>
     /// Provides synchronous and asynchronous logging and is thread safe.
@@ -66,8 +66,13 @@ public interface ILoggerFactory {
     /// </summary>
     /// <param name="name"></param>
     /// <returns><see cref="AsyncLogger{T}"/> instance</returns>
-    IAsyncLogger<T> GetOrCreateAsyncLogger<T>() where T : class;
+    IAsyncLogger<T>? GetOrCreateAsyncLogger<T>() where T : class;
 
+    /// <summary>
+    /// Creates a configuration based on the <paramref name="configuration"/> function.
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
     ILogConfiguration CreateConfiguration(LogConfigurationDelegate configuration);
 
 }

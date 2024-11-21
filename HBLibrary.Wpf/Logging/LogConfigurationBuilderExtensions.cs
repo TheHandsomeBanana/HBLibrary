@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Wpf.Logging;
 public static class LogConfigurationBuilderExtensions {
-    public static ILogConfigurationBuilder AddListBoxLogTarget(this ILogConfigurationBuilder builder, LogLevel? minLevel = null, ILogFormatter? formatter = null) {
-        builder.AddTarget(new ListBoxLogTarget(minLevel, formatter));
+    public static ILogConfigurationBuilder AddListBoxLogTarget(this ILogConfigurationBuilder builder, out ListBoxLogTarget target, LogLevel? minLevel = null, ILogFormatter? formatter = null) {
+        target = new ListBoxLogTarget(minLevel, formatter);
+        builder.AddTarget(target);
         return builder;
     }
 }
