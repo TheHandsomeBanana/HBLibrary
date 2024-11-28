@@ -304,4 +304,32 @@ public class FileEntryService : IFileEntryService {
         return MoveDirectoryAsync(source, target);
     }
     #endregion
+
+    #region Delete
+    // Since the win kernel does not support async deletion
+    // This is the best option to not block the main thread (This blocks a different thread instead)
+    public Task DeleteFileAsync(string filename) {
+        return Task.Run(() => File.Delete(filename));
+    }
+
+    // Ensure the whole list of operations are throttled (Copy, Move, Delete, whatever)
+    public async Task DeleteManyFilesAsync(IEnumerable<string> filenames) {
+        var tasks = new List<Task>();
+
+        foreach (var filename in filenames) {
+            await semaphore.WaitAsync();
+
+            tasks.Add(Task.Run(() => {
+                try {
+                    File.Delete(filename);
+                }
+                finally {
+                    semaphore.Release();
+                }
+            }));
+        }
+
+        await Task.WhenAll(tasks);
+    }
+    #endregion
 }

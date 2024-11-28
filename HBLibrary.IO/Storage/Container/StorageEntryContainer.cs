@@ -190,16 +190,43 @@ public class StorageEntryContainer : IStorageEntryContainer {
         }
 
         ChangeTracker?.Untrack(value);
-        if (value.CurrentEntryType is not null) {
-            object? internalValue = value.Get(value.CurrentEntryType);
-            if (internalValue is ITrackable notifyTrackableChanged) {
-                ChangeTracker?.Untrack(notifyTrackableChanged);
-            }
-        }
 
         entries.Remove(path);
         config.Entries.Remove(filename);
         File.Delete(path);
+    }
+
+    public Task DeleteAsync(string filename) {
+        string path = Path.Combine(BasePath, filename + EXTENSION);
+
+        if (!entries.TryGetValue(path, out IStorageEntry? value)) {
+            throw new InvalidOperationException($"Container does not contain entry with {path}.");
+        }
+
+        ChangeTracker?.Untrack(value);
+
+        entries.Remove(path);
+        config.Entries.Remove(filename);
+
+        return new FileEntryService().DeleteFileAsync(path);
+    }
+
+    public void DeleteAll() {
+        foreach (IStorageEntry entry in entries.Values) {
+            File.Delete(entry.Filename);
+        }
+
+        ChangeTracker?.UntrackAll();
+        entries.Clear();
+        config.Entries.Clear();
+    }
+
+    public Task DeleteAllAsync() {
+        ChangeTracker?.UntrackAll();
+        config.Entries.Clear();
+
+        FileEntryService fileEntryService = new FileEntryService();
+        return fileEntryService.DeleteManyFilesAsync(entries.Values.Select(e => e.Filename));
     }
 
     public void Dispose() {

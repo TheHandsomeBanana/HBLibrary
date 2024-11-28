@@ -25,6 +25,9 @@ public interface IStorageEntryContainer : IDisposable {
     public void AddOrUpdate(string filename, object entry, StorageEntryContentType contentType, StorageEntrySettings? settings = null);
 
     public void Delete(string filename);
+    public Task DeleteAsync(string filename);
+    public void DeleteAll();
+    public Task DeleteAllAsync();
 
     public void Save();
 
