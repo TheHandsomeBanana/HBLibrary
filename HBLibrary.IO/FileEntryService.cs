@@ -5,30 +5,30 @@ namespace HBLibrary.IO;
 public class FileEntryService : IFileEntryService {
     #region Copy
     public void CopyDirectory(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !Directory.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+        if (!PathValidator.ValidatePath(target) || !Directory.Exists(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         CopyDirectoryInternal(source, target, action);
     }
 
     public void CopyFile(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target))
+        if (!PathValidator.ValidatePath(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         CopyFileInternal(source, target, action);
     }
 
     public Task CopyDirectoryAsync(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !Directory.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+        if (!PathValidator.ValidatePath(target) || !Directory.Exists(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         return CopyDirectoryInternalAsync(source, target, action);
@@ -51,10 +51,10 @@ public class FileEntryService : IFileEntryService {
     }
 
     public Task CopyFileAsync(string source, string target, CopyConflictAction action = CopyConflictAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target))
+        if (!PathValidator.ValidatePath(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         return CopyFileInternalAsync(source, FileSnapshot.GetOptimalBufferSize(source), target, action);
@@ -89,9 +89,12 @@ public class FileEntryService : IFileEntryService {
                     FileInfo sourceInfo = new FileInfo(source);
                     FileInfo targetInfo = new FileInfo(target);
 
-                    if (sourceInfo.Length != targetInfo.Length)
-                        File.Copy(source, target, true);
+                    if (sourceInfo.Length == targetInfo.Length) {
+                        return;
+                    }
                 }
+
+                File.Copy(source, target, true);
                 break;
             default:
                 throw new NotSupportedException(action.ToString());
@@ -126,8 +129,9 @@ public class FileEntryService : IFileEntryService {
                 await CopyAsync(source, bufferSize, target);
                 break;
             case CopyConflictAction.OverwriteModifiedOnly:
-                if (!File.Exists(target) || new FileInfo(source).Length != new FileInfo(target).Length)
+                if (!File.Exists(target) || new FileInfo(source).Length != new FileInfo(target).Length) {
                     await CopyAsync(source, bufferSize, target);
+                }
 
                 break;
         }
@@ -159,10 +163,10 @@ public class FileEntryService : IFileEntryService {
         }
     }
 
-    private static Task CopyAsync(string source, int bufferSize, string target) {
+    private static async Task CopyAsync(string source, int bufferSize, string target) {
         using (FileStream sourceStream = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, true)) {
             using (FileStream destinationStream = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true)) {
-                return sourceStream.CopyToAsync(destinationStream);
+                await sourceStream.CopyToAsync(destinationStream);
             }
         }
     }
@@ -170,10 +174,10 @@ public class FileEntryService : IFileEntryService {
 
     #region Move
     public void MoveDirectory(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !Directory.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+        if (!PathValidator.ValidatePath(target) || !Directory.Exists(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
 
@@ -209,10 +213,10 @@ public class FileEntryService : IFileEntryService {
     }
 
     public void MoveFile(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target))
+        if (!PathValidator.ValidatePath(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         switch (action) {
@@ -234,20 +238,20 @@ public class FileEntryService : IFileEntryService {
     }
 
     public Task MoveDirectoryAsync(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !Directory.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !Directory.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target) || !Directory.Exists(target))
+        if (!PathValidator.ValidatePath(target) || !Directory.Exists(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         return MoveDirectoryInternalAsync(source, target, action);
     }
 
     public Task MoveFileAsync(string source, string target, MoveOperationAction action = MoveOperationAction.Skip) {
-        if (PathValidator.ValidatePath(source) || !File.Exists(source))
+        if (!PathValidator.ValidatePath(source) || !File.Exists(source))
             throw new ArgumentException("Path invalid.", nameof(source));
 
-        if (PathValidator.ValidatePath(target))
+        if (!PathValidator.ValidatePath(target))
             throw new ArgumentException("Path invalid.", nameof(target));
 
         switch (action) {

@@ -157,7 +157,7 @@
                                 </TextBlock.Style>
                             </TextBlock>
 
-                            <TextBlock Text="{Binding Message}"
+                            <TextBlock Text="{Binding Message, Mode=TwoWay}"
                                        Foreground="{Binding ForegroundColor}"
                                        TextWrapping="Wrap"
                                        Background="Transparent"

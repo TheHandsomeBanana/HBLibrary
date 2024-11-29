@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Wpf.Extensions;
+using HBLibrary.Wpf.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,19 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace HBLibrary.Wpf.Logging;
-public class ListBoxLog {
+public class ListBoxLog : ViewModelBase {
     public int LineNumber { get; set; }
-    public required string Message { get; set; }
+
+    private string message = "";
+    public required string Message { 
+        get => message; 
+        set {
+            message = value;
+            NotifyPropertyChanged();
+        } 
+    }
+
+
     public required DateTime Timestamp { get; set; }
     public string? LogLevel { get; set; }
     public string? OwnerCategory { get; set; }

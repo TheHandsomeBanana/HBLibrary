@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace HBLibrary.Wpf.Logging;
 public class ExtendedLogger : IExtendedLogger {
@@ -50,6 +51,10 @@ public class ExtendedLogger : IExtendedLogger {
     }
 
     public void AddBlock(string block) {
+        AddBlock(new LogBlockStatement(block));
+    }
+
+    public void AddBlock(LogBlockStatement block) {
         if (!IsEnabled) {
             return;
         }
@@ -58,12 +63,48 @@ public class ExtendedLogger : IExtendedLogger {
             // Concat global targets if registry contains logger
             IEnumerable<ILogTarget> allTargets = Registry != null
                 ? Configuration.Targets.Concat(Registry.GlobalConfiguration.Targets)
-                : Configuration.Targets;
+            : Configuration.Targets;
 
-            ILogStatement log = new LogBlockStatement(block);
 
             foreach (ILogTarget target in allTargets) {
-                target.WriteLog(log, Configuration.Formatter);
+                target.WriteLog(block, Configuration.Formatter);
+            }
+        }
+    }
+
+    public int IndexedDebug(string message) {
+        return LogIndexedInternal(message, LogLevel.Debug);
+    }
+
+    public int IndexedInfo(string message) {
+        return LogIndexedInternal(message, LogLevel.Info);
+    }
+
+    public int IndexedWarn(string message) {
+        return LogIndexedInternal(message, LogLevel.Warning);
+    }
+
+    public int IndexedError(string message) {
+        return LogIndexedInternal(message, LogLevel.Error);
+    }
+
+    public int IndexedError(Exception exception) {
+        return LogIndexedInternal(exception.ToString(), LogLevel.Error);
+    }
+
+    public int IndexedFatal(string message) {
+        return LogIndexedInternal(message, LogLevel.Fatal);
+    }
+
+    public void RewriteIndexed(int index, string message) {
+        lock (lockObj) {
+            // Concat global targets if registry contains logger
+            IEnumerable<IExtendedLogTarget> allTargets = Registry != null
+                ? Configuration.Targets.OfType<IExtendedLogTarget>().Concat(Registry.GlobalConfiguration.Targets).OfType<IExtendedLogTarget>()
+                : Configuration.Targets.OfType<IExtendedLogTarget>();
+
+            foreach (IExtendedLogTarget target in allTargets) {
+                target.RewriteLog(index, message);
             }
         }
     }
@@ -87,12 +128,44 @@ public class ExtendedLogger : IExtendedLogger {
             foreach (ILogTarget target in allTargets) {
                 // Check for threshold global or per target, no threshold = always log
                 if (levelThreshold.HasValue && levelThreshold > level
-                    || target.LevelThreshold.HasValue && target.LevelThreshold > level)
+                    || target.LevelThreshold.HasValue && target.LevelThreshold > level) {
+
                     continue;
+                }
 
                 target.WriteLog(log, Configuration.Formatter);
             }
         }
+    }
+
+    protected virtual int LogIndexedInternal(string message, LogLevel level) {
+        if (!IsEnabled)
+            return -1;
+
+        lock (lockObj) {
+            // set right threshold --> Global layer > logger layer > target layer
+            LogLevel? levelThreshold = Registry?.GlobalConfiguration.LevelThreshold ?? Configuration.LevelThreshold;
+
+            // Concat global targets if registry contains logger
+            IEnumerable<IExtendedLogTarget> allTargets = Registry != null
+                ? Configuration.Targets.OfType<IExtendedLogTarget>().Concat(Registry.GlobalConfiguration.Targets).OfType<IExtendedLogTarget>()
+                : Configuration.Targets.OfType<IExtendedLogTarget>();
+
+            ILogStatement log = new LogStatement(message, Name, level, DateTime.Now);
+            int index = -1;
+            foreach (IExtendedLogTarget target in allTargets) {
+                // Check for threshold global or per target, no threshold = always log
+                if (levelThreshold.HasValue && levelThreshold > level
+                    || target.LevelThreshold.HasValue && target.LevelThreshold > level)
+                    continue;
+
+                // Index will remain same for all targets
+                index = target.WriteIndexedLog(log, Configuration.Formatter);
+            }
+
+            return index;
+        }
+
     }
 
     public void Dispose() {

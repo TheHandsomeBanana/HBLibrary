@@ -219,7 +219,9 @@
                 <ControlTemplate TargetType="Thumb">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" />
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            MinWidth="{TemplateBinding MinWidth}"/>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
