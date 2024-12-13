@@ -37,7 +37,7 @@ public class LocalAccountViewModel : ViewModelBase<LocalAccountModel> {
     }
 
     private void OnDeleteException(Exception exception) {
-        // No exceptions!
+        HBDarkMessageBox.Show("Clear failed", exception.Message, MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
     private async Task DeleteAccount(object? obj) {

@@ -171,6 +171,7 @@
                     <Grid>
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 BorderThickness="1">
                             <ScrollViewer x:Name="PART_ContentHost"
                                           Margin="0" />
@@ -180,7 +181,8 @@
                                    Margin="5 0 0 0"
                                    IsHitTestVisible="False"
                                    Visibility="Collapsed"
-                                   x:Name="WatermarkTextBlock" />
+                                   x:Name="WatermarkTextBlock"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Grid>
 
                     <ControlTemplate.Triggers>

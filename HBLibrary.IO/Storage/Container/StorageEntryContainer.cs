@@ -221,12 +221,13 @@ public class StorageEntryContainer : IStorageEntryContainer {
         config.Entries.Clear();
     }
 
-    public Task DeleteAllAsync() {
+    public async Task DeleteAllAsync() {
         ChangeTracker?.UntrackAll();
         config.Entries.Clear();
 
         FileEntryService fileEntryService = new FileEntryService();
-        return fileEntryService.DeleteManyFilesAsync(entries.Values.Select(e => e.Filename));
+        await fileEntryService.DeleteManyFilesAsync(entries.Values.Select(e => e.Filename));
+        entries.Clear();
     }
 
     public void Dispose() {
