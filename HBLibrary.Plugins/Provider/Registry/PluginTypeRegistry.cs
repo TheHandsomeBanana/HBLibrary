@@ -29,7 +29,20 @@ public class PluginTypeRegistry : IPluginTypeRegistry {
     }
 
     public void UnregisterTypes(IAssemblyContext assemblyContext) {
-        foreach (Type type in assemblyContext.QueryAll().SelectMany(e => e.GetExportedTypes())) {
+        Type[] types;
+        try {
+            types = assemblyContext.QueryAll()
+                .SelectMany(e => e.GetExportedTypes())
+                .ToArray();
+        }
+        catch (TypeLoadException) {
+            // Types are not registered if the assembly version is invalid
+            // This occurs if the FileManager.Core.JobSteps Nuget package is not updated for plugins
+            // -> Since the application itself also uses the FileManager.Core.JobSteps package. 
+            return;
+        }
+
+        foreach (Type type in types) {
             registeredTypes.Remove(type.FullName!);
         }
     }
