@@ -1,4 +1,6 @@
 ﻿using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
+using HBLibrary.Interface.Logging.Statements;
 
 namespace HBLibrary.Interface.Logging;
 public interface ILogger : IDisposable {
@@ -11,6 +13,7 @@ public interface ILogger : IDisposable {
     void Error(string message);
     void Error(Exception exception);
     void Fatal(string message);
+    void LogStatement(ILogStatement logStatement, ILogFormatter formatter);
 }
 
 public interface ILogger<T> : ILogger where T : class {

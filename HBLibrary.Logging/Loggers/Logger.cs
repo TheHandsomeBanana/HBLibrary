@@ -6,6 +6,7 @@ using HBLibrary.Interface.Logging.Targets;
 using HBLibrary.Logging.Configuration;
 using HBLibrary.Logging.Statements;
 using HBLibrary.Logging.Targets;
+using System.Reflection.Emit;
 
 namespace HBLibrary.Logging.Loggers;
 public class Logger : ILogger {
@@ -44,6 +45,30 @@ public class Logger : ILogger {
 
     public void Warn(string message) {
         LogInternal(message, LogLevel.Warning);
+    }
+
+    public void LogStatement(ILogStatement logStatement, ILogFormatter formatter) {
+        if (!IsEnabled)
+            return;
+
+        lock (lockObj) {
+            // set right threshold --> Global layer > logger layer > target layer
+            LogLevel? levelThreshold = Registry?.GlobalConfiguration.LevelThreshold ?? Configuration.LevelThreshold;
+
+            // Concat global targets if registry contains logger
+            IEnumerable<ILogTarget> allTargets = Registry != null
+                ? Configuration.Targets.Concat(Registry.GlobalConfiguration.Targets)
+                : Configuration.Targets;
+
+            foreach (ILogTarget target in allTargets) {
+                // Check for threshold global or per target, no threshold = always log
+                if (levelThreshold.HasValue && levelThreshold > logStatement.Level
+                    || target.LevelThreshold.HasValue && target.LevelThreshold > logStatement.Level)
+                    continue;
+
+                target.WriteLog(logStatement, formatter);
+            }
+        }
     }
 
     private static readonly object lockObj = new();
