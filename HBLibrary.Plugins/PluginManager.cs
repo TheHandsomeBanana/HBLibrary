@@ -61,7 +61,7 @@ public class PluginManager : IPluginManager {
             File.Copy(assemblyFullPath, newAssemblyPath, Configuration.OverrideAssemblies);
         }
         catch (Exception ex) {
-            return Result.Fail($"Cannot copy assembly {assemblyFileName} to {Configuration.Location}", ex);
+            return Result.Fail(new Exception($"Cannot copy assembly {assemblyFileName} to {Configuration.Location}", ex));
         }
 
         return LoadAssembly(newAssemblyPath);
@@ -75,7 +75,7 @@ public class PluginManager : IPluginManager {
         string assemblyPath = Path.Combine(Configuration.Location, assemblyFileName);
         try {
             if (!assemblyContexts.TryGetValue(assemblyPath, out IAssemblyContext? assemblyContext)) {
-                return Result.Fail($"Assembly {assemblyFileName} is not loaded");
+                return Result.Fail(new Exception($"Assembly {assemblyFileName} is not loaded"));
             }
 
             Loader.Unload(assemblyContext);
@@ -88,7 +88,7 @@ public class PluginManager : IPluginManager {
             return Result.Ok();
         }
         catch (Exception ex) {
-            return Result.Fail($"Failed removing assembly {assemblyFileName} from {Configuration.Location}", ex);
+            return Result.Fail(new Exception($"Failed removing assembly {assemblyFileName} from {Configuration.Location}", ex));
         }
     }
 
@@ -182,7 +182,7 @@ public class PluginManager : IPluginManager {
             assemblyContexts.Add(assemblyFullPath, e);
             return Result.Ok();
         }, e => {
-            return Result.Fail($"Could not load assembly {assemblyFullPath}", e);
+            return Result.Fail(new Exception($"Could not load assembly {assemblyFullPath}", e));
         });
     }
 

@@ -15,12 +15,12 @@ public readonly struct Result<TValue, TError> : IEquatable<Result<TValue, TError
     public bool IsSuccess => resultState == ResultState.Success;
     public bool IsFaulted => resultState == ResultState.Faulted;
 
-    public Result(TValue value) {
+    public Result(TValue? value) {
         resultState = ResultState.Success;
         this.value = value;
     }
 
-    public Result(TError error) {
+    public Result(TError? error) {
         resultState = ResultState.Faulted;
         this.error = error;
     }
@@ -48,6 +48,9 @@ public readonly struct Result<TValue, TError> : IEquatable<Result<TValue, TError
     public Option<TValue> ToOption() {
         return IsSuccess ? Option<TValue>.Some(value!) : Option<TValue>.None();
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Result<T, TError> PullError<T>() => new Result<T, TError>(error);
 
     public R Match<R>(Func<TValue, R> success, Func<TError, R> failure) {
         return resultState == ResultState.Success
@@ -197,12 +200,12 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
     public bool IsSuccess => resultState == ResultState.Success;
     public bool IsFaulted => resultState == ResultState.Faulted;
 
-    public Result(TValue value) {
+    public Result(TValue? value) {
         resultState = ResultState.Success;
         Value = value;
     }
 
-    public Result(Exception error) {
+    public Result(Exception? error) {
         resultState = ResultState.Faulted;
         Error = error;
     }
@@ -228,6 +231,12 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
     public Option<TValue> ToOption() {
         return IsSuccess ? Option<TValue>.Some(Value!) : Option<TValue>.None();
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Result<T> PullError<T>() => new Result<T>(Error);
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Result PullError() => Result.Fail(Error);
 
     public R Match<R>(Func<TValue, R> success, Func<Exception, R> failure) {
         return IsSuccess
@@ -368,28 +377,24 @@ public readonly struct Result : IEquatable<Result> {
     private readonly ResultState resultState;
     public bool IsSuccess => resultState == ResultState.Success;
     public bool IsFaulted => resultState == ResultState.Faulted;
-    public string? Message { get; }
     public Exception? Exception { get; }
 
-    public Result(ResultState resultState, string? message, Exception? exception) {
+    public Result(ResultState resultState, Exception? exception) {
         this.resultState = resultState;
-        Message = message;
         Exception = exception;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result Ok() => new Result(ResultState.Success, null, null);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result Ok(string message) => new Result(ResultState.Success, message, null);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result Fail(string message) => new Result(ResultState.Faulted, message, new Exception(message));
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result Fail(Exception exception) => new Result(ResultState.Faulted, exception.Message, exception);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result Fail(string message, Exception exception) => new Result(ResultState.Faulted, message, exception);
+    public Result(Exception? exception) {
+        this.Exception = exception;
+        this.resultState = ResultState.Faulted;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Result(Exception error) => new Result(ResultState.Faulted, default, error);
+    public static Result Ok() => new Result(ResultState.Success,  null);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Fail(Exception exception) => new Result(ResultState.Faulted, exception);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator Result(Exception error) => new Result(ResultState.Faulted, error);
 
     public void ThrowIfFaulted() {
         if (IsFaulted) {
@@ -426,7 +431,6 @@ public readonly struct Result : IEquatable<Result> {
 
     public bool Equals(Result other) {
         return resultState == other.resultState &&
-            Message == other.Message &&
             Exception == other.Exception;
     }
 
@@ -435,7 +439,7 @@ public readonly struct Result : IEquatable<Result> {
     }
 
     public override int GetHashCode() {
-        return HBHashCode.Combine(resultState, Message, Exception);
+        return HBHashCode.Combine(resultState, Exception);
     }
 
     public static bool operator ==(Result left, Result right) {
@@ -446,14 +450,12 @@ public readonly struct Result : IEquatable<Result> {
         return !(left == right);
     }
 
-    public void Deconstruct(out ResultState resultState, out string? message, out Exception? exception) {
+    public void Deconstruct(out ResultState resultState, out Exception? exception) {
         resultState = this.resultState;
-        message = Message;
         exception = Exception;
     }
 
-    public void Deconstruct(out string? message, out Exception? exception) {
-        message = Message;
+    public void Deconstruct(out Exception? exception) {
         exception = Exception;
     }
 }

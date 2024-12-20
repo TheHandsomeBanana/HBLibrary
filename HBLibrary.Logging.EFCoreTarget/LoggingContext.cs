@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace HBLibrary.Services.Logging.EFCoreTarget;
 public class LoggingContext : DbContext {
     private readonly string tableName;
-    public DbSet<LogEntry> LogEntries { get; }
+    public DbSet<LogEntry>? LogEntries { get; }
 
     public LoggingContext(DbContextOptions<LoggingContext> options, string tableName = "Logs") : base(options) { 
         this.tableName = tableName;

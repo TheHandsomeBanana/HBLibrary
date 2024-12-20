@@ -18,10 +18,14 @@ public class RsaKeyConverter : JsonConverter<RsaKey> {
     }
 
     public override void Write(Utf8JsonWriter writer, RsaKey value, JsonSerializerOptions options) {
+        if (value.IsDisposed) {
+            throw new ObjectDisposedException(nameof(value));
+        }
+
         writer.WriteStartObject();
-        writer.WriteString("Key", Convert.ToBase64String(value.Key));
-        writer.WriteNumber("KeySize", value.KeySize);
-        writer.WriteBoolean("IsPublic", value.IsPublic);
+        writer.WriteString("Key", Convert.ToBase64String(value.Key!));
+        writer.WriteNumber("KeySize", value.KeySize!.Value);
+        writer.WriteBoolean("IsPublic", value.IsPublic!.Value);
         writer.WriteString("Name", value.Name);
         writer.WriteEndObject();
     }

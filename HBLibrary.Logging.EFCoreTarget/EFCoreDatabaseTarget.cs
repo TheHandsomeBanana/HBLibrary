@@ -1,5 +1,6 @@
 ﻿using HBLibrary.Interface.Logging;
 using HBLibrary.Interface.Logging.Configuration;
+using HBLibrary.Interface.Logging.Formatting;
 using HBLibrary.Interface.Logging.Statements;
 using HBLibrary.Interface.Logging.Targets;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ public class EFCoreDatabaseTarget : ILogTarget, IAsyncLogTarget {
     private readonly DbContextOptions<LoggingContext> dbContextOptions;
     public LogLevel? LevelThreshold { get; }
 
+    public ILogFormatter? Formatter => throw new NotImplementedException();
+
     public EFCoreDatabaseTarget(DbContextOptions<LoggingContext> dbContextOptions, string tableName = "Logs") {
         this.dbContextOptions = dbContextOptions;
         using LoggingContext context = new LoggingContext(dbContextOptions, tableName);
@@ -17,12 +20,12 @@ public class EFCoreDatabaseTarget : ILogTarget, IAsyncLogTarget {
     }
 
 
-    public void WriteLog(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
+    public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         using LoggingContext context = new LoggingContext(dbContextOptions);
         LogEntry logEntry = new LogEntry {
             Date = log.CreatedOn,
-            Category = log.Name,
-            Level = log.Level.ToString(),
+            Category = log.Name!,
+            Level = log.Level!.ToString()!,
             Message = log.Message,
         };
 
@@ -30,12 +33,12 @@ public class EFCoreDatabaseTarget : ILogTarget, IAsyncLogTarget {
         context.SaveChanges();
     }
 
-    public async Task WriteLogAsync(LogStatement log, LogDisplayFormat displayFormat = LogDisplayFormat.Full) {
+    public async Task WriteLogAsync(ILogStatement log, ILogFormatter? formatter = null) {
         await using LoggingContext context = new LoggingContext(dbContextOptions);
         LogEntry logEntry = new LogEntry {
             Date = log.CreatedOn,
-            Category = log.Name,
-            Level = log.Level.ToString(),
+            Category = log.Name!,
+            Level = log.Level!.ToString()!,
             Message = log.Message,
         };
 

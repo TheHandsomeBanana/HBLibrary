@@ -32,11 +32,7 @@ public class ResultCollection : IEquatable<ResultCollection>, IEnumerable<Result
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ResultCollection Ok() => new ResultCollection(ResultState.Success, [Result.Ok()]);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ResultCollection Fail(string message) => new ResultCollection(ResultState.Faulted, [Result.Fail(message)]);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ResultCollection Fail(Exception exception) => new ResultCollection(ResultState.Faulted, [Result.Fail(exception)]);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ResultCollection Fail(string message, Exception exception) => new ResultCollection(ResultState.Faulted, [Result.Fail(message, exception)]);
     public static ResultCollection Create(IEnumerable<Result> results) {
         ImmutableArray<Result> resultsArray = [.. results];
         if (resultsArray.Length == 0) {

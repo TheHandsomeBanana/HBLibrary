@@ -20,8 +20,6 @@ using System.Windows.Threading;
 
 namespace HBLibrary.Wpf.Logging;
 public sealed class ListBoxLogTarget : IExtendedLogTarget<ListBoxLog> {
-
-
     public LogLevel? LevelThreshold { get; set; }
     public ObservableCollection<ListBoxLog> Logs { get; set; } = [];
     [JsonIgnore]
@@ -53,11 +51,14 @@ public sealed class ListBoxLogTarget : IExtendedLogTarget<ListBoxLog> {
     public void WriteLog(ILogStatement log, ILogFormatter? formatter = null) {
         formatter ??= new ListBoxLogFormatter();
 
-        if (formatter.Format(log) is not ListBoxLog formatted) {
-            throw new LoggingException($"The formatter does not return the requested type {nameof(ListBoxLog)}");
-        }
+        Application.Current.Dispatcher.Invoke(() => {
 
-        Application.Current.Dispatcher.Invoke(() => Logs.Add(formatted));
+            if (formatter.Format(log) is not ListBoxLog formatted) {
+                throw new LoggingException($"The formatter does not return the requested type {nameof(ListBoxLog)}");
+            }
+
+            Logs.Add(formatted);
+        });
     }
 
     public void WriteSuccessLog(ILogStatement logStatement) {
@@ -79,7 +80,7 @@ public sealed class ListBoxLogTarget : IExtendedLogTarget<ListBoxLog> {
         Application.Current.Dispatcher.Invoke(() => {
             ListBoxLog log = GetLog(logIndex);
             // Message is bound -> Changes are reflected to UI
-            log.Message = message; 
+            log.Message = message;
         });
     }
 

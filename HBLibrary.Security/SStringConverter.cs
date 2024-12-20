@@ -3,7 +3,7 @@ using System.Security;
 
 namespace HBLibrary.Security;
 public static class SStringConverter {
-    public static string? SecureStringToString(SecureString value) {
+    public static string? SecureStringToString(this SecureString value) {
         nint valuePtr = IntPtr.Zero;
         try {
             valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
@@ -11,10 +11,11 @@ public static class SStringConverter {
         }
         finally {
             Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            value.Dispose();
         }
     }
 
-    public static SecureString StringToSecureString(string input) {
+    public static SecureString StringToSecureString(this string input) {
         if (string.IsNullOrEmpty(input)) {
             throw new ArgumentNullException(nameof(input));
         }

@@ -4,6 +4,19 @@ using System.Text.Json;
 
 namespace HBLibrary.Core;
 public readonly struct HBHashCode {
+    public static int CombineSequence<T>(IEnumerable<T> sequence) where T : notnull {
+#if NET5_0_OR_GREATER
+        HashCode hash = new HashCode();
+        foreach (var item in sequence) {
+            hash.Add(item);
+        }
+        return hash.ToHashCode();
+#elif NET472_OR_GREATER
+        return Combine(sequence.Select(e => e.GetHashCode()).ToArray());
+#endif
+    }
+
+
     public static int Combine<T1, T2>(T1 item1, T2 item2) {
 #if NET5_0_OR_GREATER
         return HashCode.Combine(item1, item2);
