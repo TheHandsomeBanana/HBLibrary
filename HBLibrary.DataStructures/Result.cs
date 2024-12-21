@@ -195,8 +195,15 @@ public readonly struct Result<TValue, TError> : IEquatable<Result<TValue, TError
 [DebuggerDisplay("State = {resultState}, Value = {Value}, Error = {Error}")]
 public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<TValue> {
     private readonly ResultState resultState;
+    
+    [MemberNotNullWhen(true, nameof(IsSuccess))]
+    [MemberNotNullWhen(false, nameof(IsFaulted))]
     public TValue? Value { get; }
+    
+    [MemberNotNullWhen(true, nameof(IsFaulted))]
+    [MemberNotNullWhen(false, nameof(IsSuccess))]
     public Exception? Error { get; }
+
     public bool IsSuccess => resultState == ResultState.Success;
     public bool IsFaulted => resultState == ResultState.Faulted;
 
@@ -236,7 +243,7 @@ public readonly struct Result<TValue> : IEquatable<Result<TValue>>, IEquatable<T
     public Result<T> PullError<T>() => new Result<T>(Error);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Result PullError() => Result.Fail(Error);
+    public Result PullError() => new Result(Error);
 
     public R Match<R>(Func<TValue, R> success, Func<Exception, R> failure) {
         return IsSuccess
@@ -377,6 +384,7 @@ public readonly struct Result : IEquatable<Result> {
     private readonly ResultState resultState;
     public bool IsSuccess => resultState == ResultState.Success;
     public bool IsFaulted => resultState == ResultState.Faulted;
+    [MemberNotNullWhen(true, nameof(IsFaulted))]
     public Exception? Exception { get; }
 
     public Result(ResultState resultState, Exception? exception) {

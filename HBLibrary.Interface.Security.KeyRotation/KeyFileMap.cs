@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace HBLibrary.Security.KeyRotation;
+namespace HBLibrary.Interface.Security.KeyRotation;
 public sealed class KeyFileMap : IEquatable<KeyFileMap> {
     public required IKey Key { get; init; }
     public List<string> Files { get; init; } = [];

@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Core;
+using HBLibrary.Interface.Security.KeyRotation;
 using HBLibrary.Interface.Security.Keys;
 using Microsoft.Win32;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HBLibrary.Security.KeyRotation;
-public sealed class MasterKey : IDisposable {
+public sealed class MasterKey : IMasterKey {
     public SecureString Salt { get; private set; }
     public SecureString Value { get; private set; }
 
@@ -32,6 +33,7 @@ public sealed class MasterKey : IDisposable {
     }
 
     public void Dispose() {
+        Salt.Dispose();
         Value.Dispose();
     }
 }

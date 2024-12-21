@@ -19,10 +19,15 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Security.KeyRotation;
 public sealed class KeyStorage : IKeyStorage {
-    private readonly MasterKey masterKey;
+    private readonly IMasterKey masterKey;
     public string KeyFile { get; }
 
-    public KeyStorage(string keyFile, MasterKey masterKey) {
+    /// <summary>
+    /// Make sure to dispose the injected <paramref name="masterKey"/> after done with the storage
+    /// </summary>
+    /// <param name="keyFile"></param>
+    /// <param name="masterKey"></param>
+    public KeyStorage(string keyFile, IMasterKey masterKey) {
         this.KeyFile = keyFile;
         this.masterKey = masterKey;
 
@@ -33,17 +38,41 @@ public sealed class KeyStorage : IKeyStorage {
         }
     }
 
+    public async Task<Result<KeyFileContent>> GetKeyFileContent() {
+        Result<EncryptedKeyFileContent> ekfcRes = await GetEncryptedKeyFileContentAsync();
+        if (ekfcRes.IsFaulted) {
+            return ekfcRes.PullError<KeyFileContent>();
+        }
+
+        EncryptedKeyFileContent ekfc = ekfcRes.Value!;
+        Dictionary<string, string> ekfcInternal = ekfc.GetEncryptedKeyFileMap();
+
+        Dictionary<string, KeyFileMap> decryptedEkfc = [];
+        
+        foreach (KeyValuePair<string, string> kvp in ekfcInternal) {
+            Result<KeyFileMap> kfmRes = DecryptKeyFileMap(kvp.Value);
+            if(kfmRes.IsFaulted) {
+                return kfmRes.PullError<KeyFileContent>();
+            }
+
+            decryptedEkfc.Add(kvp.Key, kfmRes.Value!);
+        }
+
+        return new KeyFileContent(decryptedEkfc);
+    }
+
     public async Task<Result> AddFilesAsync(string keyId, string[] newFiles) {
         try {
             Result<EncryptedKeyFileContent> ekfcRes = await GetEncryptedKeyFileContentAsync();
             if (ekfcRes.IsFaulted) {
                 return ekfcRes.PullError();
             }
+
             EncryptedKeyFileContent ekfc = ekfcRes.Value!;
             Result<string> encryptedValueResult = GetEncryptedValueForKeyIdAsync(keyId, ekfc);
 
             if (encryptedValueResult.IsFaulted) {
-                encryptedValueResult.PullError();
+                return encryptedValueResult.PullError();
             }
 
             Result<KeyFileMap> decryptRes = DecryptKeyFileMap(encryptedValueResult.Value!);
@@ -237,7 +266,7 @@ public sealed class KeyStorage : IKeyStorage {
     private Result<KeyFileMap> DecryptKeyFileMap(string? encryptedKeyFileMap) {
         try {
             if (encryptedKeyFileMap is null) {
-                return Result<KeyFileMap>.Fail(new ArgumentNullException(nameof(encryptedKeyFileMap)));
+                return new ArgumentNullException(nameof(encryptedKeyFileMap));
             }
 
             byte[] buffer = Convert.FromBase64String(encryptedKeyFileMap);
@@ -251,10 +280,10 @@ public sealed class KeyStorage : IKeyStorage {
 
             KeyFileMap? content = JsonSerializer.Deserialize<KeyFileMap>(sContent);
             if (content is null) {
-                return Result<KeyFileMap>.Fail(new NullReferenceException(nameof(content)));
+                return new NullReferenceException(nameof(content));
             }
 
-            return Result<KeyFileMap>.Ok(content);
+            return content;
         }
         catch (Exception ex) {
             return ex;
@@ -335,29 +364,3 @@ public sealed class KeyStorage : IKeyStorage {
         }
     }
 }
-
-public sealed class EncryptedKeyFileContent {
-    private readonly Dictionary<string, string> encryptedKeyFileMap;
-
-    [JsonConstructor]
-    internal EncryptedKeyFileContent(Dictionary<string, string> encryptedKeyFileMap) {
-        this.encryptedKeyFileMap = encryptedKeyFileMap;
-    }
-
-    public string? GetEncryptedValue(string keyId) {
-        if (TryGetEncryptedValue(keyId, out string? encryptedValue)) {
-            return encryptedValue;
-        }
-
-        return null;
-    }
-
-    public bool TryGetEncryptedValue(string keyId, [NotNullWhen(true)] out string? encryptedValue) {
-        return encryptedKeyFileMap.TryGetValue(keyId, out encryptedValue);
-    }
-
-    public void AddOrUpdateKeyFileMap(string keyId, string encryptedKeyFileMap) {
-        this.encryptedKeyFileMap[keyId] = encryptedKeyFileMap;
-    }
-}
-

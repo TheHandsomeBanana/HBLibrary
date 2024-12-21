@@ -36,4 +36,9 @@ public interface IKeyStorage {
     /// </summary>
     /// <returns></returns>
     public Result CheckIntegrity();
+
+    /// <summary>
+    /// </summary>
+    /// <returns>The fully decrypted contents of the key file</returns>
+    public Task<Result<KeyFileContent>> GetKeyFileContent();
 }

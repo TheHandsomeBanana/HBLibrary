@@ -6,4 +6,5 @@ using System.Threading.Tasks;
 
 namespace HBLibrary.Interface.Security.KeyRotation;
 public interface IKeyRotator {
+    public Task RotateKeysAsync(IMasterKey masterKey, string keyFile);
 }
