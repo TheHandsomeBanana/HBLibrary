@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HBLibrary.Interface.Security.KeyRotation;
 public interface IKeyStorage {
     /// <summary>
-    /// Adds <paramref name="files"/> to the key file and encrypts them using the existing <see cref="IKey"/>.
+    /// Adds <paramref name="files"/> to the key file. These files MUST ALREADY BE encrypted by the <see cref="IKey"/> fetched from the <paramref name="keyId"/>.
     /// </summary>
     /// <param name="keyId"></param>
     /// <param name="files"></param>
@@ -30,4 +30,10 @@ public interface IKeyStorage {
     /// <param name="keyId"></param>
     /// <returns>The possibly decrypted <see cref="IKey"/> for the provided <paramref name="keyId"/></returns>
     public Task<Result<IKey>> GetKeyAsync(string keyId);
+
+    /// <summary>
+    /// Checks if the key file is in valid format and returns an exception if it is not
+    /// </summary>
+    /// <returns></returns>
+    public Result CheckIntegrity();
 }

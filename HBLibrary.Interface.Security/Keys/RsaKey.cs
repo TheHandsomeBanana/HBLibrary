@@ -70,7 +70,7 @@ public class RsaKey : IKey {
     [XmlElement("Key")]
     [JsonPropertyName("Key")]
     public string? Base64Key {
-        get => Convert.ToBase64String(Key);
+        get => Convert.ToBase64String(Key!);
         set => Key = string.IsNullOrEmpty(value) ? [] : Convert.FromBase64String(value);
     }
 

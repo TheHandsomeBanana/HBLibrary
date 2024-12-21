@@ -7,7 +7,7 @@ namespace HBLibrary.Security.Aes;
 
 public class AesCryptographer : IAesCryptographer {
     public byte[] Decrypt(byte[] cipher, AesKey key) {
-        ICryptoTransform decryptor = System.Security.Cryptography.Aes.Create().CreateDecryptor(key.Key, key.IV);
+        ICryptoTransform decryptor = System.Security.Cryptography.Aes.Create().CreateDecryptor(key.Key!, key.IV);
 
         using (MemoryStream ms = new MemoryStream(cipher)) {
             using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read)) {
@@ -26,7 +26,7 @@ public class AesCryptographer : IAesCryptographer {
     }
 
     public byte[] Encrypt(byte[] data, AesKey key) {
-        ICryptoTransform encryptor = System.Security.Cryptography.Aes.Create().CreateEncryptor(key.Key, key.IV);
+        ICryptoTransform encryptor = System.Security.Cryptography.Aes.Create().CreateEncryptor(key.Key!, key.IV);
 
         using (MemoryStream ms = new MemoryStream()) {
             using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write)) {

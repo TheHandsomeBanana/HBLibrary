@@ -29,7 +29,7 @@ public class EFCoreDatabaseTarget : ILogTarget, IAsyncLogTarget {
             Message = log.Message,
         };
 
-        context.LogEntries.Add(logEntry);
+        context.LogEntries?.Add(logEntry);
         context.SaveChanges();
     }
 
@@ -42,7 +42,7 @@ public class EFCoreDatabaseTarget : ILogTarget, IAsyncLogTarget {
             Message = log.Message,
         };
 
-        context.LogEntries.Add(logEntry);
+        context.LogEntries?.Add(logEntry);
         await context.SaveChangesAsync();
     }
 

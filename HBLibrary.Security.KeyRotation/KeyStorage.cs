@@ -25,10 +25,53 @@ public sealed class KeyStorage : IKeyStorage {
     public KeyStorage(string keyFile, MasterKey masterKey) {
         this.KeyFile = keyFile;
         this.masterKey = masterKey;
+
+        if (!File.Exists(keyFile)) {
+            using (StreamWriter sw = new StreamWriter(File.Create(keyFile))) {
+                sw.Write(JsonSerializer.Serialize(new EncryptedKeyFileContent([])));
+            }
+        }
     }
 
     public async Task<Result> AddFilesAsync(string keyId, string[] newFiles) {
+        try {
+            Result<EncryptedKeyFileContent> ekfcRes = await GetEncryptedKeyFileContentAsync();
+            if (ekfcRes.IsFaulted) {
+                return ekfcRes.PullError();
+            }
+            EncryptedKeyFileContent ekfc = ekfcRes.Value!;
+            Result<string> encryptedValueResult = GetEncryptedValueForKeyIdAsync(keyId, ekfc);
 
+            if (encryptedValueResult.IsFaulted) {
+                encryptedValueResult.PullError();
+            }
+
+            Result<KeyFileMap> decryptRes = DecryptKeyFileMap(encryptedValueResult.Value!);
+
+            if (decryptRes.IsFaulted) {
+                return decryptRes.PullError();
+            }
+
+            KeyFileMap keyFileMap = decryptRes.Value!;
+
+            foreach (string file in newFiles) {
+                if (!keyFileMap.Files.Contains(file)) {
+                    keyFileMap.Files.Add(file);
+                }
+            }
+
+            Result<string> encryptedKeyFileMapRes = EncryptKeyFileMap(keyFileMap);
+            if (encryptedKeyFileMapRes.IsFaulted) {
+                return encryptedKeyFileMapRes.PullError();
+            }
+
+            ekfc.AddOrUpdateKeyFileMap(keyId, encryptedKeyFileMapRes.Value!);
+            Result saveRes = await SaveEncryptedKeyFileContentAsync(ekfc);
+            return saveRes;
+        }
+        catch (Exception ex) {
+            return ex;
+        }
     }
 
     public async Task<Result> SaveKeyAsync(string keyId, IKey key) {
@@ -44,7 +87,7 @@ public sealed class KeyStorage : IKeyStorage {
 
             Result res = await encryptedValueResult.MatchAsync<Result>(
                 e => HandleExistingEncryptedValueAsync(e, key),
-                e => HandleNewKeyIdAsync(keyId, ekfc, key)
+                e => HandleNewEncryptedValueAsync(keyId, ekfc, key)
             );
 
             return res;
@@ -102,18 +145,19 @@ public sealed class KeyStorage : IKeyStorage {
         return Result.Ok();
     }
 
-    private Task<Result> HandleNewKeyIdAsync(string keyId, EncryptedKeyFileContent ekfc, IKey key) {
+    private async Task<Result> HandleNewEncryptedValueAsync(string keyId, EncryptedKeyFileContent ekfc, IKey key) {
         KeyFileMap keyFileMap = new KeyFileMap {
             Key = key
         };
 
         Result<string> encryptedKeyFileMapRes = EncryptKeyFileMap(keyFileMap);
-        Result res = encryptedKeyFileMapRes.Match<Result>(e => {
-            ekfc.AddKeyFileMap(keyId, e);
-            return Result.Ok();
-        }, e => e);
+        if (encryptedKeyFileMapRes.IsFaulted) {
+            return encryptedKeyFileMapRes.PullError();
+        }
 
-        return Task.FromResult(res);
+        ekfc.AddOrUpdateKeyFileMap(keyId, encryptedKeyFileMapRes.Value!);
+        Result res = await SaveEncryptedKeyFileContentAsync(ekfc);
+        return res; 
     }
 
     private static async Task<Result> ReencryptFileAsync(string file, IKey oldKey, IKey newKey) {
@@ -177,8 +221,12 @@ public sealed class KeyStorage : IKeyStorage {
             string keyFileMapJson = JsonSerializer.Serialize(keyFileMap);
             byte[] rawContent = GlobalEnvironment.Encoding.GetBytes(keyFileMapJson);
             AesCryptographer aesCryptographer = new AesCryptographer();
-            using AesKey key = masterKey.ConvertToAesKey();
-            byte[] encryptedContent = aesCryptographer.Encrypt(rawContent, key);
+            byte[] encryptedContent;
+            
+            using (AesKey key = masterKey.ConvertToAesKey()) {
+                encryptedContent = aesCryptographer.Encrypt(rawContent, key);
+            }
+
             return Convert.ToBase64String(encryptedContent);
         }
         catch (Exception ex) {
@@ -194,8 +242,11 @@ public sealed class KeyStorage : IKeyStorage {
 
             byte[] buffer = Convert.FromBase64String(encryptedKeyFileMap);
             AesCryptographer aesCryptographer = new AesCryptographer();
-            using AesKey key = masterKey.ConvertToAesKey();
-            byte[] rawContent = aesCryptographer.Decrypt(buffer, key);
+            byte[] rawContent;
+            using (AesKey key = masterKey.ConvertToAesKey()) {
+                rawContent = aesCryptographer.Decrypt(buffer, key);
+            }
+
             string sContent = GlobalEnvironment.Encoding.GetString(rawContent);
 
             KeyFileMap? content = JsonSerializer.Deserialize<KeyFileMap>(sContent);
@@ -210,11 +261,63 @@ public sealed class KeyStorage : IKeyStorage {
         }
     }
 
-    public async Task<Result<EncryptedKeyFileContent>> GetEncryptedKeyFileContentAsync() {
+    private async Task<Result<EncryptedKeyFileContent>> GetEncryptedKeyFileContentAsync() {
         try {
             byte[] buffer;
             using (FileStream fs = File.OpenRead(KeyFile)) {
                 buffer = await fs.ReadAsync();
+            }
+
+            AesCryptographer aesCryptographer = new AesCryptographer();
+            byte[] rawContent;
+            using (AesKey key = masterKey.ConvertToAesKey()) {
+                rawContent = aesCryptographer.Decrypt(buffer, key);
+            }
+
+            string stringContent = GlobalEnvironment.Encoding.GetString(rawContent);
+
+            EncryptedKeyFileContent? content = JsonSerializer.Deserialize<EncryptedKeyFileContent>(stringContent);
+            if (content is null) {
+                return new EncryptedKeyFileContent([]);
+            }
+
+            return content;
+        }
+        catch (JsonException) {
+            return new EncryptedKeyFileContent([]);
+        }
+        catch (Exception ex) {
+            return ex;
+        }
+    }
+
+    private async Task<Result> SaveEncryptedKeyFileContentAsync(EncryptedKeyFileContent ekfc) {
+        try {
+            string ekfcJson = JsonSerializer.Serialize(ekfc);
+            byte[] rawContent = GlobalEnvironment.Encoding.GetBytes(ekfcJson);
+
+            AesCryptographer aesCryptographer = new AesCryptographer();
+            byte[] encryptedContent;
+            using (AesKey key = masterKey.ConvertToAesKey()) {
+                encryptedContent = aesCryptographer.Encrypt(rawContent, key);
+            }
+
+            using(FileStream fs = new FileStream(KeyFile, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
+                await fs.WriteAsync(encryptedContent);
+            }
+
+            return Result.Ok();
+        }
+        catch (Exception ex) {
+            return ex;
+        }
+    }
+
+    public Result CheckIntegrity() {
+        try {
+            byte[] buffer;
+            using (FileStream fs = File.OpenRead(KeyFile)) {
+                buffer = fs.Read();
             }
 
             AesCryptographer aesCryptographer = new AesCryptographer();
@@ -225,7 +328,7 @@ public sealed class KeyStorage : IKeyStorage {
                 return new NullReferenceException(nameof(content));
             }
 
-            return content;
+            return Result.Ok();
         }
         catch (Exception ex) {
             return ex;
@@ -253,30 +356,8 @@ public sealed class EncryptedKeyFileContent {
         return encryptedKeyFileMap.TryGetValue(keyId, out encryptedValue);
     }
 
-    public void AddKeyFileMap(string keyId, string encryptedKeyFileMap) {
-        this.encryptedKeyFileMap.Add(keyId, encryptedKeyFileMap);
+    public void AddOrUpdateKeyFileMap(string keyId, string encryptedKeyFileMap) {
+        this.encryptedKeyFileMap[keyId] = encryptedKeyFileMap;
     }
 }
 
-public sealed class KeyFileMap : IEquatable<KeyFileMap> {
-    public required IKey Key { get; init; }
-    public List<string> Files { get; init; } = [];
-
-    [JsonConstructor]
-    public KeyFileMap() {
-
-    }
-
-    public bool Equals(KeyFileMap? other) {
-        return Key == other?.Key && Files.SequenceEqual(other.Files);
-    }
-
-    public override bool Equals(object? obj) {
-        return Equals(obj as KeyFileMap);
-    }
-
-    public override int GetHashCode() {
-        int filesHashcode = HBHashCode.CombineSequence(Files);
-        return HBHashCode.Combine(Key, filesHashcode);
-    }
-}
