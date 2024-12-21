@@ -19,4 +19,13 @@ public static class IOAsyncLimiter {
         FileSemaphore = new SemaphoreSlim(concurrencyLimit);
     }
 
+    public static async Task Run(Func<Task> func) {
+        await FileSemaphore.WaitAsync();
+        try {
+            await func();
+        }
+        finally {
+            FileSemaphore.Release();
+        }
+    }
 }

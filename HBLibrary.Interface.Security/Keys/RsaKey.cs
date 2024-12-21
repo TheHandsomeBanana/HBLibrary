@@ -97,5 +97,7 @@ public class RsaKey : IKey {
         Key = null;
         keySize = null;
         isPublic = null;
+
+        IsDisposed = true;
     }
 }

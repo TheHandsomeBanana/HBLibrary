@@ -57,5 +57,7 @@ public class DPEntropy : IKey
             Array.Clear(Key, 0, Key.Length);
             Key = null;
         }
+
+        IsDisposed = true;
     }
 }

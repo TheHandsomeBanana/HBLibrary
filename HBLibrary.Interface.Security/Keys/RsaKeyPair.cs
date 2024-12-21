@@ -13,18 +13,57 @@ public class RsaKeyPair : IKey {
     [XmlIgnore]
     public bool IsDisposed { get; private set; }
 
-    public required RsaKey? PublicKey { get; set; }
-    public required RsaKey? PrivateKey { get; set; }
+    private RsaKey? publicKey;
+    public RsaKey? PublicKey { 
+        get {
+            if(IsDisposed) {
+                throw new ObjectDisposedException(nameof(RsaKeyPair));
+            }
+
+            return publicKey;
+        } 
+        set {
+            if (IsDisposed) {
+                throw new ObjectDisposedException(nameof(RsaKeyPair));
+            }
+
+            publicKey = value; 
+        }
+    }
+    
+    private RsaKey? privateKey;
+    public RsaKey? PrivateKey { 
+        get {
+            if(IsDisposed) {
+                throw new ObjectDisposedException(nameof(RsaKeyPair));
+            }
+
+            return privateKey;
+        } 
+        set {
+            if (IsDisposed) {
+                throw new ObjectDisposedException(nameof(RsaKeyPair));
+            }
+
+            privateKey = value; 
+        }
+    }
 
     [JsonIgnore]
     public string Name => nameof(RsaKeyPair);
 
 
     public void Dispose() {
+        if (IsDisposed) {
+            throw new ObjectDisposedException(nameof(RsaKey));
+        }
+
         PublicKey?.Dispose();
         PrivateKey?.Dispose();
 
         PublicKey = null;
         PrivateKey = null;
+
+        IsDisposed = true;
     }
 }

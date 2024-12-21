@@ -1,11 +1,15 @@
 ﻿using HBLibrary.Core;
 using HBLibrary.Core.Extensions;
+using HBLibrary.Core.Limiter;
 using HBLibrary.DataStructures;
 using HBLibrary.Interface.Security.KeyRotation;
 using HBLibrary.Interface.Security.Keys;
 using HBLibrary.Security.Aes;
+using HBLibrary.Security.Rsa;
+using Microsoft.Graph.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -23,7 +27,7 @@ public sealed class KeyStorage : IKeyStorage {
         this.masterKey = masterKey;
     }
 
-    public async Task<Result> AddFilesToKeyMap(string keyId, IKey key, string[] files) {
+    public async Task<Result> AddFilesAsync(string keyId, string[] newFiles) {
 
     }
 
@@ -38,34 +42,10 @@ public sealed class KeyStorage : IKeyStorage {
 
             Result<string> encryptedValueResult = GetEncryptedValueForKeyIdAsync(keyId, ekfc);
 
-            Result res = encryptedValueResult.Match<Result>(e => {
-                Result<KeyFileMap> decryptRes = DecryptKeyFileMap(e);
-                if (decryptRes.IsFaulted) {
-                    return decryptRes.PullError();
-                }
-
-                decryptRes.Tap(e => {
-                    // TODO:
-                    // 1. Decrypt all files using existing key
-                    // 2. Encrypt all files using new key
-                    // 3. Save new key
-                });
-
-                return Result.Ok();
-            }, e => {
-                KeyFileMap keyFileMap = new KeyFileMap {
-                    Key = key
-                };
-
-                Result<string> encryptedKeyFileMapRes = EncryptKeyFileMap(keyFileMap);
-
-                Result res = encryptedKeyFileMapRes.Match<Result>(e => {
-                    ekfc.AddKeyFileMap(keyId, e);
-                    return Result.Ok();
-                }, e => e);
-
-                return res;
-            });
+            Result res = await encryptedValueResult.MatchAsync<Result>(
+                e => HandleExistingEncryptedValueAsync(e, key),
+                e => HandleNewKeyIdAsync(keyId, ekfc, key)
+            );
 
             return res;
         }
@@ -94,6 +74,95 @@ public sealed class KeyStorage : IKeyStorage {
         }
     }
 
+    private async Task<Result> HandleExistingEncryptedValueAsync(string encryptedValueResult, IKey key) {
+        Result<KeyFileMap> decryptRes = DecryptKeyFileMap(encryptedValueResult);
+
+        Result res = await decryptRes.MatchAsync<Result>(async e => {
+            // KeyFileMap available -> Reencrypt all present files using the new key
+            List<Task<Result>> reencryptTasks = [];
+            foreach (string file in e.Files) {
+                await IOAsyncLimiter.FileSemaphore.WaitAsync();
+                reencryptTasks.Add(Task.Run(async () => {
+                    try {
+                        return await ReencryptFileAsync(file, e.Key, key);
+                    }
+                    finally {
+                        IOAsyncLimiter.FileSemaphore.Release();
+                    }
+                }));
+            }
+
+            Result[] results = await Task.WhenAll(reencryptTasks);
+
+            ResultCollection resultCollection = ResultCollection.Create(results);
+            return resultCollection.AggregateResults();
+
+        }, e => Task.FromResult<Result>(e));
+
+        return Result.Ok();
+    }
+
+    private Task<Result> HandleNewKeyIdAsync(string keyId, EncryptedKeyFileContent ekfc, IKey key) {
+        KeyFileMap keyFileMap = new KeyFileMap {
+            Key = key
+        };
+
+        Result<string> encryptedKeyFileMapRes = EncryptKeyFileMap(keyFileMap);
+        Result res = encryptedKeyFileMapRes.Match<Result>(e => {
+            ekfc.AddKeyFileMap(keyId, e);
+            return Result.Ok();
+        }, e => e);
+
+        return Task.FromResult(res);
+    }
+
+    private static async Task<Result> ReencryptFileAsync(string file, IKey oldKey, IKey newKey) {
+        try {
+            byte[] encryptedBuffer;
+            using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.None, 4096, true)) {
+                encryptedBuffer = await fs.ReadAsync();
+            }
+
+            byte[] decryptedContent;
+            switch (oldKey) {
+                case AesKey aesKey:
+                    AesCryptographer aesCryptographer = new AesCryptographer();
+                    decryptedContent = aesCryptographer.Decrypt(encryptedBuffer, aesKey);
+                    break;
+                case RsaKeyPair rsaKeyPair:
+                    RsaCryptographer rsaCryptographer = new RsaCryptographer();
+                    decryptedContent = rsaCryptographer.Decrypt(encryptedBuffer, rsaKeyPair.PrivateKey!);
+                    break;
+                default:
+                    return new NotSupportedException($"{oldKey.Name} is not supported");
+            }
+
+            byte[] newEncryptedContent;
+            switch (newKey) {
+                case AesKey aesKey:
+                    AesCryptographer aesCryptographer = new AesCryptographer();
+                    newEncryptedContent = aesCryptographer.Encrypt(decryptedContent, aesKey);
+                    break;
+                case RsaKeyPair rsaKeyPair:
+                    RsaCryptographer rsaCryptographer = new RsaCryptographer();
+                    newEncryptedContent = rsaCryptographer.Encrypt(decryptedContent, rsaKeyPair.PublicKey!);
+                    break;
+                default:
+                    return new NotSupportedException($"{newKey.Name} is not supported");
+            }
+
+
+            using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
+                await fs.WriteAsync(newEncryptedContent);
+            }
+
+            return Result.Ok();
+        }
+        catch (Exception ex) {
+            return ex;
+        }
+    }
+
     private static Result<string> GetEncryptedValueForKeyIdAsync(string keyId, EncryptedKeyFileContent ekfc) {
         string? encryptedValue = ekfc.GetEncryptedValue(keyId);
         if (encryptedValue is null) {
@@ -106,7 +175,7 @@ public sealed class KeyStorage : IKeyStorage {
     private Result<string> EncryptKeyFileMap(KeyFileMap keyFileMap) {
         try {
             string keyFileMapJson = JsonSerializer.Serialize(keyFileMap);
-            byte[] rawContent  = GlobalEnvironment.Encoding.GetBytes(keyFileMapJson);
+            byte[] rawContent = GlobalEnvironment.Encoding.GetBytes(keyFileMapJson);
             AesCryptographer aesCryptographer = new AesCryptographer();
             using AesKey key = masterKey.ConvertToAesKey();
             byte[] encryptedContent = aesCryptographer.Encrypt(rawContent, key);

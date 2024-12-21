@@ -91,5 +91,7 @@ public class AesKey : IKey {
             Array.Clear(IV, 0, IV.Length);
             IV = null;
         }
+
+        IsDisposed = true;
     }
 }

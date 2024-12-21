@@ -42,6 +42,12 @@ public class ResultCollection : IEquatable<ResultCollection>, IEnumerable<Result
         return new ResultCollection(resultsArray.All(r => r.IsSuccess) ? ResultState.Success : ResultState.Faulted, resultsArray);
     }
 
+    public Result AggregateResults() {
+        return IsSuccess
+            ? Result.Ok()
+            : Result.Fail(new AggregateException(results.Where(e => e.IsFaulted).Select(e => e.Exception!)));
+    }
+
     public bool Equals(ResultCollection? other) {
         return resultState == other?.resultState &&
             results.SequenceEqual(other.results);
