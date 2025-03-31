@@ -402,6 +402,8 @@ public readonly struct Result : IEquatable<Result> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result Fail(Exception exception) => new Result(ResultState.Faulted, exception);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result Fail(string message) => new Result(ResultState.Faulted, new Exception(message));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator Result(Exception error) => new Result(ResultState.Faulted, error);
 
     public void ThrowIfFaulted() {
