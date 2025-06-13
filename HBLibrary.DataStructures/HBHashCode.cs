@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace HBLibrary.Core;
+namespace HBLibrary.DataStructures;
 public readonly struct HBHashCode {
     public static int CombineSequence<T>(IEnumerable<T> sequence) where T : notnull {
 #if NET5_0_OR_GREATER

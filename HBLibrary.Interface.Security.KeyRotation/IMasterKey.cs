@@ -1,5 +1,4 @@
-﻿using HBLibrary.Core;
-using HBLibrary.Interface.Security.Keys;
+﻿using HBLibrary.Interface.Security.Keys;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;

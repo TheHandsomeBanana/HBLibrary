@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Core;
+using HBLibrary.DataStructures;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HBLibrary.Interface.Interpreter;

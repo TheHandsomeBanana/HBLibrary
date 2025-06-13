@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Core;
+using HBLibrary.DataStructures;
 
 namespace HBLibrary.Security.Authentication.Microsoft;
 public class MicrosoftIdentity : IEquatable<MicrosoftIdentity> {

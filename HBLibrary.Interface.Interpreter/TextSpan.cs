@@ -1,4 +1,5 @@
 ﻿using HBLibrary.Core;
+using HBLibrary.DataStructures;
 
 namespace HBLibrary.Interface.Interpreter;
 
