@@ -6,7 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>HandsomeBanana.png</PackageIcon>
+    <RepositoryUrl>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryUrl>
+    <Authors>Handsome Banana</Authors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\resources\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.14.1">

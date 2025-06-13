@@ -5,7 +5,18 @@
 	  <LangVersion>12.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>HandsomeBanana.png</PackageIcon>
+    <RepositoryUrl>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryUrl>
+    <Authors>Handsome Banana</Authors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\resources\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0" />

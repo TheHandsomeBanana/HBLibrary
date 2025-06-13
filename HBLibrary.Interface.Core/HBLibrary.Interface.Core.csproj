@@ -5,17 +5,25 @@
 	  <LangVersion>12.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>HandsomeBanana.png</PackageIcon>
+    <RepositoryType>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryType>
+    <Authors>Handsome Banana</Authors>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\resources\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HBLibrary.DataStructures" Version="1.0.0" />
     <PackageReference Include="PolySharp" Version="1.14.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.DataStructures\HBLibrary.DataStructures.csproj" />
   </ItemGroup>
 
 </Project>

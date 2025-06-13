@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>HandsomeBanana.png</PackageIcon>
+    <RepositoryUrl>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryUrl>
+    <Authors>Handsome Banana</Authors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,14 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HBLibrary.Core" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Interface.Logging" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Logging" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Security" Version="1.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.Core\HBLibrary.Core.csproj" />
-    <ProjectReference Include="..\HBLibrary.Interface.Logging\HBLibrary.Interface.Logging.csproj" />
-    <ProjectReference Include="..\HBLibrary.Logging\HBLibrary.Logging.csproj" />
-    <ProjectReference Include="..\HBLibrary.Security\HBLibrary.Security.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,13 @@
   <ItemGroup>
     <Folder Include="Themes\HBDarkBlue\" />
     <Folder Include="Themes\HBLight\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\resources\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

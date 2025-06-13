@@ -4,6 +4,10 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageIcon>HandsomeBanana.png</PackageIcon>
+		<RepositoryUrl>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryUrl>
+		<Authors>Handsome Banana</Authors>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -16,7 +20,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\HBLibrary.Interface.Logging\HBLibrary.Interface.Logging.csproj" />
+	  <None Include="..\resources\HandsomeBanana.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="HBLibrary.Interface.Logging" Version="1.0.0" />
 	</ItemGroup>
 
 </Project>

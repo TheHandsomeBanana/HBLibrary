@@ -4,13 +4,23 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageIcon>HandsomeBanana.png</PackageIcon>
+    <RepositoryUrl>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryUrl>
+    <Authors>Handsome Banana</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.Core\HBLibrary.Core.csproj" />
-    <ProjectReference Include="..\HBLibrary.DataStructures\HBLibrary.DataStructures.csproj" />
-    <ProjectReference Include="..\HBLibrary.Interface.Security.KeyRotation\HBLibrary.Interface.Security.KeyRotation.csproj" />
-    <ProjectReference Include="..\HBLibrary.Security\HBLibrary.Security.csproj" />
+    <None Include="..\resources\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HBLibrary.Core" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.DataStructures" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Interface.Security.KeyRotation" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Security" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

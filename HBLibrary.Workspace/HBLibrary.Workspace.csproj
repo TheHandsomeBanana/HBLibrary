@@ -5,12 +5,23 @@
 	  <LangVersion>12.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>HandsomeBanana.png</PackageIcon>
+    <RepositoryUrl>https://github.com/TheHandsomeBanana/HBLibrary</RepositoryUrl>
+    <Authors>Handsome Banana</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HBLibrary.Core\HBLibrary.Core.csproj" />
-    <ProjectReference Include="..\HBLibrary.Interface.Workspace\HBLibrary.Interface.Workspace.csproj" />
-    <ProjectReference Include="..\HBLibrary.Security\HBLibrary.Security.csproj" />
+    <None Include="..\resources\HandsomeBanana.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HBLibrary.Core" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Interface.Workspace" Version="1.0.0" />
+    <PackageReference Include="HBLibrary.Security" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
